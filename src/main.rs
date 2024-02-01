@@ -17,5 +17,5 @@ fn main() {
         println!("{:?}", asts);
     }
 
-    process(asts);
+    let _ = process(asts);
 }
