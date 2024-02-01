@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use crate::ast::builtin::Builtin;
 use crate::ast::operators::Operator;
 
@@ -8,6 +7,7 @@ pub struct VariableId {
 }
 
 pub struct Type {
+    name: String,
     builtin_id: Option<usize>,
     subtypes: Vec<usize>
 }
@@ -27,10 +27,7 @@ impl TypeTable {
     }
 }
 
-#[derive(PartialEq, Clone, strum_macros::Display, Debug)]
-pub enum TopLevelSymbol {
-    Function(Vec<(usize, usize)>, Vec<Line>)
-}
+type Function = (Vec<(usize, usize)>, Vec<Line>);
 
 #[derive(PartialEq, Clone, strum_macros::Display, Debug)]
 pub enum Line {

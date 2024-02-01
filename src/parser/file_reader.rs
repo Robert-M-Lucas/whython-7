@@ -28,7 +28,10 @@ impl FileReader {
 
     pub fn move_read_any(&mut self) -> Option<char> {
         let c = self.data.chars().skip(self.cursor).next();
-        if c.is_some() { self.cursor += 1; }
+        if c.is_some() {
+            self.cursor += 1;
+            if c.unwrap() == '\n' { self.line += 1; }
+        }
         c
     }
 

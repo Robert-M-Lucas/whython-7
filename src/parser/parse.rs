@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use thiserror::Error;
 use ParseError::{NestedError, SyntaxError};
 use crate::ast::keywords::MOD_KEYWORD;
-use crate::basic_ast::symbol::BasicSymbol;
+use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol};
 use crate::parser::escape_codes::get_escape_code;
 use crate::parser::file_reader::FileReader;
 use crate::parser::normal_parser::parse_normal;
@@ -20,7 +20,7 @@ pub enum ParseError {
 }
 
 
-pub fn parse(path: PathBuf, asts: &mut Vec<BasicSymbol>) -> Result<(), ParseError> {
+pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(), ParseError> {
     let data = fs::read_to_string(&path);
 
     if data.is_err() {
@@ -54,7 +54,12 @@ pub fn parse(path: PathBuf, asts: &mut Vec<BasicSymbol>) -> Result<(), ParseErro
 
     let ast = parse_normal(&mut reader, BlockType::Base)?;
 
-    asts.push(ast);
+    let inner = match ast {
+        BasicSymbol::AbstractSyntaxTree(inner) => inner,
+        _ => panic!()
+    };
+
+    asts.push((reader.get_path(), inner));
     Ok(())
 }
 

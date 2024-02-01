@@ -1,9 +1,9 @@
 use thiserror::__private::AsDynError;
-use crate::il::keywords::Keyword;
-use crate::il::{operators};
-use crate::il::operators::Operator;
+use crate::ast::keywords::Keyword;
+use crate::ast::{operators};
+use crate::ast::operators::Operator;
 use crate::basic_ast::punctuation::Punctuation;
-use crate::basic_ast::symbol::BasicSymbol;
+use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol};
 use crate::parser::file_reader::FileReader;
 use crate::parser::parse::{BlockType, ParseError};
 use crate::parser::string_parser::parse_string;
@@ -15,7 +15,7 @@ pub fn parse_normal(reader: &mut FileReader, block_type: BlockType) -> Result<Ba
 
     let mut operator_mode = false;
 
-    let mut symbols = Vec::new();
+    let mut symbols: Vec<(BasicSymbol, usize)> = Vec::new();
 
     loop {
         let next = reader.move_read_any();
@@ -45,7 +45,8 @@ pub fn parse_normal(reader: &mut FileReader, block_type: BlockType) -> Result<Ba
         match next {
             '"' => {
                 process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
-                symbols.push(parse_string(reader)?);
+                let start = reader.line();
+                symbols.push((parse_string(reader)?, start));
                 continue;
             }
             c => {
@@ -82,7 +83,8 @@ pub fn parse_normal(reader: &mut FileReader, block_type: BlockType) -> Result<Ba
 
                 if let Some(new_block) = new_block {
                     process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
-                    symbols.push(parse_normal(reader, new_block)?);
+                    let start = reader.line();
+                    symbols.push((parse_normal(reader, new_block)?, start));
                     continue;
                 }
             }
@@ -114,7 +116,13 @@ pub fn parse_normal(reader: &mut FileReader, block_type: BlockType) -> Result<Ba
 
         if next == ';' {
             process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
-            symbols.push(BasicSymbol::Punctuation(Punctuation::Semicolon));
+            symbols.push((BasicSymbol::Punctuation(Punctuation::Semicolon), reader.line()));
+            continue;
+        }
+
+        if next == ',' {
+            process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
+            symbols.push((BasicSymbol::Punctuation(Punctuation::ListSeparator), reader.line()));
             continue;
         }
 
@@ -122,13 +130,13 @@ pub fn parse_normal(reader: &mut FileReader, block_type: BlockType) -> Result<Ba
     }
 }
 
-fn process_buffer(buffer: &mut String, operator_mode: &mut bool, symbols: &mut Vec<BasicSymbol>, reader: &FileReader) -> Result<(), ParseError> {
+fn process_buffer(buffer: &mut String, operator_mode: &mut bool, symbols: &mut Vec<(BasicSymbol, usize)>, reader: &FileReader) -> Result<(), ParseError> {
     if buffer.is_empty() {
         return Ok(());
     }
 
     if *operator_mode {
-        symbols.push(process_operator_buffer(buffer, reader)?);
+        symbols.push((process_operator_buffer(buffer, reader)?, reader.line()));
         *operator_mode = false;
         buffer.clear();
         return Ok(());
@@ -143,7 +151,7 @@ fn process_buffer(buffer: &mut String, operator_mode: &mut bool, symbols: &mut V
                 format!("keywords (here '{first}') cannot be followed by '.'")
             ));
         }
-        symbols.push(BasicSymbol::Keyword(keyword));
+        symbols.push((BasicSymbol::Keyword(keyword), reader.line()));
         buffer.clear();
         return Ok(());
     }
@@ -152,7 +160,7 @@ fn process_buffer(buffer: &mut String, operator_mode: &mut bool, symbols: &mut V
     for name in split {
         names.push(name.to_string());
     }
-    symbols.push(BasicSymbol::Name(names));
+    symbols.push((BasicSymbol::Name(names), reader.line()));
     buffer.clear();
     Ok(())
 }

@@ -1,10 +1,12 @@
 use std::path::PathBuf;
 use crate::parser::parse::parse;
+use crate::processor::processor::process;
 
 mod parser;
 mod basic_ast;
 mod il;
 mod ast;
+mod processor;
 
 fn main() {
     let mut asts = Vec::new();
@@ -14,4 +16,6 @@ fn main() {
     else {
         println!("{:?}", asts);
     }
+
+    process(asts);
 }
