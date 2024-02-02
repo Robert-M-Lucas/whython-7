@@ -20,7 +20,7 @@ impl FileReader {
     }
 
     pub fn syntax_error(&self, message: String) -> ParseError {
-        ParseError::SyntaxError(self.path.clone(), self.line, message)
+        ParseError::Syntax(self.path.clone(), self.line, message)
     }
 
     pub fn line(&self) -> usize {

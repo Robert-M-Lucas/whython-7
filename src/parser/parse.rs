@@ -7,23 +7,23 @@ use crate::parser::normal_parser::parse_normal;
 use std::path::PathBuf;
 use std::{fs, io};
 use thiserror::Error;
-use ParseError::{NestedError};
+use ParseError::{Nested};
 
 #[derive(Error, Debug)]
 pub enum ParseError {
     #[error("file read error on path '{0}'")]
-    FileReadError(PathBuf, io::Error),
+    FileRead(PathBuf, io::Error),
     #[error("syntax error in file {0}:{1} - {2}")]
-    SyntaxError(PathBuf, usize, String),
+    Syntax(PathBuf, usize, String),
     #[error("In file {0}:{1}:\n{2}")]
-    NestedError(PathBuf, usize, Box<ParseError>),
+    Nested(PathBuf, usize, Box<ParseError>),
 }
 
 pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(), ParseError> {
     let data = fs::read_to_string(&path);
 
     if let Err(e) = data {
-        return Err(ParseError::FileReadError(path, e));
+        return Err(ParseError::FileRead(path, e));
     }
     let mut reader = FileReader::new(path, data.unwrap());
 
@@ -46,7 +46,7 @@ pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(
             }
 
             if let Err(e) = parse(PathBuf::from(file), asts) {
-                return Err(NestedError(reader.get_path(), reader.line(), Box::new(e)));
+                return Err(Nested(reader.get_path(), reader.line(), Box::new(e)));
             }
         }
     }

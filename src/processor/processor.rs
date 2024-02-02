@@ -7,11 +7,11 @@ use thiserror::Error;
 #[derive(Error, Debug)]
 pub enum ProcessorError {
     #[error("syntax error in file {0}:{1} - {2}")]
-    SyntaxError(PathBuf, usize, String),
+    Syntax(PathBuf, usize, String),
     #[error("type '{2}' not found in file {0}:{1}")]
-    TypeNotFoundError(PathBuf, usize, String),
+    TypeNotFound(PathBuf, usize, String),
     #[error("type '{2}' in file {0}:{1} also defined in file {3}:{4}")]
-    TypeRedefinitionError(PathBuf, usize, String, PathBuf, usize),
+    TypeRedefinition(PathBuf, usize, String, PathBuf, usize),
 }
 
 pub fn process(ast: Vec<BasicAbstractSyntaxTree>) -> Result<(), ProcessorError> {

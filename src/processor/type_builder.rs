@@ -1,6 +1,6 @@
 use crate::processor::preprocess::PreprocessSymbol;
 use crate::processor::processor::ProcessorError;
-use crate::processor::processor::ProcessorError::TypeNotFoundError;
+use crate::processor::processor::ProcessorError::TypeNotFound;
 
 use std::collections::HashMap;
 
@@ -132,7 +132,7 @@ pub fn build_type_table(
                     name.clone(),
                     UninitialisedType::new(path.clone(), line, type_counter, args),
                 ) {
-                    return Err(ProcessorError::TypeRedefinitionError(
+                    return Err(ProcessorError::TypeRedefinition(
                         path,
                         line,
                         name,
@@ -177,7 +177,7 @@ pub fn build_type_table(
             let type_ = uninitialised_types.remove(i).1;
             let (path, mut attributes) = (type_.path, type_.attributes);
             let (type_name, line) = attributes.remove(a).1.unwrap_err();
-            return Err(TypeNotFoundError(path, line, type_name));
+            return Err(TypeNotFound(path, line, type_name));
         }
     }
 
@@ -188,7 +188,7 @@ pub fn build_type_table(
         for (attr_name, attr_type) in attributes {
             if attr_type.is_err() {
                 let (attr_type, attr_type_line) = attr_type.unwrap_err();
-                return Err(TypeNotFoundError(path, attr_type_line, attr_type));
+                return Err(TypeNotFound(path, attr_type_line, attr_type));
             }
 
             attributes_processed.push((attr_name, attr_type.unwrap()))

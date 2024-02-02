@@ -2,7 +2,7 @@ use crate::ast::keywords::Keyword;
 use crate::basic_ast::punctuation::Punctuation;
 use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol};
 use crate::processor::processor::ProcessorError;
-use crate::processor::processor::ProcessorError::SyntaxError;
+use crate::processor::processor::ProcessorError::Syntax;
 
 use std::path::{PathBuf};
 use std::vec::IntoIter;
@@ -23,11 +23,11 @@ pub enum PreprocessSymbol {
 }
 
 fn no_name_error(path: PathBuf, line: usize, kw: &str) -> ProcessorError {
-    SyntaxError(path, line, format!("{kw} must be followed by a name"))
+    Syntax(path, line, format!("{kw} must be followed by a name"))
 }
 
 fn no_name_error_followed(path: PathBuf, line: usize, kw: &str, s: BasicSymbol) -> ProcessorError {
-    SyntaxError(
+    Syntax(
         path,
         line,
         format!("{kw} must be followed by a name, not {}", s.instead_found()),
@@ -35,7 +35,7 @@ fn no_name_error_followed(path: PathBuf, line: usize, kw: &str, s: BasicSymbol) 
 }
 
 fn bad_name(path: PathBuf, line: usize, kw: &str) -> ProcessorError {
-    SyntaxError(
+    Syntax(
         path,
         line,
         format!("{kw} must be followed by a name that does not contain a '.'"),
@@ -43,7 +43,7 @@ fn bad_name(path: PathBuf, line: usize, kw: &str) -> ProcessorError {
 }
 
 fn no_braces(path: PathBuf, line: usize, kw: &str) -> ProcessorError {
-    SyntaxError(
+    Syntax(
         path,
         line,
         format!("{kw}'s name must be followed with braces ('{{')"),
@@ -79,7 +79,7 @@ pub fn preprocess(
                 },
                 BasicSymbol::AbstractSyntaxTree(_) => panic!(),
                 symbol => {
-                    return Err(SyntaxError(
+                    return Err(Syntax(
                         path,
                         main_line,
                         format!(
@@ -137,7 +137,7 @@ fn parse_struct(
                 tmp_first_item,
                 BasicSymbol::Punctuation(Punctuation::ListSeparator)
             ) {
-                return Err(SyntaxError(
+                return Err(Syntax(
                     path,
                     first_item_line,
                     "struct attributes must be ',' separated".to_string(),
@@ -153,7 +153,7 @@ fn parse_struct(
         let attr_name = match attr_name {
             BasicSymbol::Name(mut name) => {
                 if name.len() > 1 {
-                    return Err(SyntaxError(
+                    return Err(Syntax(
                         path,
                         attr_line,
                         "struct attribute name cannot contain '.'".to_string(),
@@ -162,7 +162,7 @@ fn parse_struct(
                 name.remove(0)
             }
             _ => {
-                return Err(SyntaxError(
+                return Err(Syntax(
                     path,
                     attr_line,
                     "expected name of attribute".to_string(),
@@ -176,7 +176,7 @@ fn parse_struct(
                 BasicSymbol::Punctuation(Punctuation::Colon)
             )
         {
-            return Err(SyntaxError(
+            return Err(Syntax(
                 path,
                 attr_line,
                 "expected ':' after attribute name".to_string(),
@@ -186,7 +186,7 @@ fn parse_struct(
 
         let attr_type = contents.next();
         if attr_type.is_none() {
-            return Err(SyntaxError(
+            return Err(Syntax(
                 path,
                 colon_line,
                 "expected type after attribute name and ':'".to_string(),
@@ -196,7 +196,7 @@ fn parse_struct(
         let attr_type = match attr_type {
             BasicSymbol::Name(mut name) => {
                 if name.len() > 1 {
-                    return Err(SyntaxError(
+                    return Err(Syntax(
                         path,
                         contents_line,
                         "attribute types cannot contain '.'".to_string(),
@@ -205,7 +205,7 @@ fn parse_struct(
                 name.remove(0)
             }
             _ => {
-                return Err(SyntaxError(
+                return Err(Syntax(
                     path,
                     contents_line,
                     "expected attribute type after attribute name and ':'".to_string(),
@@ -265,7 +265,7 @@ fn parse_impl(
                 functions.push((function, fn_line));
             }
             _ => {
-                return Err(SyntaxError(
+                return Err(Syntax(
                     path,
                     symbol_line,
                     "only function definitions (beginning with 'fn') allowed within impls"
@@ -296,7 +296,7 @@ fn parse_fn(
     }
     let name = name.remove(0);
 
-    let (arguments, arguments_line) = tree.next().ok_or(SyntaxError(
+    let (arguments, arguments_line) = tree.next().ok_or(Syntax(
         path.clone(),
         name_line,
         "function name must be followed by brackets ('()')".to_string(),
@@ -304,7 +304,7 @@ fn parse_fn(
     let arguments = match arguments {
         BasicSymbol::BracketedSection(contents) => contents,
         _ => {
-            return Err(SyntaxError(
+            return Err(Syntax(
                 path,
                 arguments_line,
                 "function name must be followed by brackets ('()')".to_string(),
@@ -328,7 +328,7 @@ fn parse_fn(
                 tmp_first_item,
                 BasicSymbol::Punctuation(Punctuation::ListSeparator)
             ) {
-                return Err(SyntaxError(
+                return Err(Syntax(
                     path,
                     first_item_line,
                     "function arguments must be ',' separated".to_string(),
@@ -344,7 +344,7 @@ fn parse_fn(
         let arg_name = match arg_name {
             BasicSymbol::Name(mut name) => {
                 if name.len() > 1 {
-                    return Err(SyntaxError(
+                    return Err(Syntax(
                         path,
                         arg_line,
                         "function argument name cannot contain '.'".to_string(),
@@ -353,7 +353,7 @@ fn parse_fn(
                 name.remove(0)
             }
             _ => {
-                return Err(SyntaxError(
+                return Err(Syntax(
                     path,
                     arg_line,
                     "expected name of argument".to_string(),
@@ -367,7 +367,7 @@ fn parse_fn(
                 BasicSymbol::Punctuation(Punctuation::Colon)
             )
         {
-            return Err(SyntaxError(
+            return Err(Syntax(
                 path,
                 arg_line,
                 "expected ':' after argument name".to_string(),
@@ -377,7 +377,7 @@ fn parse_fn(
 
         let arg_type = arguments.next();
         if arg_type.is_none() {
-            return Err(SyntaxError(
+            return Err(Syntax(
                 path,
                 colon_line,
                 "expected type after argument name and ':'".to_string(),
@@ -387,7 +387,7 @@ fn parse_fn(
         let attr_type = match arg_type {
             BasicSymbol::Name(mut name) => {
                 if name.len() > 1 {
-                    return Err(SyntaxError(
+                    return Err(Syntax(
                         path,
                         arg_type_line,
                         "attribute types cannot contain '.'".to_string(),
@@ -396,7 +396,7 @@ fn parse_fn(
                 name.remove(0)
             }
             _ => {
-                return Err(SyntaxError(
+                return Err(Syntax(
                     path,
                     arg_type_line,
                     "expected attribute type after attribute name and ':'".to_string(),
@@ -408,7 +408,7 @@ fn parse_fn(
         first = false;
     }
 
-    let (mut contents, mut contents_line) = tree.next().ok_or(SyntaxError(
+    let (mut contents, mut contents_line) = tree.next().ok_or(Syntax(
         path.clone(),
         name_line,
         "function arguments must be followed by braces ('{}')".to_string(),
@@ -417,7 +417,7 @@ fn parse_fn(
     let return_type = if matches!(&contents, BasicSymbol::Punctuation(Punctuation::Tilda)) {
         match tree.next() {
             None => {
-                return Err(SyntaxError(
+                return Err(Syntax(
                     path.clone(),
                     contents_line,
                     "'~' must be followed by a return type".to_string(),
@@ -425,7 +425,7 @@ fn parse_fn(
             }
             Some((BasicSymbol::Name(mut name), name_line)) => {
                 if name.len() > 1 {
-                    return Err(SyntaxError(
+                    return Err(Syntax(
                         path,
                         name_line,
                         "function return type cannot contain '.'".to_string(),
@@ -434,7 +434,7 @@ fn parse_fn(
                 Some(name.remove(0))
             }
             _ => {
-                return Err(SyntaxError(
+                return Err(Syntax(
                     path.clone(),
                     contents_line,
                     "'~' must be followed by a return type".to_string(),
@@ -446,7 +446,7 @@ fn parse_fn(
     };
 
     if return_type.is_some() {
-        (contents, contents_line) = tree.next().ok_or(SyntaxError(
+        (contents, contents_line) = tree.next().ok_or(Syntax(
             path.clone(),
             name_line,
             "function return type must be followed by braces ('{}')".to_string(),
@@ -456,7 +456,7 @@ fn parse_fn(
     let contents =
         match contents {
             BasicSymbol::BracedSection(contents) => contents,
-            _ => return Err(SyntaxError(
+            _ => return Err(Syntax(
                 path.clone(),
                 contents_line,
                 "function arguments (and optional return type) must be followed by braces ('{}')"
