@@ -1,2 +1,2 @@
-pub mod symbol;
 pub mod punctuation;
+pub mod symbol;

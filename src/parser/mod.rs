@@ -1,5 +1,5 @@
-pub mod parse;
-mod file_reader;
 mod escape_codes;
-mod string_parser;
+mod file_reader;
 mod normal_parser;
+pub mod parse;
+mod string_parser;

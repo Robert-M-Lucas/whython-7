@@ -1,26 +1,36 @@
-use std::collections::HashMap;
-use std::mem;
-use std::path::PathBuf;
-use clap::builder::Str;
 use crate::processor::preprocess::PreprocessSymbol;
 use crate::processor::processor::ProcessorError;
 use crate::processor::processor::ProcessorError::TypeNotFoundError;
+use clap::builder::Str;
+use std::collections::HashMap;
+use std::mem;
+use std::path::PathBuf;
 
 struct UninitialisedType {
     pub path: PathBuf,
     pub line: usize,
     pub id: isize,
-    pub attributes: Vec<(String, Result<isize, (String, usize)>)>
+    pub attributes: Vec<(String, Result<isize, (String, usize)>)>,
 }
 
 impl UninitialisedType {
-    pub fn new(path: PathBuf, line: usize, id: isize, attributes: Vec<(String, usize, String, usize)>) -> UninitialisedType {
+    pub fn new(
+        path: PathBuf,
+        line: usize,
+        id: isize,
+        attributes: Vec<(String, usize, String, usize)>,
+    ) -> UninitialisedType {
         let mut attributes_processed = Vec::new();
         for (attr_name, _attr_line, attr_type, attr_type_line) in attributes {
             attributes_processed.push((attr_name, Err((attr_type, attr_type_line))));
         }
 
-        UninitialisedType { path, line, id, attributes: attributes_processed }
+        UninitialisedType {
+            path,
+            line,
+            id,
+            attributes: attributes_processed,
+        }
     }
 
     // pub fn to_initialised(self) -> Result<UserType, ProcessorError> {
@@ -41,12 +51,16 @@ impl UninitialisedType {
 pub struct UserType {
     name: String,
     id: isize,
-    attributes: Vec<(String, isize)>
+    attributes: Vec<(String, isize)>,
 }
 
 impl UserType {
     pub fn new(name: String, id: isize, attributes: Vec<(String, isize)>) -> UserType {
-        UserType { name, id, attributes }
+        UserType {
+            name,
+            id,
+            attributes,
+        }
     }
 }
 
@@ -59,9 +73,7 @@ impl Type for UserType {
         &self.name
     }
 
-    fn get_function(&self) -> () {
-
-    }
+    fn get_function(&self) -> () {}
 }
 
 pub trait Type {
@@ -73,12 +85,14 @@ pub trait Type {
 }
 
 pub struct TypeTable {
-    types: HashMap<isize, Box<dyn Type>>
+    types: HashMap<isize, Box<dyn Type>>,
 }
 
 impl TypeTable {
     pub fn new() -> TypeTable {
-        TypeTable { types: HashMap::new() }
+        TypeTable {
+            types: HashMap::new(),
+        }
     }
 
     pub fn add_builtin(self) -> TypeTable {
@@ -86,20 +100,24 @@ impl TypeTable {
     }
 
     pub fn add_type(&mut self, id: isize, type_: Box<dyn Type>) {
-        if self.types.insert(id, type_).is_some() { panic!("Attempted to override type") }
+        if self.types.insert(id, type_).is_some() {
+            panic!("Attempted to override type")
+        }
     }
 
     pub fn get_id_by_name(&self, name: &str) -> Result<isize, ()> {
         for (id, type_) in &self.types {
             if type_.get_name() == name {
-                return Ok(*id)
+                return Ok(*id);
             }
         }
         Err(())
     }
 }
 
-pub fn build_type_table(pre_ast: Vec<(PreprocessSymbol, usize)>) -> Result<(TypeTable, Vec<(PreprocessSymbol, usize)>), ProcessorError> {
+pub fn build_type_table(
+    pre_ast: Vec<(PreprocessSymbol, usize)>,
+) -> Result<(TypeTable, Vec<(PreprocessSymbol, usize)>), ProcessorError> {
     let mut remaining_pre_ast = Vec::new();
 
     let mut uninitialised_types: HashMap<String, UninitialisedType> = HashMap::new();
@@ -111,13 +129,20 @@ pub fn build_type_table(pre_ast: Vec<(PreprocessSymbol, usize)>) -> Result<(Type
         match symbol {
             PreprocessSymbol::Struct(path, name, args) => {
                 if let Some(existing) = uninitialised_types.insert(
-                    name.clone(), UninitialisedType::new(path.clone(), line, type_counter, args)
+                    name.clone(),
+                    UninitialisedType::new(path.clone(), line, type_counter, args),
                 ) {
-                    return Err(ProcessorError::TypeRedefinitionError(path, line, name, existing.path, existing.line))
+                    return Err(ProcessorError::TypeRedefinitionError(
+                        path,
+                        line,
+                        name,
+                        existing.path,
+                        existing.line,
+                    ));
                 }
                 type_counter += 1;
             }
-            other => remaining_pre_ast.push((other, line))
+            other => remaining_pre_ast.push((other, line)),
         }
     }
 
@@ -126,13 +151,25 @@ pub fn build_type_table(pre_ast: Vec<(PreprocessSymbol, usize)>) -> Result<(Type
     for i in 0..uninitialised_types.len() {
         'attr_loop: for a in 0..uninitialised_types[i].1.attributes.len() {
             for j in 0..uninitialised_types.len() {
-                if uninitialised_types[i].1.attributes[a].1.as_ref().unwrap_err().0 == uninitialised_types[j].0 {
+                if uninitialised_types[i].1.attributes[a]
+                    .1
+                    .as_ref()
+                    .unwrap_err()
+                    .0
+                    == uninitialised_types[j].0
+                {
                     uninitialised_types[i].1.attributes[a].1 = Ok(uninitialised_types[j].1.id);
                     continue 'attr_loop;
                 }
             }
 
-            if let Ok(id) = type_table.get_id_by_name(&uninitialised_types[i].1.attributes[a].1.as_ref().unwrap_err().0) {
+            if let Ok(id) = type_table.get_id_by_name(
+                &uninitialised_types[i].1.attributes[a]
+                    .1
+                    .as_ref()
+                    .unwrap_err()
+                    .0,
+            ) {
                 uninitialised_types[i].1.attributes[a].1 = Ok(id);
                 continue 'attr_loop;
             }
@@ -145,11 +182,7 @@ pub fn build_type_table(pre_ast: Vec<(PreprocessSymbol, usize)>) -> Result<(Type
     }
 
     for (name, type_) in uninitialised_types {
-        let (id, path, attributes) = (
-            type_.id,
-            type_.path,
-            type_.attributes
-        );
+        let (id, path, attributes) = (type_.id, type_.path, type_.attributes);
 
         let mut attributes_processed = Vec::new();
         for (attr_name, attr_type) in attributes {
@@ -163,13 +196,7 @@ pub fn build_type_table(pre_ast: Vec<(PreprocessSymbol, usize)>) -> Result<(Type
 
         type_table.add_type(
             type_.id,
-            Box::new(
-                UserType::new(
-                    name,
-                    type_.id,
-                    attributes_processed
-                )
-            )
+            Box::new(UserType::new(name, type_.id, attributes_processed)),
         )
     }
 

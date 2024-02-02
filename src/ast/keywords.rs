@@ -1,4 +1,3 @@
-
 #[derive(PartialEq, Copy, Clone, strum_macros::Display, Debug, strum_macros::EnumIter)]
 pub enum Keyword {
     Mod,

@@ -9,11 +9,11 @@ pub struct VariableId {
 pub struct Type {
     name: String,
     builtin_id: Option<usize>,
-    subtypes: Vec<usize>
+    subtypes: Vec<usize>,
 }
 
 pub struct TypeTable {
-    inner: Vec<Type>
+    inner: Vec<Type>,
 }
 
 impl TypeTable {
@@ -31,11 +31,15 @@ type Function = (Vec<(usize, usize)>, Vec<Line>);
 
 #[derive(PartialEq, Clone, strum_macros::Display, Debug)]
 pub enum Line {
-    IfTree((usize, Vec<Line>), Vec<(usize, Vec<Line>)>, Option<Vec<Line>>), // If, elifs, else
+    IfTree(
+        (usize, Vec<Line>),
+        Vec<(usize, Vec<Line>)>,
+        Option<Vec<Line>>,
+    ), // If, elifs, else
     While(usize, Vec<Line>),
     Call(isize, Vec<usize>, usize), // Func id, args, return
     Operation(usize, Operator, Option<usize>, usize), // left, operator, right, output
-    Copy(usize, usize), // from, to
+    Copy(usize, usize),             // from, to
     Builtin(Builtin, Vec<usize>),
     Return(usize),
 }

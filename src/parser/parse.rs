@@ -1,13 +1,13 @@
-use std::{fs, io};
-use std::path::PathBuf;
-use thiserror::Error;
-use ParseError::{NestedError, SyntaxError};
 use crate::ast::keywords::MOD_KEYWORD;
 use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol};
 use crate::parser::escape_codes::get_escape_code;
 use crate::parser::file_reader::FileReader;
 use crate::parser::normal_parser::parse_normal;
 use crate::parser::string_parser::parse_string;
+use std::path::PathBuf;
+use std::{fs, io};
+use thiserror::Error;
+use ParseError::{NestedError, SyntaxError};
 
 #[derive(Error, Debug)]
 pub enum ParseError {
@@ -16,9 +16,8 @@ pub enum ParseError {
     #[error("syntax error in file {0}:{1} - {2}")]
     SyntaxError(PathBuf, usize, String),
     #[error("In file {0}:{1}:\n{2}")]
-    NestedError(PathBuf, usize, Box<ParseError>)
+    NestedError(PathBuf, usize, Box<ParseError>),
 }
-
 
 pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(), ParseError> {
     let data = fs::read_to_string(&path);
@@ -36,18 +35,18 @@ pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(
             let (file, eof) = reader.move_read_to_next_char(';');
             let trimmed = file.trim();
             if trimmed.len() == 0 {
-                return Err(reader.syntax_error(
-                    format!("'{MOD_KEYWORD}' must be followed by a path")
-                ))
+                return Err(
+                    reader.syntax_error(format!("'{MOD_KEYWORD}' must be followed by a path"))
+                );
             }
             if eof {
-                return Err(reader.syntax_error(
-                    "import path must be followed by a ';'".to_string()
-                ))
+                return Err(
+                    reader.syntax_error("import path must be followed by a ';'".to_string())
+                );
             }
-            
+
             if let Err(e) = parse(PathBuf::from(file), asts) {
-                return Err(NestedError(reader.get_path(), reader.line(), Box::new(e)))
+                return Err(NestedError(reader.get_path(), reader.line(), Box::new(e)));
             }
         }
     }
@@ -56,7 +55,7 @@ pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(
 
     let inner = match ast {
         BasicSymbol::AbstractSyntaxTree(inner) => inner,
-        _ => panic!()
+        _ => panic!(),
     };
 
     asts.push((reader.get_path(), inner));
@@ -66,8 +65,8 @@ pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(
 #[derive(PartialEq)]
 pub enum BlockType {
     Base,
-    Braces, // start line
-    Brackets, // start line
+    Braces,         // start line
+    Brackets,       // start line
     SquareBrackets, // start line
 }
 

@@ -1,17 +1,22 @@
+use crate::parser::parse::ParseError;
 use std::path::PathBuf;
 use std::str::Chars;
-use crate::parser::parse::ParseError;
 
 pub struct FileReader {
     path: PathBuf,
     data: String,
     cursor: usize,
-    line: usize
+    line: usize,
 }
 
 impl FileReader {
     pub fn new(path: PathBuf, data: String) -> FileReader {
-        FileReader { path, data, cursor: 0, line: 1 }
+        FileReader {
+            path,
+            data,
+            cursor: 0,
+            line: 1,
+        }
     }
 
     pub fn syntax_error(&self, message: String) -> ParseError {
@@ -30,7 +35,9 @@ impl FileReader {
         let c = self.data.chars().skip(self.cursor).next();
         if c.is_some() {
             self.cursor += 1;
-            if c.unwrap() == '\n' { self.line += 1; }
+            if c.unwrap() == '\n' {
+                self.line += 1;
+            }
         }
         c
     }
@@ -43,7 +50,10 @@ impl FileReader {
         let mut eof = true;
 
         for char in chars {
-            if char == c { eof = false; break; }
+            if char == c {
+                eof = false;
+                break;
+            }
             out.push(char);
         }
 
@@ -58,7 +68,9 @@ impl FileReader {
             if char == '\n' {
                 self.line += 1;
             }
-            if char == c { break; }
+            if char == c {
+                break;
+            }
         }
     }
 
@@ -72,9 +84,14 @@ impl FileReader {
         for char in chars {
             self.cursor += 1;
 
-            if char == '\n' { self.line += 1; }
+            if char == '\n' {
+                self.line += 1;
+            }
 
-            if char == c { eof = false; break; }
+            if char == c {
+                eof = false;
+                break;
+            }
             out.push(char);
         }
 

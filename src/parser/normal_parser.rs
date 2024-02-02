@@ -1,14 +1,17 @@
-use thiserror::__private::AsDynError;
 use crate::ast::keywords::Keyword;
-use crate::ast::{operators};
+use crate::ast::operators;
 use crate::ast::operators::Operator;
 use crate::basic_ast::punctuation::Punctuation;
 use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol};
 use crate::parser::file_reader::FileReader;
 use crate::parser::parse::{BlockType, ParseError};
 use crate::parser::string_parser::parse_string;
+use thiserror::__private::AsDynError;
 
-pub fn parse_normal(reader: &mut FileReader, block_type: BlockType) -> Result<BasicSymbol, ParseError> {
+pub fn parse_normal(
+    reader: &mut FileReader,
+    block_type: BlockType,
+) -> Result<BasicSymbol, ParseError> {
     let start_line = reader.line();
 
     let mut buffer = String::new();
@@ -33,10 +36,12 @@ pub fn parse_normal(reader: &mut FileReader, block_type: BlockType) -> Result<Ba
                     BlockType::Base => None,
                 };
 
-                Err(reader.syntax_error(
-                    format!("closing '{}' not found (started on line {})", terminator.unwrap(), start_line)
-                ))
-            }
+                Err(reader.syntax_error(format!(
+                    "closing '{}' not found (started on line {})",
+                    terminator.unwrap(),
+                    start_line
+                )))
+            };
         }
 
         let next = next.unwrap();
@@ -54,31 +59,32 @@ pub fn parse_normal(reader: &mut FileReader, block_type: BlockType) -> Result<Ba
                     '}' => Some(BlockType::Braces),
                     ')' => Some(BlockType::Brackets),
                     ']' => Some(BlockType::SquareBrackets),
-                    _ => None
+                    _ => None,
                 };
 
                 if let Some(closed_block) = closed_block {
                     process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
                     return if closed_block != block_type {
-                        Err(reader.syntax_error(
-                            format!("closing '{c}' found with no corresponding opening bracket")
-                        ))
-                    }
-                    else {
+                        Err(reader.syntax_error(format!(
+                            "closing '{c}' found with no corresponding opening bracket"
+                        )))
+                    } else {
                         Ok(match block_type {
                             BlockType::Braces => BasicSymbol::BracedSection(symbols),
                             BlockType::Brackets => BasicSymbol::BracketedSection(symbols),
-                            BlockType::SquareBrackets => BasicSymbol::SquareBracketedSection(symbols),
-                            _ => panic!()
+                            BlockType::SquareBrackets => {
+                                BasicSymbol::SquareBracketedSection(symbols)
+                            }
+                            _ => panic!(),
                         })
-                    }
+                    };
                 }
 
                 let new_block = match c {
                     '{' => Some(BlockType::Braces),
                     '(' => Some(BlockType::Brackets),
                     '[' => Some(BlockType::SquareBrackets),
-                    _ => None
+                    _ => None,
                 };
 
                 if let Some(new_block) = new_block {
@@ -106,8 +112,7 @@ pub fn parse_normal(reader: &mut FileReader, block_type: BlockType) -> Result<Ba
                 operator_mode = true;
                 continue;
             }
-        }
-        else if operator_mode {
+        } else if operator_mode {
             process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
             buffer.push(next);
             operator_mode = false;
@@ -116,13 +121,19 @@ pub fn parse_normal(reader: &mut FileReader, block_type: BlockType) -> Result<Ba
 
         if next == ';' {
             process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
-            symbols.push((BasicSymbol::Punctuation(Punctuation::Semicolon), reader.line()));
+            symbols.push((
+                BasicSymbol::Punctuation(Punctuation::Semicolon),
+                reader.line(),
+            ));
             continue;
         }
 
         if next == ',' {
             process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
-            symbols.push((BasicSymbol::Punctuation(Punctuation::ListSeparator), reader.line()));
+            symbols.push((
+                BasicSymbol::Punctuation(Punctuation::ListSeparator),
+                reader.line(),
+            ));
             continue;
         }
 
@@ -142,7 +153,12 @@ pub fn parse_normal(reader: &mut FileReader, block_type: BlockType) -> Result<Ba
     }
 }
 
-fn process_buffer(buffer: &mut String, operator_mode: &mut bool, symbols: &mut Vec<(BasicSymbol, usize)>, reader: &FileReader) -> Result<(), ParseError> {
+fn process_buffer(
+    buffer: &mut String,
+    operator_mode: &mut bool,
+    symbols: &mut Vec<(BasicSymbol, usize)>,
+    reader: &FileReader,
+) -> Result<(), ParseError> {
     if buffer.is_empty() {
         return Ok(());
     }
@@ -159,9 +175,9 @@ fn process_buffer(buffer: &mut String, operator_mode: &mut bool, symbols: &mut V
     let first = split.next().unwrap();
     if let Some(keyword) = Keyword::get_enum(first) {
         if split.next().is_some() {
-            return Err(reader.syntax_error(
-                format!("keywords (here '{first}') cannot be followed by '.'")
-            ));
+            return Err(reader.syntax_error(format!(
+                "keywords (here '{first}') cannot be followed by '.'"
+            )));
         }
         symbols.push((BasicSymbol::Keyword(keyword), reader.line()));
         buffer.clear();
@@ -177,13 +193,14 @@ fn process_buffer(buffer: &mut String, operator_mode: &mut bool, symbols: &mut V
     Ok(())
 }
 
-fn process_operator_buffer(buffer: &String, reader: &FileReader) -> Result<BasicSymbol, ParseError> {
+fn process_operator_buffer(
+    buffer: &String,
+    reader: &FileReader,
+) -> Result<BasicSymbol, ParseError> {
     let operator = Operator::get_operator(buffer.as_str());
     if let Some(operator) = operator {
         return Ok(BasicSymbol::Operator(operator));
     }
 
-    Err(reader.syntax_error(
-        format!("operator '{buffer}' not recognised")
-    ))
+    Err(reader.syntax_error(format!("operator '{buffer}' not recognised")))
 }

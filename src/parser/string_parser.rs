@@ -25,9 +25,7 @@ pub fn parse_string(reader: &mut FileReader) -> Result<BasicSymbol, ParseError> 
         if escape {
             let char = get_escape_code(next);
             if char.is_none() {
-                return Err(reader.syntax_error(
-                    format!("unknown escape code '{next}'")
-                ))
+                return Err(reader.syntax_error(format!("unknown escape code '{next}'")));
             }
             string.push(char.unwrap());
             escape = false;
@@ -48,9 +46,9 @@ pub fn parse_string(reader: &mut FileReader) -> Result<BasicSymbol, ParseError> 
     }
 
     if eof {
-        return Err(reader.syntax_error(
-            format!("string literal started on line {start_line} not closed")
-        ))
+        return Err(reader.syntax_error(format!(
+            "string literal started on line {start_line} not closed"
+        )));
     }
 
     Ok(BasicSymbol::Literal(Literal::String(string)))

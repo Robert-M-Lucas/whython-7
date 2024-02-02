@@ -1,9 +1,9 @@
-use std::path::PathBuf;
-use thiserror::__private::AsDisplay;
 use crate::ast::keywords::Keyword;
 use crate::ast::literals::Literal;
 use crate::ast::operators::Operator;
 use crate::basic_ast::punctuation::Punctuation;
+use std::path::PathBuf;
+use thiserror::__private::AsDisplay;
 
 pub type BasicAbstractSyntaxTree = (PathBuf, Vec<(BasicSymbol, usize)>);
 
@@ -18,7 +18,7 @@ pub enum BasicSymbol {
     SquareBracketedSection(Vec<(BasicSymbol, usize)>),
     Punctuation(Punctuation),
     Name(Vec<String>),
-    Keyword(Keyword)
+    Keyword(Keyword),
 }
 
 impl BasicSymbol {
@@ -35,7 +35,7 @@ impl BasicSymbol {
                 format!("{punctuation}")
             }
             BasicSymbol::Name(_) => "Name".to_string(),
-            BasicSymbol::Keyword(_) => "Keyword".to_string()
+            BasicSymbol::Keyword(_) => "Keyword".to_string(),
         }
     }
 }

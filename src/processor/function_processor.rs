@@ -1,13 +1,16 @@
-
 pub struct Function {
     arguments: Vec<(String, isize)>,
     local_variables: Vec<(String, isize)>,
-    return_type: Option<isize>
+    return_type: Option<isize>,
 }
 
 impl Function {
     pub fn new(arguments: Vec<(String, isize)>, return_type: Option<isize>) -> Function {
-        Function { arguments, local_variables: Vec::new(), return_type }
+        Function {
+            arguments,
+            local_variables: Vec::new(),
+            return_type,
+        }
     }
 
     pub fn add_variable(&mut self, name: String, type_: isize) -> usize {

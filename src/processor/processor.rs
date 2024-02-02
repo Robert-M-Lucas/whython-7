@@ -1,9 +1,8 @@
-use std::path::PathBuf;
-use thiserror::Error;
 use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol};
 use crate::processor::preprocess::preprocess;
 use crate::processor::type_builder::build_type_table;
-
+use std::path::PathBuf;
+use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum ProcessorError {
@@ -12,7 +11,7 @@ pub enum ProcessorError {
     #[error("type '{2}' not found in file {0}:{1}")]
     TypeNotFoundError(PathBuf, usize, String),
     #[error("type '{2}' in file {0}:{1} also defined in file {3}:{4}")]
-    TypeRedefinitionError(PathBuf, usize, String, PathBuf, usize)
+    TypeRedefinitionError(PathBuf, usize, String, PathBuf, usize),
 }
 
 pub fn process(ast: Vec<BasicAbstractSyntaxTree>) -> Result<(), ProcessorError> {
