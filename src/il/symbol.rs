@@ -33,7 +33,7 @@ type Function = (Vec<(usize, usize)>, Vec<Line>);
 pub enum Line {
     IfTree((usize, Vec<Line>), Vec<(usize, Vec<Line>)>, Option<Vec<Line>>), // If, elifs, else
     While(usize, Vec<Line>),
-    DoWhile(usize, Vec<Line>),
+    Call(isize, Vec<usize>, usize), // Func id, args, return
     Operation(usize, Operator, Option<usize>, usize), // left, operator, right, output
     Copy(usize, usize), // from, to
     Builtin(Builtin, Vec<usize>),
