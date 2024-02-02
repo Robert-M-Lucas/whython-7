@@ -1,5 +1,13 @@
-mod test.why;
+struct a {
+    a: b,
+    b: b,
+    c: b
+}
 
-while a a.b.c (
-    if "hello\n"
-)
+struct b {
+
+}
+
+fn a (a: b, c: d) ~ d {
+    well hello there
+}

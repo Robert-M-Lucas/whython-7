@@ -11,7 +11,7 @@ pub struct FileReader {
 
 impl FileReader {
     pub fn new(path: PathBuf, data: String) -> FileReader {
-        FileReader { path, data, cursor: 0, line: 0 }
+        FileReader { path, data, cursor: 0, line: 1 }
     }
 
     pub fn syntax_error(&self, message: String) -> ParseError {

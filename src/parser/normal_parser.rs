@@ -126,6 +126,18 @@ pub fn parse_normal(reader: &mut FileReader, block_type: BlockType) -> Result<Ba
             continue;
         }
 
+        if next == ':' {
+            process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
+            symbols.push((BasicSymbol::Punctuation(Punctuation::Colon), reader.line()));
+            continue;
+        }
+
+        if next == '~' {
+            process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
+            symbols.push((BasicSymbol::Punctuation(Punctuation::Tilda), reader.line()));
+            continue;
+        }
+
         buffer.push(next)
     }
 }
