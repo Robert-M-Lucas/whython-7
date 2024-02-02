@@ -3,7 +3,7 @@ use crate::ast::literals::Literal;
 use crate::ast::operators::Operator;
 use crate::basic_ast::punctuation::Punctuation;
 use std::path::PathBuf;
-use thiserror::__private::AsDisplay;
+
 
 pub type BasicAbstractSyntaxTree = (PathBuf, Vec<(BasicSymbol, usize)>);
 
@@ -25,7 +25,7 @@ impl BasicSymbol {
     pub fn instead_found(&self) -> String {
         match &self {
             BasicSymbol::AbstractSyntaxTree(_) => panic!(),
-            BasicSymbol::Literal(literal) => "Literal".to_string(),
+            BasicSymbol::Literal(_literal) => "Literal".to_string(),
             BasicSymbol::Operator(_) => "Operator".to_string(),
             BasicSymbol::Assigner(_) => "Assigner".to_string(),
             BasicSymbol::BracedSection(_) => "BracedSection".to_string(),

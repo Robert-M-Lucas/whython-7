@@ -3,10 +3,10 @@ use crate::basic_ast::punctuation::Punctuation;
 use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol};
 use crate::processor::processor::ProcessorError;
 use crate::processor::processor::ProcessorError::SyntaxError;
-use std::io;
-use std::path::{Path, PathBuf};
+
+use std::path::{PathBuf};
 use std::vec::IntoIter;
-use thiserror::Error;
+
 
 pub type PreProcessFunction = (
     String,

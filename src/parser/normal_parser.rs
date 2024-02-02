@@ -2,11 +2,11 @@ use crate::ast::keywords::Keyword;
 use crate::ast::operators;
 use crate::ast::operators::Operator;
 use crate::basic_ast::punctuation::Punctuation;
-use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol};
+use crate::basic_ast::symbol::{BasicSymbol};
 use crate::parser::file_reader::FileReader;
 use crate::parser::parse::{BlockType, ParseError};
 use crate::parser::string_parser::parse_string;
-use thiserror::__private::AsDynError;
+
 
 pub fn parse_normal(
     reader: &mut FileReader,
@@ -25,7 +25,7 @@ pub fn parse_normal(
 
         // * EOF
         if next.is_none() {
-            process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
+            process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
             return if matches!(block_type, BlockType::Base) {
                 Ok(BasicSymbol::AbstractSyntaxTree(symbols))
             } else {
@@ -49,7 +49,7 @@ pub fn parse_normal(
         // * Opening/Closing blocks
         match next {
             '"' => {
-                process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
+                process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
                 let start = reader.line();
                 symbols.push((parse_string(reader)?, start));
                 continue;
@@ -63,7 +63,7 @@ pub fn parse_normal(
                 };
 
                 if let Some(closed_block) = closed_block {
-                    process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
+                    process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
                     return if closed_block != block_type {
                         Err(reader.syntax_error(format!(
                             "closing '{c}' found with no corresponding opening bracket"
@@ -88,7 +88,7 @@ pub fn parse_normal(
                 };
 
                 if let Some(new_block) = new_block {
-                    process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
+                    process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
                     let start = reader.line();
                     symbols.push((parse_normal(reader, new_block)?, start));
                     continue;
@@ -101,26 +101,26 @@ pub fn parse_normal(
             if buffer.is_empty() {
                 continue;
             }
-            process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
+            process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
             continue;
         }
 
         if operators::ALL_SYMBOLS.contains(&next) {
             if !operator_mode {
-                process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
+                process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
                 buffer.push(next);
                 operator_mode = true;
                 continue;
             }
         } else if operator_mode {
-            process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
+            process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
             buffer.push(next);
             operator_mode = false;
             continue;
         }
 
         if next == ';' {
-            process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
+            process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
             symbols.push((
                 BasicSymbol::Punctuation(Punctuation::Semicolon),
                 reader.line(),
@@ -129,7 +129,7 @@ pub fn parse_normal(
         }
 
         if next == ',' {
-            process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
+            process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
             symbols.push((
                 BasicSymbol::Punctuation(Punctuation::ListSeparator),
                 reader.line(),
@@ -138,13 +138,13 @@ pub fn parse_normal(
         }
 
         if next == ':' {
-            process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
+            process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
             symbols.push((BasicSymbol::Punctuation(Punctuation::Colon), reader.line()));
             continue;
         }
 
         if next == '~' {
-            process_buffer(&mut buffer, &mut operator_mode, &mut symbols, &reader)?;
+            process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
             symbols.push((BasicSymbol::Punctuation(Punctuation::Tilda), reader.line()));
             continue;
         }

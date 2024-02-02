@@ -1,13 +1,13 @@
 use crate::ast::keywords::MOD_KEYWORD;
 use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol};
-use crate::parser::escape_codes::get_escape_code;
+
 use crate::parser::file_reader::FileReader;
 use crate::parser::normal_parser::parse_normal;
-use crate::parser::string_parser::parse_string;
+
 use std::path::PathBuf;
 use std::{fs, io};
 use thiserror::Error;
-use ParseError::{NestedError, SyntaxError};
+use ParseError::{NestedError};
 
 #[derive(Error, Debug)]
 pub enum ParseError {
@@ -22,8 +22,8 @@ pub enum ParseError {
 pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(), ParseError> {
     let data = fs::read_to_string(&path);
 
-    if data.is_err() {
-        return Err(ParseError::FileReadError(path, data.unwrap_err()));
+    if let Err(e) = data {
+        return Err(ParseError::FileReadError(path, e));
     }
     let mut reader = FileReader::new(path, data.unwrap());
 
@@ -34,7 +34,7 @@ pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(
 
             let (file, eof) = reader.move_read_to_next_char(';');
             let trimmed = file.trim();
-            if trimmed.len() == 0 {
+            if trimmed.is_empty() {
                 return Err(
                     reader.syntax_error(format!("'{MOD_KEYWORD}' must be followed by a path"))
                 );

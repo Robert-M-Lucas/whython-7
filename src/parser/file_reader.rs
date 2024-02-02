@@ -1,6 +1,6 @@
 use crate::parser::parse::ParseError;
 use std::path::PathBuf;
-use std::str::Chars;
+
 
 pub struct FileReader {
     path: PathBuf,
@@ -32,7 +32,7 @@ impl FileReader {
     }
 
     pub fn move_read_any(&mut self) -> Option<char> {
-        let c = self.data.chars().skip(self.cursor).next();
+        let c = self.data.chars().nth(self.cursor);
         if c.is_some() {
             self.cursor += 1;
             if c.unwrap() == '\n' {
@@ -45,7 +45,7 @@ impl FileReader {
     pub fn read_until_char(&self, c: char) -> (String, bool) {
         let mut out = String::new();
 
-        let mut chars = self.data.chars().skip(self.cursor);
+        let chars = self.data.chars().skip(self.cursor);
 
         let mut eof = true;
 
@@ -61,7 +61,7 @@ impl FileReader {
     }
 
     pub fn move_to_next_char(&mut self, c: char) {
-        let mut chars = self.data.chars().skip(self.cursor);
+        let chars = self.data.chars().skip(self.cursor);
 
         for char in chars {
             self.cursor += 1;
@@ -77,7 +77,7 @@ impl FileReader {
     pub fn move_read_to_next_char(&mut self, c: char) -> (String, bool) {
         let mut out = String::new();
 
-        let mut chars = self.data.chars().skip(self.cursor);
+        let chars = self.data.chars().skip(self.cursor);
 
         let mut eof = true;
 
@@ -99,7 +99,7 @@ impl FileReader {
     }
 
     pub fn skip_whitespace(&mut self) -> bool {
-        let mut chars = self.data.chars().skip(self.cursor);
+        let chars = self.data.chars().skip(self.cursor);
 
         let mut eof = true;
 

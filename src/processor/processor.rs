@@ -1,4 +1,4 @@
-use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol};
+use crate::basic_ast::symbol::{BasicAbstractSyntaxTree};
 use crate::processor::preprocess::preprocess;
 use crate::processor::type_builder::build_type_table;
 use std::path::PathBuf;
@@ -17,6 +17,6 @@ pub enum ProcessorError {
 pub fn process(ast: Vec<BasicAbstractSyntaxTree>) -> Result<(), ProcessorError> {
     let pre_ast = preprocess(ast)?;
     println!("Preprocessing Result:\n{:?}", pre_ast);
-    let (type_table, pre_ast) = build_type_table(pre_ast)?;
+    let (_type_table, _pre_ast) = build_type_table(pre_ast)?;
     Ok(())
 }

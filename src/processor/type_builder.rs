@@ -1,9 +1,9 @@
 use crate::processor::preprocess::PreprocessSymbol;
 use crate::processor::processor::ProcessorError;
 use crate::processor::processor::ProcessorError::TypeNotFoundError;
-use clap::builder::Str;
+
 use std::collections::HashMap;
-use std::mem;
+
 use std::path::PathBuf;
 
 struct UninitialisedType {
@@ -73,7 +73,7 @@ impl Type for UserType {
         &self.name
     }
 
-    fn get_function(&self) -> () {}
+    fn get_function(&self) {}
 }
 
 pub trait Type {
@@ -81,7 +81,7 @@ pub trait Type {
 
     fn get_name(&self) -> &str;
 
-    fn get_function(&self) -> ();
+    fn get_function(&self);
 }
 
 pub struct TypeTable {
@@ -182,7 +182,7 @@ pub fn build_type_table(
     }
 
     for (name, type_) in uninitialised_types {
-        let (id, path, attributes) = (type_.id, type_.path, type_.attributes);
+        let (_id, path, attributes) = (type_.id, type_.path, type_.attributes);
 
         let mut attributes_processed = Vec::new();
         for (attr_name, attr_type) in attributes {
