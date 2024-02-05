@@ -10,7 +10,8 @@ pub enum Line {
     ReturnCall(isize, Vec<(isize, usize)>, isize),
     NoReturnCall(isize, Vec<(isize, usize)>),
     Copy(isize, isize),
-    Return(isize)
+    Return(isize),
+    InlineAsm(Vec<String>),
 }
 
 pub struct UserFunction {
@@ -26,7 +27,7 @@ impl Function for UserFunction {
     }
 
     fn get_id(&self) -> isize {
-        todo!()
+        self.id
     }
 }
 
@@ -51,9 +52,9 @@ pub fn process_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
         Box::new(
             UserFunction {
                 id: 0,
-                local_variable_count: 8,
+                local_variable_count: 1,
                 lines: vec![
-
+                    Line::Return(-8)
                 ],
                 arg_count: 0,
             }

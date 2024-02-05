@@ -54,7 +54,7 @@ pub fn compile_user_function(function: &UserFunction) -> String {
             Line::ReturnCall(function, local_args, return_addr) => {
                 // Push args to stack
                 for (local_addr, size) in local_args.iter().rev() {
-                    output.push(&format!("mov rax, QWORD PTR [{}]", get_local_address(*local_addr)));
+                    output.push(&format!("mov rax, qword [{}]", get_local_address(*local_addr)));
                     output.push("push rax");
                 }
                 // Call
@@ -63,12 +63,12 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 // Release stack space used
                 output.push(&format!("add rsp {}", local_args.len() * 8));
                 // Move return value
-                output.push(&format!("mov QWORD PTR [{}], rax", get_local_address(*return_addr)));
+                output.push(&format!("mov qword [{}], rax", get_local_address(*return_addr)));
             }
             Line::NoReturnCall(function, local_args) => {
                 // Push args to stack
                 for (local_addr, size) in local_args.iter().rev() {
-                    output.push(&format!("mov rax, QWORD PTR [{}]", get_local_address(*local_addr)));
+                    output.push(&format!("mov rax, qword [{}]", get_local_address(*local_addr)));
                     output.push("push rax");
                 }
                 // Call
@@ -78,14 +78,25 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 output.push(&format!("add rsp {}", local_args.len() * 8));
             }
             Line::Copy(local_from, local_to) => {
-                output.push(&format!("mov rax, QWORD PTR [{}]", get_local_address(*local_from)));
-                output.push(&format!("mov QWORD PTR [{}], rax", get_local_address(*local_to)));
+                output.push(&format!("mov rax, qword [{}]", get_local_address(*local_from)));
+                output.push(&format!("mov qword [{}], rax", get_local_address(*local_to)));
             }
             Line::Return(local_return_val) => {
-                output.push(&format!("mov rax, QWORD PTR [{}]", get_local_address(*local_return_val)));
-                output.push("leave");
-                output.push("ret");
-                break;
+                return if function.id == 0 {
+                    output.push(&format!("mov rcx, [{}]", get_local_address(*local_return_val)));
+                    output.push("call ExitProcess");
+                    output.into()
+                } else {
+                    output.push(&format!("mov rax, [{}]", get_local_address(*local_return_val)));
+                    output.push("leave");
+                    output.push("ret");
+                    output.into()
+                }
+            }
+            Line::InlineAsm(asm) => {
+                for line in asm {
+                    output.push(line);
+                }
             }
         }
     }

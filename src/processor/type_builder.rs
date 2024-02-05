@@ -8,7 +8,7 @@ use std::collections::{HashMap, HashSet};
 use std::path::PathBuf;
 use unique_type_id::UniqueTypeId;
 use crate::basic_ast::symbol::BasicSymbol;
-use crate::processor::custom_types::Bool;
+use crate::processor::custom_types::{Bool, Int};
 
 struct UninitialisedType {
     pub path: PathBuf,
@@ -129,6 +129,7 @@ impl TypeTable {
     }
 
     pub fn add_builtin(mut self) -> TypeTable {
+        self.add_type(Int::new().get_id(), Box::new(Int::new()));
         self.add_type(Bool::new().get_id(), Box::new(Bool::new()));
         self
     }
@@ -298,8 +299,8 @@ pub fn build_types(
         if main.args.len() != 0 {
             return Err(ProcessorError::BadMainFunction("Main function cannot have arguments".to_string()))
         }
-        if main.return_type != None {
-            return Err(ProcessorError::BadMainFunction("Main cannot have a return type".to_string()))
+        if main.return_type != Some(-1) {
+            return Err(ProcessorError::BadMainFunction("Main must return an 'int'".to_string()))
         }
     }
     else {

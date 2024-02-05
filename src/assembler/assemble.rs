@@ -7,7 +7,7 @@ use crate::processor::function_processor::Function;
 
 
 pub fn generate_assembly(output: &PathBuf, functions: Vec<Box<dyn Function>>) {
-    let mut out = String::from("\tglobal main\n\tsection .text\n");
+    let mut out = String::from("\tglobal main\n\textern ExitProcess\n\tsection .text\n");
     for f in functions {
         out += &(f.get_asm());
     }
@@ -22,7 +22,7 @@ pub fn assemble(output: &PathBuf) {
         .unwrap();
 
     Command::new("link")
-        .args(["/nodefaultlib", "/entry:main", "/out:.\\output\\out.exe", ".\\output\\out.obj", ".\\libs\\kernel32.lib"])
+        .args(["/entry:main", "/out:.\\output\\out.exe", ".\\output\\out.obj", ".\\libs\\kernel32.lib"])
         .status()
         .unwrap();
 }
