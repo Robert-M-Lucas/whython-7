@@ -1,36 +1,31 @@
-pub struct Function {
-    arguments: Vec<(String, isize)>,
-    local_variables: Vec<(String, isize)>,
-    return_type: Option<isize>,
+use std::collections::HashMap;
+use crate::assembler::default::compile_user_function;
+use crate::processor::custom_functions::{get_custom_function_implementations, get_custom_function_signatures};
+use crate::processor::processor::ProcessorError;
+use crate::processor::type_builder::{TypedFunction, TypeTable};
+
+
+pub struct UserFunction {
+
 }
 
-impl Function {
-    pub fn new(arguments: Vec<(String, isize)>, return_type: Option<isize>) -> Function {
-        Function {
-            arguments,
-            local_variables: Vec::new(),
-            return_type,
-        }
+impl UserFunction {
+
+}
+
+impl Function for UserFunction {
+    fn get_asm(&self) -> String {
+        compile_user_function(&self)
     }
+}
 
-    pub fn add_variable(&mut self, name: String, type_: isize) -> usize {
-        self.local_variables.push((name, type_));
-        self.local_variables.len() - 1
-    }
+pub trait Function {
+    fn get_asm(&self) -> String;
+}
 
-    pub fn get_variable(&self, name: &str) -> Result<(usize, isize), ()> {
-        for i in 0..self.arguments.len() {
-            if self.arguments[i].0 == name {
-                return Ok((i, self.arguments[i].1));
-            }
-        }
+pub fn process_functions(function_name_map: HashMap<Option<isize>, HashMap<String, isize>>, functions: HashMap<isize, TypedFunction>, type_table: TypeTable) -> Result<Vec<Box<dyn Function>>, ProcessorError> {
+    let custom_functions = get_custom_function_signatures();
+    let mut processed_functions = get_custom_function_implementations();
 
-        for i in 0..self.local_variables.len() {
-            if self.local_variables[i].0 == name {
-                return Ok((self.arguments.len() + i, self.local_variables[i].1));
-            }
-        }
-
-        Err(())
-    }
+    Ok(processed_functions)
 }

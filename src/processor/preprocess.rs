@@ -19,7 +19,7 @@ pub type PreProcessFunction = (
 pub enum PreprocessSymbol {
     Struct(PathBuf, String, Vec<(String, usize, String, usize)>),
     Impl(PathBuf, String, Vec<(PreProcessFunction, usize)>),
-    Function(PathBuf, PreProcessFunction),
+    Fn(PathBuf, PreProcessFunction),
 }
 
 fn no_name_error(path: PathBuf, line: usize, kw: &str) -> ProcessorError {
@@ -259,7 +259,7 @@ fn parse_impl(
             BasicSymbol::Keyword(Keyword::Fn) => {
                 let (function, fn_line) = parse_fn(path.clone(), &mut contents, symbol_line)?;
                 let function = match function {
-                    PreprocessSymbol::Function(_, function) => function,
+                    PreprocessSymbol::Fn(_, function) => function,
                     _ => panic!(),
                 };
                 functions.push((function, fn_line));
@@ -465,7 +465,7 @@ fn parse_fn(
         };
 
     Ok((
-        PreprocessSymbol::Function(path, (name, arguments_processed, return_type, contents)),
+        PreprocessSymbol::Fn(path, (name, arguments_processed, return_type, contents)),
         main_line,
     ))
 }

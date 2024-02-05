@@ -4,9 +4,9 @@ use std::path::PathBuf;
 
 mod ast;
 mod basic_ast;
-mod il;
 mod parser;
 mod processor;
+mod assembler;
 
 // TODO: Handle circular imports
 

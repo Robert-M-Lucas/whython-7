@@ -1,11 +1,12 @@
 use std::borrow::Cow;
-use crate::processor::preprocess::PreprocessSymbol;
+use crate::processor::preprocess::{PreProcessFunction, PreprocessSymbol};
 use crate::processor::processor::ProcessorError;
 use crate::processor::processor::ProcessorError::TypeNotFound;
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use std::path::PathBuf;
+use crate::basic_ast::symbol::BasicSymbol;
 use crate::processor::custom_types::Bool;
 
 struct UninitialisedType {
@@ -137,13 +138,13 @@ impl TypeTable {
         }
     }
 
-    pub fn get_id_by_name(&self, name: &str) -> Result<isize, ()> {
+    pub fn get_id_by_name(&self, name: &str) -> Option<isize> {
         for (id, type_) in &self.types {
             if type_.get_name() == name {
-                return Ok(*id);
+                return Some(*id);
             }
         }
-        Err(())
+        None
     }
 
     pub fn get_type(&self, id: isize) -> Option<&Box<dyn Type>> {
@@ -155,9 +156,24 @@ impl TypeTable {
     }
 }
 
-pub fn build_type_table(
+#[derive(Debug)]
+pub struct TypedFunction {
+    pub id: isize,
+    pub name: String,
+    pub args: Vec<(String, isize)>,
+    pub return_type: Option<isize>,
+    pub contents: Vec<(BasicSymbol, usize)>
+}
+
+// #[derive(Debug)]
+// pub enum TypedImplsFns {
+//     Impl(isize, Vec<TypedFunction>),
+//     Fn(TypedFunction)
+// }
+
+pub fn build_types(
     pre_ast: Vec<(PreprocessSymbol, usize)>,
-) -> Result<(TypeTable, Vec<(PreprocessSymbol, usize)>), ProcessorError> {
+) -> Result<(TypeTable, HashMap<Option<isize>, HashMap<String, isize>>, HashMap<isize, TypedFunction>), ProcessorError> {
     let mut remaining_pre_ast = Vec::new();
 
     let mut uninitialised_types: HashMap<String, UninitialisedType> = HashMap::new();
@@ -203,7 +219,7 @@ pub fn build_type_table(
                 }
             }
 
-            if let Ok(id) = type_table.get_id_by_name(
+            if let Some(id) = type_table.get_id_by_name(
                 &uninitialised_types[i].1.attributes[a]
                     .1
                     .as_ref()
@@ -240,5 +256,78 @@ pub fn build_type_table(
         )
     }
 
-    Ok((type_table, remaining_pre_ast))
+    let mut typed_fns = HashMap::new();
+    let mut fn_name_map = HashMap::new();
+    fn_name_map.insert(None, HashMap::new());
+    let mut id_counter: isize = 1;
+    for (symbol, line) in remaining_pre_ast {
+        match symbol {
+            PreprocessSymbol::Impl(path, type_name, functions) => {
+                let type_id = type_table.get_id_by_name(&type_name).ok_or(ProcessorError::BadImplType(path))?;
+                if !fn_name_map.contains_key(&Some(type_id)) {
+                    fn_name_map.insert(Some(type_id), HashMap::new());
+                }
+                for (function, line) in functions {
+                    if let Some(existing) = fn_name_map.get_mut(&Some(type_id)).unwrap().insert(function.0.clone(), id_counter) {
+                        return Err(ProcessorError::FunctionRedefinition);
+                    }
+                    typed_fns.insert(id_counter, process_function(function, &type_table, id_counter)?);
+                    id_counter += 1;
+                }
+            }
+            PreprocessSymbol::Fn(path, function) => {
+                let id = if &function.0 == "main" {
+                    0
+                }
+                else {
+                    id_counter += 1;
+                    id_counter - 1
+                };
+                if let Some(existing) = fn_name_map.get_mut(&None).unwrap().insert(function.0.clone(), id) {
+                    return Err(ProcessorError::FunctionRedefinition);
+                }
+                typed_fns.insert(id, process_function(function, &type_table, id)?);
+                id_counter += 1;
+            }
+            _ => panic!("Expected Impl of Functions")
+        }
+    }
+
+    if let Some(main) = typed_fns.get(&0) {
+        if main.args.len() != 0 {
+            return Err(ProcessorError::BadMainFunction("Main function cannot have arguments".to_string()))
+        }
+        if main.return_type != None {
+            return Err(ProcessorError::BadMainFunction("Main cannot have a return type".to_string()))
+        }
+    }
+    else {
+        return Err(ProcessorError::NoMainFunction)
+    }
+
+    Ok((type_table, fn_name_map, typed_fns))
+}
+
+fn process_function(function: PreProcessFunction, type_table: &TypeTable, id: isize) -> Result<TypedFunction, ProcessorError> {
+    let (name, args, return_type, contents) = function;
+
+    let mut args_processed = Vec::new();
+    for (arg_name, arg_line, type_name, type_line) in args {
+        args_processed.push((arg_name, type_table.get_id_by_name(&type_name).ok_or(TypeNotFound(PathBuf::from("TODO"), type_line, type_name))?));
+    }
+
+    let return_type = if let Some(type_name) = return_type {
+        Some(type_table.get_id_by_name(&type_name).ok_or(TypeNotFound(PathBuf::from("TODO"), 999999, type_name))?)
+    }
+    else {
+        None
+    };
+
+    Ok(TypedFunction {
+        id,
+        name,
+        args: args_processed,
+        return_type,
+        contents,
+    })
 }

@@ -12,3 +12,11 @@ struct c {
     five: b,
     six: a
 }
+
+fn asd(seven: b) ~ c {
+    words
+}
+
+fn main () {
+
+}
