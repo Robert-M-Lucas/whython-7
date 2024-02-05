@@ -1,2 +1,2 @@
 pub mod default;
-mod assemble;
+pub mod assemble;

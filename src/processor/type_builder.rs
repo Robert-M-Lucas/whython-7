@@ -6,6 +6,7 @@ use crate::processor::processor::ProcessorError::TypeNotFound;
 use std::collections::{HashMap, HashSet};
 
 use std::path::PathBuf;
+use unique_type_id::UniqueTypeId;
 use crate::basic_ast::symbol::BasicSymbol;
 use crate::processor::custom_types::Bool;
 
@@ -271,7 +272,7 @@ pub fn build_types(
                     if let Some(existing) = fn_name_map.get_mut(&Some(type_id)).unwrap().insert(function.0.clone(), id_counter) {
                         return Err(ProcessorError::FunctionRedefinition);
                     }
-                    typed_fns.insert(id_counter, process_function(function, &type_table, id_counter)?);
+                    typed_fns.insert(id_counter, process_function(function, &type_table, id_counter, Some(type_id))?);
                     id_counter += 1;
                 }
             }
@@ -286,7 +287,7 @@ pub fn build_types(
                 if let Some(existing) = fn_name_map.get_mut(&None).unwrap().insert(function.0.clone(), id) {
                     return Err(ProcessorError::FunctionRedefinition);
                 }
-                typed_fns.insert(id, process_function(function, &type_table, id)?);
+                typed_fns.insert(id, process_function(function, &type_table, id, None)?);
                 id_counter += 1;
             }
             _ => panic!("Expected Impl of Functions")
@@ -308,11 +309,20 @@ pub fn build_types(
     Ok((type_table, fn_name_map, typed_fns))
 }
 
-fn process_function(function: PreProcessFunction, type_table: &TypeTable, id: isize) -> Result<TypedFunction, ProcessorError> {
+fn process_function(function: PreProcessFunction, type_table: &TypeTable, id: isize, impl_type: Option<isize>) -> Result<TypedFunction, ProcessorError> {
     let (name, args, return_type, contents) = function;
 
     let mut args_processed = Vec::new();
+    if let Some(type_id) = impl_type {
+        args_processed.push(("self".to_string(), type_id));
+    }
+
     for (arg_name, arg_line, type_name, type_line) in args {
+        for (existing_arg, _) in &args_processed {
+            if &arg_name == existing_arg {
+                return Err(ProcessorError::VariableAlreadyDefined(arg_name));
+            }
+        }
         args_processed.push((arg_name, type_table.get_id_by_name(&type_name).ok_or(TypeNotFound(PathBuf::from("TODO"), type_line, type_name))?));
     }
 

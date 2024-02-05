@@ -4,3 +4,4 @@ pub mod processor;
 mod type_builder;
 mod custom_types;
 mod custom_functions;
+mod custom_inlines;

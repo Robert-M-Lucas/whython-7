@@ -22,7 +22,9 @@ pub enum ProcessorError {
     #[error("TODO: Function redefinition")]
     FunctionRedefinition,
     #[error("TODO: Bad main function - {0}")]
-    BadMainFunction(String)
+    BadMainFunction(String),
+    #[error("TODO: variable already defined - {0}")]
+    VariableAlreadyDefined(String)
 }
 
 pub fn process(ast: Vec<BasicAbstractSyntaxTree>) -> Result<Vec<Box<dyn Function>>, ProcessorError> {
