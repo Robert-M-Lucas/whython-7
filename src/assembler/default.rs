@@ -101,7 +101,13 @@ pub fn compile_user_function(function: &UserFunction) -> String {
         }
     }
 
-    output.push("leave"); // redundant if rsp not changed (?)
-    output.push("ret");
-    output.into()
+    return if function.id == 0 {
+        output.push("mov rcx, 0");
+        output.push("call ExitProcess");
+        output.into()
+    } else {
+        output.push("leave");
+        output.push("ret");
+        output.into()
+    }
 }

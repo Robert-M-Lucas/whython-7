@@ -251,6 +251,7 @@ dependencies = [
  "bitflags",
  "bytes",
  "clap",
+ "either",
  "itertools",
  "strum",
  "strum_macros",

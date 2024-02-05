@@ -25,4 +25,14 @@ pub fn assemble(output: &PathBuf) {
         .args(["/entry:main", "/out:.\\output\\out.exe", ".\\output\\out.obj", ".\\libs\\kernel32.lib"])
         .status()
         .unwrap();
+
+    Command::new("link")
+        .args(["/entry:main", "/out:.\\output\\out.exe", ".\\output\\out.obj", ".\\libs\\kernel32.lib"])
+        .status()
+        .unwrap();
+
+    println!("{}",
+        Command::new(".\\output\\out.exe")
+        .status()
+        .unwrap().code().unwrap())
 }

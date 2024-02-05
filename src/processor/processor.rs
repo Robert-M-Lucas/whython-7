@@ -31,6 +31,6 @@ pub fn process(ast: Vec<BasicAbstractSyntaxTree>) -> Result<Vec<Box<dyn Function
     let pre_ast = preprocess(ast)?;
     println!("Preprocessing Result:\n{:?}", pre_ast);
     let (type_table, function_names, typed_functions) = build_types(pre_ast)?;
-    println!("Typed functions:\n{:?}", typed_functions);
+    // println!("Typed functions:\n{:?}", typed_functions);
     process_functions(function_names, typed_functions, type_table)
 }

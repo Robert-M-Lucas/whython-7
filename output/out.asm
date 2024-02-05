@@ -4,7 +4,6 @@
 main:
 	push rbp
 	mov rbp, rsp
-	sub rsp, 8
-	mov qword [rbp-8], 13
-	mov rcx, [rbp-8]
+	sub rsp, 0
+	mov rcx, 2
 	call ExitProcess

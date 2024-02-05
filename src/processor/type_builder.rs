@@ -81,8 +81,6 @@ impl Type for UserType {
         &self.name
     }
 
-    fn get_function(&self) {}
-
     fn get_size(&self, type_table: &TypeTable, mut path: Option<Vec<isize>>) -> Result<usize, ProcessorError> {
         if path.is_none() {
             path = Some(vec![self.get_id()])
@@ -111,8 +109,6 @@ pub trait Type {
     fn get_id(&self) -> isize;
 
     fn get_name(&self) -> &str;
-
-    fn get_function(&self);
 
     fn get_size(&self, type_table: &TypeTable,  path: Option<Vec<isize>>) -> Result<usize, ProcessorError>;
 }
@@ -159,12 +155,52 @@ impl TypeTable {
 }
 
 #[derive(Debug)]
-pub struct TypedFunction {
+pub struct UserTypedFunction {
     pub id: isize,
     pub name: String,
     pub args: Vec<(String, isize)>,
     pub return_type: Option<isize>,
     pub contents: Vec<(BasicSymbol, usize)>
+}
+
+impl TypedFunction for UserTypedFunction {
+    fn get_id(&self) -> isize {
+        self.id
+    }
+
+    fn get_name(&self) -> &str {
+        &self.name
+    }
+
+    fn get_args(&self) -> &Vec<(String, isize)> {
+        &self.args
+    }
+
+    fn get_return_type(&self) -> Option<isize> {
+        self.return_type
+    }
+
+    fn is_inline(&self) -> bool {
+        false
+    }
+
+    fn get_contents(&self) -> &Vec<(BasicSymbol, usize)> {
+        &self.contents
+    }
+
+    fn get_inline(&self, args: Vec<isize>) -> String {
+        panic!()
+    }
+}
+
+pub trait TypedFunction {
+    fn get_id(&self) -> isize;
+    fn get_name(&self) -> &str;
+    fn get_args(&self) -> &Vec<(String, isize)>;
+    fn get_return_type(&self) -> Option<isize>;
+    fn is_inline(&self) -> bool;
+    fn get_contents(&self) -> &Vec<(BasicSymbol, usize)>;
+    fn get_inline(&self, args: Vec<isize>) -> String;
 }
 
 // #[derive(Debug)]
@@ -175,7 +211,7 @@ pub struct TypedFunction {
 
 pub fn build_types(
     pre_ast: Vec<(PreprocessSymbol, usize)>,
-) -> Result<(TypeTable, HashMap<Option<isize>, HashMap<String, isize>>, HashMap<isize, TypedFunction>), ProcessorError> {
+) -> Result<(TypeTable, HashMap<Option<isize>, HashMap<String, isize>>, HashMap<isize, Box<dyn TypedFunction>>), ProcessorError> {
     let mut remaining_pre_ast = Vec::new();
 
     let mut uninitialised_types: HashMap<String, UninitialisedType> = HashMap::new();
@@ -296,10 +332,10 @@ pub fn build_types(
     }
 
     if let Some(main) = typed_fns.get(&0) {
-        if main.args.len() != 0 {
+        if main.get_args().len() != 0 {
             return Err(ProcessorError::BadMainFunction("Main function cannot have arguments".to_string()))
         }
-        if main.return_type != Some(-1) {
+        if main.get_return_type() != Some(-1) {
             return Err(ProcessorError::BadMainFunction("Main must return an 'int'".to_string()))
         }
     }
@@ -310,7 +346,7 @@ pub fn build_types(
     Ok((type_table, fn_name_map, typed_fns))
 }
 
-fn process_function(function: PreProcessFunction, type_table: &TypeTable, id: isize, impl_type: Option<isize>) -> Result<TypedFunction, ProcessorError> {
+fn process_function(function: PreProcessFunction, type_table: &TypeTable, id: isize, impl_type: Option<isize>) -> Result<Box<dyn TypedFunction>, ProcessorError> {
     let (name, args, return_type, contents) = function;
 
     let mut args_processed = Vec::new();
@@ -334,11 +370,11 @@ fn process_function(function: PreProcessFunction, type_table: &TypeTable, id: is
         None
     };
 
-    Ok(TypedFunction {
+    Ok(Box::new(UserTypedFunction {
         id,
         name,
         args: args_processed,
         return_type,
         contents,
-    })
+    }))
 }

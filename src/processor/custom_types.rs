@@ -18,10 +18,6 @@ impl Type for Bool {
         "bool"
     }
 
-    fn get_function(&self) {
-
-    }
-
     fn get_size(&self, type_table: &TypeTable, path: Option<Vec<isize>>) -> Result<usize, ProcessorError> {
         Ok(8)
     }
@@ -42,10 +38,6 @@ impl Type for Int {
 
     fn get_name(&self) -> &str {
         "int"
-    }
-
-    fn get_function(&self) {
-
     }
 
     fn get_size(&self, type_table: &TypeTable, path: Option<Vec<isize>>) -> Result<usize, ProcessorError> {
