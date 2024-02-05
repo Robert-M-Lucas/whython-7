@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use crate::processor::preprocess::PreprocessSymbol;
 use crate::processor::processor::ProcessorError;
 use crate::processor::processor::ProcessorError::TypeNotFound;
@@ -5,6 +6,7 @@ use crate::processor::processor::ProcessorError::TypeNotFound;
 use std::collections::HashMap;
 
 use std::path::PathBuf;
+use crate::processor::custom_types::Bool;
 
 struct UninitialisedType {
     pub path: PathBuf,
@@ -51,15 +53,19 @@ impl UninitialisedType {
 pub struct UserType {
     name: String,
     id: isize,
-    attributes: Vec<(String, isize)>,
+    path: PathBuf,
+    line: usize,
+    attributes: Vec<(String, isize)>
 }
 
 impl UserType {
-    pub fn new(name: String, id: isize, attributes: Vec<(String, isize)>) -> UserType {
+    pub fn new(name: String, id: isize, path: PathBuf, line: usize, attributes: Vec<(String, isize)>) -> UserType {
         UserType {
             name,
             id,
-            attributes,
+            path,
+            line,
+            attributes
         }
     }
 }
@@ -74,6 +80,29 @@ impl Type for UserType {
     }
 
     fn get_function(&self) {}
+
+    fn get_size(&self, type_table: &TypeTable, mut path: Option<Vec<isize>>) -> Result<usize, ProcessorError> {
+        if path.is_none() {
+            path = Some(vec![self.get_id()])
+        }
+        else {
+            for id in & **path.as_ref().unwrap() {
+                if *id == self.get_id() {
+                    return Err(ProcessorError::CircularType(self.path.clone(), self.line, self.name.clone()));
+                }
+            }
+
+            path.as_mut().unwrap().push(self.get_id());
+        };
+
+        let mut size = 0;
+
+        for (name, id) in &self.attributes {
+            size += type_table.get_type(*id).unwrap().get_size(type_table, path.clone())?;
+        }
+
+        Ok(size)
+    }
 }
 
 pub trait Type {
@@ -82,6 +111,8 @@ pub trait Type {
     fn get_name(&self) -> &str;
 
     fn get_function(&self);
+
+    fn get_size(&self, type_table: &TypeTable,  path: Option<Vec<isize>>) -> Result<usize, ProcessorError>;
 }
 
 pub struct TypeTable {
@@ -95,7 +126,8 @@ impl TypeTable {
         }
     }
 
-    pub fn add_builtin(self) -> TypeTable {
+    pub fn add_builtin(mut self) -> TypeTable {
+        self.add_type(Bool::new().get_id(), Box::new(Bool::new()));
         self
     }
 
@@ -112,6 +144,14 @@ impl TypeTable {
             }
         }
         Err(())
+    }
+
+    pub fn get_type(&self, id: isize) -> Option<&Box<dyn Type>> {
+        self.types.get(&id)
+    }
+
+    pub fn get_type_size(&self, id: isize) -> Result<usize, ProcessorError> {
+        self.types.get(&id).unwrap().get_size(&self, None)
     }
 }
 
@@ -196,7 +236,7 @@ pub fn build_type_table(
 
         type_table.add_type(
             type_.id,
-            Box::new(UserType::new(name, type_.id, attributes_processed)),
+            Box::new(UserType::new(name, type_.id, path, type_.line, attributes_processed)),
         )
     }
 

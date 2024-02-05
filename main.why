@@ -1,13 +1,14 @@
 struct a {
-    a: b,
-    b: b,
-    c: b
+    one: bool,
+    two: bool
 }
 
 struct b {
-
+    three: a,
+    four: a
 }
 
-fn a (a: b, c: d) ~ d {
-    well hello there
+struct c {
+    five: b,
+    six: a
 }
