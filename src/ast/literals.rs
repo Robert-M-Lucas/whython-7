@@ -6,3 +6,9 @@ pub enum Literal {
     Bool(bool),
     None,
 }
+
+impl Literal {
+    pub fn get_type_id(&self) -> isize {
+        todo!()
+    }
+}

@@ -1,3 +1,4 @@
+use crate::ast::literals::Literal;
 use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::{Type, TypeTable};
 
@@ -20,6 +21,10 @@ impl Type for Bool {
 
     fn get_size(&self, type_table: &TypeTable, path: Option<Vec<isize>>) -> Result<usize, ProcessorError> {
         Ok(8)
+    }
+
+    fn instantiate(&self, literal: Option<Literal>, local_address: isize) -> Result<Vec<String>, ProcessorError> {
+        todo!()
     }
 }
 
@@ -44,5 +49,9 @@ impl Type for Int {
 
     fn get_size(&self, type_table: &TypeTable, path: Option<Vec<isize>>) -> Result<usize, ProcessorError> {
         Ok(8)
+    }
+
+    fn instantiate(&self, literal: Option<Literal>, local_address: isize) -> Result<Vec<String>, ProcessorError> {
+        todo!()
     }
 }

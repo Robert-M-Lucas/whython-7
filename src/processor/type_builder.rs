@@ -7,6 +7,7 @@ use std::collections::{HashMap, HashSet};
 
 use std::path::PathBuf;
 use unique_type_id::UniqueTypeId;
+use crate::ast::literals::Literal;
 use crate::basic_ast::symbol::BasicSymbol;
 use crate::processor::custom_types::{Bool, Int};
 
@@ -103,6 +104,10 @@ impl Type for UserType {
 
         Ok(size)
     }
+
+    fn instantiate(&self, literal: Option<Literal>, local_address: isize) -> Result<Vec<String>, ProcessorError> {
+        todo!()
+    }
 }
 
 pub trait Type {
@@ -111,6 +116,8 @@ pub trait Type {
     fn get_name(&self) -> &str;
 
     fn get_size(&self, type_table: &TypeTable,  path: Option<Vec<isize>>) -> Result<usize, ProcessorError>;
+
+    fn instantiate(&self, literal: Option<Literal>, local_address: isize) -> Result<Vec<String>, ProcessorError>;
 }
 
 pub struct TypeTable {

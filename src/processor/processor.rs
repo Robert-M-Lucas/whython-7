@@ -34,7 +34,11 @@ pub enum ProcessorError {
     #[error("TODO: Bad item in evaluated section")]
     BadItemInEvaluation,
     #[error("TODO: Expected operator and operand")]
-    ExpectedOperatorOperand
+    ExpectedOperatorOperand,
+    #[error("TODO: Bad operator position")]
+    BadOperatorPosition,
+    #[error("TODO: Bad operator function (did you override an operator?)")]
+    BadOperatorFunction
 }
 
 pub fn process(ast: Vec<BasicAbstractSyntaxTree>) -> Result<Vec<Box<dyn Function>>, ProcessorError> {

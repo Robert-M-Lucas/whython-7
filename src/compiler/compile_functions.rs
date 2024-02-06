@@ -93,16 +93,9 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
                     return Err(ProcessorError::BadKeyword);
                 }
                 other_symbol => {
-                    evaluate(other_symbol, &mut symbols, &mut local_variable_space)?;
+                    evaluate(other_symbol, &mut symbols, &mut local_variable_space, false, &function_name_map, &type_table, &mut lines, &functions)?;
                 }
             }
-
-            if let Some(next) = symbols.next() {
-                if !matches!(next.0, BasicSymbol::Punctuation(Punctuation::Semicolon)) {
-                    return Err(ProcessorError::ExpectedSemicolon);
-                }
-            }
-            else { return Err(ProcessorError::ExpectedSemicolon); }
         }
 
         processed_functions.push(Box::new(UserFunction {
@@ -118,11 +111,13 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
 }
 
 
-fn evaluate<'a>(first_symbol: &BasicSymbol, symbol_iter: &'a mut Iter<(BasicSymbol, usize)>, local_variable_space: &mut usize, must_complete: bool) -> Result<Either<(isize, isize), &'a Literal>, ProcessorError> { // addr, type
+fn evaluate<'a>(first_symbol: &'a BasicSymbol, symbol_iter: &'a mut Iter<(BasicSymbol, usize)>,
+                local_variable_space: &mut usize, must_complete: bool, function_name_map: &HashMap<Option<isize>,
+        HashMap<String, isize>>, type_table: &TypeTable, lines: &mut Vec<Line>, functions: &HashMap<isize, Box<dyn TypedFunction>>) -> Result<Either<(isize, isize), Literal>, ProcessorError> { // addr, type
     let mut op = None;
     let mut lhs = None;
 
-    match evaluate_symbol(first_symbol, local_variable_space)? {
+    match evaluate_symbol(first_symbol, local_variable_space, function_name_map, type_table, lines, functions)? {
         Left(_lhs) => { lhs = Some(_lhs) }
         Right(_op) => { op = Some(_op) }
     }
@@ -144,7 +139,7 @@ fn evaluate<'a>(first_symbol: &BasicSymbol, symbol_iter: &'a mut Iter<(BasicSymb
         return Err(ProcessorError::BadItemInEvaluation);
     }
 
-    match evaluate_symbol(first_symbol, local_variable_space)? {
+    match evaluate_symbol(first_symbol, local_variable_space, function_name_map, type_table, lines, functions)? {
         Left(_lhs) => { lhs = Some(_lhs) }
         Right(_op) => { op = Some(_op) }
     }
@@ -156,7 +151,7 @@ fn evaluate<'a>(first_symbol: &BasicSymbol, symbol_iter: &'a mut Iter<(BasicSymb
     let (op, lhs) = (op.unwrap(), lhs.unwrap());
 
     if matches!(op, Operator::Not) {
-        return Ok(Left(evaluate_operation(lhs, op, None, local_variable_space)?))
+        return Ok(Left(evaluate_operation(lhs, op, None, local_variable_space, function_name_map, type_table, lines, functions)?))
     }
 
     let third_symbol = if let Some(symbol) = symbol_iter.next() {
@@ -170,30 +165,32 @@ fn evaluate<'a>(first_symbol: &BasicSymbol, symbol_iter: &'a mut Iter<(BasicSymb
         return Err(ProcessorError::BadItemInEvaluation);
     }
 
-    let rhs = match evaluate_symbol(first_symbol, local_variable_space)? {
+    let rhs = match evaluate_symbol(third_symbol, local_variable_space, function_name_map, type_table, lines, functions)? {
         Left(rhs) => { rhs }
         Right(_) => return Err(ProcessorError::BadItemInEvaluation)
     };
 
-    return Ok(Left(evaluate_operation(lhs, op, Some(rhs), local_variable_space)?))
+    return Ok(Left(evaluate_operation(lhs, op, Some(rhs), local_variable_space, function_name_map, type_table, lines, functions)?))
 }
 
-fn evaluate_symbol<'a>(symbol: &'a BasicSymbol, local_variable_space: &mut usize) -> Result<Either<Either<(isize, isize), &'a Literal>, &'a Operator>, ProcessorError> {
+fn evaluate_symbol(symbol: &BasicSymbol, local_variable_space: &mut usize, function_name_map: &HashMap<Option<isize>,
+    HashMap<String, isize>>, type_table: &TypeTable, lines: &mut Vec<Line>, functions: &HashMap<isize, Box<dyn TypedFunction>>) -> Result<Either<Either<(isize, isize), Literal>, Operator>, ProcessorError> {
     Ok(match symbol {
         BasicSymbol::BracketedSection(inner) => {
-            let mut iter = inner.iter();
+            let mut iter = inner.into_iter();
             let next = if let Some(next) = iter.next() {
                 &next.0
             }
             else { return Err(ProcessorError::EmptyBrackets); };
-            Left(evaluate(next, &mut iter, local_variable_space, true)?)
+            let res = evaluate(next, &mut iter, local_variable_space, true, function_name_map, type_table, lines, functions)?;
+            Left(res)
         }
-        BasicSymbol::Literal(literal) => { Left(Right(literal)) }
+        BasicSymbol::Literal(literal) => { Left(Right(literal.clone())) }
         BasicSymbol::Operator(operator) => {
             if !matches!(operator, Operator::Not) {
                 return Err(ProcessorError::BadItemInEvaluation);
             }
-            Right(operator)
+            Right(operator.clone())
         }
         BasicSymbol::Name(_) => { todo!() }
         _ => {
@@ -202,7 +199,62 @@ fn evaluate_symbol<'a>(symbol: &'a BasicSymbol, local_variable_space: &mut usize
     })
 }
 
-fn evaluate_operation(lhs: Either<(isize, isize), &Literal>, op: &Operator, rhs: Option<Either<(isize, isize), &Literal>>, local_variable_space: &mut usize)
+fn instantiate_literal(literal: Literal, local_variable_space: &mut usize, function_name_map: &HashMap<Option<isize>,
+    HashMap<String, isize>>, type_table: &TypeTable, lines: &mut Vec<Line>, functions: &HashMap<isize, Box<dyn TypedFunction>>) -> Result<(isize, isize), ProcessorError> {
+    let id = literal.get_type_id();
+    let _type = type_table.get_type(id).unwrap();
+    let size = _type.get_size(type_table, None)?;
+    let addr = -(*local_variable_space as isize) - size as isize;
+    let asm = _type.instantiate(literal, addr)?;
+    lines.push(Line::InlineAsm(asm));
+    Ok((addr, id))
+}
+
+fn evaluate_operation(lhs: Either<(isize, isize), Literal>, op: Operator, rhs: Option<Either<(isize, isize), Literal>>,
+                      local_variable_space: &mut usize, function_name_map: &HashMap<Option<isize>,
+                HashMap<String, isize>>, type_table: &TypeTable, lines: &mut Vec<Line>, functions: &HashMap<isize, Box<dyn TypedFunction>>)
     -> Result<(isize, isize), ProcessorError> {
-    todo!()
+    let lhs = match lhs {
+        Left(addr) => { addr }
+        Right(literal) => { instantiate_literal(literal, local_variable_space, function_name_map, type_table, lines, functions)? }
+    };
+
+    let rhs = if let Some(rhs) = rhs {
+        Some(match rhs {
+            Left(addr) => { addr }
+            Right(literal) => { instantiate_literal(literal, local_variable_space, function_name_map, type_table, lines, functions)? }
+        })
+    }
+    else { None };
+
+     Ok(match op {
+        Operator::Not => {
+            let func = function_name_map.get(&Some(lhs.1)).unwrap().get("not").ok_or(ProcessorError::BadOperatorFunction)?;
+            let func = functions.get(func).unwrap();
+            if (func.is_inline() && func.get_args().len() != 2) || (!func.is_inline() && func.get_args().len() != 1) {
+                return Err(ProcessorError::BadOperatorFunction);
+            }
+            if func.is_inline() {
+                func.get_inline()
+            }
+        },
+        op => {
+            let rhs = rhs.ok_or(ProcessorError::BadOperatorPosition)?;
+            match op {
+                Operator::Add => (),
+                Operator::Subtract => (),
+                Operator::Product => (),
+                Operator::Divide => (),
+                Operator::Greater => (),
+                Operator::Less => (),
+                Operator::GreaterEqual => (),
+                Operator::LessEqual => (),
+                Operator::Equal => (),
+                Operator::NotEqual => (),
+                Operator::Or => (),
+                Operator::And => (),
+                Operator::Not => panic!()
+            }
+        }
+    })
 }
