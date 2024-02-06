@@ -113,7 +113,8 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
 
 fn evaluate<'a>(first_symbol: &'a BasicSymbol, symbol_iter: &'a mut Iter<(BasicSymbol, usize)>,
                 local_variable_space: &mut usize, must_complete: bool, function_name_map: &HashMap<Option<isize>,
-        HashMap<String, isize>>, type_table: &TypeTable, lines: &mut Vec<Line>, functions: &HashMap<isize, Box<dyn TypedFunction>>) -> Result<Either<(isize, isize), Literal>, ProcessorError> { // addr, type
+        HashMap<String, isize>>, type_table: &TypeTable, lines: &mut Vec<Line>, functions: &HashMap<isize, Box<dyn TypedFunction>>)
+    -> Result<Either<(isize, isize), Literal>, ProcessorError> { // addr, type
     let mut op = None;
     let mut lhs = None;
 
