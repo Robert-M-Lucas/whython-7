@@ -29,11 +29,13 @@ impl Int {
     pub fn new() -> Int {
         Int {}
     }
+
+    pub const fn get_id() -> isize { -1 }
 }
 
 impl Type for Int {
     fn get_id(&self) -> isize {
-        -1
+        Int::get_id()
     }
 
     fn get_name(&self) -> &str {

@@ -1,13 +1,18 @@
-use crate::processor::function_processor::{Line, UserFunction};
+use crate::compiler::compile_functions::{Line, UserFunction};
 
-struct Output {
+pub struct Output {
     inner: String
 }
 
 impl Output {
-    pub fn new(id: isize) -> Output {
+    pub fn new() -> Output {
+        Output { inner: String::new() }
+    }
+
+    pub fn new_with_name(id: isize) -> Output {
         Output { inner: format!("{}:\n", get_function_name(id)) }
     }
+
 
     pub fn push(&mut self, string: &str) {
         self.inner.push('\t');
@@ -33,7 +38,7 @@ pub fn get_function_name(id: isize) -> String {
     format!(".{sign}{}", id.abs())
 }
 
-fn get_local_address(addr: isize) -> String {
+pub fn get_local_address(addr: isize) -> String {
     let sign = if addr > 0 {
         "+"
     }
@@ -44,7 +49,7 @@ fn get_local_address(addr: isize) -> String {
 }
 
 pub fn compile_user_function(function: &UserFunction) -> String {
-    let mut output = Output::new(function.id);
+    let mut output = Output::new_with_name(function.id);
     output.push("push rbp");
     output.push("mov rbp, rsp");
     output.push(&format!("sub rsp, {}", function.local_variable_count * 8));

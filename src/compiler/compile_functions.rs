@@ -1,10 +1,8 @@
 use std::collections::{HashMap, HashSet};
-use crate::assembler::default::compile_user_function;
-use crate::processor::custom_functions::{get_custom_function_implementations, get_custom_function_signatures};
+use crate::compiler::custom_functions::{get_custom_function_implementations, get_custom_function_signatures};
+use crate::compiler::default::compile_user_function;
 use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::{TypedFunction, TypeTable};
-
-
 
 pub enum Line {
     ReturnCall(isize, Vec<(isize, usize)>, isize),
@@ -36,7 +34,7 @@ pub trait Function {
     fn get_id(&self) -> isize;
 }
 
-pub fn process_functions(mut function_name_map: HashMap<Option<isize>, HashMap<String, isize>>, mut functions: HashMap<isize, Box<dyn TypedFunction>>, type_table: TypeTable) -> Result<Vec<Box<dyn Function>>, ProcessorError> {
+pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<String, isize>>, mut functions: HashMap<isize, Box<dyn TypedFunction>>, type_table: TypeTable) -> Result<Vec<Box<dyn Function>>, ProcessorError> {
     for (t, f) in get_custom_function_signatures() {
         if function_name_map.get(&t).unwrap().contains_key(f.get_name()) {
             continue;
@@ -70,3 +68,4 @@ pub fn process_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
     let processed_functions = processed_functions.into_iter().filter(|f| used_functions.contains(&f.get_id())).collect();
     Ok(processed_functions)
 }
+

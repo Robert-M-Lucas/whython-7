@@ -172,7 +172,7 @@ impl TypedFunction for UserTypedFunction {
         &self.name
     }
 
-    fn get_args(&self) -> &Vec<(String, isize)> {
+    fn get_args(&self) -> &[(String, isize)] {
         &self.args
     }
 
@@ -196,7 +196,7 @@ impl TypedFunction for UserTypedFunction {
 pub trait TypedFunction {
     fn get_id(&self) -> isize;
     fn get_name(&self) -> &str;
-    fn get_args(&self) -> &Vec<(String, isize)>;
+    fn get_args(&self) -> &[(String, isize)];
     fn get_return_type(&self) -> Option<isize>;
     fn is_inline(&self) -> bool;
     fn get_contents(&self) -> &Vec<(BasicSymbol, usize)>;

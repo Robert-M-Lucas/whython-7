@@ -8,6 +8,7 @@ mod basic_ast;
 mod parser;
 mod processor;
 mod assembler;
+mod compiler;
 
 // TODO: Handle circular imports
 

@@ -1,9 +1,7 @@
 use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
-use crate::assembler::default::get_function_name;
-use crate::processor::function_processor::Function;
-
+use crate::compiler::compile_functions::Function;
 
 
 pub fn generate_assembly(output: &PathBuf, functions: Vec<Box<dyn Function>>) {
@@ -18,11 +16,6 @@ pub fn generate_assembly(output: &PathBuf, functions: Vec<Box<dyn Function>>) {
 pub fn assemble(output: &PathBuf) {
     Command::new("nasm")
         .args(["-f", "win64", ".\\output\\out.asm"])
-        .status()
-        .unwrap();
-
-    Command::new("link")
-        .args(["/entry:main", "/out:.\\output\\out.exe", ".\\output\\out.obj", ".\\libs\\kernel32.lib"])
         .status()
         .unwrap();
 
