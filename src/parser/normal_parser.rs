@@ -2,7 +2,7 @@ use crate::ast::keywords::Keyword;
 use crate::ast::operators;
 use crate::ast::operators::Operator;
 use crate::basic_ast::punctuation::Punctuation;
-use crate::basic_ast::symbol::{BasicSymbol};
+use crate::basic_ast::symbol::{BasicSymbol, NameAccessType, NameType};
 use crate::parser::file_reader::FileReader;
 use crate::parser::parse::{BlockType, ParseError};
 use crate::parser::string_parser::parse_string;
@@ -90,7 +90,30 @@ pub fn parse_normal(
                 if let Some(new_block) = new_block {
                     process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
                     let start = reader.line();
-                    symbols.push((parse_normal(reader, new_block)?, start));
+
+                    let parsed = parse_normal(reader, new_block)?;
+
+                    let mut intercepted = false;
+                    if !symbols.is_empty() && matches!(symbols.last().unwrap().0, BasicSymbol::Name(_)) &&
+                        matches!(&parsed, BasicSymbol::BracketedSection(_)) && matches!(symbols.last().unwrap().0.get_name_contents().last().unwrap().2, NameType::Normal) {
+                        let BasicSymbol::Name(v) = &mut symbols.last_mut().unwrap().0;
+
+                        intercepted = true;
+                        let mut arguments = vec![Vec::new()];
+
+                        let BasicSymbol::BracketedSection(symbols) = parsed;
+                        for symbol in symbols {
+                            match symbol.0 {
+                                BasicSymbol::Punctuation(Punctuation::ListSeparator) => arguments.push(Vec::new()),
+                                symbol => arguments.last().unwrap().push(symbol)
+                            }
+                        }
+
+                        *(&mut v.last_mut().unwrap().2) = NameType::Function(arguments);
+                    }
+                    else {
+                        symbols.push((parsed, start));
+                    }
                     continue;
                 }
             }
@@ -170,25 +193,32 @@ fn process_buffer(
         return Ok(());
     }
 
-    let mut split = buffer.split('.');
-
-    let first = split.next().unwrap();
-    if let Some(keyword) = Keyword::get_enum(first) {
-        if split.next().is_some() {
-            return Err(reader.syntax_error(format!(
-                "keywords (here '{first}') cannot be followed by '.'"
-            )));
+    let mut sections = Vec::new();
+    let mut section_buffer = String::new();
+    let mut section_type = NameType::Normal;
+    let mut last_separator = NameAccessType::Base;
+    for c in buffer.chars() {
+        if c == '.' {
+            sections.push((section_buffer, last_separator, section_type));
+            section_buffer = String::new();
+            section_type = NameType::Normal;
+            last_separator = NameAccessType::Normal;
+            continue;
         }
-        symbols.push((BasicSymbol::Keyword(keyword), reader.line()));
-        buffer.clear();
-        return Ok(());
+        if c == '#' {
+            sections.push((section_buffer, last_separator, section_type));
+            section_buffer = String::new();
+            section_type = NameType::Normal;
+            last_separator = NameAccessType::Static;
+            continue;
+        }
+
+        section_buffer.push(c);
     }
 
-    let mut names = vec![first.to_string()];
-    for name in split {
-        names.push(name.to_string());
-    }
-    symbols.push((BasicSymbol::Name(names), reader.line()));
+    sections.push((section_buffer, last_separator, section_type));
+
+    symbols.push((BasicSymbol::Name(sections), reader.line()));
     buffer.clear();
     Ok(())
 }

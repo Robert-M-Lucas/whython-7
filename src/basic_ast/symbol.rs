@@ -8,6 +8,19 @@ use std::path::PathBuf;
 pub type BasicAbstractSyntaxTree = (PathBuf, Vec<(BasicSymbol, usize)>);
 
 #[derive(PartialEq, Clone, strum_macros::Display, Debug)]
+pub enum NameAccessType {
+    Base,
+    Static,
+    Normal
+}
+
+#[derive(PartialEq, Clone, strum_macros::Display, Debug)]
+pub enum NameType {
+    Normal,
+    Function(Vec<Vec<BasicSymbol>>)
+}
+
+#[derive(PartialEq, Clone, strum_macros::Display, Debug)]
 pub enum BasicSymbol {
     AbstractSyntaxTree(Vec<(BasicSymbol, usize)>),
     Literal(Literal),
@@ -17,8 +30,17 @@ pub enum BasicSymbol {
     BracketedSection(Vec<(BasicSymbol, usize)>),
     SquareBracketedSection(Vec<(BasicSymbol, usize)>),
     Punctuation(Punctuation),
-    Name(Vec<String>),
     Keyword(Keyword),
+    Name(Vec<(String, NameAccessType, NameType)>),
+}
+
+impl BasicSymbol {
+    pub fn get_name_contents(&self) -> &Vec<(String, NameAccessType, NameType)> {
+        match self {
+            BasicSymbol::Name(inside) => inside,
+            _ => panic!()
+        }
+    }
 }
 
 impl BasicSymbol {

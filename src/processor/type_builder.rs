@@ -195,7 +195,7 @@ impl TypedFunction for UserTypedFunction {
         &self.contents
     }
 
-    fn get_inline(&self, args: Vec<isize>) -> String {
+    fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         panic!()
     }
 }
@@ -207,7 +207,7 @@ pub trait TypedFunction {
     fn get_return_type(&self) -> Option<isize>;
     fn is_inline(&self) -> bool;
     fn get_contents(&self) -> &Vec<(BasicSymbol, usize)>;
-    fn get_inline(&self, args: Vec<isize>) -> String;
+    fn get_inline(&self, args: Vec<isize>) -> Vec<String>;
 }
 
 // #[derive(Debug)]

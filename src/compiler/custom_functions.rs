@@ -44,10 +44,10 @@ impl TypedFunction for WindowsExit {
         panic!()
     }
 
-    fn get_inline(&self, args: Vec<isize>) -> String {
-        let mut output = Output::new();
-        output.push(&format!("mov rcx, [{}]", crate::compiler::default::get_local_address(args[0])));
-        output.push("call ExitProcess");
-        output.into()
+    fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
+        let mut output = Vec::new();
+        output.push(format!("mov rcx, [{}]", crate::compiler::default::get_local_address(args[0])));
+        output.push("call ExitProcess".to_string());
+        output
     }
 }
