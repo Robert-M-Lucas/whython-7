@@ -7,7 +7,7 @@ use crate::processor::type_builder::{Type, TypedFunction};
 
 pub fn get_custom_function_signatures() -> Vec<(Option<isize>, Box<dyn TypedFunction>)> {
     vec![
-
+        (None, Box::new(WindowsExit{}))
     ]
 }
 

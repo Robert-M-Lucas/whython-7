@@ -24,7 +24,17 @@ pub enum ProcessorError {
     #[error("TODO: Bad main function - {0}")]
     BadMainFunction(String),
     #[error("TODO: variable already defined - {0}")]
-    VariableAlreadyDefined(String)
+    VariableAlreadyDefined(String),
+    #[error("TODO: Bad keyword")]
+    BadKeyword,
+    #[error("TODO: Expected semicolon")]
+    ExpectedSemicolon,
+    #[error("TODO: Empty brackets")]
+    EmptyBrackets,
+    #[error("TODO: Bad item in evaluated section")]
+    BadItemInEvaluation,
+    #[error("TODO: Expected operator and operand")]
+    ExpectedOperatorOperand
 }
 
 pub fn process(ast: Vec<BasicAbstractSyntaxTree>) -> Result<Vec<Box<dyn Function>>, ProcessorError> {
