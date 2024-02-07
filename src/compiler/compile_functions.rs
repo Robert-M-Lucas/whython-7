@@ -5,7 +5,7 @@ use crate::ast::keywords::Keyword;
 use crate::ast::literals::Literal;
 use crate::ast::operators::Operator;
 use crate::basic_ast::punctuation::Punctuation;
-use crate::basic_ast::symbol::BasicSymbol;
+use crate::basic_ast::symbol::{BasicSymbol, NameAccessType, NameType};
 use crate::compiler::custom_functions::{get_custom_function_implementations, get_custom_function_signatures};
 use crate::compiler::default::compile_user_function;
 use crate::processor::processor::ProcessorError;
@@ -42,30 +42,113 @@ pub trait Function {
 }
 
 pub struct NameHandler {
-    functions: HashMap<Option<isize>, HashMap<String, isize>>,
+    functions: HashMap<isize, Box<dyn TypedFunction>>,
+    functions_table: HashMap<Option<isize>, HashMap<String, isize>>,
     type_table: TypeTable,
-    args: Vec<(String, isize)>,
-    local_variables: Vec<(String, isize)>,
+    args: Vec<(String, isize, isize)>,
+    local_variables: Vec<(String, isize, isize)>,
     local_variables_size: usize
 }
 
 impl NameHandler {
-    pub fn new(functions: HashMap<Option<isize>, HashMap<String, isize>>,
-               type_table: TypeTable,
-               args: Vec<(String, isize)>,
-               local_variables: Vec<(String, isize)>,
-               local_variables_size: usize) -> NameHandler {
+    pub fn new(functions: HashMap<isize, Box<dyn TypedFunction>>,
+               functions_table: HashMap<Option<isize>, HashMap<String, isize>>,
+               type_table: TypeTable) -> NameHandler {
         NameHandler {
             functions,
+            functions_table,
             type_table,
-            args,
-            local_variables,
-            local_variables_size,
+            args: Vec::new(),
+            local_variables: Vec::new(),
+            local_variables_size: 0,
         }
     }
 
-    pub fn resolve_name(&self, name: Vec<String>) -> Either<(isize, isize), Box<dyn TypedFunction>> {
-        todo!()
+    pub fn reset(&mut self) {
+        self.args.clear();
+        self.local_variables.clear();
+        self.local_variables_size = 0;
+    }
+
+    pub fn type_table(&self) -> &TypeTable {
+        &self.type_table
+    }
+
+    pub fn get_function(&self, _type: Option<isize>, name: &str) -> Option<&Box<dyn TypedFunction>> {
+        self.functions_table.get(&_type).and_then(
+            |x| x.get(name).and_then(
+                |x| Some(self.functions.get(x).unwrap())
+        ))
+    }
+
+    pub fn local_variable_space(&self) -> usize {
+        self.local_variables_size
+    }
+
+    pub fn add_local_variable(&mut self, name: Option<String>, _type: isize) -> isize {
+        let size = self.type_table.get_type(_type).unwrap().get_size(&self.type_table, None).unwrap();
+        let addr = -(self.local_variables_size as isize) - size as isize;
+        if let Some(name) = name {
+            self.local_variables.push((name, addr, _type));
+        }
+        addr
+    }
+
+    pub fn name_variable(&mut self, name: String, addr: isize, _type: isize) {
+        self.local_variables.push((name, addr, _type));
+    }
+
+    pub fn resolve_name(&self, name: &Vec<(String, NameAccessType, NameType)>) -> Result<Either<(isize, isize), (&Box<dyn TypedFunction>, Option<isize>, &Vec<Vec<BasicSymbol>>)>, ProcessorError> {
+        let mut current_type = None;
+        let mut current_variable = None;
+        let mut return_func = None;
+
+        for (name, access_type, name_type) in name {
+            if return_func.is_some() {
+                todo!()
+            }
+
+            match name_type {
+                NameType::Normal => {
+                    if current_type != None || current_variable != None {
+                        todo!()
+                    }
+                    if let Some((_, addr, _type)) = self.local_variables.iter().find(|(n, _, _)| n == name) {
+                        current_variable = Some(*addr);
+                        current_type = Some(*_type);
+                    }
+                    else {
+                        if let Some(_type) = self.type_table.get_id_by_name(&name) {
+                            current_variable = None;
+                            current_type = Some(_type);
+                        }
+                        else {
+                            return Err(ProcessorError::NameNotFound(name.clone()));
+                        }
+                    }
+                }
+                NameType::Function(contents) => {
+                    if let Some(func) = self.functions_table.get(&current_type).unwrap().get(&name) {
+                        let default_arg = if access_type == NameAccessType::Normal {
+                            current_type
+                        }
+                        else {
+                            None
+                        };
+                        return_func = Some((self.functions.get(func).unwrap(), default_arg, contents));
+                    }
+                }
+            }
+        }
+
+        if let Some(return_func) = return_func {
+            return Ok(Right(return_func));
+        }
+
+        Ok(Left((
+            current_type.unwrap(),
+            current_variable.ok_or(ProcessorError::StandaloneType)?
+        )))
     }
 }
 
@@ -78,18 +161,15 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
         function_name_map.get_mut(&t).unwrap().insert(f.get_name().to_string(), f.get_id());
         functions.insert(f.get_id(), f);
     }
-    let functions = functions;
-    let function_name_map = function_name_map;
+    let mut name_handler = NameHandler::new(functions, function_name_map, type_table);
     let mut processed_functions = get_custom_function_implementations();
     let mut used_functions = HashSet::new();
     used_functions.insert(0);
 
     for id in functions.keys() {
+        name_handler.reset();
         let function = functions.get(id).unwrap();
         if function.is_inline() { continue; }
-
-        let mut local_variable_space = 0;
-        let mut local_variables: Vec<(String, isize)> = Vec::new();
 
         let mut lines = Vec::new();
         let mut symbols = function.get_contents().iter();
@@ -121,16 +201,16 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
                 }
                 BasicSymbol::Keyword(_) => {
                     return Err(ProcessorError::BadKeyword);
-                }
+                },
                 other_symbol => {
-                    evaluate(other_symbol, &mut symbols, &mut local_variable_space, false, &function_name_map, &type_table, &mut lines, &functions)?;
+                    evaluate(other_symbol, &mut symbols, false, &mut lines, &mut name_handler)?;
                 }
             }
         }
 
         processed_functions.push(Box::new(UserFunction {
             id: *id,
-            local_variable_count: local_variable_space / 8,
+            local_variable_count: name_handler.local_variable_space() / 8,
             arg_count: function.get_args().len(),
             lines,
         }));
@@ -142,13 +222,12 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
 
 
 fn evaluate<'a>(first_symbol: &'a BasicSymbol, symbol_iter: &'a mut Iter<(BasicSymbol, usize)>,
-                local_variable_space: &mut usize, must_complete: bool, function_name_map: &HashMap<Option<isize>,
-        HashMap<String, isize>>, type_table: &TypeTable, lines: &mut Vec<Line>, functions: &HashMap<isize, Box<dyn TypedFunction>>)
+                must_complete: bool, lines: &mut Vec<Line>, name_handler: &mut NameHandler)
     -> Result<Either<(isize, isize), Literal>, ProcessorError> { // addr, type
     let mut op = None;
     let mut lhs = None;
 
-    match evaluate_symbol(first_symbol, local_variable_space, function_name_map, type_table, lines, functions)? {
+    match evaluate_symbol(first_symbol, lines, name_handler)? {
         Left(_lhs) => { lhs = Some(_lhs) }
         Right(_op) => { op = Some(_op) }
     }
@@ -170,9 +249,10 @@ fn evaluate<'a>(first_symbol: &'a BasicSymbol, symbol_iter: &'a mut Iter<(BasicS
         return Err(ProcessorError::BadItemInEvaluation);
     }
 
-    match evaluate_symbol(first_symbol, local_variable_space, function_name_map, type_table, lines, functions)? {
-        Left(_lhs) => { lhs = Some(_lhs) }
-        Right(_op) => { op = Some(_op) }
+    match evaluate_symbol(first_symbol, lines, name_handler)? {
+        Some(Left(_lhs)) => { lhs = Some(_lhs) }
+        Some(Right(_op)) => { op = Some(_op) }
+        _ => {}
     }
 
     if lhs.is_none() || op.is_none() {
@@ -182,7 +262,7 @@ fn evaluate<'a>(first_symbol: &'a BasicSymbol, symbol_iter: &'a mut Iter<(BasicS
     let (op, lhs) = (op.unwrap(), lhs.unwrap());
 
     if matches!(op, Operator::Not) {
-        return Ok(Left(evaluate_operation(lhs, op, None, local_variable_space, function_name_map, type_table, lines, functions)?))
+        return Ok(Left(evaluate_operation(lhs, op, None, lines, name_handler)?))
     }
 
     let third_symbol = if let Some(symbol) = symbol_iter.next() {
@@ -196,24 +276,24 @@ fn evaluate<'a>(first_symbol: &'a BasicSymbol, symbol_iter: &'a mut Iter<(BasicS
         return Err(ProcessorError::BadItemInEvaluation);
     }
 
-    let rhs = match evaluate_symbol(third_symbol, local_variable_space, function_name_map, type_table, lines, functions)? {
-        Left(rhs) => { rhs }
-        Right(_) => return Err(ProcessorError::BadItemInEvaluation)
+    let rhs = match evaluate_symbol(third_symbol, lines, name_handler)? {
+        None => return Err(ProcessorError::DoesntEvaluate),
+        Some(Left(rhs)) => { rhs }
+        Some(Right(_)) => return Err(ProcessorError::BadItemInEvaluation)
     };
 
-    return Ok(Left(evaluate_operation(lhs, op, Some(rhs), local_variable_space, function_name_map, type_table, lines, functions)?))
+    return Ok(Left(evaluate_operation(lhs, op, Some(rhs), lines, name_handler)?))
 }
 
-fn evaluate_symbol(symbol: &BasicSymbol, local_variable_space: &mut usize, function_name_map: &HashMap<Option<isize>,
-    HashMap<String, isize>>, type_table: &TypeTable, lines: &mut Vec<Line>, functions: &HashMap<isize, Box<dyn TypedFunction>>) -> Result<Either<Either<(isize, isize), Literal>, Operator>, ProcessorError> {
-    Ok(match symbol {
+fn evaluate_symbol(symbol: &BasicSymbol, lines: &mut Vec<Line>, name_handler: &mut NameHandler) -> Result<Option<Either<Either<(isize, isize), Literal>, Operator>>, ProcessorError> {
+    Ok(Some(match symbol {
         BasicSymbol::BracketedSection(inner) => {
             let mut iter = inner.into_iter();
             let next = if let Some(next) = iter.next() {
                 &next.0
             }
             else { return Err(ProcessorError::EmptyBrackets); };
-            let res = evaluate(next, &mut iter, local_variable_space, true, function_name_map, type_table, lines, functions)?;
+            let res = evaluate(next, &mut iter, true, lines, name_handler)?;
             Left(res)
         }
         BasicSymbol::Literal(literal) => { Left(Right(literal.clone())) }
@@ -223,22 +303,46 @@ fn evaluate_symbol(symbol: &BasicSymbol, local_variable_space: &mut usize, funct
             }
             Right(operator.clone())
         }
-        BasicSymbol::Name(_) => { todo!() }
+        BasicSymbol::Name(name) => { match name_handler.resolve_name(name)? {
+            Left(_) => { todo!() }
+            Right((function, default_arg, args)) => {
+                if default_arg.is_some() || !args.is_empty() || !function.get_args().is_empty() { todo!() }
+                if function.is_inline() {
+                    if let Some(_type) = function.get_return_type() {
+                        todo!()
+                        // name_handler.type_table().get_type(_type).unwrap().instantiate()
+                    }
+                    else {
+                        lines.push(Line::InlineAsm(function.get_inline(Vec::new())));
+                        return Ok(None);
+                    }
+                }
+                else {
+                    if let Some(_type) = function.get_return_type() {
+                        todo!()
+                        // name_handler.type_table().get_type(_type).unwrap().instantiate()
+                    }
+                    else {
+                        lines.push(Line::NoReturnCall(function.get_id(), Vec::new()));
+                        return Ok(None);
+                    }
+                }
+            }
+        }}
         _ => {
             return Err(ProcessorError::BadItemInEvaluation);
         }
-    })
+    }))
 }
 
-fn instantiate_literal(literal: Either<Literal, isize>, local_variable_space: &mut usize, function_name_map: &HashMap<Option<isize>,
-    HashMap<String, isize>>, type_table: &TypeTable, lines: &mut Vec<Line>, functions: &HashMap<isize, Box<dyn TypedFunction>>) -> Result<(isize, isize), ProcessorError> {
+fn instantiate_literal(literal: Either<Literal, isize>, lines: &mut Vec<Line>, name_handler: &mut NameHandler
+) -> Result<(isize, isize), ProcessorError> {
     let id = match &literal {
         Left(literal) => literal.get_type_id(),
         Right(id) => *id
     };
-    let _type = type_table.get_type(id).unwrap();
-    let size = _type.get_size(type_table, None)?;
-    let addr = -(*local_variable_space as isize) - size as isize;
+    let _type = name_handler.type_table().get_type(id).unwrap();
+    let addr = name_handler.add_local_variable(None, id);
     let asm = match literal {
         Left(literal) => _type.instantiate(Some(literal), addr)?,
         Right(_id) => _type.instantiate(None, addr)?
@@ -248,39 +352,37 @@ fn instantiate_literal(literal: Either<Literal, isize>, local_variable_space: &m
 }
 
 fn evaluate_operation(lhs: Either<(isize, isize), Literal>, op: Operator, rhs: Option<Either<(isize, isize), Literal>>,
-                      local_variable_space: &mut usize, function_name_map: &HashMap<Option<isize>,
-                HashMap<String, isize>>, type_table: &TypeTable, lines: &mut Vec<Line>, functions: &HashMap<isize, Box<dyn TypedFunction>>)
+                      lines: &mut Vec<Line>, name_handler: &mut NameHandler)
     -> Result<(isize, isize), ProcessorError> {
     let lhs = match lhs {
         Left(addr) => { addr }
-        Right(literal) => { instantiate_literal(Left(literal), local_variable_space, function_name_map, type_table, lines, functions)? }
+        Right(literal) => { instantiate_literal(Left(literal), lines, name_handler)? }
     };
 
     let rhs = if let Some(rhs) = rhs {
         Some(match rhs {
             Left(addr) => { addr }
-            Right(literal) => { instantiate_literal(Left(literal), local_variable_space, function_name_map, type_table, lines, functions)? }
+            Right(literal) => { instantiate_literal(Left(literal), lines, name_handler)? }
         })
     }
     else { None };
 
      Ok(match op {
         Operator::Not => {
-            let func = function_name_map.get(&Some(lhs.1)).unwrap().get("not").ok_or(ProcessorError::BadOperatorFunction)?;
-            let func = functions.get(func).unwrap();
+            let func = name_handler.get_function(Some(lhs.1), "not").ok_or(ProcessorError::BadOperatorFunction)?;
             let func_args = func.get_args();
             if func_args.len() != 2 {
                 return Err(ProcessorError::BadOperatorFunction);
             }
             let output = instantiate_literal(
                 Right(func.get_return_type().ok_or(ProcessorError::BadOperatorFunction)?),
-                local_variable_space, function_name_map, type_table, lines, functions
+                lines, name_handler
             )?;
             if func.is_inline() {
                 lines.push(Line::InlineAsm(func.get_inline(vec![lhs.0, output.0])));
             }
             else {
-                lines.push(Line::ReturnCall(func.get_id(), vec![(lhs.0, type_table.get_type_size(lhs.1)?)], output.0));
+                lines.push(Line::ReturnCall(func.get_id(), vec![(lhs.0, name_handler.type_table().get_type_size(lhs.1)?)], output.0));
             }
             output
         },
@@ -302,21 +404,20 @@ fn evaluate_operation(lhs: Either<(isize, isize), Literal>, op: Operator, rhs: O
                 Operator::Not => panic!()
             };
 
-            let func = function_name_map.get(&Some(lhs.1)).unwrap().get(func_name).ok_or(ProcessorError::BadOperatorFunction)?;
-            let func = functions.get(func).unwrap();
+            let func = name_handler.get_function(Some(lhs.1), func_name).ok_or(ProcessorError::BadOperatorFunction)?;
             let func_args = func.get_args();
             if func_args.len() != 3 {
                 return Err(ProcessorError::BadOperatorFunction);
             }
             let output = instantiate_literal(
                 Right(func.get_return_type().ok_or(ProcessorError::BadOperatorFunction)?),
-                local_variable_space, function_name_map, type_table, lines, functions
+                lines, name_handler
             )?;
             if func.is_inline() {
                 lines.push(Line::InlineAsm(func.get_inline(vec![lhs.0, rhs.0, output.0])));
             }
             else {
-                lines.push(Line::ReturnCall(func.get_id(), vec![(lhs.0, type_table.get_type_size(lhs.1)?), (rhs.0, type_table.get_type_size(rhs.1)?)], output.0));
+                lines.push(Line::ReturnCall(func.get_id(), vec![(lhs.0, name_handler.type_table().get_type_size(lhs.1)?), (rhs.0, name_handler.type_table().get_type_size(rhs.1)?)], output.0));
             }
             output
         }

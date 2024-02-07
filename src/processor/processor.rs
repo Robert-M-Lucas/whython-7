@@ -11,12 +11,14 @@ pub enum ProcessorError {
     Syntax(PathBuf, usize, String),
     #[error("type '{2}' in file {0}:{1} not found")]
     TypeNotFound(PathBuf, usize, String),
+    #[error("TODO: name '{0}' not found")] // TODO:
+    NameNotFound(String),
     #[error("type '{2}' in file {0}:{1} also defined in file {3}:{4}")]
     TypeRedefinition(PathBuf, usize, String, PathBuf, usize),
     #[error("type '{2}' has an infinite size")]
     CircularType(PathBuf, usize, String),
     #[error("TODO: BadImplType")]
-    BadImplType(PathBuf), // TODO
+    BadImplType(PathBuf), // TODO:
     #[error("TODO: No main")]
     NoMainFunction,
     #[error("TODO: Function redefinition")]
@@ -38,7 +40,11 @@ pub enum ProcessorError {
     #[error("TODO: Bad operator position")]
     BadOperatorPosition,
     #[error("TODO: Bad operator function (did you override an operator?)")]
-    BadOperatorFunction
+    BadOperatorFunction,
+    #[error("TODO: Standalone type")]
+    StandaloneType,
+    #[error("TODO: Doesn't evaluate")]
+    DoesntEvaluate
 }
 
 pub fn process(ast: Vec<BasicAbstractSyntaxTree>) -> Result<Vec<Box<dyn Function>>, ProcessorError> {

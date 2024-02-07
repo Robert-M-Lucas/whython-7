@@ -96,17 +96,20 @@ pub fn parse_normal(
                     let mut intercepted = false;
                     if !symbols.is_empty() && matches!(symbols.last().unwrap().0, BasicSymbol::Name(_)) &&
                         matches!(&parsed, BasicSymbol::BracketedSection(_)) && matches!(symbols.last().unwrap().0.get_name_contents().last().unwrap().2, NameType::Normal) {
-                        let BasicSymbol::Name(v) = &mut symbols.last_mut().unwrap().0;
+                        let BasicSymbol::Name(v) = &mut symbols.last_mut().unwrap().0 else { panic!(); };
 
                         intercepted = true;
                         let mut arguments = vec![Vec::new()];
 
-                        let BasicSymbol::BracketedSection(symbols) = parsed;
+                        let BasicSymbol::BracketedSection(symbols) = parsed else { panic!(); };
                         for symbol in symbols {
                             match symbol.0 {
                                 BasicSymbol::Punctuation(Punctuation::ListSeparator) => arguments.push(Vec::new()),
-                                symbol => arguments.last().unwrap().push(symbol)
+                                symbol => arguments.last_mut().unwrap().push(symbol)
                             }
+                        }
+                        if arguments.len() == 1 && arguments.last().unwrap().len() == 0 {
+                            arguments.pop();
                         }
 
                         *(&mut v.last_mut().unwrap().2) = NameType::Function(arguments);
@@ -218,8 +221,18 @@ fn process_buffer(
 
     sections.push((section_buffer, last_separator, section_type));
 
-    symbols.push((BasicSymbol::Name(sections), reader.line()));
-    buffer.clear();
+    if let Some(kwd) = Keyword::get_enum(&sections.first().unwrap().0) {
+        if sections.len() > 1 {
+            return Err(reader.syntax_error("Keyword cannon be followed by . or #".to_string()));
+        }
+        symbols.push((BasicSymbol::Keyword(kwd), reader.line()));
+        buffer.clear();
+    }
+    else {
+        symbols.push((BasicSymbol::Name(sections), reader.line()));
+        buffer.clear();
+    }
+
     Ok(())
 }
 

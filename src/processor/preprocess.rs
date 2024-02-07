@@ -1,6 +1,6 @@
 use crate::ast::keywords::Keyword;
 use crate::basic_ast::punctuation::Punctuation;
-use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol};
+use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol, NameType};
 use crate::processor::processor::ProcessorError;
 use crate::processor::processor::ProcessorError::Syntax;
 
@@ -213,11 +213,11 @@ fn parse_struct(
             }
         };
 
-        attributes.push((attr_name, attr_line, attr_type, attr_type_line));
+        attributes.push((attr_name.0, attr_line, attr_type.0, attr_type_line));
         first = false;
     }
 
-    Ok((PreprocessSymbol::Struct(path, name, attributes), main_line))
+    Ok((PreprocessSymbol::Struct(path, name.0, attributes), main_line))
 }
 
 fn parse_impl(
@@ -275,7 +275,7 @@ fn parse_impl(
         }
     }
 
-    Ok((PreprocessSymbol::Impl(path, name, functions), main_line))
+    Ok((PreprocessSymbol::Impl(path, name.0, functions), main_line))
 }
 
 fn parse_fn(
@@ -294,118 +294,110 @@ fn parse_fn(
     if name.len() > 1 {
         return Err(bad_name(path, name_line, "fn"));
     }
-    let name = name.remove(0);
+    let (name, _, name_type) = name.remove(0);
 
-    let (arguments, arguments_line) = tree.next().ok_or(Syntax(
-        path.clone(),
-        name_line,
-        "function name must be followed by brackets ('()')".to_string(),
-    ))?;
-    let arguments = match arguments {
-        BasicSymbol::BracketedSection(contents) => contents,
-        _ => {
-            return Err(Syntax(
-                path,
-                arguments_line,
-                "function name must be followed by brackets ('()')".to_string(),
-            ))
+    let parameters = match name_type {
+        NameType::Normal => return Err(Syntax(
+            path.clone(),
+            name_line,
+            "function name must be followed by brackets ('()')".to_string(),
+        )),
+        NameType::Function(arguments) => {
+            arguments
         }
     };
-    let mut arguments = arguments.into_iter();
 
-    let mut arguments_processed = Vec::new();
-    let mut first = true;
+    // let (arguments, arguments_line) = tree.next().ok_or()?;
+    // let arguments = match arguments {
+    //     BasicSymbol::BracketedSection(contents) => contents,
+    //     _ => {
+    //         return Err(Syntax(
+    //             path,
+    //             arguments_line,
+    //             "function name must be followed by brackets ('()')".to_string(),
+    //         ))
+    //     }
+    // };
 
-    loop {
-        let mut first_item = arguments.next();
+    let mut parameters_processed = Vec::new();
+
+    for parameter in parameters {
+        let mut parameter = parameter.into_iter();
+
+        let mut first_item = parameter.next();
         if first_item.is_none() {
-            break;
+            return Err(Syntax(
+                path,
+                999999, // TODO:
+                "function parameters cannot have a trailing ','".to_string(),
+            ));
         }
 
-        if !first {
-            let (tmp_first_item, first_item_line) = first_item.unwrap();
-            if !matches!(
-                tmp_first_item,
-                BasicSymbol::Punctuation(Punctuation::ListSeparator)
-            ) {
-                return Err(Syntax(
-                    path,
-                    first_item_line,
-                    "function arguments must be ',' separated".to_string(),
-                ));
-            }
-            first_item = arguments.next();
-            if first_item.is_none() {
-                break;
-            }
-        }
-
-        let (arg_name, arg_line) = first_item.unwrap();
+        let arg_name = first_item.unwrap();
         let arg_name = match arg_name {
             BasicSymbol::Name(mut name) => {
                 if name.len() > 1 {
                     return Err(Syntax(
                         path,
-                        arg_line,
-                        "function argument name cannot contain '.'".to_string(),
+                        999999, // TODO:
+                        "function parameter name cannot contain '.'".to_string(),
                     ));
                 }
-                name.remove(0)
+                name.remove(0).0
             }
             _ => {
                 return Err(Syntax(
                     path,
-                    arg_line,
-                    "expected name of argument".to_string(),
+                    999999,
+                    "expected name of parameter".to_string(),
                 ))
             }
         };
-        let colon = arguments.next();
+
+        let colon = parameter.next();
         if colon.is_none()
             || !matches!(
-                colon.as_ref().unwrap().0,
+                colon.as_ref().unwrap(),
                 BasicSymbol::Punctuation(Punctuation::Colon)
             )
         {
             return Err(Syntax(
                 path,
-                arg_line,
-                "expected ':' after argument name".to_string(),
+                999999, // TODO:
+                "expected ':' after parameter name".to_string(),
             ));
         }
-        let colon_line = colon.unwrap().1;
 
-        let arg_type = arguments.next();
-        if arg_type.is_none() {
+        let param_type = parameter.next();
+        if param_type.is_none() {
             return Err(Syntax(
                 path,
-                colon_line,
+                999999, // TODO:
                 "expected type after argument name and ':'".to_string(),
             ));
         }
-        let (arg_type, arg_type_line) = arg_type.unwrap();
-        let attr_type = match arg_type {
+        let param_type = param_type.unwrap();
+        let param_type = match param_type {
             BasicSymbol::Name(mut name) => {
                 if name.len() > 1 {
                     return Err(Syntax(
                         path,
-                        arg_type_line,
-                        "attribute types cannot contain '.'".to_string(),
+                        999999, // TODO:
+                        "parameter types cannot contain '.'".to_string(),
                     ));
                 }
-                name.remove(0)
+                name.remove(0).0
             }
             _ => {
                 return Err(Syntax(
                     path,
-                    arg_type_line,
-                    "expected attribute type after attribute name and ':'".to_string(),
+                    999999, // TODO:
+                    "expected parameter type after attribute name and ':'".to_string(),
                 ))
             }
         };
 
-        arguments_processed.push((arg_name, arg_line, attr_type, arg_type_line));
-        first = false;
+        parameters_processed.push((arg_name, 999999, param_type, 999999)); // TODO:
     }
 
     let (mut contents, mut contents_line) = tree.next().ok_or(Syntax(
@@ -465,7 +457,7 @@ fn parse_fn(
         };
 
     Ok((
-        PreprocessSymbol::Fn(path, (name, arguments_processed, return_type, contents)),
+        PreprocessSymbol::Fn(path, (name, parameters_processed, return_type.and_then(|x| Some(x.0)), contents)),
         main_line,
     ))
 }
