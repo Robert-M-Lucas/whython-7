@@ -9,6 +9,9 @@ pub enum Literal {
 
 impl Literal {
     pub fn get_type_id(&self) -> isize {
-        todo!()
+        match &self {
+            Literal::Int(_) => -1,
+            _ => todo!()
+        }
     }
 }

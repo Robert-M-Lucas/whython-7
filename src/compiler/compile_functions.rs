@@ -88,6 +88,10 @@ impl NameHandler {
         }
     }
 
+    pub fn set_args(&mut self, args: Vec<(String, isize, isize)>) {
+        self.args = args
+    }
+
     pub fn reset(&mut self) {
         self.args.clear();
         self.local_variables.clear();
@@ -105,6 +109,7 @@ impl NameHandler {
     pub fn add_local_variable(&mut self, name: Option<String>, _type: isize) -> isize {
         let size = self.type_table.get_type(_type).unwrap().get_size(&self.type_table, None).unwrap();
         let addr = -(self.local_variables_size as isize) - size as isize;
+        self.local_variables_size += size;
         if let Some(name) = name {
             self.local_variables.push((name, addr, _type));
         }
@@ -115,7 +120,7 @@ impl NameHandler {
         self.local_variables.push((name, addr, _type));
     }
 
-    pub fn resolve_name<'b, 'c>(&self, function_holder: &'c FunctionHolder, name: &'b Vec<(String, NameAccessType, NameType)>) -> Result<Either<(isize, isize), (&Box<dyn TypedFunction>, Option<(isize, isize)>, &'b + 'c Vec<Vec<BasicSymbol>>)>, ProcessorError> {
+    pub fn resolve_name<'b>(&self, function_holder: &'b FunctionHolder, name: &'b Vec<(String, NameAccessType, NameType)>) -> Result<Either<(isize, isize), (&'b Box<dyn TypedFunction>, Option<(isize, isize)>, &'b Vec<Vec<BasicSymbol>>)>, ProcessorError> {
         let mut current_type = None;
         let mut current_variable = None;
         let mut return_func = None;
@@ -130,7 +135,7 @@ impl NameHandler {
                     if current_type != None || current_variable != None {
                         todo!()
                     }
-                    if let Some((_, addr, _type)) = self.local_variables.iter().find(|(n, _, _)| n == name) {
+                    if let Some((_, addr, _type)) = self.local_variables.iter().chain(self.args.iter()).find(|(n, _, _)| n == name) {
                         current_variable = Some(*addr);
                         current_type = Some(*_type);
                     }
@@ -171,6 +176,10 @@ impl NameHandler {
 
 
 pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<String, isize>>, mut functions: HashMap<isize, Box<dyn TypedFunction>>, type_table: TypeTable) -> Result<Vec<Box<dyn Function>>, ProcessorError> {
+    let mut function_contents: HashMap<isize, Vec<BasicSymbol>> = HashMap::new();
+    for (id, func) in &mut functions {
+        function_contents.insert(*id, func.take_contents());
+    }
     for (t, f) in get_custom_function_signatures() {
         if function_name_map.get(&t).unwrap().contains_key(f.get_name()) {
             continue;
@@ -178,10 +187,7 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
         function_name_map.get_mut(&t).unwrap().insert(f.get_name().to_string(), f.get_id());
         functions.insert(f.get_id(), f);
     }
-    let mut function_contents: HashMap<isize, Vec<BasicSymbol>> = HashMap::new();
-    for (id, func) in &mut functions {
-        function_contents.insert(*id, func.take_contents());
-    }
+
     let function_holder = FunctionHolder::new(functions, function_name_map);
     let mut name_handler = NameHandler::new(type_table);
     let mut processed_functions = get_custom_function_implementations();
@@ -190,9 +196,11 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
 
     for (id, contents) in function_contents {
         name_handler.reset();
+        name_handler.set_args(function_holder.functions.get(&id).unwrap().get_args_positioned(name_handler.type_table()));
         let mut lines = Vec::new();
 
         for line in contents.split(|x| matches!(x, BasicSymbol::Punctuation(Punctuation::Semicolon))) {
+            if line.len() == 0 { continue; }
             evaluate(line, &mut lines, &mut name_handler, &function_holder, None)?;
         }
 

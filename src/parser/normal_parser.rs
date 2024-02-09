@@ -1,4 +1,5 @@
 use crate::ast::keywords::Keyword;
+use crate::ast::literals::Literal;
 use crate::ast::operators;
 use crate::ast::operators::Operator;
 use crate::basic_ast::punctuation::Punctuation;
@@ -190,6 +191,12 @@ fn process_buffer(
     if *operator_mode {
         symbols.push(process_operator_buffer(buffer, reader)?);
         *operator_mode = false;
+        buffer.clear();
+        return Ok(());
+    }
+
+    if let Ok(val) = buffer.parse() {
+        symbols.push(BasicSymbol::Literal(Literal::Int(val)));
         buffer.clear();
         return Ok(());
     }

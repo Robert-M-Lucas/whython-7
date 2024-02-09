@@ -1,3 +1,7 @@
 fn main() ~ int {
-    exit(1)
+    custom_exit(10);
+}
+
+fn custom_exit(code: int) {
+    exit(code);
 }

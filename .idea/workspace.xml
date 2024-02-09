@@ -9,11 +9,14 @@
   <component name="ChangeListManager">
     <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/output/out.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/output/out.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/literals.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/literals.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/custom_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/custom_functions.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/normal_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/normal_parser.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/processor/custom_types.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/custom_types.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/processor.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/processor.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/type_builder.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/type_builder.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

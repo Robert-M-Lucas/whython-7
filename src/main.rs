@@ -30,8 +30,8 @@ fn main() {
     };
 
     generate_assembly(&PathBuf::from("output"), functions);
-    #[cfg(target_arch = "windows")]
+    #[cfg(target_os = "windows")]
     assemble(&PathBuf::from("output"));
-    #[cfg(not(target_arch = "windows"))]
+    #[cfg(not(target_os = "windows"))]
     println!("Assembly, linking and execution omitted due to unsupported platform")
 }

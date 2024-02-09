@@ -208,6 +208,17 @@ pub trait TypedFunction {
     fn get_id(&self) -> isize;
     fn get_name(&self) -> &str;
     fn get_args(&self) -> &[(String, isize)];
+    fn get_args_positioned(&self, type_table: &TypeTable) -> Vec<(String, isize, isize)> {
+        let mut offset = 0isize;
+        let mut output = Vec::new();
+
+        for (name, _type) in self.get_args() {
+            output.push((name.clone(), offset, *_type));
+            offset += type_table.get_type_size(*_type).unwrap() as isize;
+        }
+
+        output
+    }
     fn get_return_type(&self) -> Option<isize>;
     fn is_inline(&self) -> bool;
     fn contents(&self) -> &Vec<BasicSymbol>;

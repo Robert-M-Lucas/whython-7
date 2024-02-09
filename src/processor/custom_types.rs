@@ -1,4 +1,5 @@
 use crate::ast::literals::Literal;
+use crate::compiler::default::get_local_address;
 use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::{Type, TypeTable};
 
@@ -52,6 +53,11 @@ impl Type for Int {
     }
 
     fn instantiate(&self, literal: Option<&Literal>, local_address: isize) -> Result<Vec<String>, ProcessorError> {
-        todo!()
+        if literal.is_none() { return Ok(vec![]); }
+        let Literal::Int(val) = literal.unwrap() else { panic!() };
+
+        Ok(vec![
+            format!("mov qword [{}], {}", get_local_address(local_address), *val)
+        ])
     }
 }
