@@ -44,7 +44,11 @@ pub enum ProcessorError {
     #[error("TODO: Standalone type")]
     StandaloneType,
     #[error("TODO: Doesn't evaluate")]
-    DoesntEvaluate
+    DoesntEvaluate,
+    #[error("TODO: Bad arg type")]
+    BadArgType,
+    #[error("TODO: Bad arg count")]
+    BadArgCount
 }
 
 pub fn process(ast: Vec<BasicAbstractSyntaxTree>) -> Result<Vec<Box<dyn Function>>, ProcessorError> {
