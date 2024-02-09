@@ -18,7 +18,7 @@ pub fn parse_normal(
 
     let mut operator_mode = false;
 
-    let mut symbols: Vec<(BasicSymbol, usize)> = Vec::new();
+    let mut symbols: Vec<BasicSymbol> = Vec::new();
 
     loop {
         let next = reader.move_read_any();
@@ -51,7 +51,7 @@ pub fn parse_normal(
             '"' => {
                 process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
                 let start = reader.line();
-                symbols.push((parse_string(reader)?, start));
+                symbols.push(parse_string(reader)?);
                 continue;
             }
             c => {
@@ -94,16 +94,16 @@ pub fn parse_normal(
                     let parsed = parse_normal(reader, new_block)?;
 
                     let mut intercepted = false;
-                    if !symbols.is_empty() && matches!(symbols.last().unwrap().0, BasicSymbol::Name(_)) &&
-                        matches!(&parsed, BasicSymbol::BracketedSection(_)) && matches!(symbols.last().unwrap().0.get_name_contents().last().unwrap().2, NameType::Normal) {
-                        let BasicSymbol::Name(v) = &mut symbols.last_mut().unwrap().0 else { panic!(); };
+                    if !symbols.is_empty() && matches!(symbols.last().unwrap(), BasicSymbol::Name(_)) &&
+                        matches!(&parsed, BasicSymbol::BracketedSection(_)) && matches!(symbols.last().unwrap().get_name_contents().last().unwrap().2, NameType::Normal) {
+                        let BasicSymbol::Name(v) = &mut symbols.last_mut().unwrap() else { panic!(); };
 
                         intercepted = true;
                         let mut arguments = vec![Vec::new()];
 
                         let BasicSymbol::BracketedSection(symbols) = parsed else { panic!(); };
                         for symbol in symbols {
-                            match symbol.0 {
+                            match symbol {
                                 BasicSymbol::Punctuation(Punctuation::ListSeparator) => arguments.push(Vec::new()),
                                 symbol => arguments.last_mut().unwrap().push(symbol)
                             }
@@ -115,7 +115,7 @@ pub fn parse_normal(
                         *(&mut v.last_mut().unwrap().2) = NameType::Function(arguments);
                     }
                     else {
-                        symbols.push((parsed, start));
+                        symbols.push(parsed);
                     }
                     continue;
                 }
@@ -147,31 +147,29 @@ pub fn parse_normal(
 
         if next == ';' {
             process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
-            symbols.push((
-                BasicSymbol::Punctuation(Punctuation::Semicolon),
-                reader.line(),
-            ));
+            symbols.push(
+                BasicSymbol::Punctuation(Punctuation::Semicolon)
+            );
             continue;
         }
 
         if next == ',' {
             process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
-            symbols.push((
+            symbols.push(
                 BasicSymbol::Punctuation(Punctuation::ListSeparator),
-                reader.line(),
-            ));
+            );
             continue;
         }
 
         if next == ':' {
             process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
-            symbols.push((BasicSymbol::Punctuation(Punctuation::Colon), reader.line()));
+            symbols.push(BasicSymbol::Punctuation(Punctuation::Colon));
             continue;
         }
 
         if next == '~' {
             process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
-            symbols.push((BasicSymbol::Punctuation(Punctuation::Tilda), reader.line()));
+            symbols.push(BasicSymbol::Punctuation(Punctuation::Tilda));
             continue;
         }
 
@@ -182,7 +180,7 @@ pub fn parse_normal(
 fn process_buffer(
     buffer: &mut String,
     operator_mode: &mut bool,
-    symbols: &mut Vec<(BasicSymbol, usize)>,
+    symbols: &mut Vec<BasicSymbol>,
     reader: &FileReader,
 ) -> Result<(), ParseError> {
     if buffer.is_empty() {
@@ -190,7 +188,7 @@ fn process_buffer(
     }
 
     if *operator_mode {
-        symbols.push((process_operator_buffer(buffer, reader)?, reader.line()));
+        symbols.push(process_operator_buffer(buffer, reader)?);
         *operator_mode = false;
         buffer.clear();
         return Ok(());
@@ -225,11 +223,11 @@ fn process_buffer(
         if sections.len() > 1 {
             return Err(reader.syntax_error("Keyword cannon be followed by . or #".to_string()));
         }
-        symbols.push((BasicSymbol::Keyword(kwd), reader.line()));
+        symbols.push(BasicSymbol::Keyword(kwd));
         buffer.clear();
     }
     else {
-        symbols.push((BasicSymbol::Name(sections), reader.line()));
+        symbols.push(BasicSymbol::Name(sections));
         buffer.clear();
     }
 

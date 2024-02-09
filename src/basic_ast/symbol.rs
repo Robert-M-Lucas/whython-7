@@ -5,7 +5,7 @@ use crate::basic_ast::punctuation::Punctuation;
 use std::path::PathBuf;
 
 
-pub type BasicAbstractSyntaxTree = (PathBuf, Vec<(BasicSymbol, usize)>);
+pub type BasicAbstractSyntaxTree = (PathBuf, Vec<BasicSymbol>);
 
 #[derive(PartialEq, Clone, strum_macros::Display, Debug)]
 pub enum NameAccessType {
@@ -22,7 +22,7 @@ pub enum NameType {
 
 #[derive(PartialEq, Clone, strum_macros::Display, Debug)]
 pub enum BasicSymbol {
-    AbstractSyntaxTree(Vec<(BasicSymbol, usize)>),
+    AbstractSyntaxTree(Vec<BasicSymbol>),
     Literal(Literal),
     Operator(Operator),
     Assigner(Operator),

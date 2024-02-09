@@ -23,7 +23,7 @@ impl Type for Bool {
         Ok(8)
     }
 
-    fn instantiate(&self, literal: Option<Literal>, local_address: isize) -> Result<Vec<String>, ProcessorError> {
+    fn instantiate(&self, literal: Option<&Literal>, local_address: isize) -> Result<Vec<String>, ProcessorError> {
         todo!()
     }
 }
@@ -51,7 +51,7 @@ impl Type for Int {
         Ok(8)
     }
 
-    fn instantiate(&self, literal: Option<Literal>, local_address: isize) -> Result<Vec<String>, ProcessorError> {
+    fn instantiate(&self, literal: Option<&Literal>, local_address: isize) -> Result<Vec<String>, ProcessorError> {
         todo!()
     }
 }

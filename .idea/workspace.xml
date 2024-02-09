@@ -11,6 +11,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/custom_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/custom_functions.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/processor/custom_types.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/custom_types.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/processor/processor.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/processor.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/processor/type_builder.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/type_builder.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -51,9 +53,6 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RsExternalLinterProjectSettings">
-    <option name="runOnTheFly" value="true" />
-  </component>
   <component name="RunManager" selected="Cargo.Run whython-7">
     <configuration name="Run whython-7" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
       <option name="command" value="run --package whython-7 --bin whython-7" />
@@ -106,7 +105,8 @@
       <workItem from="1707411486477" duration="36000" />
       <workItem from="1707411529254" duration="600000" />
       <workItem from="1707419983027" duration="5121000" />
-      <workItem from="1707485254035" duration="1931000" />
+      <workItem from="1707485254035" duration="2324000" />
+      <workItem from="1707491585220" duration="1783000" />
     </task>
     <task id="LOCAL-00001" summary="Commit">
       <option name="closed" value="true" />
@@ -124,7 +124,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707437121336</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Commit">
+      <option name="closed" value="true" />
+      <created>1707487577616</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1707487577617</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

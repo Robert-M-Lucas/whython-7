@@ -105,7 +105,7 @@ impl Type for UserType {
         Ok(size)
     }
 
-    fn instantiate(&self, literal: Option<Literal>, local_address: isize) -> Result<Vec<String>, ProcessorError> {
+    fn instantiate(&self, literal: Option<&Literal>, local_address: isize) -> Result<Vec<String>, ProcessorError> {
         todo!()
     }
 }
@@ -167,7 +167,7 @@ pub struct UserTypedFunction {
     pub name: String,
     pub args: Vec<(String, isize)>,
     pub return_type: Option<isize>,
-    pub contents: Option<Vec<(BasicSymbol, usize)>>
+    pub contents: Option<Vec<BasicSymbol>>
 }
 
 impl TypedFunction for UserTypedFunction {
@@ -191,11 +191,11 @@ impl TypedFunction for UserTypedFunction {
         false
     }
 
-    fn contents(&self) -> &Vec<(BasicSymbol, usize)> {
+    fn contents(&self) -> &Vec<BasicSymbol> {
         self.contents.as_ref().unwrap()
     }
 
-    fn take_contents(&mut self) -> Vec<(BasicSymbol, usize)> {
+    fn take_contents(&mut self) -> Vec<BasicSymbol> {
         self.contents.take().unwrap()
     }
 
@@ -210,8 +210,8 @@ pub trait TypedFunction {
     fn get_args(&self) -> &[(String, isize)];
     fn get_return_type(&self) -> Option<isize>;
     fn is_inline(&self) -> bool;
-    fn contents(&self) -> &Vec<(BasicSymbol, usize)>;
-    fn take_contents(&mut self) -> Vec<(BasicSymbol, usize)>;
+    fn contents(&self) -> &Vec<BasicSymbol>;
+    fn take_contents(&mut self) -> Vec<BasicSymbol>;
     fn get_inline(&self, args: Vec<isize>) -> Vec<String>;
 }
 
@@ -387,6 +387,6 @@ fn process_function(function: PreProcessFunction, type_table: &TypeTable, id: is
         name,
         args: args_processed,
         return_type,
-        contents,
+        contents: Some(contents),
     }))
 }

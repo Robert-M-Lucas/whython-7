@@ -40,7 +40,11 @@ impl TypedFunction for WindowsExit {
         true
     }
 
-    fn contents(&self) -> &Vec<(BasicSymbol, usize)> {
+    fn contents(&self) -> &Vec<BasicSymbol> {
+        panic!()
+    }
+
+    fn take_contents(&mut self) -> Vec<BasicSymbol> {
         panic!()
     }
 

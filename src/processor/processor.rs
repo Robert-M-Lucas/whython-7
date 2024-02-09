@@ -54,7 +54,9 @@ pub enum ProcessorError {
     #[error("TODO: Bad evaluable layout - Expected `value`, `prefix-operator value`, or `value postfix-operator other-value`")]
     BadEvaluableLayout,
     #[error("TODO: Unexpected symbol")]
-    UnexpectedSymbol(BasicSymbol)
+    UnexpectedSymbol(BasicSymbol),
+    #[error("Placeholder")]
+    Placeholder
 }
 
 pub fn process(ast: Vec<BasicAbstractSyntaxTree>) -> Result<Vec<Box<dyn Function>>, ProcessorError> {

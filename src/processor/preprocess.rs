@@ -12,7 +12,7 @@ pub type PreProcessFunction = (
     String,
     Vec<(String, usize, String, usize)>,
     Option<String>,
-    Vec<(BasicSymbol, usize)>,
+    Vec<BasicSymbol>,
 );
 
 #[derive(PartialEq, Clone, strum_macros::Display, Debug)]
@@ -62,18 +62,18 @@ pub fn preprocess(
             if next.is_none() {
                 break;
             }
-            let (first_symbol, main_line) = next.unwrap();
+            let first_symbol = next.unwrap();
 
             match first_symbol {
                 BasicSymbol::Keyword(keyword) => match keyword {
                     Keyword::Struct => {
-                        output.push(parse_struct(path.clone(), &mut tree, main_line)?);
+                        output.push(parse_struct(path.clone(), &mut tree)?);
                     }
                     Keyword::Impl => {
-                        output.push(parse_impl(path.clone(), &mut tree, main_line)?);
+                        output.push(parse_impl(path.clone(), &mut tree)?);
                     }
                     Keyword::Fn => {
-                        output.push(parse_fn(path.clone(), &mut tree, main_line)?);
+                        output.push(parse_fn(path.clone(), &mut tree, 9999999)?);
                     }
                     _ => {}
                 },
@@ -81,7 +81,7 @@ pub fn preprocess(
                 symbol => {
                     return Err(Syntax(
                         path,
-                        main_line,
+                        999999,
                         format!(
                             "expected 'struct', 'impl' or 'fn' but instead found {}",
                             symbol.instead_found()
@@ -97,28 +97,27 @@ pub fn preprocess(
 
 fn parse_struct(
     path: PathBuf,
-    tree: &mut IntoIter<(BasicSymbol, usize)>,
-    main_line: usize,
+    tree: &mut IntoIter<BasicSymbol>
 ) -> Result<(PreprocessSymbol, usize), ProcessorError> {
-    let (name, name_line) = tree
+    let name = tree
         .next()
-        .ok_or(no_name_error(path.clone(), main_line, "struct"))?;
+        .ok_or(no_name_error(path.clone(), 999999, "struct"))?;
     let mut name = match name {
         BasicSymbol::Name(name) => name,
-        _ => return Err(no_name_error_followed(path, name_line, "struct", name)),
+        _ => return Err(no_name_error_followed(path, 999999, "struct", name)),
     };
 
     if name.len() > 1 {
-        return Err(bad_name(path, name_line, "struct"));
+        return Err(bad_name(path, 999999, "struct"));
     }
     let name = name.remove(0);
 
-    let (contents, contents_line) =
+    let contents =
         tree.next()
-            .ok_or(no_braces(path.clone(), name_line, "struct"))?;
+            .ok_or(no_braces(path.clone(), 999999, "struct"))?;
     let contents = match contents {
         BasicSymbol::BracedSection(contents) => contents,
-        _ => return Err(no_braces(path, contents_line, "struct")),
+        _ => return Err(no_braces(path, 999999, "struct")),
     };
     let mut contents = contents.into_iter();
 
@@ -132,14 +131,14 @@ fn parse_struct(
         }
 
         if !first {
-            let (tmp_first_item, first_item_line) = first_item.unwrap();
+            let tmp_first_item = first_item.unwrap();
             if !matches!(
                 tmp_first_item,
                 BasicSymbol::Punctuation(Punctuation::ListSeparator)
             ) {
                 return Err(Syntax(
                     path,
-                    first_item_line,
+                    999999,
                     "struct attributes must be ',' separated".to_string(),
                 ));
             }
@@ -149,13 +148,13 @@ fn parse_struct(
             }
         }
 
-        let (attr_name, attr_line) = first_item.unwrap();
+        let attr_name = first_item.unwrap();
         let attr_name = match attr_name {
             BasicSymbol::Name(mut name) => {
                 if name.len() > 1 {
                     return Err(Syntax(
                         path,
-                        attr_line,
+                        999999,
                         "struct attribute name cannot contain '.'".to_string(),
                     ));
                 }
@@ -164,7 +163,7 @@ fn parse_struct(
             _ => {
                 return Err(Syntax(
                     path,
-                    attr_line,
+                    999999,
                     "expected name of attribute".to_string(),
                 ))
             }
@@ -172,17 +171,17 @@ fn parse_struct(
         let colon = contents.next();
         if colon.is_none()
             || !matches!(
-                colon.as_ref().unwrap().0,
+                colon.as_ref().unwrap(),
                 BasicSymbol::Punctuation(Punctuation::Colon)
             )
         {
             return Err(Syntax(
                 path,
-                attr_line,
+                999999,
                 "expected ':' after attribute name".to_string(),
             ));
         }
-        let colon_line = colon.unwrap().1;
+        let colon_line = 999999;
 
         let attr_type = contents.next();
         if attr_type.is_none() {
@@ -192,13 +191,13 @@ fn parse_struct(
                 "expected type after attribute name and ':'".to_string(),
             ));
         }
-        let (attr_type, attr_type_line) = attr_type.unwrap();
+        let attr_type = attr_type.unwrap();
         let attr_type = match attr_type {
             BasicSymbol::Name(mut name) => {
                 if name.len() > 1 {
                     return Err(Syntax(
                         path,
-                        contents_line,
+                        999999,
                         "attribute types cannot contain '.'".to_string(),
                     ));
                 }
@@ -207,43 +206,42 @@ fn parse_struct(
             _ => {
                 return Err(Syntax(
                     path,
-                    contents_line,
+                    999999,
                     "expected attribute type after attribute name and ':'".to_string(),
                 ))
             }
         };
 
-        attributes.push((attr_name.0, attr_line, attr_type.0, attr_type_line));
+        attributes.push((attr_name.0, 999999, attr_type.0, 999999));
         first = false;
     }
 
-    Ok((PreprocessSymbol::Struct(path, name.0, attributes), main_line))
+    Ok((PreprocessSymbol::Struct(path, name.0, attributes), 999999))
 }
 
 fn parse_impl(
     path: PathBuf,
-    tree: &mut IntoIter<(BasicSymbol, usize)>,
-    main_line: usize,
+    tree: &mut IntoIter<BasicSymbol>,
 ) -> Result<(PreprocessSymbol, usize), ProcessorError> {
-    let (name, name_line) = tree
+    let name= tree
         .next()
-        .ok_or(no_name_error(path.clone(), main_line, "impl"))?;
+        .ok_or(no_name_error(path.clone(), 999999, "impl"))?;
     let mut name = match name {
         BasicSymbol::Name(name) => name,
-        _ => return Err(no_name_error_followed(path, name_line, "impl", name)),
+        _ => return Err(no_name_error_followed(path, 999999, "impl", name)),
     };
 
     if name.len() > 1 {
-        return Err(bad_name(path, name_line, "impl"));
+        return Err(bad_name(path, 999999, "impl"));
     }
     let name = name.remove(0);
 
-    let (contents, contents_line) =
+    let contents =
         tree.next()
-            .ok_or(no_braces(path.clone(), name_line, "impl"))?;
+            .ok_or(no_braces(path.clone(), 999999, "impl"))?;
     let contents = match contents {
         BasicSymbol::BracedSection(contents) => contents,
-        _ => return Err(no_braces(path, contents_line, "impl")),
+        _ => return Err(no_braces(path, 999999, "impl")),
     };
     let mut contents = contents.into_iter();
 
@@ -254,10 +252,10 @@ fn parse_impl(
         if symbol.is_none() {
             break;
         }
-        let (symbol, symbol_line) = symbol.unwrap();
+        let symbol = symbol.unwrap();
         match symbol {
             BasicSymbol::Keyword(Keyword::Fn) => {
-                let (function, fn_line) = parse_fn(path.clone(), &mut contents, symbol_line)?;
+                let (function, fn_line) = parse_fn(path.clone(), &mut contents, 999999)?;
                 let function = match function {
                     PreprocessSymbol::Fn(_, function) => function,
                     _ => panic!(),
@@ -267,7 +265,7 @@ fn parse_impl(
             _ => {
                 return Err(Syntax(
                     path,
-                    symbol_line,
+                    999999,
                     "only function definitions (beginning with 'fn') allowed within impls"
                         .to_string(),
                 ))
@@ -275,31 +273,31 @@ fn parse_impl(
         }
     }
 
-    Ok((PreprocessSymbol::Impl(path, name.0, functions), main_line))
+    Ok((PreprocessSymbol::Impl(path, name.0, functions), 999999))
 }
 
 fn parse_fn(
     path: PathBuf,
-    tree: &mut IntoIter<(BasicSymbol, usize)>,
+    tree: &mut IntoIter<BasicSymbol>,
     main_line: usize,
 ) -> Result<(PreprocessSymbol, usize), ProcessorError> {
-    let (name, name_line) = tree
+    let name = tree
         .next()
         .ok_or(no_name_error(path.clone(), main_line, "fn"))?;
     let mut name = match name {
         BasicSymbol::Name(name) => name,
-        _ => return Err(no_name_error_followed(path, name_line, "fn", name)),
+        _ => return Err(no_name_error_followed(path, 999999, "fn", name)),
     };
 
     if name.len() > 1 {
-        return Err(bad_name(path, name_line, "fn"));
+        return Err(bad_name(path, 999999, "fn"));
     }
     let (name, _, name_type) = name.remove(0);
 
     let parameters = match name_type {
         NameType::Normal => return Err(Syntax(
             path.clone(),
-            name_line,
+            999999,
             "function name must be followed by brackets ('()')".to_string(),
         )),
         NameType::Function(arguments) => {
@@ -400,9 +398,9 @@ fn parse_fn(
         parameters_processed.push((arg_name, 999999, param_type, 999999)); // TODO:
     }
 
-    let (mut contents, mut contents_line) = tree.next().ok_or(Syntax(
+    let mut contents = tree.next().ok_or(Syntax(
         path.clone(),
-        name_line,
+        999999,
         "function arguments must be followed by braces ('{}')".to_string(),
     ))?;
 
@@ -411,15 +409,15 @@ fn parse_fn(
             None => {
                 return Err(Syntax(
                     path.clone(),
-                    contents_line,
+                    999999,
                     "'~' must be followed by a return type".to_string(),
                 ))
             }
-            Some((BasicSymbol::Name(mut name), name_line)) => {
+            Some(BasicSymbol::Name(mut name)) => {
                 if name.len() > 1 {
                     return Err(Syntax(
                         path,
-                        name_line,
+                        999999,
                         "function return type cannot contain '.'".to_string(),
                     ));
                 }
@@ -428,7 +426,7 @@ fn parse_fn(
             _ => {
                 return Err(Syntax(
                     path.clone(),
-                    contents_line,
+                    999999,
                     "'~' must be followed by a return type".to_string(),
                 ))
             }
@@ -438,9 +436,9 @@ fn parse_fn(
     };
 
     if return_type.is_some() {
-        (contents, contents_line) = tree.next().ok_or(Syntax(
+        contents = tree.next().ok_or(Syntax(
             path.clone(),
-            name_line,
+            999999,
             "function return type must be followed by braces ('{}')".to_string(),
         ))?;
     }
@@ -450,7 +448,7 @@ fn parse_fn(
             BasicSymbol::BracedSection(contents) => contents,
             _ => return Err(Syntax(
                 path.clone(),
-                contents_line,
+                999999,
                 "function arguments (and optional return type) must be followed by braces ('{}')"
                     .to_string(),
             )),

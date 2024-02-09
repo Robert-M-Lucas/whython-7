@@ -115,7 +115,7 @@ impl NameHandler {
         self.local_variables.push((name, addr, _type));
     }
 
-    pub fn resolve_name<'b>(&self, function_holder: &FunctionHolder, name: &'b Vec<(String, NameAccessType, NameType)>) -> Result<Either<(isize, isize), (&Box<dyn TypedFunction>, Option<(isize, isize)>, &'b Vec<Vec<BasicSymbol>>)>, ProcessorError> {
+    pub fn resolve_name<'b, 'c>(&self, function_holder: &'c FunctionHolder, name: &'b Vec<(String, NameAccessType, NameType)>) -> Result<Either<(isize, isize), (&Box<dyn TypedFunction>, Option<(isize, isize)>, &'b + 'c Vec<Vec<BasicSymbol>>)>, ProcessorError> {
         let mut current_type = None;
         let mut current_variable = None;
         let mut return_func = None;
@@ -180,24 +180,26 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
     }
     let mut function_contents: HashMap<isize, Vec<BasicSymbol>> = HashMap::new();
     for (id, func) in &mut functions {
-        function_contents.insert(*id, func.take_contents().into_iter().map(|x| x.0).collect());
+        function_contents.insert(*id, func.take_contents());
     }
     let function_holder = FunctionHolder::new(functions, function_name_map);
-
+    let mut name_handler = NameHandler::new(type_table);
     let mut processed_functions = get_custom_function_implementations();
     let mut used_functions = HashSet::new();
     used_functions.insert(0);
 
     for (id, contents) in function_contents {
-        for line in contents.split(|x| matches!(x, BasicSymbol::Punctuation(Punctuation::Semicolon))) {
+        name_handler.reset();
+        let mut lines = Vec::new();
 
+        for line in contents.split(|x| matches!(x, BasicSymbol::Punctuation(Punctuation::Semicolon))) {
+            evaluate(line, &mut lines, &mut name_handler, &function_holder, None)?;
         }
-        todo!();
 
         processed_functions.push(Box::new(UserFunction {
             id,
             local_variable_count: name_handler.local_variable_space() / 8,
-            arg_count: function.get_args().len(),
+            arg_count: function_holder.functions().get(&id).unwrap().get_args().len(),
             lines,
         }));
     }
@@ -244,7 +246,14 @@ fn evaluate_symbol(symbol: &BasicSymbol, lines: &mut Vec<Line>, name_handler: &m
             evaluate(inner, lines, name_handler, function_holder, return_into)?
         }
         BasicSymbol::Name(name) => {
-            name_handler.resolve_name(function_holder, name)
+            match name_handler.resolve_name(function_holder, name)? {
+                Left(variable) => {
+                    Some(variable)
+                }
+                Right((function, default_args, args)) => {
+                    call_function(function, default_args, args, lines, name_handler, function_holder, return_into)?
+                }
+            }
         }
         other => return Err(ProcessorError::UnexpectedSymbol(other.clone()))
     })
@@ -254,14 +263,70 @@ fn call_function(function: &Box<dyn TypedFunction>, default_arg: Option<(isize, 
     lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder, return_into: Option<(isize, isize)>)
     -> Result<Option<(isize, isize)>, ProcessorError> {
     let target_args = function.get_args();
-    let mut call_args = Vec::new();
-    for (i, arg) in args.iter().enumerate() {
-        let evaluated = evaluate(arg, )
+    if args.len() != target_args.len() {
+        return Err(ProcessorError::BadArgCount);
     }
+    let mut call_args = Vec::new();
+    if let Some(default_arg) = default_arg {
+        if default_arg.1 != target_args[0].1 {
+            return Err(ProcessorError::Placeholder);
+        }
+        call_args.push((default_arg.0, name_handler.type_table().get_type_size(default_arg.1).unwrap()));
+    }
+    for arg in args {
+        let evaluated = evaluate(arg, lines, name_handler, function_holder, None)?;
+        if evaluated.is_none() { return Err(ProcessorError::DoesntEvaluate) }
+        let evaluated = evaluated.unwrap();
+        if evaluated.1 != target_args[call_args.len()].1 {
+            return Err(ProcessorError::BadArgType);
+        }
+        call_args.push((evaluated.0, name_handler.type_table().get_type_size(evaluated.1).unwrap()));
+    }
+
+    Ok(if let Some(return_type) = function.get_return_type() {
+        if return_into.is_some() && return_into.unwrap().1 != return_type {
+            return Err(ProcessorError::Placeholder);
+        }
+        let return_into = if let Some(return_into) = return_into {
+            (return_into.0, name_handler.type_table().get_type_size(return_type).unwrap())
+        }
+        else {
+            (name_handler.add_local_variable(None, return_type), name_handler.type_table.get_type_size(return_type).unwrap())
+        };
+
+        if function.is_inline() {
+            let mut inline_args: Vec<_> = call_args.into_iter().map(|x| x.0).collect();
+            inline_args.push(return_into.0);
+            lines.push(Line::InlineAsm(function.get_inline(inline_args)));
+        }
+        else {
+            lines.push(Line::ReturnCall(function.get_id(), call_args, return_type))
+        }
+
+        Some((return_into.0, return_type))
+    }
+    else {
+        if return_into.is_some() {
+            return Err(ProcessorError::Placeholder);
+        }
+
+        if function.is_inline() {
+            let inline_args: Vec<_> = call_args.into_iter().map(|x| x.0).collect();
+            lines.push(Line::InlineAsm(function.get_inline(inline_args)));
+        }
+        else {
+            lines.push(Line::NoReturnCall(function.get_id(), call_args))
+        }
+
+        None
+    })
 }
 
 fn evaluate_operator<'a>(symbol: &'a BasicSymbol) -> Result<&'a Operator, ProcessorError> {
-    todo!()
+    match symbol {
+        BasicSymbol::Operator(operator) => Ok(operator),
+        _ => Err(ProcessorError::BadEvaluableLayout)
+    }
 }
 
 fn try_instantiate_literal(literal: Either<(isize, isize), &Literal>, lines: &mut Vec<Line>, name_handler: &mut NameHandler,
