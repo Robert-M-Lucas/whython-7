@@ -41,22 +41,46 @@ pub trait Function {
     fn get_id(&self) -> isize;
 }
 
-pub struct NameHandler<'a> {
-    functions: &'a HashMap<isize, Box<dyn TypedFunction>>,
+pub struct FunctionHolder {
+    functions: HashMap<isize, Box<dyn TypedFunction>>,
     functions_table: HashMap<Option<isize>, HashMap<String, isize>>,
+}
+
+impl FunctionHolder {
+    pub fn new(functions: HashMap<isize, Box<dyn TypedFunction>>,
+               functions_table: HashMap<Option<isize>, HashMap<String, isize>>,) -> FunctionHolder {
+        FunctionHolder {
+            functions,
+            functions_table
+        }
+    }
+
+    pub fn get_function(&self, _type: Option<isize>, name: &str) -> Option<&Box<dyn TypedFunction>> {
+        self.functions_table.get(&_type).and_then(
+            |x| x.get(name).and_then(
+                |x| Some(self.functions.get(x).unwrap())
+            ))
+    }
+
+    pub fn functions(&self) -> &HashMap<isize, Box<dyn TypedFunction>> {
+        &self.functions
+    }
+
+    pub fn functions_table(&self) -> &HashMap<Option<isize>, HashMap<String, isize>> {
+        &self.functions_table
+    }
+}
+
+pub struct NameHandler {
     type_table: TypeTable,
     args: Vec<(String, isize, isize)>,
     local_variables: Vec<(String, isize, isize)>,
     local_variables_size: usize
 }
 
-impl<'a> NameHandler<'a> {
-    pub fn new(functions: &'a HashMap<isize, Box<dyn TypedFunction>>,
-               functions_table: HashMap<Option<isize>, HashMap<String, isize>>,
-               type_table: TypeTable) -> NameHandler {
+impl NameHandler {
+    pub fn new(type_table: TypeTable) -> NameHandler {
         NameHandler {
-            functions,
-            functions_table,
             type_table,
             args: Vec::new(),
             local_variables: Vec::new(),
@@ -72,17 +96,6 @@ impl<'a> NameHandler<'a> {
 
     pub fn type_table(&self) -> &TypeTable {
         &self.type_table
-    }
-
-    pub fn get_function(&self, _type: Option<isize>, name: &str) -> Option<&Box<dyn TypedFunction>> {
-        self.functions_table.get(&_type).and_then(
-            |x| x.get(name).and_then(
-                |x| Some(self.functions.get(x).unwrap())
-        ))
-    }
-
-    pub fn functions(&self) -> &HashMap<isize, Box<dyn TypedFunction>> {
-        &self.functions
     }
 
     pub fn local_variable_space(&self) -> usize {
@@ -102,7 +115,7 @@ impl<'a> NameHandler<'a> {
         self.local_variables.push((name, addr, _type));
     }
 
-    pub fn resolve_name<'b>(&self, name: &'b Vec<(String, NameAccessType, NameType)>) -> Result<Either<(isize, isize), (&Box<dyn TypedFunction>, Option<isize>, &'b Vec<Vec<BasicSymbol>>)>, ProcessorError> {
+    pub fn resolve_name<'b>(&self, function_holder: &FunctionHolder, name: &'b Vec<(String, NameAccessType, NameType)>) -> Result<Either<(isize, isize), (&Box<dyn TypedFunction>, Option<isize>, &'b Vec<Vec<BasicSymbol>>)>, ProcessorError> {
         let mut current_type = None;
         let mut current_variable = None;
         let mut return_func = None;
@@ -132,14 +145,14 @@ impl<'a> NameHandler<'a> {
                     }
                 }
                 NameType::Function(contents) => {
-                    if let Some(func) = self.functions_table.get(&current_type).unwrap().get(name) {
+                    if let Some(func) = function_holder.functions_table().get(&current_type).unwrap().get(name) {
                         let default_arg = if matches!(access_type, NameAccessType::Normal) {
                             current_type
                         }
                         else {
                             None
                         };
-                        return_func = Some((self.functions.get(func).unwrap(), default_arg, contents));
+                        return_func = Some((function_holder.functions().get(func).unwrap(), default_arg, contents));
                     }
                 }
             }
@@ -157,6 +170,7 @@ impl<'a> NameHandler<'a> {
 }
 
 
+
 pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<String, isize>>, mut functions: HashMap<isize, Box<dyn TypedFunction>>, type_table: TypeTable) -> Result<Vec<Box<dyn Function>>, ProcessorError> {
     for (t, f) in get_custom_function_signatures() {
         if function_name_map.get(&t).unwrap().contains_key(f.get_name()) {
@@ -165,14 +179,20 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
         function_name_map.get_mut(&t).unwrap().insert(f.get_name().to_string(), f.get_id());
         functions.insert(f.get_id(), f);
     }
-    let function_ids: Vec<isize> = functions.keys().map(|x| *x).collect();
-    let functions = functions;
+    let mut function_contents: HashMap<isize, Vec<BasicSymbol>> = HashMap::new();
+    for (id, func) in &mut functions {
+        function_contents.insert(*id, func.take_contents().into_iter().map(|x| x.0).collect());
+    }
+    let function_holder = FunctionHolder::new(functions, function_name_map);
 
     let mut processed_functions = get_custom_function_implementations();
     let mut used_functions = HashSet::new();
     used_functions.insert(0);
 
-    for id in function_ids {
+    for (id, contents) in function_contents {
+        for line in contents.split(|x| matches!(x, BasicSymbol::Punctuation(Punctuation::Semicolon))) {
+
+        }
         todo!();
 
         processed_functions.push(Box::new(UserFunction {
@@ -188,31 +208,43 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
 }
 
 
-fn evaluate<'a>(first_symbol: &'a BasicSymbol, symbol_iter: &'a mut Iter<(&'a BasicSymbol, usize)>,
-                must_complete: bool, lines: &mut Vec<Line>, name_handler: &mut NameHandler)
-                -> Result<Either<(isize, isize), Literal>, ProcessorError> { // addr, type
+fn evaluate<'a>(section: &[BasicSymbol], lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder,
+    return_into: Option<(isize, isize)>
+    )-> Result<Either<(isize, isize), Literal>, ProcessorError> { // addr, type
+
     todo!()
 }
 
-fn evaluate_symbol(symbol: &BasicSymbol, lines: &mut Vec<Line>, name_handler: &mut NameHandler) -> Result<Option<Either<Either<(isize, isize), Literal>, Operator>>, ProcessorError> {
+fn evaluate_symbol(symbol: &BasicSymbol, lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder
+    return_into: Option<(isize, isize)>) -> Result<Option<Either<Either<(isize, isize), Literal>, Operator>>, ProcessorError> {
     todo!()
 }
 
-fn try_instantiate_literal(literal: Either<(isize, isize), Literal>, lines: &mut Vec<Line>, name_handler: &mut NameHandler
-) -> Result<(isize, isize), ProcessorError> {
+fn try_instantiate_literal(literal: Either<(isize, isize), Literal>, lines: &mut Vec<Line>, name_handler: &mut NameHandler,
+   function_holder: &FunctionHolder, return_into: Option<(isize, isize)>) -> Result<(isize, isize), ProcessorError> {
     match literal {
         Left(r) => Ok(r),
-        Right(literal) => instantiate_literal(Left(literal), lines, name_handler)
+        Right(literal) => instantiate_literal(Left(literal), lines, name_handler, function_holder, return_into)
     }
 }
 
-fn instantiate_literal(literal: Either<Literal, isize>, lines: &mut Vec<Line>, name_handler: &mut NameHandler
-) -> Result<(isize, isize), ProcessorError> {
-    let id = match &literal {
-        Left(literal) => literal.get_type_id(),
-        Right(id) => *id
+fn instantiate_literal(literal: Either<Literal, isize>, lines: &mut Vec<Line>, name_handler: &mut NameHandler,
+   function_holder: &FunctionHolder, return_into: Option<(isize, isize)>) -> Result<(isize, isize), ProcessorError> {
+    let (addr, id) = if let Some((addr, id)) = return_into {
+        (addr, id)
+    }
+    else {
+        let id =
+        (
+            match &literal {
+                Left(literal) => literal.get_type_id(),
+                Right(id) => *id
+            },
+            name_handler.add_local_variable(None, id)
+        )
     };
-    let addr = name_handler.add_local_variable(None, id);
+    let id = m
+    let addr =
     let _type = name_handler.type_table().get_type(id).unwrap();
     let asm = match literal {
         Left(literal) => _type.instantiate(Some(literal), addr)?,
@@ -223,7 +255,7 @@ fn instantiate_literal(literal: Either<Literal, isize>, lines: &mut Vec<Line>, n
 }
 
 fn evaluate_operation(lhs: Either<(isize, isize), Literal>, op: Operator, rhs: Option<Either<(isize, isize), Literal>>,
-                      lines: &mut Vec<Line>, name_handler: &mut NameHandler)
+    lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder, return_into: Option<(isize, isize)>)
     -> Result<(isize, isize), ProcessorError> {
     todo!()
 }

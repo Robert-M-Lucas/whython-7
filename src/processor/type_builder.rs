@@ -167,7 +167,7 @@ pub struct UserTypedFunction {
     pub name: String,
     pub args: Vec<(String, isize)>,
     pub return_type: Option<isize>,
-    pub contents: Vec<(BasicSymbol, usize)>
+    pub contents: Option<Vec<(BasicSymbol, usize)>>
 }
 
 impl TypedFunction for UserTypedFunction {
@@ -191,8 +191,12 @@ impl TypedFunction for UserTypedFunction {
         false
     }
 
-    fn get_contents(&self) -> &Vec<(BasicSymbol, usize)> {
-        &self.contents
+    fn contents(&self) -> &Vec<(BasicSymbol, usize)> {
+        self.contents.as_ref().unwrap()
+    }
+
+    fn take_contents(&mut self) -> Vec<(BasicSymbol, usize)> {
+        self.contents.take().unwrap()
     }
 
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
@@ -206,7 +210,8 @@ pub trait TypedFunction {
     fn get_args(&self) -> &[(String, isize)];
     fn get_return_type(&self) -> Option<isize>;
     fn is_inline(&self) -> bool;
-    fn get_contents(&self) -> &Vec<(BasicSymbol, usize)>;
+    fn contents(&self) -> &Vec<(BasicSymbol, usize)>;
+    fn take_contents(&mut self) -> Vec<(BasicSymbol, usize)>;
     fn get_inline(&self, args: Vec<isize>) -> Vec<String>;
 }
 

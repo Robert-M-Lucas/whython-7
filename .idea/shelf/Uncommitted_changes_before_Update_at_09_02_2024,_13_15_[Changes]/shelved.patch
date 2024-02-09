@@ -1,0 +1,83 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"ALL\" />\n  </component>\n  <component name=\"CargoProjects\">\n    <cargoProject FILE=\"$PROJECT_DIR$/Cargo.toml\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"4a32adca-6e3f-423b-8eaf-1f905a752400\" name=\"Changes\" comment=\"\">\n      <change beforePath=\"$PROJECT_DIR$/.idea/.gitignore\" beforeDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/.idea/editor.xml\" beforeDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"MacroExpansionManager\">\n    <option name=\"directoryName\" value=\"px6oipxj\" />\n  </component>\n  <component name=\"ProjectColorInfo\"><![CDATA[{\n  \"customColor\": \"\",\n  \"associatedIndex\": 7\n}]]></component>\n  <component name=\"ProjectId\" id=\"2c3JJhiilBjbhR3vdcAEf6hNkrT\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\"><![CDATA[{\n  \"keyToString\": {\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\n    \"RunOnceActivity.rust.reset.selective.auto.import\": \"true\",\n    \"git-widget-placeholder\": \"master\",\n    \"ignore.virus.scanning.warn.message\": \"true\",\n    \"node.js.detected.package.eslint\": \"true\",\n    \"node.js.detected.package.tslint\": \"true\",\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\n    \"nodejs_package_manager_path\": \"npm\",\n    \"org.rust.cargo.project.model.PROJECT_DISCOVERY\": \"true\",\n    \"vue.rearranger.settings.migration\": \"true\"\n  }\n}]]></component>\n  <component name=\"RunManager\" selected=\"Cargo.Run whython-7\">\n    <configuration name=\"Run whython-7\" type=\"CargoCommandRunConfiguration\" factoryName=\"Cargo Command\">\n      <option name=\"command\" value=\"run --package whython-7 --bin whython-7\" />\n      <option name=\"workingDirectory\" value=\"file://$PROJECT_DIR$\" />\n      <envs />\n      <option name=\"emulateTerminal\" value=\"true\" />\n      <option name=\"channel\" value=\"DEFAULT\" />\n      <option name=\"requiredFeatures\" value=\"true\" />\n      <option name=\"allFeatures\" value=\"false\" />\n      <option name=\"withSudo\" value=\"false\" />\n      <option name=\"buildTarget\" value=\"REMOTE\" />\n      <option name=\"backtrace\" value=\"SHORT\" />\n      <option name=\"isRedirectInput\" value=\"false\" />\n      <option name=\"redirectInputPath\" value=\"\" />\n      <method v=\"2\">\n        <option name=\"CARGO.BUILD_TASK_PROVIDER\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"Test whython-7\" type=\"CargoCommandRunConfiguration\" factoryName=\"Cargo Command\">\n      <option name=\"command\" value=\"test --workspace\" />\n      <option name=\"workingDirectory\" value=\"file://$PROJECT_DIR$\" />\n      <envs />\n      <option name=\"emulateTerminal\" value=\"true\" />\n      <option name=\"channel\" value=\"DEFAULT\" />\n      <option name=\"requiredFeatures\" value=\"true\" />\n      <option name=\"allFeatures\" value=\"false\" />\n      <option name=\"withSudo\" value=\"false\" />\n      <option name=\"buildTarget\" value=\"REMOTE\" />\n      <option name=\"backtrace\" value=\"SHORT\" />\n      <option name=\"isRedirectInput\" value=\"false\" />\n      <option name=\"redirectInputPath\" value=\"\" />\n      <method v=\"2\">\n        <option name=\"CARGO.BUILD_TASK_PROVIDER\" enabled=\"true\" />\n      </method>\n    </configuration>\n  </component>\n  <component name=\"RustProjectSettings\">\n    <option name=\"toolchainHomeDirectory\" value=\"$USER_HOME$/.cargo/bin\" />\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"4a32adca-6e3f-423b-8eaf-1f905a752400\" name=\"Changes\" comment=\"\" />\n      <created>1707334258896</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1707334258896</updated>\n      <workItem from=\"1707334260163\" duration=\"807000\" />\n    </task>\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"3\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 6ca4d1c37cf95e2c93c8e785563d0683c0cff3f3)
++++ b/.idea/workspace.xml	(date 1707484515793)
+@@ -7,10 +7,7 @@
+     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="">
+-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" />
+-    </list>
++    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Commit" />
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+@@ -22,31 +19,31 @@
+   <component name="MacroExpansionManager">
+     <option name="directoryName" value="px6oipxj" />
+   </component>
+-  <component name="ProjectColorInfo"><![CDATA[{
+-  "customColor": "",
+-  "associatedIndex": 7
+-}]]></component>
++  <component name="ProjectColorInfo">{
++  &quot;customColor&quot;: &quot;&quot;,
++  &quot;associatedIndex&quot;: 7
++}</component>
+   <component name="ProjectId" id="2c3JJhiilBjbhR3vdcAEf6hNkrT" />
+   <component name="ProjectViewState">
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "RunOnceActivity.OpenProjectViewOnStart": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "RunOnceActivity.rust.reset.selective.auto.import": "true",
+-    "git-widget-placeholder": "master",
+-    "ignore.virus.scanning.warn.message": "true",
+-    "node.js.detected.package.eslint": "true",
+-    "node.js.detected.package.tslint": "true",
+-    "node.js.selected.package.eslint": "(autodetect)",
+-    "node.js.selected.package.tslint": "(autodetect)",
+-    "nodejs_package_manager_path": "npm",
+-    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+-    "vue.rearranger.settings.migration": "true"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
++    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
++    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
++    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
++    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
++    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
++    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="RunManager" selected="Cargo.Run whython-7">
+     <configuration name="Run whython-7" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+       <option name="command" value="run --package whython-7 --bin whython-7" />
+@@ -101,4 +98,8 @@
+   <component name="TypeScriptGeneratedFilesManager">
+     <option name="version" value="3" />
+   </component>
++  <component name="VcsManagerConfiguration">
++    <MESSAGE value="Commit" />
++    <option name="LAST_COMMIT_MESSAGE" value="Commit" />
++  </component>
+ </project>
+\ No newline at end of file
