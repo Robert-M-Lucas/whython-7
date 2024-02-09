@@ -115,7 +115,7 @@ impl NameHandler {
         self.local_variables.push((name, addr, _type));
     }
 
-    pub fn resolve_name<'b>(&self, function_holder: &FunctionHolder, name: &'b Vec<(String, NameAccessType, NameType)>) -> Result<Either<(isize, isize), (&Box<dyn TypedFunction>, Option<isize>, &'b Vec<Vec<BasicSymbol>>)>, ProcessorError> {
+    pub fn resolve_name<'b>(&self, function_holder: &FunctionHolder, name: &'b Vec<(String, NameAccessType, NameType)>) -> Result<Either<(isize, isize), (&Box<dyn TypedFunction>, Option<(isize, isize)>, &'b Vec<Vec<BasicSymbol>>)>, ProcessorError> {
         let mut current_type = None;
         let mut current_variable = None;
         let mut return_func = None;
@@ -147,7 +147,7 @@ impl NameHandler {
                 NameType::Function(contents) => {
                     if let Some(func) = function_holder.functions_table().get(&current_type).unwrap().get(name) {
                         let default_arg = if matches!(access_type, NameAccessType::Normal) {
-                            current_type
+                            Some((current_variable.unwrap(), current_type.unwrap()))
                         }
                         else {
                             None
@@ -168,7 +168,6 @@ impl NameHandler {
         )))
     }
 }
-
 
 
 pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<String, isize>>, mut functions: HashMap<isize, Box<dyn TypedFunction>>, type_table: TypeTable) -> Result<Vec<Box<dyn Function>>, ProcessorError> {
@@ -210,17 +209,62 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
 
 fn evaluate<'a>(section: &[BasicSymbol], lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder,
     return_into: Option<(isize, isize)>
-    )-> Result<Either<(isize, isize), Literal>, ProcessorError> { // addr, type
+    )-> Result<Option<(isize, isize)>, ProcessorError> { // addr, type
+    Ok(if section.len() == 1 {
+        evaluate_symbol(&section[0], lines, name_handler, function_holder, return_into)?
+    }
+    else if section.len() == 2 {
+        let op = evaluate_operator(&section[0])?;
+        let Some(value) = evaluate_symbol(&section[1], lines, name_handler, function_holder, None)?
+        else { return Err(ProcessorError::BadEvaluableLayout); };
+        evaluate_operation(value, op, None, lines, name_handler, function_holder, return_into)?
+    }
+    else if section.len() == 3 {
+        let Some(lhs) = evaluate_symbol(&section[0], lines, name_handler, function_holder, None)?
+            else { return Err(ProcessorError::BadEvaluableLayout); };
+        let op = evaluate_operator(&section[1])?;
+        let Some(rhs) = evaluate_symbol(&section[2], lines, name_handler, function_holder, None)?
+            else { return Err(ProcessorError::BadEvaluableLayout); };
+        evaluate_operation(lhs, op, Some(rhs), lines, name_handler, function_holder, return_into)?
+    }
+    else {
+        return Err(ProcessorError::BadEvaluableLayout);
+    })
+}
 
+fn evaluate_symbol(symbol: &BasicSymbol, lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder,
+    return_into: Option<(isize, isize)>) -> Result<Option<(isize, isize)>, ProcessorError> {
+    Ok(match symbol {
+        BasicSymbol::AbstractSyntaxTree(_) => panic!(),
+        BasicSymbol::Operator(_) => return Err(ProcessorError::BadOperatorPosition),
+        BasicSymbol::Literal(literal) => {
+            Some(instantiate_literal(Left(literal), lines, name_handler, function_holder, return_into)?)
+        }
+        BasicSymbol::BracketedSection(inner) => {
+            evaluate(inner, lines, name_handler, function_holder, return_into)?
+        }
+        BasicSymbol::Name(name) => {
+            name_handler.resolve_name(function_holder, name)
+        }
+        other => return Err(ProcessorError::UnexpectedSymbol(other.clone()))
+    })
+}
+
+fn call_function(function: &Box<dyn TypedFunction>, default_arg: Option<(isize, isize)>, args: &Vec<Vec<BasicSymbol>>,
+    lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder, return_into: Option<(isize, isize)>)
+    -> Result<Option<(isize, isize)>, ProcessorError> {
+    let target_args = function.get_args();
+    let mut call_args = Vec::new();
+    for (i, arg) in args.iter().enumerate() {
+        let evaluated = evaluate(arg, )
+    }
+}
+
+fn evaluate_operator<'a>(symbol: &'a BasicSymbol) -> Result<&'a Operator, ProcessorError> {
     todo!()
 }
 
-fn evaluate_symbol(symbol: &BasicSymbol, lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder
-    return_into: Option<(isize, isize)>) -> Result<Option<Either<Either<(isize, isize), Literal>, Operator>>, ProcessorError> {
-    todo!()
-}
-
-fn try_instantiate_literal(literal: Either<(isize, isize), Literal>, lines: &mut Vec<Line>, name_handler: &mut NameHandler,
+fn try_instantiate_literal(literal: Either<(isize, isize), &Literal>, lines: &mut Vec<Line>, name_handler: &mut NameHandler,
    function_holder: &FunctionHolder, return_into: Option<(isize, isize)>) -> Result<(isize, isize), ProcessorError> {
     match literal {
         Left(r) => Ok(r),
@@ -228,23 +272,18 @@ fn try_instantiate_literal(literal: Either<(isize, isize), Literal>, lines: &mut
     }
 }
 
-fn instantiate_literal(literal: Either<Literal, isize>, lines: &mut Vec<Line>, name_handler: &mut NameHandler,
-   function_holder: &FunctionHolder, return_into: Option<(isize, isize)>) -> Result<(isize, isize), ProcessorError> {
+fn instantiate_literal(literal: Either<&Literal, isize>, lines: &mut Vec<Line>, name_handler: &mut NameHandler,
+   _function_holder: &FunctionHolder, return_into: Option<(isize, isize)>) -> Result<(isize, isize), ProcessorError> {
     let (addr, id) = if let Some((addr, id)) = return_into {
         (addr, id)
     }
     else {
-        let id =
-        (
-            match &literal {
-                Left(literal) => literal.get_type_id(),
-                Right(id) => *id
-            },
-            name_handler.add_local_variable(None, id)
-        )
+        let id = match &literal {
+            Left(literal) => literal.get_type_id(),
+            Right(id) => *id
+        };
+        (name_handler.add_local_variable(None, id), id)
     };
-    let id = m
-    let addr =
     let _type = name_handler.type_table().get_type(id).unwrap();
     let asm = match literal {
         Left(literal) => _type.instantiate(Some(literal), addr)?,
@@ -254,8 +293,8 @@ fn instantiate_literal(literal: Either<Literal, isize>, lines: &mut Vec<Line>, n
     Ok((addr, id))
 }
 
-fn evaluate_operation(lhs: Either<(isize, isize), Literal>, op: Operator, rhs: Option<Either<(isize, isize), Literal>>,
+fn evaluate_operation(lhs: (isize, isize), op: &Operator, rhs: Option<(isize, isize)>,
     lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder, return_into: Option<(isize, isize)>)
-    -> Result<(isize, isize), ProcessorError> {
+    -> Result<Option<(isize, isize)>, ProcessorError> {
     todo!()
 }

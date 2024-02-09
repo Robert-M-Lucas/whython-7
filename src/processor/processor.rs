@@ -1,4 +1,4 @@
-use crate::basic_ast::symbol::{BasicAbstractSyntaxTree};
+use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol};
 use crate::processor::preprocess::preprocess;
 use crate::processor::type_builder::build_types;
 use std::path::PathBuf;
@@ -43,12 +43,18 @@ pub enum ProcessorError {
     BadOperatorFunction,
     #[error("TODO: Standalone type")]
     StandaloneType,
+    #[error("TODO: Standalone operator")]
+    StandaloneOperator,
     #[error("TODO: Doesn't evaluate")]
     DoesntEvaluate,
     #[error("TODO: Bad arg type")]
     BadArgType,
     #[error("TODO: Bad arg count")]
-    BadArgCount
+    BadArgCount,
+    #[error("TODO: Bad evaluable layout - Expected `value`, `prefix-operator value`, or `value postfix-operator other-value`")]
+    BadEvaluableLayout,
+    #[error("TODO: Unexpected symbol")]
+    UnexpectedSymbol(BasicSymbol)
 }
 
 pub fn process(ast: Vec<BasicAbstractSyntaxTree>) -> Result<Vec<Box<dyn Function>>, ProcessorError> {

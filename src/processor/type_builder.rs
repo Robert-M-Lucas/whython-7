@@ -117,7 +117,7 @@ pub trait Type {
 
     fn get_size(&self, type_table: &TypeTable,  path: Option<Vec<isize>>) -> Result<usize, ProcessorError>;
 
-    fn instantiate(&self, literal: Option<Literal>, local_address: isize) -> Result<Vec<String>, ProcessorError>;
+    fn instantiate(&self, literal: Option<&Literal>, local_address: isize) -> Result<Vec<String>, ProcessorError>;
 }
 
 pub struct TypeTable {
