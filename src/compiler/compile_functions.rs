@@ -167,54 +167,13 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
     }
     let function_ids: Vec<isize> = functions.keys().map(|x| *x).collect();
     let functions = functions;
-    let mut name_handler = NameHandler::new(&functions, function_name_map, type_table);
+
     let mut processed_functions = get_custom_function_implementations();
     let mut used_functions = HashSet::new();
     used_functions.insert(0);
 
     for id in function_ids {
-        name_handler.reset();
-
-        let function = functions.get(&id).unwrap();
-        if function.is_inline() { continue; }
-
-        let mut lines = Vec::new();
-        let symbols: Vec<_> = function.get_contents().iter().map(|x| (&x.0, x.1)).collect();
-        let mut symbols = symbols.iter();
-
-        let mut next_saved = None;
-
-        loop {
-            let next = if next_saved.is_some() {
-                next_saved.take().unwrap()
-            }
-            else {
-                if let Some(s) = symbols.next() {
-                    &s.0
-                }
-                else {
-                    break
-                }
-            };
-
-            match next {
-                BasicSymbol::Keyword(Keyword::Let) => {
-                    panic!()
-                }
-                BasicSymbol::Keyword(Keyword::If) => {
-                    panic!()
-                }
-                BasicSymbol::Keyword(Keyword::While) => {
-                    panic!()
-                }
-                BasicSymbol::Keyword(_) => {
-                    return Err(ProcessorError::BadKeyword);
-                },
-                other_symbol => {
-                    evaluate(other_symbol, &mut symbols, false, &mut lines, &mut name_handler)?;
-                }
-            }
-        }
+        todo!();
 
         processed_functions.push(Box::new(UserFunction {
             id,
@@ -232,135 +191,11 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
 fn evaluate<'a>(first_symbol: &'a BasicSymbol, symbol_iter: &'a mut Iter<(&'a BasicSymbol, usize)>,
                 must_complete: bool, lines: &mut Vec<Line>, name_handler: &mut NameHandler)
                 -> Result<Either<(isize, isize), Literal>, ProcessorError> { // addr, type
-    let mut op = None;
-    let mut lhs = None;
-
-    match evaluate_symbol(first_symbol, lines, name_handler)? {
-        Some(Left(_lhs)) => { lhs = Some(_lhs) }
-        Some(Right(_op)) => { op = Some(_op) }
-        None => {}
-    }
-
-    let second_symbol = if let Some(symbol) = symbol_iter.next() {
-        &symbol.0
-    }
-    else if lhs.is_some() {
-        return Ok(lhs.unwrap());
-    }
-    else {
-        return Err(ProcessorError::BadItemInEvaluation);
-    };
-
-    if matches!(second_symbol, BasicSymbol::Punctuation(Punctuation::Semicolon)) {
-        if lhs.is_some() && !must_complete {
-            return Ok(lhs.unwrap());
-        }
-        return Err(ProcessorError::BadItemInEvaluation);
-    }
-
-    match evaluate_symbol(first_symbol, lines, name_handler)? {
-        Some(Left(_lhs)) => { lhs = Some(_lhs) }
-        Some(Right(_op)) => { op = Some(_op) }
-        _ => {}
-    }
-
-    if lhs.is_none() || op.is_none() {
-        return Err(ProcessorError::ExpectedOperatorOperand)
-    }
-
-    let (op, lhs) = (op.unwrap(), lhs.unwrap());
-
-    if matches!(op, Operator::Not) {
-        return Ok(Left(evaluate_operation(lhs, op, None, lines, name_handler)?))
-    }
-
-    let third_symbol = if let Some(symbol) = symbol_iter.next() {
-        &symbol.0
-    }
-    else {
-        return Err(ProcessorError::BadItemInEvaluation);
-    };
-
-    if matches!(second_symbol, BasicSymbol::Punctuation(Punctuation::Semicolon)) {
-        return Err(ProcessorError::BadItemInEvaluation);
-    }
-
-    let rhs = match evaluate_symbol(third_symbol, lines, name_handler)? {
-        None => return Err(ProcessorError::DoesntEvaluate),
-        Some(Left(rhs)) => { rhs }
-        Some(Right(_)) => return Err(ProcessorError::BadItemInEvaluation)
-    };
-
-    return Ok(Left(evaluate_operation(lhs, op, Some(rhs), lines, name_handler)?))
+    todo!()
 }
 
 fn evaluate_symbol(symbol: &BasicSymbol, lines: &mut Vec<Line>, name_handler: &mut NameHandler) -> Result<Option<Either<Either<(isize, isize), Literal>, Operator>>, ProcessorError> {
-    Ok(Some(match symbol {
-        BasicSymbol::BracketedSection(inner) => {
-            let mut iter: Vec<_> = inner.into_iter().map(|x| (&x.0, x.1)).collect();
-            let mut iter = iter.iter();
-            let next = if let Some(next) = iter.next() {
-                &next.0
-            }
-            else { return Err(ProcessorError::EmptyBrackets); };
-            let res = evaluate(next, &mut iter, true, lines, name_handler)?;
-            Left(res)
-        }
-        BasicSymbol::Literal(literal) => { Left(Right(literal.clone())) }
-        BasicSymbol::Operator(operator) => {
-            if !matches!(operator, Operator::Not) {
-                return Err(ProcessorError::BadItemInEvaluation);
-            }
-            Right(operator.clone())
-        }
-        BasicSymbol::Name(name) => { match name_handler.resolve_name(name)? {
-            Left(_) => { todo!() }
-            Right((function, default_arg, args)) => {
-                let mut out_args = Vec::new();
-                let target_args = function.get_args();
-                if let Some(default_arg) = default_arg { todo!() }
-
-                for (i, arg) in args.into_iter().enumerate() {
-                    let mut arg_iter: Vec<_> = arg.into_iter().map(|x| (x, 999999usize)).collect();
-                    let mut arg_iter = arg_iter.iter();
-                    let evaluated_arg = evaluate(&arg_iter.next().unwrap().0, &mut arg_iter, true, lines, name_handler)?;
-                    let (addr, _type) = try_instantiate_literal(evaluated_arg, lines, name_handler)?;
-                    if _type != target_args[i].1 {
-                        return Err(ProcessorError::BadArgType);
-                    }
-                    out_args.push((addr, _type));
-                }
-
-                if out_args.len() != target_args.len() { return Err(ProcessorError::BadArgCount); }
-
-                if function.is_inline() {
-                    let out_args = out_args.into_iter().map(|x| x.0).collect();
-                    if let Some(_type) = function.get_return_type() {
-                        todo!()
-                        // name_handler.type_table().get_type(_type).unwrap().instantiate()
-                    }
-                    else {
-                        lines.push(Line::InlineAsm(function.get_inline(out_args)));
-                        return Ok(None);
-                    }
-                }
-                else {
-                    let out_args = out_args.into_iter().map(|x| (x.0, name_handler.type_table().get_type_size(x.1).unwrap())).collect();
-                    if let Some(_type) = function.get_return_type() {
-                        todo!()
-                        // name_handler.type_table().get_type(_type).unwrap().instantiate()
-                    }
-                    else {
-                        lines.push(Line::NoReturnCall(function.get_id(), out_args));
-                        return Ok(None);
-                    }
-                }
-            }
-        }}
-        _ => {
-            return Err(ProcessorError::BadItemInEvaluation);
-        }
-    }))
+    todo!()
 }
 
 fn try_instantiate_literal(literal: Either<(isize, isize), Literal>, lines: &mut Vec<Line>, name_handler: &mut NameHandler
@@ -390,76 +225,5 @@ fn instantiate_literal(literal: Either<Literal, isize>, lines: &mut Vec<Line>, n
 fn evaluate_operation(lhs: Either<(isize, isize), Literal>, op: Operator, rhs: Option<Either<(isize, isize), Literal>>,
                       lines: &mut Vec<Line>, name_handler: &mut NameHandler)
     -> Result<(isize, isize), ProcessorError> {
-    let lhs = match lhs {
-        Left(addr) => { addr }
-        Right(literal) => { instantiate_literal(Left(literal), lines, name_handler)? }
-    };
-
-    let rhs = if let Some(rhs) = rhs {
-        Some(match rhs {
-            Left(addr) => { addr }
-            Right(literal) => { instantiate_literal(Left(literal), lines, name_handler)? }
-        })
-    }
-    else { None };
-
-     Ok(match op {
-        Operator::Not => {
-            let func = name_handler.get_function(Some(lhs.1), "not").ok_or(ProcessorError::BadOperatorFunction)?;
-            let func_args = func.get_args();
-            let func_id = func.get_id();
-            if func_args.len() != 2 {
-                return Err(ProcessorError::BadOperatorFunction);
-            }
-            let output = instantiate_literal(
-                Right(func.get_return_type().ok_or(ProcessorError::BadOperatorFunction)?),
-                lines, name_handler
-            )?;
-            let func = name_handler.functions().get(&func_id).unwrap();
-            if func.is_inline() {
-                lines.push(Line::InlineAsm(func.get_inline(vec![lhs.0, output.0])));
-            }
-            else {
-                lines.push(Line::ReturnCall(func.get_id(), vec![(lhs.0, name_handler.type_table().get_type_size(lhs.1)?)], output.0));
-            }
-            output
-        },
-        op => {
-            let rhs = rhs.ok_or(ProcessorError::BadOperatorPosition)?;
-            let func_name = match op {
-                Operator::Add => "add",
-                Operator::Subtract => "sub",
-                Operator::Product => "mul",
-                Operator::Divide => "div",
-                Operator::Greater => "gt",
-                Operator::Less => "lt",
-                Operator::GreaterEqual => "ge",
-                Operator::LessEqual => "le",
-                Operator::Equal => "eq",
-                Operator::NotEqual => "ne",
-                Operator::Or => "or",
-                Operator::And => "and",
-                Operator::Not => panic!()
-            };
-
-            let func = name_handler.get_function(Some(lhs.1), func_name).ok_or(ProcessorError::BadOperatorFunction)?;
-            let func_args = func.get_args();
-            let func_id = func.get_id();
-            if func_args.len() != 3 {
-                return Err(ProcessorError::BadOperatorFunction);
-            }
-            let output = instantiate_literal(
-                Right(func.get_return_type().ok_or(ProcessorError::BadOperatorFunction)?),
-                lines, name_handler
-            )?;
-            let func = name_handler.functions().get(&func_id).unwrap();
-            if func.is_inline() {
-                lines.push(Line::InlineAsm(func.get_inline(vec![lhs.0, rhs.0, output.0])));
-            }
-            else {
-                lines.push(Line::ReturnCall(func.get_id(), vec![(lhs.0, name_handler.type_table().get_type_size(lhs.1)?), (rhs.0, name_handler.type_table().get_type_size(rhs.1)?)], output.0));
-            }
-            output
-        }
-    })
+    todo!()
 }
