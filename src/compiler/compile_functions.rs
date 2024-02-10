@@ -75,7 +75,8 @@ pub struct NameHandler {
     type_table: TypeTable,
     args: Vec<(String, isize, isize)>,
     local_variables: Vec<(String, isize, isize)>,
-    local_variables_size: usize
+    local_variables_size: usize,
+    used_functions: HashSet<isize>
 }
 
 impl NameHandler {
@@ -85,6 +86,7 @@ impl NameHandler {
             args: Vec::new(),
             local_variables: Vec::new(),
             local_variables_size: 0,
+            used_functions: HashSet::new()
         }
     }
 
@@ -173,6 +175,20 @@ impl NameHandler {
             current_type.unwrap()
         )))
     }
+
+    pub fn use_function_id(&mut self, id: isize) {
+        self.used_functions.insert(id);
+    }
+
+    pub fn use_function(&mut self, func: &Box<dyn TypedFunction>) {
+        if !func.is_inline() {
+            self.used_functions.insert(func.get_id());
+        }
+    }
+
+    pub fn used_functions(&self) -> &HashSet<isize> {
+        &self.used_functions
+    }
 }
 
 
@@ -192,14 +208,9 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
     let function_holder = FunctionHolder::new(functions, function_name_map);
     let mut name_handler = NameHandler::new(type_table);
     let mut processed_functions = get_custom_function_implementations();
-    let mut used_functions = HashSet::new();
-    for func in &processed_functions {
-        used_functions.insert(func.get_id()); // TODO: temp
-    }
-    // used_functions.insert(0);
+    name_handler.use_function_id(0);
 
     for (id, contents) in function_contents {
-        used_functions.insert(id); // TODO: temp
         name_handler.reset();
         name_handler.set_args(function_holder.functions.get(&id).unwrap().get_args_positioned(name_handler.type_table()));
         let mut lines = Vec::new();
@@ -217,7 +228,7 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
         }));
     }
 
-    let processed_functions = processed_functions.into_iter().filter(|f| used_functions.contains(&f.get_id())).collect();
+    let processed_functions = processed_functions.into_iter().filter(|f| name_handler.used_functions().contains(&f.get_id())).collect();
     Ok(processed_functions)
 }
 
@@ -278,6 +289,7 @@ fn evaluate_symbol(symbol: &BasicSymbol, lines: &mut Vec<Line>, name_handler: &m
 fn call_function(function: &Box<dyn TypedFunction>, default_arg: Option<(isize, isize)>, args: &Vec<Vec<BasicSymbol>>,
     lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder, return_into: Option<(isize, isize)>)
     -> Result<Option<(isize, isize)>, ProcessorError> {
+    name_handler.use_function(function);
     let target_args = function.get_args();
     if args.len() != target_args.len() {
         return Err(ProcessorError::BadArgCount);
@@ -290,6 +302,7 @@ fn call_function(function: &Box<dyn TypedFunction>, default_arg: Option<(isize, 
         call_args.push((default_arg.0, name_handler.type_table().get_type_size(default_arg.1).unwrap()));
     }
     for arg in args {
+        \
         let evaluated = evaluate(arg, lines, name_handler, function_holder, None)?;
         println!("{:?}", evaluated);
         if evaluated.is_none() { return Err(ProcessorError::DoesntEvaluate) }

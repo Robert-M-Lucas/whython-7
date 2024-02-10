@@ -1,3 +1,7 @@
 fn main() ~ int {
-    printi(2);
+    recurse(3, 8);
+}
+
+fn recurse(a: int, b: int) {
+    recurse(b, a);
 }

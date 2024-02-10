@@ -30,12 +30,12 @@ impl From<Output> for String {
 pub fn get_function_name(id: isize) -> String {
     if id == 0 { return "main".to_string() }
     let sign = if id < 0 {
-        "_"
+        "__"
     }
     else {
-        ""
+        "_"
     };
-    format!(".{sign}{}", id.abs())
+    format!("{sign}{}", id.abs())
 }
 
 pub fn get_function_sublabel(id: isize, label: &str) -> String {

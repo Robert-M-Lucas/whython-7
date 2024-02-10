@@ -5,32 +5,29 @@
     extern WriteConsoleA
     extern WriteConsoleW
     section .text
-._1:
+_2:
 	push rbp
 	mov rbp, rsp
-	sub rsp, 8
-	mov byte [rbp-4], 4Eh
-	sub     rsp, 56
-	mov     qword [rsp + 40], 0eh 
-	mov     ecx, -11
-	call    GetStdHandle
-	mov     rcx, rax
-	mov     rdx, [rbp - 8]
-	mov     r8, [rsp + 40]
-	mov     r9, 01h
-	mov     qword [rsp + 32], 00h 
-	call    WriteFile
-	add     rsp, 56
+	sub rsp, 0
+	mov rax, qword [rbp+16]
+	push rax
+	mov rax, qword [rbp+24]
+	push rax
+	call _2
+	add rsp, 16
 	leave
 	ret
 main:
 	push rbp
 	mov rbp, rsp
-	sub rsp, 8
-	mov qword [rbp-8], 2
+	sub rsp, 16
+	mov qword [rbp-8], 3
+	mov qword [rbp-16], 8
+	mov rax, qword [rbp-16]
+	push rax
 	mov rax, qword [rbp-8]
 	push rax
-	call ._1
-	add rsp, 8
+	call _2
+	add rsp, 16
 	mov rcx, 0
 	call ExitProcess

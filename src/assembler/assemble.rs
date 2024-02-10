@@ -26,11 +26,11 @@ pub fn assemble(output: &PathBuf) {
         .unwrap();
 
     Command::new("link")
-        .args(["/entry:main", "/out:.\\output\\out.exe", "/SUBSYSTEM:CONSOLE", ".\\output\\out.obj", ".\\libs\\kernel32.lib"])
+        .args(["/entry:main", "/out:.\\output\\out.exe", "/SUBSYSTEM:CONSOLE", "/LARGEADDRESSAWARE:NO", ".\\output\\out.obj", ".\\libs\\kernel32.lib"])
         .status()
         .unwrap();
 
-    println!("Exited with return code {}",
+    println!("\nExited with return code {}",
         Command::new(".\\output\\out.exe")
         .status()
         .unwrap().code().unwrap())
