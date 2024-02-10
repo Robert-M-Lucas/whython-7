@@ -302,7 +302,6 @@ fn call_function(function: &Box<dyn TypedFunction>, default_arg: Option<(isize, 
         call_args.push((default_arg.0, name_handler.type_table().get_type_size(default_arg.1).unwrap()));
     }
     for arg in args {
-        \
         let evaluated = evaluate(arg, lines, name_handler, function_holder, None)?;
         println!("{:?}", evaluated);
         if evaluated.is_none() { return Err(ProcessorError::DoesntEvaluate) }
