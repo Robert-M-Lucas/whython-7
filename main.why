@@ -1,16 +1,3 @@
 fn main() ~ int {
-    blank();
-    mid(2);
-}
-
-fn blank() {
-
-}
-
-fn mid(code: int) {
-    custom_exit(0, code);
-}
-
-fn custom_exit(u: int, code: int) {
-    exit(code);
+    printi(2);
 }

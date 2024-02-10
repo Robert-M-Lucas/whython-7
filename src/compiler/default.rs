@@ -38,6 +38,23 @@ pub fn get_function_name(id: isize) -> String {
     format!(".{sign}{}", id.abs())
 }
 
+pub fn get_function_sublabel(id: isize, label: &str) -> String {
+    let mut base = if id == 0 { "main".to_string() }
+    else {
+        let sign = if id < 0 {
+            "_"
+        }
+        else {
+            ""
+        };
+        format!(".{sign}{}", id.abs())
+    };
+
+    base.push('.');
+    base += label;
+    base
+}
+
 pub fn get_local_address(addr: isize) -> String {
     let sign = if addr >= 0 {
         "+"

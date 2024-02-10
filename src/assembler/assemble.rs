@@ -5,7 +5,13 @@ use crate::compiler::compile_functions::Function;
 
 
 pub fn generate_assembly(output: &PathBuf, functions: Vec<Box<dyn Function>>) {
-    let mut out = String::from("\tglobal main\n\textern ExitProcess\n\tsection .text\n");
+    let mut out = String::from("    global main
+    extern ExitProcess
+    extern GetStdHandle
+    extern WriteFile
+    extern WriteConsoleA
+    extern WriteConsoleW
+    section .text\n");
     for f in functions {
         out += &(f.get_asm());
     }
@@ -20,11 +26,11 @@ pub fn assemble(output: &PathBuf) {
         .unwrap();
 
     Command::new("link")
-        .args(["/entry:main", "/out:.\\output\\out.exe", ".\\output\\out.obj", ".\\libs\\kernel32.lib"])
+        .args(["/entry:main", "/out:.\\output\\out.exe", "/SUBSYSTEM:CONSOLE", ".\\output\\out.obj", ".\\libs\\kernel32.lib"])
         .status()
         .unwrap();
 
-    println!("{}",
+    println!("Exited with return code {}",
         Command::new(".\\output\\out.exe")
         .status()
         .unwrap().code().unwrap())

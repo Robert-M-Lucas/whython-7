@@ -1,43 +1,36 @@
-	global main
-	extern ExitProcess
-	section .text
-.6:
+    global main
+    extern ExitProcess
+    extern GetStdHandle
+    extern WriteFile
+    extern WriteConsoleA
+    extern WriteConsoleW
+    section .text
+._1:
 	push rbp
 	mov rbp, rsp
-	sub rsp, 0
-	mov rcx, [rbp+24]
-	call ExitProcess
-	leave
-	ret
-.2:
-	push rbp
-	mov rbp, rsp
-	sub rsp, 0
+	sub rsp, 8
+	mov byte [rbp-4], 4Eh
+	sub     rsp, 56
+	mov     qword [rsp + 40], 0eh 
+	mov     ecx, -11
+	call    GetStdHandle
+	mov     rcx, rax
+	mov     rdx, [rbp - 8]
+	mov     r8, [rsp + 40]
+	mov     r9, 01h
+	mov     qword [rsp + 32], 00h 
+	call    WriteFile
+	add     rsp, 56
 	leave
 	ret
 main:
 	push rbp
 	mov rbp, rsp
 	sub rsp, 8
-	call .2
-	add rsp, 0
 	mov qword [rbp-8], 2
 	mov rax, qword [rbp-8]
 	push rax
-	call .4
+	call ._1
 	add rsp, 8
 	mov rcx, 0
 	call ExitProcess
-.4:
-	push rbp
-	mov rbp, rsp
-	sub rsp, 8
-	mov qword [rbp-8], 0
-	mov rax, qword [rbp+16]
-	push rax
-	mov rax, qword [rbp-8]
-	push rax
-	call .6
-	add rsp, 16
-	leave
-	ret

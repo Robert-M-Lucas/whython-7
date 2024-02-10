@@ -193,6 +193,9 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
     let mut name_handler = NameHandler::new(type_table);
     let mut processed_functions = get_custom_function_implementations();
     let mut used_functions = HashSet::new();
+    for func in &processed_functions {
+        used_functions.insert(func.get_id()); // TODO: temp
+    }
     // used_functions.insert(0);
 
     for (id, contents) in function_contents {

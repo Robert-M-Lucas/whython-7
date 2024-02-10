@@ -8,11 +8,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Commit">
+      <change afterPath="$PROJECT_DIR$/test2.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/output/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/output/out.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/output/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/output/out.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/output/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/output/out.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assembler/assemble.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/assembler/assemble.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/custom_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/custom_functions.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/default.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/default.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -35,24 +39,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Cargo.Run whython-7.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.rust.reset.selective.auto.import": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
-    "settings.editor.selected.configurable": "language.rust.cargo.check",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Cargo.Run whython-7.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;language.rust.cargo.check&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Cargo.Run whython-7">
     <configuration name="Run whython-7" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
       <option name="command" value="run --package whython-7 --bin whython-7" />
@@ -108,6 +112,7 @@
       <workItem from="1707485254035" duration="2324000" />
       <workItem from="1707491585220" duration="1783000" />
       <workItem from="1707537208478" duration="663000" />
+      <workItem from="1707562919368" duration="8629000" />
     </task>
     <task id="LOCAL-00001" summary="Commit">
       <option name="closed" value="true" />
