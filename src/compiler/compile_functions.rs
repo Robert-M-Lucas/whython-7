@@ -136,6 +136,7 @@ impl NameHandler {
                         todo!()
                     }
                     if let Some((_, addr, _type)) = self.local_variables.iter().chain(self.args.iter()).find(|(n, _, _)| n == name) {
+                        println!("{}, {}", addr, _type);
                         current_variable = Some(*addr);
                         current_type = Some(*_type);
                     }
@@ -168,8 +169,8 @@ impl NameHandler {
         }
 
         Ok(Left((
-            current_type.unwrap(),
-            current_variable.ok_or(ProcessorError::StandaloneType)?
+            current_variable.ok_or(ProcessorError::StandaloneType)?,
+            current_type.unwrap()
         )))
     }
 }
@@ -192,9 +193,10 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
     let mut name_handler = NameHandler::new(type_table);
     let mut processed_functions = get_custom_function_implementations();
     let mut used_functions = HashSet::new();
-    used_functions.insert(0);
+    // used_functions.insert(0);
 
     for (id, contents) in function_contents {
+        used_functions.insert(id); // TODO: temp
         name_handler.reset();
         name_handler.set_args(function_holder.functions.get(&id).unwrap().get_args_positioned(name_handler.type_table()));
         let mut lines = Vec::new();
@@ -244,6 +246,7 @@ fn evaluate<'a>(section: &[BasicSymbol], lines: &mut Vec<Line>, name_handler: &m
 
 fn evaluate_symbol(symbol: &BasicSymbol, lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder,
     return_into: Option<(isize, isize)>) -> Result<Option<(isize, isize)>, ProcessorError> {
+    println!("{:?}", symbol);
     Ok(match symbol {
         BasicSymbol::AbstractSyntaxTree(_) => panic!(),
         BasicSymbol::Operator(_) => return Err(ProcessorError::BadOperatorPosition),
@@ -254,8 +257,10 @@ fn evaluate_symbol(symbol: &BasicSymbol, lines: &mut Vec<Line>, name_handler: &m
             evaluate(inner, lines, name_handler, function_holder, return_into)?
         }
         BasicSymbol::Name(name) => {
+            println!("{:?}", name);
             match name_handler.resolve_name(function_holder, name)? {
                 Left(variable) => {
+                    println!("{:?}", variable);
                     Some(variable)
                 }
                 Right((function, default_args, args)) => {
@@ -283,6 +288,7 @@ fn call_function(function: &Box<dyn TypedFunction>, default_arg: Option<(isize, 
     }
     for arg in args {
         let evaluated = evaluate(arg, lines, name_handler, function_holder, None)?;
+        println!("{:?}", evaluated);
         if evaluated.is_none() { return Err(ProcessorError::DoesntEvaluate) }
         let evaluated = evaluated.unwrap();
         if evaluated.1 != target_args[call_args.len()].1 {

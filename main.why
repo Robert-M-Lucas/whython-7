@@ -1,7 +1,16 @@
 fn main() ~ int {
-    custom_exit(10);
+    blank();
+    mid(2);
 }
 
-fn custom_exit(code: int) {
+fn blank() {
+
+}
+
+fn mid(code: int) {
+    custom_exit(0, code);
+}
+
+fn custom_exit(u: int, code: int) {
     exit(code);
 }

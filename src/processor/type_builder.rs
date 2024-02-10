@@ -209,7 +209,7 @@ pub trait TypedFunction {
     fn get_name(&self) -> &str;
     fn get_args(&self) -> &[(String, isize)];
     fn get_args_positioned(&self, type_table: &TypeTable) -> Vec<(String, isize, isize)> {
-        let mut offset = 0isize;
+        let mut offset = 16isize;
         let mut output = Vec::new();
 
         for (name, _type) in self.get_args() {

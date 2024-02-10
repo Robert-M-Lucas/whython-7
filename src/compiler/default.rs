@@ -39,7 +39,7 @@ pub fn get_function_name(id: isize) -> String {
 }
 
 pub fn get_local_address(addr: isize) -> String {
-    let sign = if addr > 0 {
+    let sign = if addr >= 0 {
         "+"
     }
     else {
@@ -66,7 +66,7 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 output.push(&format!("call {}", get_function_name(*function)));
 
                 // Release stack space used
-                output.push(&format!("add rsp {}", local_args.len() * 8));
+                output.push(&format!("add rsp, {}", local_args.len() * 8));
                 // Move return value
                 output.push(&format!("mov qword [{}], rax", get_local_address(*return_addr)));
             }
@@ -80,7 +80,7 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 output.push(&format!("call {}", get_function_name(*function)));
 
                 // Release stack space used
-                output.push(&format!("add rsp {}", local_args.len() * 8));
+                output.push(&format!("add rsp, {}", local_args.len() * 8));
             }
             Line::Copy(local_from, local_to) => {
                 output.push(&format!("mov rax, qword [{}]", get_local_address(*local_from)));
