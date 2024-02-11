@@ -76,7 +76,8 @@ pub struct NameHandler {
     args: Vec<(String, isize, isize)>,
     local_variables: Vec<(String, isize, isize)>,
     local_variables_size: usize,
-    used_functions: HashSet<isize>
+    used_functions: HashSet<isize>,
+    nest_stack: Vec<String>
 }
 
 impl NameHandler {
@@ -86,7 +87,8 @@ impl NameHandler {
             args: Vec::new(),
             local_variables: Vec::new(),
             local_variables_size: 0,
-            used_functions: HashSet::new()
+            used_functions: HashSet::new(),
+            nest_stack: Vec::new()
         }
     }
 
@@ -95,6 +97,9 @@ impl NameHandler {
     }
 
     pub fn reset(&mut self) {
+        if !self.nest_stack.is_empty() {
+            panic!();
+        }
         self.args.clear();
         self.local_variables.clear();
         self.local_variables_size = 0;

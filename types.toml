@@ -1,0 +1,15 @@
+IntDiv=0
+IntMul=1
+IntSub=2
+IntAdd=3
+PrintI=4
+WindowsExit=5
+B=6
+Bo=7
+Boo=8
+Bool=9
+BoolN=10
+BoolNo=11
+BoolNot=12
+Print=13
+PrintB=14
