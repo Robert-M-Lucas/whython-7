@@ -9,7 +9,10 @@ pub fn get_custom_function_signatures() -> Vec<(Option<isize>, Box<dyn TypedFunc
     vec![
         (None, Box::new(WindowsExit{})),
         (None, Box::new(PrintI{})),
-        (Some(-1), Box::new(IntAdd{}))
+        (Some(-1), Box::new(IntAdd{})),
+        (Some(-1), Box::new(IntSub{})),
+        (Some(-1), Box::new(IntMul{})),
+        (Some(-1), Box::new(IntDiv{}))
     ]
 }
 
@@ -25,7 +28,7 @@ lazy_static! {
 }
 impl TypedFunction for WindowsExit {
     fn get_id(&self) -> isize {
-        -1_000_000
+        -1
     }
 
     fn get_name(&self) -> &str {
@@ -66,7 +69,7 @@ lazy_static! {
 }
 impl TypedFunction for PrintI {
     fn get_id(&self) -> isize {
-        -1
+        -2
     }
 
     fn get_name(&self) -> &str {
@@ -150,7 +153,7 @@ lazy_static! {
 }
 impl TypedFunction for IntAdd {
     fn get_id(&self) -> isize {
-        -1_000_000
+        -3
     }
 
     fn get_name(&self) -> &str {
@@ -181,6 +184,134 @@ impl TypedFunction for IntAdd {
         vec![
             format!("mov rax, [{}]", get_local_address(args[0])),
             format!("add rax, [{}]", get_local_address(args[1])),
+            format!("mov [{}], rax", get_local_address(args[2])),
+        ]
+    }
+}
+
+pub struct IntSub {}
+lazy_static! {
+    static ref INT_SUB_ARGS: [(String, isize); 2] = [(String::from("lhs"), Int::get_id()), (String::from("rhs"), Int::get_id())];
+}
+impl TypedFunction for IntSub {
+    fn get_id(&self) -> isize {
+        -4
+    }
+
+    fn get_name(&self) -> &str {
+        "sub"
+    }
+
+    fn get_args(&self) -> &[(String, isize)] {
+        INT_SUB_ARGS.as_ref()
+    }
+
+    fn get_return_type(&self) -> Option<isize> {
+        Some(-1)
+    }
+
+    fn is_inline(&self) -> bool {
+        true
+    }
+
+    fn contents(&self) -> &Vec<BasicSymbol> {
+        panic!()
+    }
+
+    fn take_contents(&mut self) -> Vec<BasicSymbol> {
+        panic!()
+    }
+
+    fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
+        vec![
+            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("sub rax, [{}]", get_local_address(args[1])),
+            format!("mov [{}], rax", get_local_address(args[2])),
+        ]
+    }
+}
+
+pub struct IntMul {}
+lazy_static! {
+    static ref INT_MUL_ARGS: [(String, isize); 2] = [(String::from("lhs"), Int::get_id()), (String::from("rhs"), Int::get_id())];
+}
+impl TypedFunction for IntMul {
+    fn get_id(&self) -> isize {
+        -5
+    }
+
+    fn get_name(&self) -> &str {
+        "mul"
+    }
+
+    fn get_args(&self) -> &[(String, isize)] {
+        crate::compiler::custom_functions::INT_SUB_ARGS.as_ref()
+    }
+
+    fn get_return_type(&self) -> Option<isize> {
+        Some(-1)
+    }
+
+    fn is_inline(&self) -> bool {
+        true
+    }
+
+    fn contents(&self) -> &Vec<BasicSymbol> {
+        panic!()
+    }
+
+    fn take_contents(&mut self) -> Vec<BasicSymbol> {
+        panic!()
+    }
+
+    fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
+        vec![
+            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rcx, [{}]", get_local_address(args[1])),
+            "mul rcx".to_string(),
+            format!("mov [{}], rax", get_local_address(args[2])),
+        ]
+    }
+}
+
+pub struct IntDiv {}
+lazy_static! {
+    static ref INT_DIV_ARGS: [(String, isize); 2] = [(String::from("lhs"), Int::get_id()), (String::from("rhs"), Int::get_id())];
+}
+impl TypedFunction for IntDiv {
+    fn get_id(&self) -> isize {
+        -6
+    }
+
+    fn get_name(&self) -> &str {
+        "div"
+    }
+
+    fn get_args(&self) -> &[(String, isize)] {
+        crate::compiler::custom_functions::INT_SUB_ARGS.as_ref()
+    }
+
+    fn get_return_type(&self) -> Option<isize> {
+        Some(-1)
+    }
+
+    fn is_inline(&self) -> bool {
+        true
+    }
+
+    fn contents(&self) -> &Vec<BasicSymbol> {
+        panic!()
+    }
+
+    fn take_contents(&mut self) -> Vec<BasicSymbol> {
+        panic!()
+    }
+
+    fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
+        vec![
+            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rcx, [{}]", get_local_address(args[1])),
+            "div rcx".to_string(),
             format!("mov [{}], rax", get_local_address(args[2])),
         ]
     }

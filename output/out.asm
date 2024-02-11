@@ -5,7 +5,8 @@
     extern WriteConsoleA
     extern WriteConsoleW
     section .text
-__1:
+
+__2:
 	push rbp
 	mov rbp, rsp
 	sub rsp, 16
@@ -13,14 +14,14 @@ __1:
 	mov qword [rbp-16], 0D0Ah
 	mov qword [rbp-8], 0h
 	mov rbx, 10
-	._1.loop:
+	._2.loop:
 	xor rdx, rdx
 	div rbx
 	dec rcx
 	add rdx, '0'
 	mov [rcx], dl
 	test rax, rax
-	jnz ._1.loop
+	jnz ._2.loop
 	sub rsp, 48
 	mov ecx, -11
 	call GetStdHandle
@@ -35,40 +36,35 @@ __1:
 	add rsp, 48
 	leave
 	ret
-_2:
-	push rbp
-	mov rbp, rsp
-	sub rsp, 16
-	mov rax, [rbp+16]
-	add rax, [rbp+24]
-	mov [rbp-16], rax
-	mov rax, [rbp-16]
-	add rax, [rbp+24]
-	mov [rbp-8], rax
-	mov rax, [rbp-8]
-	leave
-	ret
+
 main:
 	push rbp
 	mov rbp, rsp
-	sub rsp, 48
+	sub rsp, 72
 	mov qword [rbp-8], 2
-	mov qword [rbp-16], 4
-	mov rax, qword [rbp-16]
-	push rax
-	mov rax, qword [rbp-8]
-	push rax
-	call _2
-	add rsp, 16
-	mov qword [rbp-24], rax
+	mov qword [rbp-16], 3
+	mov rax, [rbp-8]
+	mov rcx, [rbp-16]
+	mul rcx
+	mov [rbp-24], rax
 	mov rax, qword [rbp-24]
 	push rax
-	call __1
+	call __2
 	add rsp, 8
-	mov qword [rbp-40], 1
-	mov qword [rbp-48], 3
-	mov rax, [rbp-40]
-	add rax, [rbp-48]
-	mov [rbp-32], rax
-	mov rcx, [rbp-32]
+	mov qword [rbp-32], 9
+	mov qword [rbp-40], 2
+	mov rax, [rbp-32]
+	mov rcx, [rbp-40]
+	div rcx
+	mov [rbp-48], rax
+	mov rax, qword [rbp-48]
+	push rax
+	call __2
+	add rsp, 8
+	mov qword [rbp-64], 1
+	mov qword [rbp-72], 3
+	mov rax, [rbp-64]
+	sub rax, [rbp-72]
+	mov [rbp-56], rax
+	mov rcx, [rbp-56]
 	call ExitProcess

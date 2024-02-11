@@ -7,7 +7,14 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Commit" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Commit">
+      <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/output/out.asm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/output/out.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/output/out.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assembler/assemble.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/assembler/assemble.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/custom_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/custom_functions.rs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -168,7 +175,23 @@
       <option name="project" value="LOCAL" />
       <updated>1707679264000</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Commit">
+      <option name="closed" value="true" />
+      <created>1707679319201</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1707679319201</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Commit">
+      <option name="closed" value="true" />
+      <created>1707679657629</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1707679657629</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

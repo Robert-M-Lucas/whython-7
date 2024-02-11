@@ -13,6 +13,7 @@ pub fn generate_assembly(output: &PathBuf, functions: Vec<Box<dyn Function>>) {
     extern WriteConsoleW
     section .text\n");
     for f in functions {
+        out.push('\n');
         out += &(f.get_asm());
     }
 

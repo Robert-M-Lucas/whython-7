@@ -1,11 +1,5 @@
 fn main() ~ int {
-    printi(2 - 4);
-    return 1 + 3;
+    printi(2 * 3);
+    printi(9 / 2);
+    return 1 - 3;
 }
-
-impl int {
-    fn sub(lhs: int, rhs: int) ~ int {
-        return (lhs + rhs) + rhs;
-    }
-}
-
