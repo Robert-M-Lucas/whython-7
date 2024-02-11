@@ -1,7 +1,9 @@
 use crate::parser::parse::parse;
 use crate::processor::processor::process;
 use std::path::PathBuf;
-use crate::assembler::assemble::{assemble, generate_assembly};
+use std::process::Command;
+use std::time::Instant;
+use crate::assembler::assemble::{assemble, generate_assembly, link};
 
 mod ast;
 mod basic_ast;
@@ -12,26 +14,54 @@ mod compiler;
 
 // TODO: Handle circular imports
 
+macro_rules! time {
+    ($($tts:tt)*) => {
+        let t = Instant::now();
+        $($tts)*;
+        let end = t.elapsed();
+        println!("Completed [{:?}]", end);
+    };
+}
+
 fn main() {
     let mut asts = Vec::new();
-    if let Err(e) = parse(PathBuf::from("main.why"), &mut asts) {
-        println!("Parse Error:\n{}", e);
-        return;
-    } else {
-        println!("Parse Result:\n{:?}", asts);
-    }
-
-    let functions = match process(asts) {
-        Err(e) => {
-            println!("Processing Error:\n{}", e);
-            return
+    print!("Parsing...");
+    time!(
+        if let Err(e) = parse(PathBuf::from("main.why"), &mut asts) {
+            println!("Parse Error:\n{}", e);
+            return;
+        } else {
+            // println!("Parse Result:\n{:?}", asts);
         }
-        Ok(functions) => functions
-    };
+    );
 
-    generate_assembly(&PathBuf::from("output"), functions);
+    print!("Processing...");
+    time!(
+        let functions = match process(asts) {
+            Err(e) => {
+                println!("Processing Error:\n{}", e);
+                return
+            }
+            Ok(functions) => functions
+        };
+    );
+
+    print!("Compiling...");
+    time!(generate_assembly(&PathBuf::from("output"), functions));
     #[cfg(target_os = "windows")]
-    assemble(&PathBuf::from("output"));
+    print!("Assembling (NASM)...");
+    time!(assemble());
+    println!("Linking (MSVC)...");
+    time!(link());
+    println!("Executing...");
+    time!(run());
     #[cfg(not(target_os = "windows"))]
-    println!("Assembling, linking and execution omitted due to unsupported platform")
+    println!("Assembling, linking, and execution omitted due to unsupported platform")
+}
+
+fn run() {
+    println!("\nExited with return code {}",
+             Command::new(".\\output\\out.exe")
+                 .status()
+                 .unwrap().code().unwrap())
 }

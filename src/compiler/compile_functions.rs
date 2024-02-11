@@ -138,7 +138,7 @@ impl NameHandler {
                         todo!()
                     }
                     if let Some((_, addr, _type)) = self.local_variables.iter().chain(self.args.iter()).find(|(n, _, _)| n == name) {
-                        println!("{}, {}", addr, _type);
+                        // println!("{}, {}", addr, _type);
                         current_variable = Some(*addr);
                         current_type = Some(*_type);
                     }
@@ -260,7 +260,7 @@ fn evaluate<'a>(section: &[BasicSymbol], lines: &mut Vec<Line>, name_handler: &m
 
 fn evaluate_symbol(symbol: &BasicSymbol, lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder,
     return_into: Option<(isize, isize)>) -> Result<Option<(isize, isize)>, ProcessorError> {
-    println!("{:?}", symbol);
+    // println!("{:?}", symbol);
     Ok(match symbol {
         BasicSymbol::AbstractSyntaxTree(_) => panic!(),
         BasicSymbol::Operator(_) => return Err(ProcessorError::BadOperatorPosition),
@@ -271,10 +271,10 @@ fn evaluate_symbol(symbol: &BasicSymbol, lines: &mut Vec<Line>, name_handler: &m
             evaluate(inner, lines, name_handler, function_holder, return_into)?
         }
         BasicSymbol::Name(name) => {
-            println!("{:?}", name);
+            // println!("{:?}", name);
             match name_handler.resolve_name(function_holder, name)? {
                 Left(variable) => {
-                    println!("{:?}", variable);
+                    // println!("{:?}", variable);
                     Some(variable)
                 }
                 Right((function, default_args, args)) => {
@@ -303,7 +303,7 @@ fn call_function(function: &Box<dyn TypedFunction>, default_arg: Option<(isize, 
     }
     for arg in args {
         let evaluated = evaluate(arg, lines, name_handler, function_holder, None)?;
-        println!("{:?}", evaluated);
+        // println!("{:?}", evaluated);
         if evaluated.is_none() { return Err(ProcessorError::DoesntEvaluate) }
         let evaluated = evaluated.unwrap();
         if evaluated.1 != target_args[call_args.len()].1 {

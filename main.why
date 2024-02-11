@@ -3,6 +3,5 @@ fn main() ~ int {
 }
 
 fn recurse(a: int, b: int) {
-    printi(a);
     recurse(b, a);
 }

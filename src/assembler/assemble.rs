@@ -19,19 +19,16 @@ pub fn generate_assembly(output: &PathBuf, functions: Vec<Box<dyn Function>>) {
     fs::write("output\\out.asm", out).unwrap();
 }
 
-pub fn assemble(output: &PathBuf) {
+pub fn assemble() {
     Command::new("nasm")
         .args(["-f", "win64", ".\\output\\out.asm"])
         .status()
         .unwrap();
+}
 
+pub fn link() {
     Command::new("link")
         .args(["/entry:main", "/out:.\\output\\out.exe", "/SUBSYSTEM:CONSOLE", "/LARGEADDRESSAWARE:NO", ".\\output\\out.obj", ".\\libs\\kernel32.lib"])
         .status()
         .unwrap();
-
-    println!("\nExited with return code {}",
-        Command::new(".\\output\\out.exe")
-        .status()
-        .unwrap().code().unwrap())
 }
