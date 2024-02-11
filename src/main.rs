@@ -33,5 +33,5 @@ fn main() {
     #[cfg(target_os = "windows")]
     assemble(&PathBuf::from("output"));
     #[cfg(not(target_os = "windows"))]
-    println!("Assembly, linking and execution omitted due to unsupported platform")
+    println!("Assembling, linking and execution omitted due to unsupported platform")
 }
