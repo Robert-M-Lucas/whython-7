@@ -120,19 +120,19 @@ impl Function for PrintI {
                         "test rax, rax".to_string(),
                         format!("jnz {}", get_function_sublabel(TypedFunction::get_id(self), "loop")),
 
-                        "sub     rsp, 48".to_string(),
-                        "mov     ecx, -11".to_string(),
-                        "call    GetStdHandle".to_string(),
+                        "sub rsp, 48".to_string(),
+                        "mov ecx, -11".to_string(),
+                        "call GetStdHandle".to_string(),
 
-                        "mov     rcx, rax".to_string(),
-                        "mov     rdx, rbp ".to_string(),
-                        "sub     rdx, 16".to_string(),
-                        "mov     qword [rsp + 40], 10h".to_string(),
-                        "mov     r8, [rsp + 40]".to_string(),
-                        "mov     r9, dword 00h".to_string(),
-                        "mov     qword [rsp + 32], 00h".to_string(),
-                        "call    WriteFile".to_string(),
-                        "add     rsp, 48".to_string()
+                        "mov rcx, rax".to_string(),
+                        "mov rdx, rbp ".to_string(),
+                        "sub rdx, 16".to_string(),
+                        "mov qword [rsp + 40], 10h".to_string(),
+                        "mov r8, [rsp + 40]".to_string(),
+                        "mov r9, dword 00h".to_string(),
+                        "mov qword [rsp + 32], 00h".to_string(),
+                        "call WriteFile".to_string(),
+                        "add rsp, 48".to_string()
                     ])
                 ],
             }
