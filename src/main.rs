@@ -31,7 +31,7 @@ fn main() {
             println!("Parse Error:\n{}", e);
             return;
         } else {
-            // println!("Parse Result:\n{:?}", asts);
+            println!("Parse Result:\n{:?}", asts);
         }
     );
 
@@ -43,7 +43,7 @@ fn main() {
                 return
             }
             Ok(functions) => functions
-        };
+        }
     );
 
     print!("Compiling...");

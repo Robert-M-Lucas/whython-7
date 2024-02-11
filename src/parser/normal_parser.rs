@@ -195,6 +195,17 @@ fn process_buffer(
         return Ok(());
     }
 
+    if buffer == "true" {
+        symbols.push(BasicSymbol::Literal(Literal::Bool(true)));
+        buffer.clear();
+        return Ok(());
+    }
+    if buffer == "false" {
+        symbols.push(BasicSymbol::Literal(Literal::Bool(false)));
+        buffer.clear();
+        return Ok(());
+    }
+
     if let Ok(val) = buffer.parse() {
         symbols.push(BasicSymbol::Literal(Literal::Int(val)));
         buffer.clear();

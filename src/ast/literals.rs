@@ -11,6 +11,7 @@ impl Literal {
     pub fn get_type_id(&self) -> isize {
         match &self {
             Literal::Int(_) => -1,
+            Literal::Bool(_) => -2,
             _ => todo!()
         }
     }

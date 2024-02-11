@@ -25,7 +25,19 @@ impl Type for Bool {
     }
 
     fn instantiate(&self, literal: Option<&Literal>, local_address: isize) -> Result<Vec<String>, ProcessorError> {
-        todo!()
+        if literal.is_none() { return Ok(vec![]); }
+        let Literal::Bool(val) = literal.unwrap() else { panic!() };
+
+        if *val {
+            Ok(vec![
+                format!("mov qword [{}], 0", get_local_address(local_address))
+            ])
+        }
+        else {
+            Ok(vec![
+                format!("mov qword [{}], -1", get_local_address(local_address))
+            ])
+        }
     }
 }
 

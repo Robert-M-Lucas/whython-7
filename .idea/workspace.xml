@@ -7,7 +7,18 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Commit" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Commit">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/output/out.asm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/output/out.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/output/out.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/literals.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/literals.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/custom_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/custom_functions.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/normal_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/normal_parser.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/processor/custom_types.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/custom_types.rs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -195,7 +206,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707683459104</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Commit">
+      <option name="closed" value="true" />
+      <created>1707684009416</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1707684009416</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -204,5 +223,16 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Commit" />
     <option name="LAST_COMMIT_MESSAGE" value="Commit" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/src/compiler/compile_functions.rs</url>
+          <line>173</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

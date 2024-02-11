@@ -1,4 +1,8 @@
 fn main() ~ int {
+    printb(false);
+    printb(!false);
+    printb(true);
+    printb(!true);
     printi(13 * 3);
     printi(13 / 3);
     printi(13 + 3);
