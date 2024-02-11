@@ -8,7 +8,8 @@ use crate::processor::type_builder::{Type, TypedFunction};
 pub fn get_custom_function_signatures() -> Vec<(Option<isize>, Box<dyn TypedFunction>)> {
     vec![
         (None, Box::new(WindowsExit{})),
-        (None, Box::new(PrintI{}))
+        (None, Box::new(PrintI{})),
+        (Some(-1), Box::new(IntAdd{}))
     ]
 }
 
@@ -52,10 +53,10 @@ impl TypedFunction for WindowsExit {
     }
 
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
-        let mut output = Vec::new();
-        output.push(format!("mov rcx, [{}]", crate::compiler::default::get_local_address(args[0])));
-        output.push("call ExitProcess".to_string());
-        output
+        vec![
+            format!("mov rcx, [{}]", crate::compiler::default::get_local_address(args[0])),
+            "call ExitProcess".to_string(),
+        ]
     }
 }
 
@@ -101,7 +102,7 @@ impl Function for PrintI {
     fn get_asm(&self) -> String {
         compile_user_function(
             &UserFunction {
-                id: -1,
+                id: TypedFunction::get_id(self),
                 local_variable_count: 2,
                 arg_count: 1,
                 lines: vec![
@@ -140,5 +141,47 @@ impl Function for PrintI {
 
     fn get_id(&self) -> isize {
         TypedFunction::get_id(self)
+    }
+}
+
+pub struct IntAdd {}
+lazy_static! {
+    static ref INT_ADD_ARGS: [(String, isize); 2] = [(String::from("lhs"), Int::get_id()), (String::from("rhs"), Int::get_id())];
+}
+impl TypedFunction for IntAdd {
+    fn get_id(&self) -> isize {
+        -1_000_000
+    }
+
+    fn get_name(&self) -> &str {
+        "add"
+    }
+
+    fn get_args(&self) -> &[(String, isize)] {
+        INT_ADD_ARGS.as_ref()
+    }
+
+    fn get_return_type(&self) -> Option<isize> {
+        Some(-1)
+    }
+
+    fn is_inline(&self) -> bool {
+        true
+    }
+
+    fn contents(&self) -> &Vec<BasicSymbol> {
+        panic!()
+    }
+
+    fn take_contents(&mut self) -> Vec<BasicSymbol> {
+        panic!()
+    }
+
+    fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
+        vec![
+            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("add rax, [{}]", get_local_address(args[1])),
+            format!("mov [{}], rax", get_local_address(args[2])),
+        ]
     }
 }

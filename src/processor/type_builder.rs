@@ -373,9 +373,6 @@ fn process_function(function: PreProcessFunction, type_table: &TypeTable, id: is
     let (name, args, return_type, contents) = function;
 
     let mut args_processed = Vec::new();
-    if let Some(type_id) = impl_type {
-        args_processed.push(("self".to_string(), type_id));
-    }
 
     for (arg_name, arg_line, type_name, type_line) in args {
         for (existing_arg, _) in &args_processed {

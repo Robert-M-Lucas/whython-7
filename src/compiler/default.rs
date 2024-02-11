@@ -83,7 +83,9 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 output.push(&format!("call {}", get_function_name(*function)));
 
                 // Release stack space used
-                output.push(&format!("add rsp, {}", local_args.len() * 8));
+                if !local_args.is_empty() {
+                    output.push(&format!("add rsp, {}", local_args.len() * 8));
+                }
                 // Move return value
                 output.push(&format!("mov qword [{}], rax", get_local_address(*return_addr)));
             }
@@ -105,11 +107,13 @@ pub fn compile_user_function(function: &UserFunction) -> String {
             }
             Line::Return(local_return_val) => {
                 return if function.id == 0 {
-                    output.push(&format!("mov rcx, [{}]", get_local_address(*local_return_val)));
+                    output.push(&format!("mov rcx, [{}]", get_local_address(local_return_val.unwrap())));
                     output.push("call ExitProcess");
                     output.into()
                 } else {
-                    output.push(&format!("mov rax, [{}]", get_local_address(*local_return_val)));
+                    if let Some(val) = local_return_val {
+                        output.push(&format!("mov rax, [{}]", get_local_address(*val)));
+                    }
                     output.push("leave");
                     output.push("ret");
                     output.into()

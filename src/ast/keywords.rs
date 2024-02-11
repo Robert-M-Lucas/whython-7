@@ -11,6 +11,7 @@ pub enum Keyword {
     Break,
     Continue,
     Let,
+    Return,
 }
 
 pub const MOD_KEYWORD: &str = "mod";
@@ -29,6 +30,7 @@ impl Keyword {
             "break" => Some(Keyword::Break),
             "continue" => Some(Keyword::Continue),
             "let" => Some(Keyword::Let),
+            "return" => Some(Keyword::Return),
             _ => None,
         }
     }

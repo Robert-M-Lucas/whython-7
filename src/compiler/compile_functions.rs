@@ -15,7 +15,7 @@ pub enum Line {
     ReturnCall(isize, Vec<(isize, usize)>, isize),
     NoReturnCall(isize, Vec<(isize, usize)>),
     Copy(isize, isize),
-    Return(isize),
+    Return(Option<isize>),
     InlineAsm(Vec<String>),
 }
 
@@ -198,8 +198,8 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
         function_contents.insert(*id, func.take_contents());
     }
     for (t, f) in get_custom_function_signatures() {
-        if function_name_map.get(&t).unwrap().contains_key(f.get_name()) {
-            continue;
+        if function_name_map.get_mut(&t).is_none() {
+            function_name_map.insert(t, HashMap::new());
         }
         function_name_map.get_mut(&t).unwrap().insert(f.get_name().to_string(), f.get_id());
         functions.insert(f.get_id(), f);
@@ -211,13 +211,54 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
     name_handler.use_function_id(0);
 
     for (id, contents) in function_contents {
+        let function = function_holder.functions.get(&id).unwrap();
         name_handler.reset();
-        name_handler.set_args(function_holder.functions.get(&id).unwrap().get_args_positioned(name_handler.type_table()));
+        name_handler.set_args(function.get_args_positioned(name_handler.type_table()));
+        let return_type = function.get_return_type();
         let mut lines = Vec::new();
+        let mut last_return = false;
 
         for line in contents.split(|x| matches!(x, BasicSymbol::Punctuation(Punctuation::Semicolon))) {
             if line.len() == 0 { continue; }
-            evaluate(line, &mut lines, &mut name_handler, &function_holder, None)?;
+            last_return = false;
+
+            match &line[0] {
+                BasicSymbol::Keyword(Keyword::Return) => {
+                    last_return = true;
+                    if line.len() == 1 {
+                        if return_type.is_none() {
+                            lines.push(Line::Return(None));
+                            continue;
+                        }
+                        else {
+                            println!("a");
+                            return Err(ProcessorError::Placeholder);
+                        }
+                    }
+                    else if return_type.is_none() {
+                        return Err(ProcessorError::Placeholder);
+                    }
+
+                    let return_into = name_handler.add_local_variable(None, return_type.unwrap());
+                    let return_value = evaluate(&line[1..], &mut lines, &mut name_handler, &function_holder, Some((return_into, return_type.unwrap())))?;
+                    if return_value.is_none() {
+                        println!("b");
+                        return Err(ProcessorError::Placeholder);
+                    }
+                    let return_value = return_value.unwrap();
+                    if return_type.is_none() || return_type.unwrap() != return_value.1 {
+                        println!("c");
+                        return Err(ProcessorError::Placeholder);
+                    }
+                    lines.push(Line::Return(Some(return_value.0)));
+                }
+                _ => { evaluate(line, &mut lines, &mut name_handler, &function_holder, None)?; }
+            };
+        }
+
+        if return_type.is_some() && !last_return {
+            println!("d");
+            return Err(ProcessorError::Placeholder);
         }
 
         processed_functions.push(Box::new(UserFunction {
@@ -329,7 +370,7 @@ fn call_function(function: &Box<dyn TypedFunction>, default_arg: Option<(isize, 
             lines.push(Line::InlineAsm(function.get_inline(inline_args)));
         }
         else {
-            lines.push(Line::ReturnCall(function.get_id(), call_args, return_type))
+            lines.push(Line::ReturnCall(function.get_id(), call_args, return_into.0))
         }
 
         Some((return_into.0, return_type))
@@ -390,5 +431,77 @@ fn instantiate_literal(literal: Either<&Literal, isize>, lines: &mut Vec<Line>, 
 fn evaluate_operation(lhs: (isize, isize), op: &Operator, rhs: Option<(isize, isize)>,
     lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder, return_into: Option<(isize, isize)>)
     -> Result<Option<(isize, isize)>, ProcessorError> {
-    todo!()
+
+    Ok(Some(match op {
+        Operator::Not => {
+            let func = function_holder.get_function(Some(lhs.1), "not").ok_or(ProcessorError::BadOperatorFunction)?;
+            name_handler.use_function(func);
+            let func_args = func.get_args();
+            let func_id = func.get_id();
+            if func_args.len() != 1 {
+                return Err(ProcessorError::BadOperatorFunction);
+            }
+            let output = if let Some(return_into) = return_into {
+                return_into
+            }
+            else {
+                instantiate_literal(
+                    Right(func.get_return_type().ok_or(ProcessorError::BadOperatorFunction)?),
+                    lines, name_handler, function_holder, None
+                )?
+            };
+            let func = function_holder.functions().get(&func_id).unwrap();
+            if func.is_inline() {
+                lines.push(Line::InlineAsm(func.get_inline(vec![lhs.0, output.0])));
+            }
+            else {
+                lines.push(Line::ReturnCall(func.get_id(), vec![(lhs.0, name_handler.type_table().get_type_size(lhs.1)?)], output.0));
+            }
+            output
+        },
+        op => {
+            let rhs = rhs.ok_or(ProcessorError::BadOperatorPosition)?;
+            let func_name = match op {
+                Operator::Add => "add",
+                Operator::Subtract => "sub",
+                Operator::Product => "mul",
+                Operator::Divide => "div",
+                Operator::Greater => "gt",
+                Operator::Less => "lt",
+                Operator::GreaterEqual => "ge",
+                Operator::LessEqual => "le",
+                Operator::Equal => "eq",
+                Operator::NotEqual => "ne",
+                Operator::Or => "or",
+                Operator::And => "and",
+                Operator::Not => panic!()
+            };
+
+            let func = function_holder.get_function(Some(lhs.1), func_name).ok_or(ProcessorError::BadOperatorFunction)?;
+            name_handler.use_function(func);
+            let func_args = func.get_args();
+            let func_id = func.get_id();
+
+            if func_args.len() != 2 {
+                return Err(ProcessorError::BadOperatorFunction);
+            }
+            let output = if let Some(return_into) = return_into {
+                return_into
+            }
+            else {
+                instantiate_literal(
+                    Right(func.get_return_type().ok_or(ProcessorError::BadOperatorFunction)?),
+                    lines, name_handler, function_holder, None
+                )?
+            };
+            let func = function_holder.functions().get(&func_id).unwrap();
+            if func.is_inline() {
+                lines.push(Line::InlineAsm(func.get_inline(vec![lhs.0, rhs.0, output.0])));
+            }
+            else {
+                lines.push(Line::ReturnCall(func.get_id(), vec![(lhs.0, name_handler.type_table().get_type_size(lhs.1)?), (rhs.0, name_handler.type_table().get_type_size(rhs.1)?)], output.0));
+            }
+            output
+        }
+    }))
 }
