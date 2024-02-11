@@ -1,5 +1,7 @@
 fn main() ~ int {
-    printi(2 * 3);
-    printi(9 / 2);
+    printi(13 * 3);
+    printi(13 / 3);
+    printi(13 + 3);
+    printi(13 - 3);
     return 1 - 3;
 }

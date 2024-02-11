@@ -7,14 +7,7 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Commit">
-      <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/output/out.asm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/output/out.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/output/out.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assembler/assemble.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/assembler/assemble.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/custom_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/custom_functions.rs" afterDir="false" />
-    </list>
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Commit" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -53,6 +46,9 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RsExternalLinterProjectSettings">
+    <option name="runOnTheFly" value="true" />
+  </component>
   <component name="RunManager" selected="Cargo.Run whython-7">
     <configuration name="Run whython-7" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
       <option name="command" value="run --package whython-7 --bin whython-7" />
@@ -191,7 +187,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707679657629</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Commit">
+      <option name="closed" value="true" />
+      <created>1707683459104</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1707683459104</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

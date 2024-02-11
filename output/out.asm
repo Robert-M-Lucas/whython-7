@@ -40,8 +40,8 @@ __2:
 main:
 	push rbp
 	mov rbp, rsp
-	sub rsp, 72
-	mov qword [rbp-8], 2
+	sub rsp, 120
+	mov qword [rbp-8], 13
 	mov qword [rbp-16], 3
 	mov rax, [rbp-8]
 	mov rcx, [rbp-16]
@@ -51,8 +51,8 @@ main:
 	push rax
 	call __2
 	add rsp, 8
-	mov qword [rbp-32], 9
-	mov qword [rbp-40], 2
+	mov qword [rbp-32], 13
+	mov qword [rbp-40], 3
 	mov rax, [rbp-32]
 	mov rcx, [rbp-40]
 	div rcx
@@ -61,10 +61,28 @@ main:
 	push rax
 	call __2
 	add rsp, 8
-	mov qword [rbp-64], 1
-	mov qword [rbp-72], 3
-	mov rax, [rbp-64]
-	sub rax, [rbp-72]
-	mov [rbp-56], rax
-	mov rcx, [rbp-56]
+	mov qword [rbp-56], 13
+	mov qword [rbp-64], 3
+	mov rax, [rbp-56]
+	add rax, [rbp-64]
+	mov [rbp-72], rax
+	mov rax, qword [rbp-72]
+	push rax
+	call __2
+	add rsp, 8
+	mov qword [rbp-80], 13
+	mov qword [rbp-88], 3
+	mov rax, [rbp-80]
+	sub rax, [rbp-88]
+	mov [rbp-96], rax
+	mov rax, qword [rbp-96]
+	push rax
+	call __2
+	add rsp, 8
+	mov qword [rbp-112], 1
+	mov qword [rbp-120], 3
+	mov rax, [rbp-112]
+	sub rax, [rbp-120]
+	mov [rbp-104], rax
+	mov rcx, [rbp-104]
 	call ExitProcess
