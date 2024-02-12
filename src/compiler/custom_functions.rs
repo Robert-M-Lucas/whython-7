@@ -498,7 +498,7 @@ impl TypedFunction for IntLE {
         vec![
             format!("mov rax, [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
-            "cmp rax, rcx".to_string(),
+            "cmp rcx, rax".to_string(),
             format!("setle [{}]", get_local_address(args[2])),
         ]
     }
