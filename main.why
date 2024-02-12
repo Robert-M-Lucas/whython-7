@@ -1,10 +1,5 @@
-struct a {
-    inner: int
-}
-
-
 fn main() ~ int {
-    let c: a = true;
+    let c: bool = true;
 
     while (c) {
         printi(1);
