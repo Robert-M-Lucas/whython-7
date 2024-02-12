@@ -529,6 +529,149 @@ fn process_lines(
                     return Err(ProcessorError::WhileMoreAfterBraces(line[3].1.clone()));
                 }
             }
+            BasicSymbol::Keyword(Keyword::If) => {
+                if line.len() < 2 {
+                    return Err(ProcessorError::IfElifNoBrackets(line[0].1.clone()));
+                }
+
+                let BasicSymbol::BracketedSection(expr) = &line[1].0 else {
+                    return Err(ProcessorError::IfElifNoBrackets(line[1].1.clone()));
+                };
+                let mut next_label =
+                    get_function_sublabel(current_id, &name_handler.get_uid().to_string());
+                let end_label =
+                    get_function_sublabel(current_id, &name_handler.get_uid().to_string());
+
+                let evaluated = evaluate(expr, lines, name_handler, function_holder, None)?
+                    .ok_or(ProcessorError::DoesntEvaluate(line[1].1.clone()))?;
+                if evaluated.1 != Bool::new().get_id() {
+                    return Err(ProcessorError::BadConditionType(
+                        line[1].1.clone(),
+                        name_handler
+                            .type_table()
+                            .get_type(evaluated.1)
+                            .unwrap()
+                            .get_name()
+                            .to_string(),
+                    ));
+                }
+                lines.push(Line::InlineAsm(vec![
+                    format!("mov rax, [{}]", get_local_address(evaluated.0)),
+                    "cmp rax, 0".to_string(),
+                    format!("jnz {}", next_label),
+                ]));
+                if line.len() < 3 {
+                    return Err(ProcessorError::IfElifElseNoBraces(line[1].1.clone()));
+                }
+                let BasicSymbol::BracedSection(inner) = &line[2].0 else {
+                    return Err(ProcessorError::IfElifElseNoBraces(line[2].1.clone()));
+                };
+                process_lines(
+                    inner,
+                    current_id,
+                    return_type,
+                    lines,
+                    name_handler,
+                    function_holder,
+                    break_label.clone()
+                )?;
+
+                let mut i = 3;
+                let mut ended = false;
+                while line.len() >= i + 1 {
+                    lines.push(Line::InlineAsm(vec![
+                        format!("jmp {}", end_label),
+                        format!("{}:", next_label),
+                    ]));
+
+                    next_label =
+                        get_function_sublabel(current_id, &name_handler.get_uid().to_string());
+
+                    match &line[i].0 {
+                        BasicSymbol::Keyword(Keyword::Elif) => {
+                            if ended {
+                                return Err(ProcessorError::IfElifAfterElse(line[i].1.clone()));
+                            }
+                            i += 1;
+                            if line.len() <= i {
+                                return Err(ProcessorError::IfElifNoBrackets(line[i - 1].1.clone()));
+                            }
+
+                            let BasicSymbol::BracketedSection(expr) = &line[i].0 else {
+                                return Err(ProcessorError::IfElifNoBrackets(line[i].1.clone()));
+                            };
+
+                            let evaluated = evaluate(expr, lines, name_handler, function_holder, None)?
+                                .ok_or(ProcessorError::DoesntEvaluate(line[i].1.clone()))?;
+                            if evaluated.1 != Bool::new().get_id() {
+                                return Err(ProcessorError::BadConditionType(
+                                    line[i].1.clone(),
+                                    name_handler
+                                        .type_table()
+                                        .get_type(evaluated.1)
+                                        .unwrap()
+                                        .get_name()
+                                        .to_string(),
+                                ));
+                            }
+                            lines.push(Line::InlineAsm(vec![
+                                format!("mov rax, [{}]", get_local_address(evaluated.0)),
+                                "cmp rax, 0".to_string(),
+                                format!("jnz {}", next_label),
+                            ]));
+
+                            i += 1;
+                            if line.len() <= i  {
+                                return Err(ProcessorError::IfElifElseNoBraces(line[i-1].1.clone()));
+                            }
+                            let BasicSymbol::BracedSection(inner) = &line[i].0 else {
+                                return Err(ProcessorError::IfElifElseNoBraces(line[i].1.clone()));
+                            };
+                            process_lines(
+                                inner,
+                                current_id,
+                                return_type,
+                                lines,
+                                name_handler,
+                                function_holder,
+                                break_label.clone()
+                            )?;
+                            i += 1;
+                        }
+                        BasicSymbol::Keyword(Keyword::Else) => {
+                            ended = true;
+                            i += 1;
+                            if line.len() <= i  {
+                                return Err(ProcessorError::IfElifElseNoBraces(line[i-1].1.clone()));
+                            }
+                            let BasicSymbol::BracedSection(inner) = &line[i].0 else {
+                                return Err(ProcessorError::IfElifElseNoBraces(line[i].1.clone()));
+                            };
+                            process_lines(
+                                inner,
+                                current_id,
+                                return_type,
+                                lines,
+                                name_handler,
+                                function_holder,
+                                break_label.clone()
+                            )?;
+                            i += 1;
+                        }
+                        _ => {
+                            return Err(ProcessorError::ElseMoreAfterBraces(line[i].1.clone()))
+                        }
+                    }
+                }
+
+                lines.push(Line::InlineAsm(vec![
+                    format!("{}:", next_label),
+                    format!("{}:", end_label)
+                ]));
+            }
+            BasicSymbol::Keyword(Keyword::Elif | Keyword::Else) => {
+                return Err(ProcessorError::RawElifElse(line[0].1.clone()))
+            }
             BasicSymbol::Keyword(Keyword::Break) => {
                 if line.len() > 1 {
                     return Err(ProcessorError::BreakLineNotEmpty(line[1].1.clone()))

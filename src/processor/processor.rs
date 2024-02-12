@@ -97,7 +97,7 @@ pub enum ProcessorError {
     LetNoName(LineInfo),
     #[error("Error: `let [NAME]: [TYPE]` must be followed by `= [VALUE]`")]
     LetNoValue(LineInfo),
-    #[error("Error: While must be followed by brackets containing the condition\n{0}")]
+    #[error("Error: `while` must be followed by brackets containing the condition\n{0}")]
     WhileNoBrackets(LineInfo),
     #[error("Error: Condition must evaluate to boolean (not '{1}')\n{0}")]
     BadConditionType(LineInfo, String),
@@ -117,6 +117,16 @@ pub enum ProcessorError {
     BreakLineNotEmpty(LineInfo),
     #[error("Error: Nothing to break out of\n{0}")]
     NothingToBreak(LineInfo),
+    #[error("Error: `elif` and `else` can only follow `if`\n{0}")]
+    RawElifElse(LineInfo),
+    #[error("Error: `if` and `elif` must be followed by brackets containing the condition\n{0}")]
+    IfElifNoBrackets(LineInfo),
+    #[error("Error: `if` and `elif` conditions, or `else` on its own must be followed by braces containing code to be executed conditionally\n{0}")]
+    IfElifElseNoBraces(LineInfo),
+    #[error("Error: An if/elif/else chain must be followed by semicolon\n{0}")]
+    ElseMoreAfterBraces(LineInfo),
+    #[error("Error: Can't have anything after an else in an if/elif/else\n{0}")]
+    IfElifAfterElse(LineInfo),
     #[error("TODO: Placeholder")]
     Placeholder2,
 }
