@@ -18,7 +18,7 @@ pub fn generate_assembly(_output: &PathBuf, functions: Vec<Box<dyn Function>>) {
         out += &(f.get_asm());
     }
 
-    if PathBuf::from("output").as_path().is_dir() {
+    if !PathBuf::from("output").as_path().is_dir() {
         fs::create_dir("output").expect("Failed to create output folder");
     }
     fs::write("output\\out.asm", out).expect("Failed to write assembly to file");
