@@ -8,7 +8,7 @@ use crate::processor::custom_types::{Bool, Int};
 use crate::processor::type_builder::{Type, TypedFunction};
 use lazy_static::lazy_static;
 use unique_type_id::UniqueTypeId;
-use crate::custom::bool::BoolNot;
+use crate::custom::bool::{BoolEQ, BoolNE, BoolNot};
 use crate::custom::int::{IntAdd, IntDiv, IntEQ, IntGE, IntGT, IntLE, IntLT, IntMul, IntNE, IntSub};
 
 pub fn get_custom_function_signatures() -> Vec<(Option<isize>, Box<dyn TypedFunction>)> {
@@ -16,17 +16,19 @@ pub fn get_custom_function_signatures() -> Vec<(Option<isize>, Box<dyn TypedFunc
         (None, Box::new(WindowsExit {})),
         (None, Box::new(PrintI {})),
         (None, Box::new(PrintB {})),
-        (Some(-1), Box::new(IntAdd {})),
-        (Some(-1), Box::new(IntSub {})),
-        (Some(-1), Box::new(IntMul {})),
-        (Some(-1), Box::new(IntDiv {})),
-        (Some(-1), Box::new(IntLT {})),
-        (Some(-1), Box::new(IntGT {})),
-        (Some(-1), Box::new(IntLE {})),
-        (Some(-1), Box::new(IntGE {})),
-        (Some(-1), Box::new(IntEQ {})),
-        (Some(-1), Box::new(IntNE {})),
-        (Some(-2), Box::new(BoolNot {})),
+        (Some(Int::get_id()), Box::new(IntAdd {})),
+        (Some(Int::get_id()), Box::new(IntSub {})),
+        (Some(Int::get_id()), Box::new(IntMul {})),
+        (Some(Int::get_id()), Box::new(IntDiv {})),
+        (Some(Int::get_id()), Box::new(IntLT {})),
+        (Some(Int::get_id()), Box::new(IntGT {})),
+        (Some(Int::get_id()), Box::new(IntLE {})),
+        (Some(Int::get_id()), Box::new(IntGE {})),
+        (Some(Int::get_id()), Box::new(IntEQ {})),
+        (Some(Int::get_id()), Box::new(IntNE {})),
+        (Some(Bool::get_id()), Box::new(BoolNot {})),
+        (Some(Bool::get_id()), Box::new(BoolEQ {})),
+        (Some(Bool::get_id()), Box::new(BoolNE {})),
     ]
 }
 
