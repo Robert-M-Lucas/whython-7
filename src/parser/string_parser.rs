@@ -26,9 +26,10 @@ pub fn parse_string(reader: &mut FileReader) -> Result<BasicSymbol, ParseError> 
         if escape {
             let char = get_escape_code(next);
             if char.is_none() {
-                return Err(
-                    ParseError::UnknownEscapeCode(reader.get_line_info_current(), next)
-                );
+                return Err(ParseError::UnknownEscapeCode(
+                    reader.get_line_info_current(),
+                    next,
+                ));
             }
             string.push(char.unwrap());
             escape = false;

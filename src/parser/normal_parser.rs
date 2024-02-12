@@ -9,7 +9,6 @@ use crate::parser::line_info::LineInfo;
 use crate::parser::parse::{BlockType, ParseError};
 use crate::parser::string_parser::parse_string;
 
-
 pub fn parse_normal(
     reader: &mut FileReader,
     block_type: BlockType,
@@ -43,7 +42,7 @@ pub fn parse_normal(
                 Err(ParseError::NotClosed(
                     reader.get_line_info(),
                     terminator.unwrap(),
-                    start_line
+                    start_line,
                 ))
             };
         }
@@ -98,19 +97,36 @@ pub fn parse_normal(
                     let parsed = parse_normal(reader, new_block)?;
 
                     let mut intercepted = false;
-                    if !symbols.is_empty() && matches!(symbols.last().unwrap().0, BasicSymbol::Name(_)) &&
-                        matches!(&parsed, BasicSymbol::BracketedSection(_)) && matches!(symbols.last().unwrap().0.get_name_contents().last().unwrap().2, NameType::Normal) {
+                    if !symbols.is_empty()
+                        && matches!(symbols.last().unwrap().0, BasicSymbol::Name(_))
+                        && matches!(&parsed, BasicSymbol::BracketedSection(_))
+                        && matches!(
+                            symbols
+                                .last()
+                                .unwrap()
+                                .0
+                                .get_name_contents()
+                                .last()
+                                .unwrap()
+                                .2,
+                            NameType::Normal
+                        )
+                    {
                         let (s, l) = &mut symbols.last_mut().unwrap();
                         let BasicSymbol::Name(v) = s else { panic!() };
 
                         intercepted = true;
                         let mut arguments = vec![Vec::new()];
 
-                        let BasicSymbol::BracketedSection(symbols) = parsed else { panic!(); };
+                        let BasicSymbol::BracketedSection(symbols) = parsed else {
+                            panic!();
+                        };
                         for (symbol, line) in symbols {
                             match symbol {
-                                BasicSymbol::Punctuation(Punctuation::ListSeparator) => arguments.push(Vec::new()),
-                                symbol => arguments.last_mut().unwrap().push((symbol, line))
+                                BasicSymbol::Punctuation(Punctuation::ListSeparator) => {
+                                    arguments.push(Vec::new())
+                                }
+                                symbol => arguments.last_mut().unwrap().push((symbol, line)),
                             }
                         }
                         if arguments.len() == 1 && arguments.last().unwrap().len() == 0 {
@@ -118,8 +134,7 @@ pub fn parse_normal(
                         }
 
                         *(&mut v.last_mut().unwrap().2) = NameType::Function(arguments);
-                    }
-                    else {
+                    } else {
                         symbols.push((parsed, parsed_pos));
                     }
                     continue;
@@ -152,29 +167,37 @@ pub fn parse_normal(
 
         if next == ';' {
             process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
-            symbols.push(
-                (BasicSymbol::Punctuation(Punctuation::Semicolon), reader.get_line_info_current())
-            );
+            symbols.push((
+                BasicSymbol::Punctuation(Punctuation::Semicolon),
+                reader.get_line_info_current(),
+            ));
             continue;
         }
 
         if next == ',' {
             process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
-            symbols.push(
-                (BasicSymbol::Punctuation(Punctuation::ListSeparator), reader.get_line_info_current()),
-            );
+            symbols.push((
+                BasicSymbol::Punctuation(Punctuation::ListSeparator),
+                reader.get_line_info_current(),
+            ));
             continue;
         }
 
         if next == ':' {
             process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
-            symbols.push((BasicSymbol::Punctuation(Punctuation::Colon), reader.get_line_info_current()));
+            symbols.push((
+                BasicSymbol::Punctuation(Punctuation::Colon),
+                reader.get_line_info_current(),
+            ));
             continue;
         }
 
         if next == '~' {
             process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
-            symbols.push((BasicSymbol::Punctuation(Punctuation::Tilda), reader.get_line_info_current()));
+            symbols.push((
+                BasicSymbol::Punctuation(Punctuation::Tilda),
+                reader.get_line_info_current(),
+            ));
             continue;
         }
 
@@ -196,25 +219,37 @@ fn process_buffer(
     }
 
     if *operator_mode {
-        symbols.push((process_operator_buffer(buffer, reader)?, reader.get_line_info()));
+        symbols.push((
+            process_operator_buffer(buffer, reader)?,
+            reader.get_line_info(),
+        ));
         *operator_mode = false;
         buffer.clear();
         return Ok(());
     }
 
     if buffer == "true" {
-        symbols.push((BasicSymbol::Literal(Literal::Bool(true)), reader.get_line_info()));
+        symbols.push((
+            BasicSymbol::Literal(Literal::Bool(true)),
+            reader.get_line_info(),
+        ));
         buffer.clear();
         return Ok(());
     }
     if buffer == "false" {
-        symbols.push((BasicSymbol::Literal(Literal::Bool(false)), reader.get_line_info()));
+        symbols.push((
+            BasicSymbol::Literal(Literal::Bool(false)),
+            reader.get_line_info(),
+        ));
         buffer.clear();
         return Ok(());
     }
 
     if let Ok(val) = buffer.parse() {
-        symbols.push((BasicSymbol::Literal(Literal::Int(val)), reader.get_line_info()));
+        symbols.push((
+            BasicSymbol::Literal(Literal::Int(val)),
+            reader.get_line_info(),
+        ));
         buffer.clear();
         return Ok(());
     }
@@ -246,12 +281,14 @@ fn process_buffer(
 
     if let Some(kwd) = Keyword::get_enum(&sections.first().unwrap().0) {
         if sections.len() > 1 {
-            return Err(ParseError::KeywordFollowed(reader.get_line_info(), sections.first().unwrap().0.clone()));
+            return Err(ParseError::KeywordFollowed(
+                reader.get_line_info(),
+                sections.first().unwrap().0.clone(),
+            ));
         }
         symbols.push((BasicSymbol::Keyword(kwd), reader.get_line_info()));
         buffer.clear();
-    }
-    else {
+    } else {
         symbols.push((BasicSymbol::Name(sections), reader.get_line_info()));
         buffer.clear();
     }
@@ -266,15 +303,18 @@ fn process_operator_buffer(
     let operator = Operator::get_operator(buffer.as_str());
     if let Some(operator) = operator {
         return Ok(BasicSymbol::Operator(operator));
-    }
-    else if buffer == "=" {
+    } else if buffer == "=" {
         return Ok(BasicSymbol::Assigner(None));
-    }
-    else if buffer.chars().last().unwrap() == '=' {
-        if let Some(operator) = Operator::get_operator(&buffer[..buffer.char_indices().last().unwrap().0]) {
+    } else if buffer.chars().last().unwrap() == '=' {
+        if let Some(operator) =
+            Operator::get_operator(&buffer[..buffer.char_indices().last().unwrap().0])
+        {
             return Ok(BasicSymbol::Assigner(Some(operator)));
         }
     }
 
-    Err(ParseError::OperatorNotRecognised(reader.get_line_info(), buffer.clone()))
+    Err(ParseError::OperatorNotRecognised(
+        reader.get_line_info(),
+        buffer.clone(),
+    ))
 }

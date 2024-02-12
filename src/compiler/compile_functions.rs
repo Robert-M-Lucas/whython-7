@@ -1,17 +1,19 @@
-use std::collections::{HashMap, HashSet};
-use std::slice::Iter;
-use either::{Either, Left, Right};
 use crate::ast::keywords::Keyword;
 use crate::ast::literals::Literal;
 use crate::ast::operators::Operator;
 use crate::basic_ast::punctuation::Punctuation;
 use crate::basic_ast::symbol::{BasicSymbol, NameAccessType, NameType};
-use crate::compiler::custom_functions::{get_custom_function_implementations, get_custom_function_signatures};
+use crate::compiler::custom_functions::{
+    get_custom_function_implementations, get_custom_function_signatures,
+};
 use crate::compiler::default::{compile_user_function, get_function_sublabel, get_local_address};
 use crate::parser::line_info::LineInfo;
 use crate::processor::custom_types::Bool;
 use crate::processor::processor::ProcessorError;
-use crate::processor::type_builder::{Type, TypedFunction, TypeTable};
+use crate::processor::type_builder::{Type, TypeTable, TypedFunction};
+use either::{Either, Left, Right};
+use std::collections::{HashMap, HashSet};
+use std::slice::Iter;
 
 pub enum Line {
     ReturnCall(isize, Vec<(isize, usize)>, isize),
@@ -25,7 +27,7 @@ pub struct UserFunction {
     pub id: isize,
     pub local_variable_count: usize,
     pub arg_count: usize,
-    pub lines: Vec<Line>
+    pub lines: Vec<Line>,
 }
 
 impl Function for UserFunction {
@@ -49,19 +51,25 @@ pub struct FunctionHolder {
 }
 
 impl FunctionHolder {
-    pub fn new(functions: HashMap<isize, Box<dyn TypedFunction>>,
-               functions_table: HashMap<Option<isize>, HashMap<String, isize>>,) -> FunctionHolder {
+    pub fn new(
+        functions: HashMap<isize, Box<dyn TypedFunction>>,
+        functions_table: HashMap<Option<isize>, HashMap<String, isize>>,
+    ) -> FunctionHolder {
         FunctionHolder {
             functions,
-            functions_table
+            functions_table,
         }
     }
 
-    pub fn get_function(&self, _type: Option<isize>, name: &str) -> Option<&Box<dyn TypedFunction>> {
-        self.functions_table.get(&_type).and_then(
-            |x| x.get(name).and_then(
-                |x| Some(self.functions.get(x).unwrap())
-            ))
+    pub fn get_function(
+        &self,
+        _type: Option<isize>,
+        name: &str,
+    ) -> Option<&Box<dyn TypedFunction>> {
+        self.functions_table.get(&_type).and_then(|x| {
+            x.get(name)
+                .and_then(|x| Some(self.functions.get(x).unwrap()))
+        })
     }
 
     pub fn functions(&self) -> &HashMap<isize, Box<dyn TypedFunction>> {
@@ -79,7 +87,7 @@ pub struct NameHandler {
     local_variables: Vec<(String, isize, isize)>,
     local_variables_size: usize,
     used_functions: HashSet<isize>,
-    uid: usize
+    uid: usize,
 }
 
 impl NameHandler {
@@ -90,7 +98,7 @@ impl NameHandler {
             local_variables: Vec::new(),
             local_variables_size: 0,
             used_functions: HashSet::new(),
-            uid: 0
+            uid: 0,
         }
     }
 
@@ -119,7 +127,12 @@ impl NameHandler {
     }
 
     pub fn add_local_variable(&mut self, name: Option<String>, _type: isize) -> isize {
-        let size = self.type_table.get_type(_type).unwrap().get_size(&self.type_table, None).unwrap();
+        let size = self
+            .type_table
+            .get_type(_type)
+            .unwrap()
+            .get_size(&self.type_table, None)
+            .unwrap();
         let addr = -(self.local_variables_size as isize) - size as isize;
         self.local_variables_size += size;
         if let Some(name) = name {
@@ -132,7 +145,22 @@ impl NameHandler {
         self.local_variables.push((name, addr, _type));
     }
 
-    pub fn resolve_name<'b>(&self, function_holder: &'b FunctionHolder, name: &'b Vec<(String, NameAccessType, NameType)>, line: &LineInfo) -> Result<Either<(isize, isize), (&'b Box<dyn TypedFunction>, Option<(isize, isize)>, &'b Vec<Vec<(BasicSymbol, LineInfo)>>)>, ProcessorError> {
+    pub fn resolve_name<'b>(
+        &self,
+        function_holder: &'b FunctionHolder,
+        name: &'b Vec<(String, NameAccessType, NameType)>,
+        line: &LineInfo,
+    ) -> Result<
+        Either<
+            (isize, isize),
+            (
+                &'b Box<dyn TypedFunction>,
+                Option<(isize, isize)>,
+                &'b Vec<Vec<(BasicSymbol, LineInfo)>>,
+            ),
+        >,
+        ProcessorError,
+    > {
         let mut current_type = None;
         let mut current_variable = None;
         let mut return_func = None;
@@ -147,30 +175,41 @@ impl NameHandler {
                     if current_type != None || current_variable != None {
                         todo!()
                     }
-                    if let Some((_, addr, _type)) = self.local_variables.iter().chain(self.args.iter()).find(|(n, _, _)| n == name) {
+                    if let Some((_, addr, _type)) = self
+                        .local_variables
+                        .iter()
+                        .chain(self.args.iter())
+                        .find(|(n, _, _)| n == name)
+                    {
                         // println!("{}, {}", addr, _type);
                         current_variable = Some(*addr);
                         current_type = Some(*_type);
-                    }
-                    else {
+                    } else {
                         if let Some(_type) = self.type_table.get_id_by_name(&name) {
                             current_variable = None;
                             current_type = Some(_type);
-                        }
-                        else {
+                        } else {
                             return Err(ProcessorError::NameNotFound(line.clone(), name.clone()));
                         }
                     }
                 }
                 NameType::Function(contents) => {
-                    if let Some(func) = function_holder.functions_table().get(&current_type).unwrap().get(name) {
+                    if let Some(func) = function_holder
+                        .functions_table()
+                        .get(&current_type)
+                        .unwrap()
+                        .get(name)
+                    {
                         let default_arg = if matches!(access_type, NameAccessType::Normal) {
                             Some((current_variable.unwrap(), current_type.unwrap()))
-                        }
-                        else {
+                        } else {
                             None
                         };
-                        return_func = Some((function_holder.functions().get(func).unwrap(), default_arg, contents));
+                        return_func = Some((
+                            function_holder.functions().get(func).unwrap(),
+                            default_arg,
+                            contents,
+                        ));
                     }
                 }
             }
@@ -182,7 +221,7 @@ impl NameHandler {
 
         Ok(Left((
             current_variable.ok_or(ProcessorError::StandaloneType(line.clone()))?,
-            current_type.unwrap()
+            current_type.unwrap(),
         )))
     }
 
@@ -201,8 +240,11 @@ impl NameHandler {
     }
 }
 
-
-pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<String, isize>>, mut functions: HashMap<isize, Box<dyn TypedFunction>>, type_table: TypeTable) -> Result<Vec<Box<dyn Function>>, ProcessorError> {
+pub fn compile_functions(
+    mut function_name_map: HashMap<Option<isize>, HashMap<String, isize>>,
+    mut functions: HashMap<isize, Box<dyn TypedFunction>>,
+    type_table: TypeTable,
+) -> Result<Vec<Box<dyn Function>>, ProcessorError> {
     let mut function_contents: HashMap<isize, Vec<(BasicSymbol, LineInfo)>> = HashMap::new();
     for (id, func) in &mut functions {
         function_contents.insert(*id, func.take_contents());
@@ -211,7 +253,10 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
         if function_name_map.get_mut(&t).is_none() {
             function_name_map.insert(t, HashMap::new());
         }
-        function_name_map.get_mut(&t).unwrap().insert(f.get_name().to_string(), f.get_id());
+        function_name_map
+            .get_mut(&t)
+            .unwrap()
+            .insert(f.get_name().to_string(), f.get_id());
         functions.insert(f.get_id(), f);
     }
 
@@ -227,7 +272,14 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
         let return_type = function.get_return_type();
         let mut lines = Vec::new();
 
-        let last_return = process_lines(&contents, id, return_type, &mut lines, &mut name_handler, &function_holder)?;
+        let last_return = process_lines(
+            &contents,
+            id,
+            return_type,
+            &mut lines,
+            &mut name_handler,
+            &function_holder,
+        )?;
 
         if return_type.is_some() && !last_return {
             return Err(ProcessorError::NoReturnStatement(function.get_line()));
@@ -236,20 +288,37 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
         processed_functions.push(Box::new(UserFunction {
             id,
             local_variable_count: name_handler.local_variable_space() / 8,
-            arg_count: function_holder.functions().get(&id).unwrap().get_args().len(),
+            arg_count: function_holder
+                .functions()
+                .get(&id)
+                .unwrap()
+                .get_args()
+                .len(),
             lines,
         }));
     }
 
-    let processed_functions = processed_functions.into_iter().filter(|f| name_handler.used_functions().contains(&f.get_id())).collect();
+    let processed_functions = processed_functions
+        .into_iter()
+        .filter(|f| name_handler.used_functions().contains(&f.get_id()))
+        .collect();
     Ok(processed_functions)
 }
 
-fn process_lines(section: &[(BasicSymbol, LineInfo)], current_id: isize, return_type: Option<isize>, lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder) -> Result<bool, ProcessorError> {
+fn process_lines(
+    section: &[(BasicSymbol, LineInfo)],
+    current_id: isize,
+    return_type: Option<isize>,
+    lines: &mut Vec<Line>,
+    name_handler: &mut NameHandler,
+    function_holder: &FunctionHolder,
+) -> Result<bool, ProcessorError> {
     let mut last_return = false;
 
     for line in section.split(|x| matches!(x.0, BasicSymbol::Punctuation(Punctuation::Semicolon))) {
-        if line.len() == 0 { continue; }
+        if line.len() == 0 {
+            continue;
+        }
         last_return = false;
 
         if line.len() > 1 {
@@ -257,20 +326,37 @@ fn process_lines(section: &[(BasicSymbol, LineInfo)], current_id: isize, return_
                 BasicSymbol::Assigner(assigner) => {
                     let name = match &line[0].0 {
                         BasicSymbol::Name(name) => name,
-                        _ => return Err(ProcessorError::NonNameAssignment(line[0].1.clone()))
+                        _ => return Err(ProcessorError::NonNameAssignment(line[0].1.clone())),
                     };
-                    let Left(variable) = name_handler.resolve_name(&function_holder, name, &line[0].1)? else {
-                        return Err(ProcessorError::AssignToNonVariable(line[0].1.clone()))
-                    };
-                    if line.len() < 3 { return Err(ProcessorError::NoAssignmentRHS(line[1].1.clone())); }
-                    if let Some(assigner) = assigner {
-                        let result = evaluate(&line[2..], lines, name_handler, function_holder, None)?.ok_or(
-                            ProcessorError::DoesntEvaluate(line[2].1.clone())
-                        )?;
-                        evaluate_operation(variable, (assigner, &line[1].1), Some(result), lines, name_handler, function_holder, Some(variable))?;
-                    }
+                    let Left(variable) =
+                        name_handler.resolve_name(&function_holder, name, &line[0].1)?
                     else {
-                        evaluate(&line[2..], lines, name_handler, function_holder, Some(variable))?;
+                        return Err(ProcessorError::AssignToNonVariable(line[0].1.clone()));
+                    };
+                    if line.len() < 3 {
+                        return Err(ProcessorError::NoAssignmentRHS(line[1].1.clone()));
+                    }
+                    if let Some(assigner) = assigner {
+                        let result =
+                            evaluate(&line[2..], lines, name_handler, function_holder, None)?
+                                .ok_or(ProcessorError::DoesntEvaluate(line[2].1.clone()))?;
+                        evaluate_operation(
+                            variable,
+                            (assigner, &line[1].1),
+                            Some(result),
+                            lines,
+                            name_handler,
+                            function_holder,
+                            Some(variable),
+                        )?;
+                    } else {
+                        evaluate(
+                            &line[2..],
+                            lines,
+                            name_handler,
+                            function_holder,
+                            Some(variable),
+                        )?;
                     }
 
                     continue;
@@ -286,59 +372,106 @@ fn process_lines(section: &[(BasicSymbol, LineInfo)], current_id: isize, return_
                     if return_type.is_none() {
                         lines.push(Line::Return(None));
                         continue;
-                    }
-                    else {
+                    } else {
                         return Err(ProcessorError::NoneReturnOnTypedFunction(line[0].1.clone()));
                     }
-                }
-                else if return_type.is_none() {
+                } else if return_type.is_none() {
                     return Err(ProcessorError::TypeReturnOnVoidFunction(line[1].1.clone()));
                 }
                 let return_type = return_type.unwrap();
 
                 let return_into = name_handler.add_local_variable(None, return_type);
-                let return_value = evaluate(&line[1..], lines, name_handler, &function_holder, Some((return_into, return_type)))?;
+                let return_value = evaluate(
+                    &line[1..],
+                    lines,
+                    name_handler,
+                    &function_holder,
+                    Some((return_into, return_type)),
+                )?;
                 if return_value.is_none() {
                     return Err(ProcessorError::DoesntEvaluate(line[1].1.clone()));
                 }
                 let return_value = return_value.unwrap();
                 if return_type != return_value.1 {
-                    return Err(
-                        ProcessorError::BadReturnType(
-                            line[1].1.clone(),
-                            name_handler.type_table().get_type(return_type).unwrap().get_name().to_string(),
-                            name_handler.type_table().get_type(return_value.1).unwrap().get_name().to_string(),
-                        ));
+                    return Err(ProcessorError::BadReturnType(
+                        line[1].1.clone(),
+                        name_handler
+                            .type_table()
+                            .get_type(return_type)
+                            .unwrap()
+                            .get_name()
+                            .to_string(),
+                        name_handler
+                            .type_table()
+                            .get_type(return_value.1)
+                            .unwrap()
+                            .get_name()
+                            .to_string(),
+                    ));
                 }
                 lines.push(Line::Return(Some(return_value.0)));
             }
             BasicSymbol::Keyword(Keyword::Let) => {
-                if line.len() < 2 { return Err(ProcessorError::LetNoName(line[0].1.clone())); }
-                let BasicSymbol::Name(name) = &line[1].0 else { return Err(ProcessorError::LetNoName(line[1].1.clone())); };
+                if line.len() < 2 {
+                    return Err(ProcessorError::LetNoName(line[0].1.clone()));
+                }
+                let BasicSymbol::Name(name) = &line[1].0 else {
+                    return Err(ProcessorError::LetNoName(line[1].1.clone()));
+                };
 
-                if name.len() > 1 { return Err(ProcessorError::MultipartNameDef(line[1].1.clone())); }
+                if name.len() > 1 {
+                    return Err(ProcessorError::MultipartNameDef(line[1].1.clone()));
+                }
                 let name = &name[0];
 
-                if !matches!(&name.2, NameType::Normal) { return Err(ProcessorError::LetNoName(line[0].1.clone())); }
+                if !matches!(&name.2, NameType::Normal) {
+                    return Err(ProcessorError::LetNoName(line[0].1.clone()));
+                }
                 let name = &name.0;
 
-                if line.len() < 4 { return Err(ProcessorError::NameTypeNotDefined(line[1].1.clone())); }
-                if !matches!(&line[2].0, BasicSymbol::Punctuation(Punctuation::Colon)) { return Err(ProcessorError::NameTypeNotDefined(line[2].1.clone())); }
+                if line.len() < 4 {
+                    return Err(ProcessorError::NameTypeNotDefined(line[1].1.clone()));
+                }
+                if !matches!(&line[2].0, BasicSymbol::Punctuation(Punctuation::Colon)) {
+                    return Err(ProcessorError::NameTypeNotDefined(line[2].1.clone()));
+                }
 
-                let BasicSymbol::Name(type_name) = &line[3].0 else { return Err(ProcessorError::NameTypeNotDefined(line[3].1.clone())); };
+                let BasicSymbol::Name(type_name) = &line[3].0 else {
+                    return Err(ProcessorError::NameTypeNotDefined(line[3].1.clone()));
+                };
 
-                if type_name.len() > 1 { return Err(ProcessorError::MultipartTypeName(line[3].1.clone())); }
+                if type_name.len() > 1 {
+                    return Err(ProcessorError::MultipartTypeName(line[3].1.clone()));
+                }
                 let type_name = &type_name[0];
 
-                if !matches!(&type_name.2, NameType::Normal) { return Err(ProcessorError::NameTypeNotDefined(line[3].1.clone())); }
+                if !matches!(&type_name.2, NameType::Normal) {
+                    return Err(ProcessorError::NameTypeNotDefined(line[3].1.clone()));
+                }
 
-                let type_id = name_handler.type_table().get_id_by_name(&type_name.0).ok_or(ProcessorError::TypeNotFound(line[3].1.clone(), type_name.0.clone()))?;
+                let type_id = name_handler
+                    .type_table()
+                    .get_id_by_name(&type_name.0)
+                    .ok_or(ProcessorError::TypeNotFound(
+                        line[3].1.clone(),
+                        type_name.0.clone(),
+                    ))?;
                 let addr = name_handler.add_local_variable(Some(name.clone()), type_id);
 
-                if line.len() < 6 { return Err(ProcessorError::LetNoValue(line[3].1.clone())); }
-                if !matches!(&line[4].0, BasicSymbol::Assigner(None)) { return Err(ProcessorError::LetNoValue(line[4].1.clone())); }
+                if line.len() < 6 {
+                    return Err(ProcessorError::LetNoValue(line[3].1.clone()));
+                }
+                if !matches!(&line[4].0, BasicSymbol::Assigner(None)) {
+                    return Err(ProcessorError::LetNoValue(line[4].1.clone()));
+                }
 
-                evaluate(&line[5..], lines, name_handler, &function_holder, Some((addr, type_id)))?;
+                evaluate(
+                    &line[5..],
+                    lines,
+                    name_handler,
+                    &function_holder,
+                    Some((addr, type_id)),
+                )?;
             }
             BasicSymbol::Keyword(Keyword::While) => {
                 if line.len() < 2 {
@@ -348,26 +481,48 @@ fn process_lines(section: &[(BasicSymbol, LineInfo)], current_id: isize, return_
                 let BasicSymbol::BracketedSection(expr) = &line[1].0 else {
                     return Err(ProcessorError::WhileNoBrackets(line[1].1.clone()));
                 };
-                let start_label = get_function_sublabel(current_id, &name_handler.get_uid().to_string());
-                let end_label = get_function_sublabel(current_id, &name_handler.get_uid().to_string());
+                let start_label =
+                    get_function_sublabel(current_id, &name_handler.get_uid().to_string());
+                let end_label =
+                    get_function_sublabel(current_id, &name_handler.get_uid().to_string());
 
                 lines.push(Line::InlineAsm(vec![format!("{}:", start_label)]));
-                let evaluated = evaluate(expr, lines, name_handler, function_holder, None)?.ok_or(ProcessorError::DoesntEvaluate(line[1].1.clone()))?;
+                let evaluated = evaluate(expr, lines, name_handler, function_holder, None)?
+                    .ok_or(ProcessorError::DoesntEvaluate(line[1].1.clone()))?;
                 lines.push(Line::InlineAsm(vec![
                     format!("mov rax, [{}]", get_local_address(evaluated.0)),
                     "cmp rax, 0".to_string(),
-                    format!("jnz {}", end_label)
+                    format!("jnz {}", end_label),
                 ]));
 
-                if evaluated.1 != Bool::new().get_id() { return Err(
-                    ProcessorError::BadConditionType(line[1].1.clone(), name_handler.type_table().get_type(evaluated.1).unwrap().get_name().to_string())
-                ); }
-                if line.len() < 3 { return Err(ProcessorError::WhileNoBraces(line[1].1.clone())) }
-                let BasicSymbol::BracedSection(inner) = &line[2].0 else { return Err(ProcessorError::WhileNoBraces(line[2].1.clone())) };
-                process_lines(inner, current_id, return_type, lines, name_handler, function_holder)?;
+                if evaluated.1 != Bool::new().get_id() {
+                    return Err(ProcessorError::BadConditionType(
+                        line[1].1.clone(),
+                        name_handler
+                            .type_table()
+                            .get_type(evaluated.1)
+                            .unwrap()
+                            .get_name()
+                            .to_string(),
+                    ));
+                }
+                if line.len() < 3 {
+                    return Err(ProcessorError::WhileNoBraces(line[1].1.clone()));
+                }
+                let BasicSymbol::BracedSection(inner) = &line[2].0 else {
+                    return Err(ProcessorError::WhileNoBraces(line[2].1.clone()));
+                };
+                process_lines(
+                    inner,
+                    current_id,
+                    return_type,
+                    lines,
+                    name_handler,
+                    function_holder,
+                )?;
                 lines.push(Line::InlineAsm(vec![
                     format!("jmp {}", start_label),
-                    format!("{}:", end_label)
+                    format!("{}:", end_label),
                 ]));
 
                 if line.len() > 3 {
@@ -383,43 +538,81 @@ fn process_lines(section: &[(BasicSymbol, LineInfo)], current_id: isize, return_
     Ok(last_return)
 }
 
-
-fn evaluate<'a>(section: &[(BasicSymbol, LineInfo)], lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder,
-                return_into: Option<(isize, isize)>
-)-> Result<Option<(isize, isize)>, ProcessorError> { // addr, type
+fn evaluate<'a>(
+    section: &[(BasicSymbol, LineInfo)],
+    lines: &mut Vec<Line>,
+    name_handler: &mut NameHandler,
+    function_holder: &FunctionHolder,
+    return_into: Option<(isize, isize)>,
+) -> Result<Option<(isize, isize)>, ProcessorError> {
+    // addr, type
     Ok(if section.len() == 1 {
-        evaluate_symbol(&section[0], lines, name_handler, function_holder, return_into)?
-    }
-    else if section.len() == 2 {
+        evaluate_symbol(
+            &section[0],
+            lines,
+            name_handler,
+            function_holder,
+            return_into,
+        )?
+    } else if section.len() == 2 {
         let op = evaluate_operator(&section[0])?;
         let Some(value) = evaluate_symbol(&section[1], lines, name_handler, function_holder, None)?
-            else {
-                return Err(ProcessorError::DoesntEvaluate(section[1].1.clone()));
-            };
-        evaluate_operation(value, (op, &section[1].1), None, lines, name_handler, function_holder, return_into)?
-    }
-    else if section.len() == 3 {
+        else {
+            return Err(ProcessorError::DoesntEvaluate(section[1].1.clone()));
+        };
+        evaluate_operation(
+            value,
+            (op, &section[1].1),
+            None,
+            lines,
+            name_handler,
+            function_holder,
+            return_into,
+        )?
+    } else if section.len() == 3 {
         let Some(lhs) = evaluate_symbol(&section[0], lines, name_handler, function_holder, None)?
-            else { return Err(ProcessorError::DoesntEvaluate(section[0].1.clone())); };
+        else {
+            return Err(ProcessorError::DoesntEvaluate(section[0].1.clone()));
+        };
         let op = evaluate_operator(&section[1])?;
         let Some(rhs) = evaluate_symbol(&section[2], lines, name_handler, function_holder, None)?
-            else { return Err(ProcessorError::DoesntEvaluate(section[2].1.clone())); };
-        evaluate_operation(lhs, (op, &section[1].1), Some(rhs), lines, name_handler, function_holder, return_into)?
-    }
-    else {
+        else {
+            return Err(ProcessorError::DoesntEvaluate(section[2].1.clone()));
+        };
+        evaluate_operation(
+            lhs,
+            (op, &section[1].1),
+            Some(rhs),
+            lines,
+            name_handler,
+            function_holder,
+            return_into,
+        )?
+    } else {
         return Err(ProcessorError::BadEvaluableLayout(section[3].1.clone()));
     })
 }
 
-fn evaluate_symbol(symbol: &(BasicSymbol, LineInfo), lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder,
-    return_into: Option<(isize, isize)>) -> Result<Option<(isize, isize)>, ProcessorError> {
+fn evaluate_symbol(
+    symbol: &(BasicSymbol, LineInfo),
+    lines: &mut Vec<Line>,
+    name_handler: &mut NameHandler,
+    function_holder: &FunctionHolder,
+    return_into: Option<(isize, isize)>,
+) -> Result<Option<(isize, isize)>, ProcessorError> {
     // println!("{:?}", symbol);
     Ok(match &symbol.0 {
         BasicSymbol::AbstractSyntaxTree(_) => panic!(),
-        BasicSymbol::Operator(_) => return Err(ProcessorError::BadEvaluableLayout(symbol.1.clone())),
-        BasicSymbol::Literal(literal) => {
-            Some(instantiate_literal(Left(literal), lines, name_handler, function_holder, return_into)?)
+        BasicSymbol::Operator(_) => {
+            return Err(ProcessorError::BadEvaluableLayout(symbol.1.clone()))
         }
+        BasicSymbol::Literal(literal) => Some(instantiate_literal(
+            Left(literal),
+            lines,
+            name_handler,
+            function_holder,
+            return_into,
+        )?),
         BasicSymbol::BracketedSection(inner) => {
             evaluate(inner, lines, name_handler, function_holder, return_into)?
         }
@@ -430,29 +623,54 @@ fn evaluate_symbol(symbol: &(BasicSymbol, LineInfo), lines: &mut Vec<Line>, name
                     // println!("{:?}", variable);
                     Some(variable)
                 }
-                Right((function, default_args, args)) => {
-                    call_function(function, &symbol.1, default_args, args, lines, name_handler, function_holder, return_into)?
-                }
+                Right((function, default_args, args)) => call_function(
+                    function,
+                    &symbol.1,
+                    default_args,
+                    args,
+                    lines,
+                    name_handler,
+                    function_holder,
+                    return_into,
+                )?,
             }
         }
-        other => return Err(ProcessorError::BadEvaluableLayout(symbol.1.clone()))
+        other => return Err(ProcessorError::BadEvaluableLayout(symbol.1.clone())),
     })
 }
 
-fn call_function(function: &Box<dyn TypedFunction>, start_line: &LineInfo, default_arg: Option<(isize, isize)>, args: &Vec<Vec<(BasicSymbol, LineInfo)>>,
-    lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder, return_into: Option<(isize, isize)>)
-    -> Result<Option<(isize, isize)>, ProcessorError> {
+fn call_function(
+    function: &Box<dyn TypedFunction>,
+    start_line: &LineInfo,
+    default_arg: Option<(isize, isize)>,
+    args: &Vec<Vec<(BasicSymbol, LineInfo)>>,
+    lines: &mut Vec<Line>,
+    name_handler: &mut NameHandler,
+    function_holder: &FunctionHolder,
+    return_into: Option<(isize, isize)>,
+) -> Result<Option<(isize, isize)>, ProcessorError> {
     name_handler.use_function(function);
     let target_args = function.get_args();
     if args.len() > target_args.len() {
-        return Err(ProcessorError::BadArgCount(args[target_args.len()][0].1.clone(), target_args.len(), args.len()));
+        return Err(ProcessorError::BadArgCount(
+            args[target_args.len()][0].1.clone(),
+            target_args.len(),
+            args.len(),
+        ));
     }
     if args.len() < target_args.len() {
         if args.len() > 0 {
-            return Err(ProcessorError::BadArgCount(args[args.len()-1].last().unwrap().1.clone(), target_args.len(), args.len()));
-        }
-        else {
-            return Err(ProcessorError::BadArgCount(function.get_line(), target_args.len(), args.len()));
+            return Err(ProcessorError::BadArgCount(
+                args[args.len() - 1].last().unwrap().1.clone(),
+                target_args.len(),
+                args.len(),
+            ));
+        } else {
+            return Err(ProcessorError::BadArgCount(
+                function.get_line(),
+                target_args.len(),
+                args.len(),
+            ));
         }
     }
 
@@ -461,63 +679,111 @@ fn call_function(function: &Box<dyn TypedFunction>, start_line: &LineInfo, defau
         if default_arg.1 != target_args[0].1 {
             return Err(ProcessorError::Placeholder2); // TODO:
         }
-        call_args.push((default_arg.0, name_handler.type_table().get_type_size(default_arg.1).unwrap()));
+        call_args.push((
+            default_arg.0,
+            name_handler
+                .type_table()
+                .get_type_size(default_arg.1)
+                .unwrap(),
+        ));
     }
     for arg in args {
         let evaluated = evaluate(arg, lines, name_handler, function_holder, None)?;
         // println!("{:?}", evaluated);
-        if evaluated.is_none() { return Err(ProcessorError::DoesntEvaluate(arg[0].1.clone())) }
+        if evaluated.is_none() {
+            return Err(ProcessorError::DoesntEvaluate(arg[0].1.clone()));
+        }
         let evaluated = evaluated.unwrap();
         if evaluated.1 != target_args[call_args.len()].1 {
             return Err(ProcessorError::BadArgType(
                 arg[0].1.clone(),
-                name_handler.type_table().get_type(target_args[call_args.len()].1).unwrap().get_name().to_string(),
-                name_handler.type_table().get_type(evaluated.1).unwrap().get_name().to_string()
+                name_handler
+                    .type_table()
+                    .get_type(target_args[call_args.len()].1)
+                    .unwrap()
+                    .get_name()
+                    .to_string(),
+                name_handler
+                    .type_table()
+                    .get_type(evaluated.1)
+                    .unwrap()
+                    .get_name()
+                    .to_string(),
             ));
         }
-        call_args.push((evaluated.0, name_handler.type_table().get_type_size(evaluated.1).unwrap()));
+        call_args.push((
+            evaluated.0,
+            name_handler
+                .type_table()
+                .get_type_size(evaluated.1)
+                .unwrap(),
+        ));
     }
 
     Ok(if let Some(return_type) = function.get_return_type() {
         if return_into.is_some() && return_into.unwrap().1 != return_type {
             return Err(ProcessorError::BadEvaluatedType(
                 start_line.clone(),
-                name_handler.type_table().get_type(return_into.unwrap().1).unwrap().get_name().to_string(),
-                name_handler.type_table().get_type(return_type).unwrap().get_name().to_string()
+                name_handler
+                    .type_table()
+                    .get_type(return_into.unwrap().1)
+                    .unwrap()
+                    .get_name()
+                    .to_string(),
+                name_handler
+                    .type_table()
+                    .get_type(return_type)
+                    .unwrap()
+                    .get_name()
+                    .to_string(),
             ));
         }
         let return_into = if let Some(return_into) = return_into {
-            (return_into.0, name_handler.type_table().get_type_size(return_type).unwrap())
-        }
-        else {
-            (name_handler.add_local_variable(None, return_type), name_handler.type_table.get_type_size(return_type).unwrap())
+            (
+                return_into.0,
+                name_handler
+                    .type_table()
+                    .get_type_size(return_type)
+                    .unwrap(),
+            )
+        } else {
+            (
+                name_handler.add_local_variable(None, return_type),
+                name_handler.type_table.get_type_size(return_type).unwrap(),
+            )
         };
 
         if function.is_inline() {
             let mut inline_args: Vec<_> = call_args.into_iter().map(|x| x.0).collect();
             inline_args.push(return_into.0);
             lines.push(Line::InlineAsm(function.get_inline(inline_args)));
-        }
-        else {
-            lines.push(Line::ReturnCall(function.get_id(), call_args, return_into.0))
+        } else {
+            lines.push(Line::ReturnCall(
+                function.get_id(),
+                call_args,
+                return_into.0,
+            ))
         }
 
         Some((return_into.0, return_type))
-    }
-    else {
+    } else {
         if return_into.is_some() {
             return Err(ProcessorError::BadEvaluatedType(
                 start_line.clone(),
-                name_handler.type_table().get_type(return_into.unwrap().1).unwrap().get_name().to_string(),
-                "None".to_string()
+                name_handler
+                    .type_table()
+                    .get_type(return_into.unwrap().1)
+                    .unwrap()
+                    .get_name()
+                    .to_string(),
+                "None".to_string(),
             ));
         }
 
         if function.is_inline() {
             let inline_args: Vec<_> = call_args.into_iter().map(|x| x.0).collect();
             lines.push(Line::InlineAsm(function.get_inline(inline_args)));
-        }
-        else {
+        } else {
             lines.push(Line::NoReturnCall(function.get_id(), call_args))
         }
 
@@ -525,53 +791,82 @@ fn call_function(function: &Box<dyn TypedFunction>, start_line: &LineInfo, defau
     })
 }
 
-fn evaluate_operator<'a>(symbol: &'a (BasicSymbol, LineInfo)) -> Result<&'a Operator, ProcessorError> {
+fn evaluate_operator<'a>(
+    symbol: &'a (BasicSymbol, LineInfo),
+) -> Result<&'a Operator, ProcessorError> {
     match &symbol.0 {
         BasicSymbol::Operator(operator) => Ok(operator),
-        _ => Err(ProcessorError::BadEvaluableLayout(symbol.1.clone()))
+        _ => Err(ProcessorError::BadEvaluableLayout(symbol.1.clone())),
     }
 }
 
-fn try_instantiate_literal(literal: Either<(isize, isize), &Literal>, lines: &mut Vec<Line>, name_handler: &mut NameHandler,
-   function_holder: &FunctionHolder, return_into: Option<(isize, isize)>) -> Result<(isize, isize), ProcessorError> {
+fn try_instantiate_literal(
+    literal: Either<(isize, isize), &Literal>,
+    lines: &mut Vec<Line>,
+    name_handler: &mut NameHandler,
+    function_holder: &FunctionHolder,
+    return_into: Option<(isize, isize)>,
+) -> Result<(isize, isize), ProcessorError> {
     match literal {
         Left(r) => Ok(r),
-        Right(literal) => instantiate_literal(Left(literal), lines, name_handler, function_holder, return_into)
+        Right(literal) => instantiate_literal(
+            Left(literal),
+            lines,
+            name_handler,
+            function_holder,
+            return_into,
+        ),
     }
 }
 
-fn instantiate_literal(literal: Either<&Literal, isize>, lines: &mut Vec<Line>, name_handler: &mut NameHandler,
-   _function_holder: &FunctionHolder, return_into: Option<(isize, isize)>) -> Result<(isize, isize), ProcessorError> {
+fn instantiate_literal(
+    literal: Either<&Literal, isize>,
+    lines: &mut Vec<Line>,
+    name_handler: &mut NameHandler,
+    _function_holder: &FunctionHolder,
+    return_into: Option<(isize, isize)>,
+) -> Result<(isize, isize), ProcessorError> {
     let (addr, id) = if let Some((addr, id)) = return_into {
         (addr, id)
-    }
-    else {
+    } else {
         let id = match &literal {
             Left(literal) => literal.get_type_id(),
-            Right(id) => *id
+            Right(id) => *id,
         };
         (name_handler.add_local_variable(None, id), id)
     };
     let _type = name_handler.type_table().get_type(id).unwrap();
     let asm = match literal {
         Left(literal) => _type.instantiate(Some(literal), addr)?,
-        Right(_id) => _type.instantiate(None, addr)?
+        Right(_id) => _type.instantiate(None, addr)?,
     };
     lines.push(Line::InlineAsm(asm));
     Ok((addr, id))
 }
 
-fn evaluate_operation(lhs: (isize, isize), op: (&Operator, &LineInfo), rhs: Option<(isize, isize)>,
-    lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder, return_into: Option<(isize, isize)>)
-    -> Result<Option<(isize, isize)>, ProcessorError> {
-
+fn evaluate_operation(
+    lhs: (isize, isize),
+    op: (&Operator, &LineInfo),
+    rhs: Option<(isize, isize)>,
+    lines: &mut Vec<Line>,
+    name_handler: &mut NameHandler,
+    function_holder: &FunctionHolder,
+    return_into: Option<(isize, isize)>,
+) -> Result<Option<(isize, isize)>, ProcessorError> {
     Ok(Some(match &op.0 {
         Operator::Not => {
-            let func = function_holder.get_function(Some(lhs.1), "not").ok_or(ProcessorError::SingleOpFunctionNotFound(
-                op.1.clone(),
-                "not".to_string(),
-                name_handler.type_table.get_type(lhs.1).unwrap().get_name().to_string()
-            ))?;
+            let func = function_holder.get_function(Some(lhs.1), "not").ok_or(
+                ProcessorError::SingleOpFunctionNotFound(
+                    op.1.clone(),
+                    "not".to_string(),
+                    name_handler
+                        .type_table
+                        .get_type(lhs.1)
+                        .unwrap()
+                        .get_name()
+                        .to_string(),
+                ),
+            )?;
             name_handler.use_function(func);
             let func_args = func.get_args();
             let func_id = func.get_id();
@@ -579,33 +874,54 @@ fn evaluate_operation(lhs: (isize, isize), op: (&Operator, &LineInfo), rhs: Opti
                 return Err(ProcessorError::SingleOpFunctionNotFound(
                     op.1.clone(),
                     "not".to_string(),
-                    name_handler.type_table.get_type(lhs.1).unwrap().get_name().to_string()
+                    name_handler
+                        .type_table
+                        .get_type(lhs.1)
+                        .unwrap()
+                        .get_name()
+                        .to_string(),
                 ));
             }
             let output = if let Some(return_into) = return_into {
                 return_into
-            }
-            else {
+            } else {
                 instantiate_literal(
-                    Right(func.get_return_type().ok_or(ProcessorError::SingleOpFunctionNotFound(
-                        op.1.clone(),
-                        "not".to_string(),
-                        name_handler.type_table.get_type(lhs.1).unwrap().get_name().to_string()
-                    ))?),
-                    lines, name_handler, function_holder, None
+                    Right(
+                        func.get_return_type()
+                            .ok_or(ProcessorError::SingleOpFunctionNotFound(
+                                op.1.clone(),
+                                "not".to_string(),
+                                name_handler
+                                    .type_table
+                                    .get_type(lhs.1)
+                                    .unwrap()
+                                    .get_name()
+                                    .to_string(),
+                            ))?,
+                    ),
+                    lines,
+                    name_handler,
+                    function_holder,
+                    None,
                 )?
             };
             let func = function_holder.functions().get(&func_id).unwrap();
             if func.is_inline() {
                 lines.push(Line::InlineAsm(func.get_inline(vec![lhs.0, output.0])));
-            }
-            else {
-                lines.push(Line::ReturnCall(func.get_id(), vec![(lhs.0, name_handler.type_table().get_type_size(lhs.1)?)], output.0));
+            } else {
+                lines.push(Line::ReturnCall(
+                    func.get_id(),
+                    vec![(lhs.0, name_handler.type_table().get_type_size(lhs.1)?)],
+                    output.0,
+                ));
             }
             output
-        },
+        }
         op_ => {
-            let rhs = rhs.ok_or(ProcessorError::BadOperatorPosition(op.1.clone(), op.0.clone()))?;
+            let rhs = rhs.ok_or(ProcessorError::BadOperatorPosition(
+                op.1.clone(),
+                op.0.clone(),
+            ))?;
             let func_name = match op_ {
                 Operator::Add => "add",
                 Operator::Subtract => "sub",
@@ -619,15 +935,27 @@ fn evaluate_operation(lhs: (isize, isize), op: (&Operator, &LineInfo), rhs: Opti
                 Operator::NotEqual => "ne",
                 Operator::Or => "or",
                 Operator::And => "and",
-                Operator::Not => panic!()
+                Operator::Not => panic!(),
             };
 
-            let func = function_holder.get_function(Some(lhs.1), func_name).ok_or(ProcessorError::OpFunctionNotFound(
-                op.1.clone(),
-                func_name.to_string(),
-                name_handler.type_table.get_type(lhs.1).unwrap().get_name().to_string(),
-                name_handler.type_table.get_type(rhs.1).unwrap().get_name().to_string()
-            ))?;
+            let func = function_holder.get_function(Some(lhs.1), func_name).ok_or(
+                ProcessorError::OpFunctionNotFound(
+                    op.1.clone(),
+                    func_name.to_string(),
+                    name_handler
+                        .type_table
+                        .get_type(lhs.1)
+                        .unwrap()
+                        .get_name()
+                        .to_string(),
+                    name_handler
+                        .type_table
+                        .get_type(rhs.1)
+                        .unwrap()
+                        .get_name()
+                        .to_string(),
+                ),
+            )?;
             name_handler.use_function(func);
             let func_args = func.get_args();
             let func_id = func.get_id();
@@ -636,30 +964,63 @@ fn evaluate_operation(lhs: (isize, isize), op: (&Operator, &LineInfo), rhs: Opti
                 return Err(ProcessorError::OpFunctionNotFound(
                     op.1.clone(),
                     func_name.to_string(),
-                    name_handler.type_table.get_type(lhs.1).unwrap().get_name().to_string(),
-                    name_handler.type_table.get_type(rhs.1).unwrap().get_name().to_string()
+                    name_handler
+                        .type_table
+                        .get_type(lhs.1)
+                        .unwrap()
+                        .get_name()
+                        .to_string(),
+                    name_handler
+                        .type_table
+                        .get_type(rhs.1)
+                        .unwrap()
+                        .get_name()
+                        .to_string(),
                 ));
             }
             let output = if let Some(return_into) = return_into {
                 return_into
-            }
-            else {
+            } else {
                 instantiate_literal(
-                    Right(func.get_return_type().ok_or(ProcessorError::OpFunctionNotFound(
-                        op.1.clone(),
-                        func_name.to_string(),
-                        name_handler.type_table.get_type(lhs.1).unwrap().get_name().to_string(),
-                        name_handler.type_table.get_type(rhs.1).unwrap().get_name().to_string()
-                    ))?),
-                    lines, name_handler, function_holder, None
+                    Right(
+                        func.get_return_type()
+                            .ok_or(ProcessorError::OpFunctionNotFound(
+                                op.1.clone(),
+                                func_name.to_string(),
+                                name_handler
+                                    .type_table
+                                    .get_type(lhs.1)
+                                    .unwrap()
+                                    .get_name()
+                                    .to_string(),
+                                name_handler
+                                    .type_table
+                                    .get_type(rhs.1)
+                                    .unwrap()
+                                    .get_name()
+                                    .to_string(),
+                            ))?,
+                    ),
+                    lines,
+                    name_handler,
+                    function_holder,
+                    None,
                 )?
             };
             let func = function_holder.functions().get(&func_id).unwrap();
             if func.is_inline() {
-                lines.push(Line::InlineAsm(func.get_inline(vec![lhs.0, rhs.0, output.0])));
-            }
-            else {
-                lines.push(Line::ReturnCall(func.get_id(), vec![(lhs.0, name_handler.type_table().get_type_size(lhs.1)?), (rhs.0, name_handler.type_table().get_type_size(rhs.1)?)], output.0));
+                lines.push(Line::InlineAsm(
+                    func.get_inline(vec![lhs.0, rhs.0, output.0]),
+                ));
+            } else {
+                lines.push(Line::ReturnCall(
+                    func.get_id(),
+                    vec![
+                        (lhs.0, name_handler.type_table().get_type_size(lhs.1)?),
+                        (rhs.0, name_handler.type_table().get_type_size(rhs.1)?),
+                    ],
+                    output.0,
+                ));
             }
             output
         }

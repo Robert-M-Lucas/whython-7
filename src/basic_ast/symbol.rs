@@ -2,9 +2,8 @@ use crate::ast::keywords::Keyword;
 use crate::ast::literals::Literal;
 use crate::ast::operators::Operator;
 use crate::basic_ast::punctuation::Punctuation;
-use std::path::PathBuf;
 use crate::parser::line_info::LineInfo;
-
+use std::path::PathBuf;
 
 pub type BasicAbstractSyntaxTree = Vec<(BasicSymbol, LineInfo)>;
 
@@ -12,13 +11,13 @@ pub type BasicAbstractSyntaxTree = Vec<(BasicSymbol, LineInfo)>;
 pub enum NameAccessType {
     Base,
     Static,
-    Normal
+    Normal,
 }
 
 #[derive(Clone, strum_macros::Display, Debug)]
 pub enum NameType {
     Normal,
-    Function(Vec<Vec<(BasicSymbol, LineInfo)>>)
+    Function(Vec<Vec<(BasicSymbol, LineInfo)>>),
 }
 
 #[derive(Clone, strum_macros::Display, Debug)]
@@ -39,7 +38,7 @@ impl BasicSymbol {
     pub fn get_name_contents(&self) -> &Vec<(String, NameAccessType, NameType)> {
         match self {
             BasicSymbol::Name(inside) => inside,
-            _ => panic!()
+            _ => panic!(),
         }
     }
 }

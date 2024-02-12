@@ -1,8 +1,7 @@
+use crate::parser::line_info::LineInfo;
 use crate::parser::parse::ParseError;
 use std::path::PathBuf;
 use std::rc::Rc;
-use crate::parser::line_info::LineInfo;
-
 
 pub struct FileReader {
     path: Rc<PathBuf>,
@@ -10,7 +9,7 @@ pub struct FileReader {
     cursor: usize,
     line_start: usize,
     line: usize,
-    checkpoint: (usize, usize)
+    checkpoint: (usize, usize),
 }
 
 impl FileReader {
@@ -21,52 +20,38 @@ impl FileReader {
             cursor: 0,
             line_start: 0,
             line: 1,
-            checkpoint: (1, 0)
+            checkpoint: (1, 0),
         }
     }
 
     pub fn get_line_info(&self) -> LineInfo {
-        LineInfo::new(
-            self.path.clone(),
-            self.checkpoint.0,
-            self.checkpoint.1
-        )
+        LineInfo::new(self.path.clone(), self.checkpoint.0, self.checkpoint.1)
     }
-    
+
     pub fn get_line_info_changed(&self, line: usize, char_start: usize) -> LineInfo {
-        LineInfo::new(
-            self.path.clone(),
-            line,
-            char_start
-        )
+        LineInfo::new(self.path.clone(), line, char_start)
     }
 
     pub fn get_line_info_current(&self) -> LineInfo {
         if self.cursor - self.line_start == 0 {
+            LineInfo::new(self.path.clone(), self.line, self.cursor - self.line_start)
+        } else {
             LineInfo::new(
                 self.path.clone(),
                 self.line,
-                self.cursor - self.line_start
-            )
-        }
-        else {
-            LineInfo::new(
-                self.path.clone(),
-                self.line,
-                self.cursor - self.line_start - 1
+                self.cursor - self.line_start - 1,
             )
         }
     }
-    
+
     pub fn get_line_char(&self) -> (usize, usize) {
         if self.cursor - self.line_start < 2 {
             (self.line, self.cursor - self.line_start)
-        }
-        else {
+        } else {
             (self.line, self.cursor - self.line_start - 2)
         }
     }
-    
+
     pub fn checkpoint(&mut self) -> (usize, usize) {
         self.checkpoint = self.get_line_char();
         self.checkpoint

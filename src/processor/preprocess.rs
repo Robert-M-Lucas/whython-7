@@ -2,12 +2,13 @@ use crate::ast::keywords::Keyword;
 use crate::basic_ast::punctuation::Punctuation;
 use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol, NameType};
 
-use std::path::{PathBuf};
-use std::vec::IntoIter;
 use crate::parser::line_info::LineInfo;
 use crate::processor::processor::ProcessorError;
-use crate::processor::processor::ProcessorError::{FnNoBraces, FnParamsTrailingComma, MultipartNameDef, MultipartTypeName, NameTypeNotDefined};
-
+use crate::processor::processor::ProcessorError::{
+    FnNoBraces, FnParamsTrailingComma, MultipartNameDef, MultipartTypeName, NameTypeNotDefined,
+};
+use std::path::PathBuf;
+use std::vec::IntoIter;
 
 pub type PreProcessFunction = (
     String,
@@ -51,9 +52,7 @@ pub fn preprocess(
                     _ => {}
                 },
                 BasicSymbol::AbstractSyntaxTree(_) => panic!(),
-                symbol => {
-                    return Err(ProcessorError::BadTopLevelSymbol(first_line))
-                }
+                symbol => return Err(ProcessorError::BadTopLevelSymbol(first_line)),
             }
         }
     }
@@ -63,7 +62,7 @@ pub fn preprocess(
 
 fn parse_struct(
     start_line_info: LineInfo,
-    tree: &mut IntoIter<(BasicSymbol, LineInfo)>
+    tree: &mut IntoIter<(BasicSymbol, LineInfo)>,
 ) -> Result<PreprocessSymbol, ProcessorError> {
     let (name, name_line) = tree
         .next()
@@ -78,9 +77,9 @@ fn parse_struct(
     }
     let name = name.remove(0);
 
-    let (contents, contents_line) =
-        tree.next()
-            .ok_or(ProcessorError::StructNoBraces(name_line))?;
+    let (contents, contents_line) = tree
+        .next()
+        .ok_or(ProcessorError::StructNoBraces(name_line))?;
     let contents = match contents {
         BasicSymbol::BracedSection(contents) => contents,
         _ => return Err(ProcessorError::StructNoBraces(contents_line)),
@@ -118,20 +117,16 @@ fn parse_struct(
                 }
                 name.remove(0)
             }
-            _ => {
-                return Err(ProcessorError::StructExpectedAttributeName(attr_name_line))
-            }
+            _ => return Err(ProcessorError::StructExpectedAttributeName(attr_name_line)),
         };
         let Some((colon, colon_line)) = contents.next() else {
             return Err(ProcessorError::NameTypeNotDefined(attr_name_line));
         };
-        if !matches!(colon, BasicSymbol::Punctuation(Punctuation::Colon))
-        {
+        if !matches!(colon, BasicSymbol::Punctuation(Punctuation::Colon)) {
             return Err(ProcessorError::NameTypeNotDefined(colon_line));
         }
 
-        let Some((attr_type, attr_type_line)) = contents.next()
-        else {
+        let Some((attr_type, attr_type_line)) = contents.next() else {
             return Err(ProcessorError::NameTypeNotDefined(colon_line));
         };
         let attr_type = match attr_type {
@@ -141,23 +136,25 @@ fn parse_struct(
                 }
                 name.remove(0)
             }
-            _ => {
-                return Err(ProcessorError::NameTypeNotDefined(attr_type_line))
-            }
+            _ => return Err(ProcessorError::NameTypeNotDefined(attr_type_line)),
         };
 
         attributes.push((attr_name.0, attr_name_line, attr_type.0, attr_type_line));
         first = false;
     }
 
-    Ok(PreprocessSymbol::Struct(start_line_info, name.0, attributes))
+    Ok(PreprocessSymbol::Struct(
+        start_line_info,
+        name.0,
+        attributes,
+    ))
 }
 
 fn parse_impl(
     start_line_info: LineInfo,
     tree: &mut IntoIter<(BasicSymbol, LineInfo)>,
 ) -> Result<PreprocessSymbol, ProcessorError> {
-    let (name, name_line)= tree
+    let (name, name_line) = tree
         .next()
         .ok_or(ProcessorError::ImplNoName(start_line_info.clone()))?;
     let mut name = match name {
@@ -170,9 +167,7 @@ fn parse_impl(
     }
     let name = name.remove(0);
 
-    let (contents, contents_line) =
-        tree.next()
-            .ok_or(ProcessorError::ImplNoBraces(name_line))?;
+    let (contents, contents_line) = tree.next().ok_or(ProcessorError::ImplNoBraces(name_line))?;
     let contents = match contents {
         BasicSymbol::BracedSection(contents) => contents,
         _ => return Err(ProcessorError::ImplNoBraces(contents_line)),
@@ -196,9 +191,7 @@ fn parse_impl(
                 };
                 functions.push((function, symbol_line));
             }
-            _ => {
-                return Err(ProcessorError::ImplNonFnContent(symbol_line))
-            }
+            _ => return Err(ProcessorError::ImplNonFnContent(symbol_line)),
         }
     }
 
@@ -225,9 +218,7 @@ fn parse_fn(
 
     let parameters = match name_type {
         NameType::Normal => return Err(FnNoBraces(name_line)),
-        NameType::Function(arguments) => {
-            arguments
-        }
+        NameType::Function(arguments) => arguments,
     };
 
     // let (arguments, arguments_line) = tree.next().ok_or()?;
@@ -248,8 +239,7 @@ fn parse_fn(
     for parameter in parameters {
         let mut parameter = parameter.into_iter();
 
-        let Some((mut first_item, first_line)) = parameter.next()
-        else {
+        let Some((mut first_item, first_line)) = parameter.next() else {
             return Err(ProcessorError::FnParamsTrailingComma(last_line));
         };
 
@@ -262,22 +252,19 @@ fn parse_fn(
                 }
                 name.remove(0).0
             }
-            _ => {
-                return Err(ProcessorError::FnExpectedParameterName(arg_line))
-            }
+            _ => return Err(ProcessorError::FnExpectedParameterName(arg_line)),
         };
 
         let Some((colon, colon_line)) = parameter.next() else {
-            return Err(ProcessorError::NameTypeNotDefined(arg_line))
+            return Err(ProcessorError::NameTypeNotDefined(arg_line));
         };
 
-        if !matches!(colon, BasicSymbol::Punctuation(Punctuation::Colon))
-        {
+        if !matches!(colon, BasicSymbol::Punctuation(Punctuation::Colon)) {
             return Err(ProcessorError::NameTypeNotDefined(colon_line));
         }
 
         let Some((param_type, param_type_line)) = parameter.next() else {
-            return Err(ProcessorError::NameTypeNotDefined(colon_line))
+            return Err(ProcessorError::NameTypeNotDefined(colon_line));
         };
         let param_type = match param_type {
             BasicSymbol::Name(mut name) => {
@@ -286,22 +273,20 @@ fn parse_fn(
                 }
                 name.remove(0).0
             }
-            _ => {
-                return Err(ProcessorError::NameTypeNotDefined(param_type_line))
-            }
+            _ => return Err(ProcessorError::NameTypeNotDefined(param_type_line)),
         };
 
         parameters_processed.push((arg_name, arg_line, param_type, param_type_line.clone())); // TODO:
         last_line = param_type_line;
     }
 
-    let (mut contents, mut contents_line) = tree.next().ok_or(
-        ProcessorError::FnNoBracesOrReturn(last_line)
-    )?;
+    let (mut contents, mut contents_line) = tree
+        .next()
+        .ok_or(ProcessorError::FnNoBracesOrReturn(last_line))?;
 
     let return_type = if matches!(&contents, BasicSymbol::Punctuation(Punctuation::Tilda)) {
         let Some((next_symbol, next_line)) = tree.next() else {
-            return Err(ProcessorError::FnExpectedReturnType(contents_line))
+            return Err(ProcessorError::FnExpectedReturnType(contents_line));
         };
         contents_line = next_line.clone();
         match next_symbol {
@@ -311,27 +296,30 @@ fn parse_fn(
                 }
                 Some((name.remove(0), next_line))
             }
-            _ => {
-                return Err(ProcessorError::FnExpectedReturnType(next_line))
-            }
+            _ => return Err(ProcessorError::FnExpectedReturnType(next_line)),
         }
     } else {
         None
     };
 
     if return_type.is_some() {
-        (contents, contents_line) = tree.next().ok_or(
-            ProcessorError::FnNoBraces(contents_line)
-        )?;
+        (contents, contents_line) = tree
+            .next()
+            .ok_or(ProcessorError::FnNoBraces(contents_line))?;
     }
 
-    let contents =
-        match contents {
-            BasicSymbol::BracedSection(contents) => contents,
-            _ => return Err(ProcessorError::FnNoBraces(contents_line)),
-        };
+    let contents = match contents {
+        BasicSymbol::BracedSection(contents) => contents,
+        _ => return Err(ProcessorError::FnNoBraces(contents_line)),
+    };
 
-    Ok(
-        PreprocessSymbol::Fn(start_line_info, (name, parameters_processed, return_type.and_then(|x| Some((x.0.0, x.1))), contents)),
-    )
+    Ok(PreprocessSymbol::Fn(
+        start_line_info,
+        (
+            name,
+            parameters_processed,
+            return_type.and_then(|x| Some((x.0 .0, x.1))),
+            contents,
+        ),
+    ))
 }

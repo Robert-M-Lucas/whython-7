@@ -12,7 +12,7 @@ impl Literal {
         match &self {
             Literal::Int(_) => -1,
             Literal::Bool(_) => -2,
-            _ => todo!()
+            _ => todo!(),
         }
     }
 }

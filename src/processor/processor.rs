@@ -1,11 +1,11 @@
+use crate::ast::operators::Operator;
 use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol};
+use crate::compiler::compile_functions::{compile_functions, Function};
+use crate::parser::line_info::LineInfo;
 use crate::processor::preprocess::preprocess;
 use crate::processor::type_builder::build_types;
 use std::path::PathBuf;
 use thiserror::Error;
-use crate::ast::operators::Operator;
-use crate::compiler::compile_functions::{Function, compile_functions};
-use crate::parser::line_info::LineInfo;
 
 #[derive(Error, Debug)]
 pub enum ProcessorError {
@@ -75,7 +75,9 @@ pub enum ProcessorError {
     BadArgType(LineInfo, String, String),
     #[error("Error: Wrong amount of arguments for function. Expected {1}, found{2}\n{0}")]
     BadArgCount(LineInfo, usize, usize),
-    #[error("Error: Functions with a return type must have a return statement as their last line\n{0}")]
+    #[error(
+        "Error: Functions with a return type must have a return statement as their last line\n{0}"
+    )]
     NoReturnStatement(LineInfo),
     #[error("Error: You can only assign to names\n{0}")]
     NonNameAssignment(LineInfo),
@@ -110,10 +112,12 @@ pub enum ProcessorError {
     #[error("Error: Operator function '{1}' not found for type '{2}' (LHS) and '{3}' (RHS)\n{0}")]
     OpFunctionNotFound(LineInfo, String, String, String),
     #[error("TODO: Placeholder")]
-    Placeholder2
+    Placeholder2,
 }
 
-pub fn process(ast: Vec<BasicAbstractSyntaxTree>) -> Result<Vec<Box<dyn Function>>, ProcessorError> {
+pub fn process(
+    ast: Vec<BasicAbstractSyntaxTree>,
+) -> Result<Vec<Box<dyn Function>>, ProcessorError> {
     let pre_ast = preprocess(ast)?;
     // println!("Preprocessing Result:\n{:?}", pre_ast);
     let (type_table, function_names, typed_functions) = build_types(pre_ast)?;

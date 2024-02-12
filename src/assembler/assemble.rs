@@ -1,17 +1,18 @@
+use crate::compiler::compile_functions::Function;
 use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
-use crate::compiler::compile_functions::Function;
-
 
 pub fn generate_assembly(output: &PathBuf, functions: Vec<Box<dyn Function>>) {
-    let mut out = String::from("    global main
+    let mut out = String::from(
+        "    global main
     extern ExitProcess
     extern GetStdHandle
     extern WriteFile
     extern WriteConsoleA
     extern WriteConsoleW
-    section .text\n");
+    section .text\n",
+    );
     for f in functions {
         out.push('\n');
         out += &(f.get_asm());
@@ -29,7 +30,14 @@ pub fn assemble() {
 
 pub fn link() {
     Command::new("link")
-        .args(["/entry:main", "/out:.\\output\\out.exe", "/SUBSYSTEM:CONSOLE", "/LARGEADDRESSAWARE:NO", ".\\output\\out.obj", ".\\libs\\kernel32.lib"])
+        .args([
+            "/entry:main",
+            "/out:.\\output\\out.exe",
+            "/SUBSYSTEM:CONSOLE",
+            "/LARGEADDRESSAWARE:NO",
+            ".\\output\\out.obj",
+            ".\\libs\\kernel32.lib",
+        ])
         .status()
         .unwrap();
 }

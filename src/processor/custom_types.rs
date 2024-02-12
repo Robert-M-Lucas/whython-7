@@ -9,7 +9,9 @@ impl Bool {
     pub fn new() -> Bool {
         Bool {}
     }
-    pub fn get_id() -> isize { -2 }
+    pub fn get_id() -> isize {
+        -2
+    }
 }
 
 impl Type for Bool {
@@ -21,23 +23,36 @@ impl Type for Bool {
         "bool"
     }
 
-    fn get_size(&self, type_table: &TypeTable, path: Option<Vec<isize>>) -> Result<usize, ProcessorError> {
+    fn get_size(
+        &self,
+        type_table: &TypeTable,
+        path: Option<Vec<isize>>,
+    ) -> Result<usize, ProcessorError> {
         Ok(8)
     }
 
-    fn instantiate(&self, literal: Option<&Literal>, local_address: isize) -> Result<Vec<String>, ProcessorError> {
-        if literal.is_none() { return Ok(vec![]); }
-        let Literal::Bool(val) = literal.unwrap() else { panic!() };
+    fn instantiate(
+        &self,
+        literal: Option<&Literal>,
+        local_address: isize,
+    ) -> Result<Vec<String>, ProcessorError> {
+        if literal.is_none() {
+            return Ok(vec![]);
+        }
+        let Literal::Bool(val) = literal.unwrap() else {
+            panic!()
+        };
 
         if *val {
-            Ok(vec![
-                format!("mov qword [{}], 0", get_local_address(local_address))
-            ])
-        }
-        else {
-            Ok(vec![
-                format!("mov qword [{}], -1", get_local_address(local_address))
-            ])
+            Ok(vec![format!(
+                "mov qword [{}], 0",
+                get_local_address(local_address)
+            )])
+        } else {
+            Ok(vec![format!(
+                "mov qword [{}], -1",
+                get_local_address(local_address)
+            )])
         }
     }
 }
@@ -49,7 +64,9 @@ impl Int {
         Int {}
     }
 
-    pub const fn get_id() -> isize { -1 }
+    pub const fn get_id() -> isize {
+        -1
+    }
 }
 
 impl Type for Int {
@@ -61,16 +78,30 @@ impl Type for Int {
         "int"
     }
 
-    fn get_size(&self, type_table: &TypeTable, path: Option<Vec<isize>>) -> Result<usize, ProcessorError> {
+    fn get_size(
+        &self,
+        type_table: &TypeTable,
+        path: Option<Vec<isize>>,
+    ) -> Result<usize, ProcessorError> {
         Ok(8)
     }
 
-    fn instantiate(&self, literal: Option<&Literal>, local_address: isize) -> Result<Vec<String>, ProcessorError> {
-        if literal.is_none() { return Ok(vec![]); }
-        let Literal::Int(val) = literal.unwrap() else { panic!() };
+    fn instantiate(
+        &self,
+        literal: Option<&Literal>,
+        local_address: isize,
+    ) -> Result<Vec<String>, ProcessorError> {
+        if literal.is_none() {
+            return Ok(vec![]);
+        }
+        let Literal::Int(val) = literal.unwrap() else {
+            panic!()
+        };
 
-        Ok(vec![
-            format!("mov qword [{}], {}", get_local_address(local_address), *val)
-        ])
+        Ok(vec![format!(
+            "mov qword [{}], {}",
+            get_local_address(local_address),
+            *val
+        )])
     }
 }

@@ -1,4 +1,4 @@
-use std::fmt::{Display, Formatter, write};
+use std::fmt::{write, Display, Formatter};
 use std::fs;
 use std::path::PathBuf;
 use std::rc::Rc;
@@ -7,7 +7,7 @@ use std::rc::Rc;
 pub struct LineInfo {
     file: Option<Rc<PathBuf>>,
     line: usize,
-    char_start: usize
+    char_start: usize,
 }
 
 impl LineInfo {
@@ -15,7 +15,7 @@ impl LineInfo {
         LineInfo {
             file: Some(file),
             line,
-            char_start
+            char_start,
         }
     }
 
@@ -55,16 +55,24 @@ impl Display for LineInfo {
             changed_end = true;
         }
 
-        if changed_start { write!(f, "... ")?; }
-        write!(f, "{}", &line[line.char_indices().nth(start).unwrap().0..line.char_indices().nth(end).unwrap().0])?;
-        if changed_start { write!(f, " ...")?; }
+        if changed_start {
+            write!(f, "... ")?;
+        }
+        write!(
+            f,
+            "{}",
+            &line[line.char_indices().nth(start).unwrap().0
+                ..line.char_indices().nth(end).unwrap().0]
+        )?;
+        if changed_start {
+            write!(f, " ...")?;
+        }
         write!(f, "\n")?;
 
         let mut offset = line_text.len() + 2;
         if changed_start {
             offset += 4 + 10;
-        }
-        else {
+        } else {
             offset += self.char_start;
         }
         for _ in 0..offset {

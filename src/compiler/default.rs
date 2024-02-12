@@ -1,18 +1,21 @@
 use crate::compiler::compile_functions::{Line, UserFunction};
 
 pub struct Output {
-    inner: String
+    inner: String,
 }
 
 impl Output {
     pub fn new() -> Output {
-        Output { inner: String::new() }
+        Output {
+            inner: String::new(),
+        }
     }
 
     pub fn new_with_name(id: isize) -> Output {
-        Output { inner: format!("{}:\n", get_function_name(id)) }
+        Output {
+            inner: format!("{}:\n", get_function_name(id)),
+        }
     }
-
 
     pub fn push(&mut self, string: &str) {
         self.inner.push('\t');
@@ -28,25 +31,18 @@ impl From<Output> for String {
 }
 
 pub fn get_function_name(id: isize) -> String {
-    if id == 0 { return "main".to_string() }
-    let sign = if id < 0 {
-        "__"
+    if id == 0 {
+        return "main".to_string();
     }
-    else {
-        "_"
-    };
+    let sign = if id < 0 { "__" } else { "_" };
     format!("{sign}{}", id.abs())
 }
 
 pub fn get_function_sublabel(id: isize, label: &str) -> String {
-    let mut base = if id == 0 { "main".to_string() }
-    else {
-        let sign = if id < 0 {
-            "_"
-        }
-        else {
-            ""
-        };
+    let mut base = if id == 0 {
+        "main".to_string()
+    } else {
+        let sign = if id < 0 { "_" } else { "" };
         format!(".{sign}{}", id.abs())
     };
 
@@ -56,12 +52,7 @@ pub fn get_function_sublabel(id: isize, label: &str) -> String {
 }
 
 pub fn get_local_address(addr: isize) -> String {
-    let sign = if addr >= 0 {
-        "+"
-    }
-    else {
-        ""
-    };
+    let sign = if addr >= 0 { "+" } else { "" };
     format!("rbp{sign}{addr}")
 }
 
@@ -76,7 +67,10 @@ pub fn compile_user_function(function: &UserFunction) -> String {
             Line::ReturnCall(function, local_args, return_addr) => {
                 // Push args to stack
                 for (local_addr, size) in local_args.iter().rev() {
-                    output.push(&format!("mov rax, qword [{}]", get_local_address(*local_addr)));
+                    output.push(&format!(
+                        "mov rax, qword [{}]",
+                        get_local_address(*local_addr)
+                    ));
                     output.push("push rax");
                 }
                 // Call
@@ -87,12 +81,18 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                     output.push(&format!("add rsp, {}", local_args.len() * 8));
                 }
                 // Move return value
-                output.push(&format!("mov qword [{}], rax", get_local_address(*return_addr)));
+                output.push(&format!(
+                    "mov qword [{}], rax",
+                    get_local_address(*return_addr)
+                ));
             }
             Line::NoReturnCall(function, local_args) => {
                 // Push args to stack
                 for (local_addr, size) in local_args.iter().rev() {
-                    output.push(&format!("mov rax, qword [{}]", get_local_address(*local_addr)));
+                    output.push(&format!(
+                        "mov rax, qword [{}]",
+                        get_local_address(*local_addr)
+                    ));
                     output.push("push rax");
                 }
                 // Call
@@ -102,12 +102,21 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 output.push(&format!("add rsp, {}", local_args.len() * 8));
             }
             Line::Copy(local_from, local_to) => {
-                output.push(&format!("mov rax, qword [{}]", get_local_address(*local_from)));
-                output.push(&format!("mov qword [{}], rax", get_local_address(*local_to)));
+                output.push(&format!(
+                    "mov rax, qword [{}]",
+                    get_local_address(*local_from)
+                ));
+                output.push(&format!(
+                    "mov qword [{}], rax",
+                    get_local_address(*local_to)
+                ));
             }
             Line::Return(local_return_val) => {
                 return if function.id == 0 {
-                    output.push(&format!("mov rcx, [{}]", get_local_address(local_return_val.unwrap())));
+                    output.push(&format!(
+                        "mov rcx, [{}]",
+                        get_local_address(local_return_val.unwrap())
+                    ));
                     output.push("call ExitProcess");
                     output.into()
                 } else {
@@ -135,5 +144,5 @@ pub fn compile_user_function(function: &UserFunction) -> String {
         output.push("leave");
         output.push("ret");
         output.into()
-    }
+    };
 }

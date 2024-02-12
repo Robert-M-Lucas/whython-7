@@ -1,16 +1,16 @@
-use std::borrow::Cow;
 use crate::processor::preprocess::{PreProcessFunction, PreprocessSymbol};
 use crate::processor::processor::ProcessorError;
 use crate::processor::processor::ProcessorError::TypeNotFound;
+use std::borrow::Cow;
 
 use std::collections::{HashMap, HashSet};
 
-use std::path::PathBuf;
-use unique_type_id::UniqueTypeId;
 use crate::ast::literals::Literal;
 use crate::basic_ast::symbol::BasicSymbol;
 use crate::parser::line_info::LineInfo;
 use crate::processor::custom_types::{Bool, Int};
+use std::path::PathBuf;
+use unique_type_id::UniqueTypeId;
 
 struct UninitialisedType {
     pub path: LineInfo,
@@ -55,16 +55,21 @@ pub struct UserType {
     name: String,
     id: isize,
     path: LineInfo,
-    attributes: Vec<(String, isize)>
+    attributes: Vec<(String, isize)>,
 }
 
 impl UserType {
-    pub fn new(name: String, id: isize, path: LineInfo, attributes: Vec<(String, isize)>) -> UserType {
+    pub fn new(
+        name: String,
+        id: isize,
+        path: LineInfo,
+        attributes: Vec<(String, isize)>,
+    ) -> UserType {
         UserType {
             name,
             id,
             path,
-            attributes
+            attributes,
         }
     }
 }
@@ -78,11 +83,14 @@ impl Type for UserType {
         &self.name
     }
 
-    fn get_size(&self, type_table: &TypeTable, mut path: Option<Vec<isize>>) -> Result<usize, ProcessorError> {
+    fn get_size(
+        &self,
+        type_table: &TypeTable,
+        mut path: Option<Vec<isize>>,
+    ) -> Result<usize, ProcessorError> {
         if path.is_none() {
             path = Some(vec![self.get_id()])
-        }
-        else {
+        } else {
             let mut failed_check = false;
             for id in &**path.as_ref().unwrap() {
                 if *id == self.get_id() {
@@ -97,20 +105,30 @@ impl Type for UserType {
                 debug_str += "->";
             }
 
-            return Err(ProcessorError::CircularType(self.path.clone(), self.name.clone(), debug_str));
-
+            return Err(ProcessorError::CircularType(
+                self.path.clone(),
+                self.name.clone(),
+                debug_str,
+            ));
         };
 
         let mut size = 0;
 
         for (name, id) in &self.attributes {
-            size += type_table.get_type(*id).unwrap().get_size(type_table, path.clone())?;
+            size += type_table
+                .get_type(*id)
+                .unwrap()
+                .get_size(type_table, path.clone())?;
         }
 
         Ok(size)
     }
 
-    fn instantiate(&self, literal: Option<&Literal>, local_address: isize) -> Result<Vec<String>, ProcessorError> {
+    fn instantiate(
+        &self,
+        literal: Option<&Literal>,
+        local_address: isize,
+    ) -> Result<Vec<String>, ProcessorError> {
         todo!()
     }
 }
@@ -120,9 +138,17 @@ pub trait Type {
 
     fn get_name(&self) -> &str;
 
-    fn get_size(&self, type_table: &TypeTable,  path: Option<Vec<isize>>) -> Result<usize, ProcessorError>;
+    fn get_size(
+        &self,
+        type_table: &TypeTable,
+        path: Option<Vec<isize>>,
+    ) -> Result<usize, ProcessorError>;
 
-    fn instantiate(&self, literal: Option<&Literal>, local_address: isize) -> Result<Vec<String>, ProcessorError>;
+    fn instantiate(
+        &self,
+        literal: Option<&Literal>,
+        local_address: isize,
+    ) -> Result<Vec<String>, ProcessorError>;
 }
 
 pub struct TypeTable {
@@ -173,7 +199,7 @@ pub struct UserTypedFunction {
     pub line: LineInfo,
     pub args: Vec<(String, isize)>,
     pub return_type: Option<isize>,
-    pub contents: Option<Vec<(BasicSymbol, LineInfo)>>
+    pub contents: Option<Vec<(BasicSymbol, LineInfo)>>,
 }
 
 impl TypedFunction for UserTypedFunction {
@@ -245,7 +271,14 @@ pub trait TypedFunction {
 
 pub fn build_types(
     pre_ast: Vec<PreprocessSymbol>,
-) -> Result<(TypeTable, HashMap<Option<isize>, HashMap<String, isize>>, HashMap<isize, Box<dyn TypedFunction>>), ProcessorError> {
+) -> Result<
+    (
+        TypeTable,
+        HashMap<Option<isize>, HashMap<String, isize>>,
+        HashMap<isize, Box<dyn TypedFunction>>,
+    ),
+    ProcessorError,
+> {
     let mut remaining_pre_ast = Vec::new();
 
     let mut uninitialised_types: HashMap<String, UninitialisedType> = HashMap::new();
@@ -327,48 +360,63 @@ pub fn build_types(
     for symbol in remaining_pre_ast {
         match symbol {
             PreprocessSymbol::Impl(line, type_name, functions) => {
-                let type_id = type_table.get_id_by_name(&type_name).ok_or(ProcessorError::BadImplType(line))?;
+                let type_id = type_table
+                    .get_id_by_name(&type_name)
+                    .ok_or(ProcessorError::BadImplType(line))?;
                 if !fn_name_map.contains_key(&Some(type_id)) {
                     fn_name_map.insert(Some(type_id), HashMap::new());
                 }
                 for (function, line) in functions {
-                    fn_name_map.get_mut(&Some(type_id)).unwrap().insert(function.0.clone(), id_counter);
-                    typed_fns.insert(id_counter, process_function(function, &type_table, id_counter, Some(type_id), line)?);
+                    fn_name_map
+                        .get_mut(&Some(type_id))
+                        .unwrap()
+                        .insert(function.0.clone(), id_counter);
+                    typed_fns.insert(
+                        id_counter,
+                        process_function(function, &type_table, id_counter, Some(type_id), line)?,
+                    );
                     id_counter += 1;
                 }
             }
             PreprocessSymbol::Fn(line, function) => {
                 let id = if &function.0 == "main" {
                     0
-                }
-                else {
+                } else {
                     id_counter += 1;
                     id_counter - 1
                 };
-                fn_name_map.get_mut(&None).unwrap().insert(function.0.clone(), id);
+                fn_name_map
+                    .get_mut(&None)
+                    .unwrap()
+                    .insert(function.0.clone(), id);
                 typed_fns.insert(id, process_function(function, &type_table, id, None, line)?);
                 id_counter += 1;
             }
-            _ => panic!("Expected Impl of Functions")
+            _ => panic!("Expected Impl of Functions"),
         }
     }
 
     if let Some(main) = typed_fns.get(&0) {
         if main.get_args().len() != 0 {
-            return Err(ProcessorError::MainFunctionParams)
+            return Err(ProcessorError::MainFunctionParams);
         }
         if main.get_return_type() != Some(-1) {
-            return Err(ProcessorError::MainFunctionBadReturn)
+            return Err(ProcessorError::MainFunctionBadReturn);
         }
-    }
-    else {
-        return Err(ProcessorError::NoMainFunction)
+    } else {
+        return Err(ProcessorError::NoMainFunction);
     }
 
     Ok((type_table, fn_name_map, typed_fns))
 }
 
-fn process_function(function: PreProcessFunction, type_table: &TypeTable, id: isize, impl_type: Option<isize>, line: LineInfo) -> Result<Box<dyn TypedFunction>, ProcessorError> {
+fn process_function(
+    function: PreProcessFunction,
+    type_table: &TypeTable,
+    id: isize,
+    impl_type: Option<isize>,
+    line: LineInfo,
+) -> Result<Box<dyn TypedFunction>, ProcessorError> {
     let (name, args, return_type, contents) = function;
 
     let mut args_processed = Vec::new();
@@ -379,13 +427,21 @@ fn process_function(function: PreProcessFunction, type_table: &TypeTable, id: is
                 return Err(ProcessorError::ParameterNameInUse(param_line, param_name));
             }
         }
-        args_processed.push((param_name, type_table.get_id_by_name(&type_name).ok_or(ProcessorError::TypeNotFound(type_line, type_name))?));
+        args_processed.push((
+            param_name,
+            type_table
+                .get_id_by_name(&type_name)
+                .ok_or(ProcessorError::TypeNotFound(type_line, type_name))?,
+        ));
     }
 
     let return_type = if let Some((type_name, type_line)) = return_type {
-        Some(type_table.get_id_by_name(&type_name).ok_or(ProcessorError::TypeNotFound(type_line, type_name))?)
-    }
-    else {
+        Some(
+            type_table
+                .get_id_by_name(&type_name)
+                .ok_or(ProcessorError::TypeNotFound(type_line, type_name))?,
+        )
+    } else {
         None
     };
 

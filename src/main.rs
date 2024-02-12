@@ -1,18 +1,18 @@
+use crate::assembler::assemble::{assemble, generate_assembly, link};
+use crate::parser::line_info::LineInfo;
 use crate::parser::parse::parse;
 use crate::processor::processor::process;
 use std::path::PathBuf;
 use std::process::Command;
 use std::rc::Rc;
 use std::time::Instant;
-use crate::assembler::assemble::{assemble, generate_assembly, link};
-use crate::parser::line_info::LineInfo;
 
+mod assembler;
 mod ast;
 mod basic_ast;
+mod compiler;
 mod parser;
 mod processor;
-mod assembler;
-mod compiler;
 
 // TODO: Handle circular imports
 
@@ -61,8 +61,12 @@ fn main() {
 }
 
 fn run() {
-    println!("\nExited with return code {}",
-             Command::new(".\\output\\out.exe")
-                 .status()
-                 .unwrap().code().unwrap())
+    println!(
+        "\nExited with return code {}",
+        Command::new(".\\output\\out.exe")
+            .status()
+            .unwrap()
+            .code()
+            .unwrap()
+    )
 }

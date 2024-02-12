@@ -4,12 +4,12 @@ use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol};
 use crate::parser::file_reader::FileReader;
 use crate::parser::normal_parser::parse_normal;
 
+use crate::parser::line_info::LineInfo;
+use crate::parser::parse::ParseError::ModNotFollowedByPath;
 use std::path::PathBuf;
 use std::{fs, io};
 use thiserror::Error;
-use ParseError::{Nested};
-use crate::parser::line_info::LineInfo;
-use crate::parser::parse::ParseError::ModNotFollowedByPath;
+use ParseError::Nested;
 
 #[derive(Error, Debug)]
 pub enum ParseError {
@@ -30,7 +30,7 @@ pub enum ParseError {
     #[error("Error: String literal started on line {1} not closed\n{0}")]
     UnclosedString(LineInfo, usize),
     #[error("Error: Closing '{1}' found with no corresponding opening bracket\n{0}")]
-    NoOpening(LineInfo, char)
+    NoOpening(LineInfo, char),
 }
 
 pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(), ParseError> {
@@ -50,11 +50,9 @@ pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(
             let (file, eof) = reader.move_read_to_next_char(';');
             let trimmed = file.trim();
             if trimmed.is_empty() {
-                return Err(
-                    ModNotFollowedByPath(reader.get_line_info())
-                );
+                return Err(ModNotFollowedByPath(reader.get_line_info()));
             }
-            
+
             if let Err(e) = parse(PathBuf::from(file), asts) {
                 return Err(Nested(reader.get_line_info(), Box::new(e)));
             }
