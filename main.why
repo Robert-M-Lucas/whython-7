@@ -1,7 +1,12 @@
-fn main() ~ int {
-    let c: bool = true;
+struct a {
+    inner: int
+}
 
-    while (c) a {
+
+fn main() ~ int {
+    let c: a = true;
+
+    while (c) {
         printi(1);
         c = false;
     };

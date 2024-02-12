@@ -49,8 +49,8 @@ pub enum ProcessorError {
     TypeNotFound(LineInfo, String),
     #[error("Error: Name '{1}' not found\n{0}")] // TODO:
     NameNotFound(LineInfo, String),
-    #[error("Error: Type '{1}' defined...\n{0}{2}")]
-    TypeRedefinition(LineInfo, String, LineInfo),
+    // #[error("Error: Type '{1}' defined...\n{0}{2}")]
+    // TypeRedefinition(LineInfo, String, LineInfo),
     #[error("Error: Type '{1}' has an infinite size [{2}]\n{0}")]
     CircularType(LineInfo, String, String),
     #[error("Error: Impl type not found\n{0}")]
@@ -61,14 +61,14 @@ pub enum ProcessorError {
     MainFunctionParams, // TODO
     #[error("Error: Main function must return 'int'")]
     MainFunctionBadReturn, // TODO
-    #[error("Error: Expected semicolon\n{0}")]
-    ExpectedSemicolon(LineInfo),
+    // #[error("Error: Expected semicolon\n{0}")]
+    // ExpectedSemicolon(LineInfo),
     #[error("Error: Bad operator position for '{1}'\n{0}")]
     BadOperatorPosition(LineInfo, Operator),
     #[error("Error: Standalone type\n{0}")]
     StandaloneType(LineInfo),
-    #[error("Error: Standalone operator\n{0}")]
-    StandaloneOperator(LineInfo),
+    // #[error("Error: Standalone operator\n{0}")]
+    // StandaloneOperator(LineInfo),
     #[error("Error: This must evaluate to a value but doesn't\n{0}")]
     DoesntEvaluate(LineInfo),
     #[error("Error: Bad argument type for function. Expected {1}, found {2}\n{0}")]

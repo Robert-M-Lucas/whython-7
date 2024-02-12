@@ -125,19 +125,18 @@ impl NameHandler {
         self.local_variables_size
     }
 
-    pub fn add_local_variable(&mut self, name: Option<String>, _type: isize) -> isize {
+    pub fn add_local_variable(&mut self, name: Option<String>, _type: isize) -> Result<isize, ProcessorError> {
         let size = self
             .type_table
             .get_type(_type)
             .unwrap()
-            .get_size(&self.type_table, None)
-            .unwrap();
+            .get_size(&self.type_table, None)?;
         let addr = -(self.local_variables_size as isize) - size as isize;
         self.local_variables_size += size;
         if let Some(name) = name {
             self.local_variables.push((name, addr, _type));
         }
-        addr
+        Ok(addr)
     }
 
     pub fn name_variable(&mut self, name: String, addr: isize, _type: isize) {
@@ -377,7 +376,7 @@ fn process_lines(
                 }
                 let return_type = return_type.unwrap();
 
-                let return_into = name_handler.add_local_variable(None, return_type);
+                let return_into = name_handler.add_local_variable(None, return_type)?;
                 let return_value = evaluate(
                     &line[1..],
                     lines,
@@ -453,7 +452,7 @@ fn process_lines(
                         line[3].1.clone(),
                         type_name.0.clone(),
                     ))?;
-                let addr = name_handler.add_local_variable(Some(name.clone()), type_id);
+                let addr = name_handler.add_local_variable(Some(name.clone()), type_id)?;
 
                 if line.len() < 6 {
                     return Err(ProcessorError::LetNoValue(line[3].1.clone()));
@@ -745,8 +744,8 @@ fn call_function(
             )
         } else {
             (
-                name_handler.add_local_variable(None, return_type),
-                name_handler.type_table.get_type_size(return_type).unwrap(),
+                name_handler.add_local_variable(None, return_type)?,
+                name_handler.type_table.get_type_size(return_type)?,
             )
         };
 
@@ -830,7 +829,7 @@ fn instantiate_literal(
             Left(literal) => literal.get_type_id(),
             Right(id) => *id,
         };
-        (name_handler.add_local_variable(None, id), id)
+        (name_handler.add_local_variable(None, id)?, id)
     };
     let _type = name_handler.type_table().get_type(id).unwrap();
     let asm = match literal {

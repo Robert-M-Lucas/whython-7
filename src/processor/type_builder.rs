@@ -99,17 +99,23 @@ impl Type for UserType {
                 }
             }
 
-            let mut debug_str = String::new();
-            for id in &**path.as_ref().unwrap() {
-                debug_str += &type_table.get_type(*id).unwrap().get_name();
-                debug_str += "->";
+            if failed_check {
+                let mut debug_str = String::new();
+                for id in &**path.as_ref().unwrap() {
+                    debug_str += &type_table.get_type(*id).unwrap().get_name();
+                    debug_str += "->";
+                }
+
+                debug_str += &self.get_name();
+
+                return Err(ProcessorError::CircularType(
+                    self.path.clone(),
+                    self.name.clone(),
+                    debug_str,
+                ));
             }
 
-            return Err(ProcessorError::CircularType(
-                self.path.clone(),
-                self.name.clone(),
-                debug_str,
-            ));
+            path.as_mut().unwrap().push(self.get_id());
         };
 
         let mut size = 0;
@@ -118,7 +124,7 @@ impl Type for UserType {
             size += type_table
                 .get_type(*id)
                 .unwrap()
-                .get_size(type_table, path.clone())?;
+                .get_size(type_table, Some(path.as_ref().unwrap().clone()))?;
         }
 
         Ok(size)
