@@ -1,9 +1,20 @@
 fn main() ~ int {
     let c: int = 1;
 
-    while (c <= 10) {
+    while (c < 10) {
         printi(c);
+        c += 1;
     };
 
     return c;
+}
+
+impl int {
+    fn mul(lhs: int, rhs: int) ~ int {
+        while (0 < rhs) {
+            lhs += lhs;
+            rhs -= 1;
+        }
+        return lhs;
+    }
 }

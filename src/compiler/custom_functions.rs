@@ -18,7 +18,7 @@ pub fn get_custom_function_signatures() -> Vec<(Option<isize>, Box<dyn TypedFunc
         (Some(-1), Box::new(IntSub {})),
         (Some(-1), Box::new(IntMul {})),
         (Some(-1), Box::new(IntDiv {})),
-        (Some(-1), Box::new(IntLE {})),
+        (Some(-1), Box::new(IntLT {})),
         (Some(-2), Box::new(BoolNot {})),
     ]
 }
@@ -462,20 +462,20 @@ impl TypedFunction for BoolNot {
 
 #[derive(UniqueTypeId)]
 #[UniqueTypeIdType = "u16"]
-pub struct IntLE {}
+pub struct IntLT {}
 lazy_static! {
-    static ref INT_LE_ARGS: [(String, isize); 2] = [
+    static ref INT_LT_ARGS: [(String, isize); 2] = [
         (String::from("lhs"), Int {}.get_id()),
         (String::from("rhs"), Int {}.get_id())
     ];
 }
-impl TypedFunction for IntLE {
+impl TypedFunction for IntLT {
     fn get_id(&self) -> isize {
         -(Self::id().0 as isize)
     }
 
     fn get_name(&self) -> &str {
-        "le"
+        "lt"
     }
 
     fn get_args(&self) -> &[(String, isize)] {
