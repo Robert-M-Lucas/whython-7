@@ -217,8 +217,8 @@ impl TypedFunction for IntLT {
         vec![
             format!("mov rax, [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
-            "cmp rax, rcx".to_string(),
-            format!("setnle [{}]", get_local_address(args[2])),
+            "cmp rcx, rax".to_string(),
+            format!("setle [{}]", get_local_address(args[2])),
         ]
     }
 }
@@ -261,8 +261,8 @@ impl TypedFunction for IntGT {
         vec![
             format!("mov rax, [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
-            "cmp rcx, rax".to_string(),
-            format!("setnle [{}]", get_local_address(args[2])),
+            "cmp rax, rcx".to_string(),
+            format!("setle [{}]", get_local_address(args[2])),
         ]
     }
 }
