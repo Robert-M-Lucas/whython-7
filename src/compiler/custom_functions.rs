@@ -499,7 +499,7 @@ impl TypedFunction for IntLE {
             format!("mov rax, [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cmp rax, rcx".to_string(),
-            format!("setle [{}]", get_local_address(args[1])),
+            format!("setle [{}]", get_local_address(args[2])),
         ]
     }
 }
