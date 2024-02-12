@@ -1,0 +1,23 @@
+Working
+- struct definition
+- functions
+- static struct functions
+- non-static struct functions
+- return
+- while
+- break
+- int type w/ most operators
+- bool type w/ some operator
+- variable initialisation
+- variable assignments
+- printi w/ small numbers
+- printb truncated
+
+Silent Fail
+- printi w/ large numbers
+- full printb output
+- shadowing
+
+Error
+- instantiating custom structs
+- if/elif/else

@@ -47,7 +47,7 @@ pub fn preprocess(
                         output.push(parse_impl(first_line, &mut tree)?);
                     }
                     Keyword::Fn => {
-                        output.push(parse_fn(first_line, &mut tree, 9999999)?);
+                        output.push(parse_fn(first_line, &mut tree, None)?);
                     }
                     _ => {}
                 },
@@ -184,7 +184,7 @@ fn parse_impl(
         let (symbol, symbol_line) = symbol.unwrap();
         match symbol {
             BasicSymbol::Keyword(Keyword::Fn) => {
-                let function = parse_fn(start_line_info.clone(), &mut contents, 999999)?;
+                let function = parse_fn(start_line_info.clone(), &mut contents, Some(name.0.clone()))?;
                 let function = match function {
                     PreprocessSymbol::Fn(_, function) => function,
                     _ => panic!(),
@@ -201,7 +201,7 @@ fn parse_impl(
 fn parse_fn(
     start_line_info: LineInfo,
     tree: &mut IntoIter<(BasicSymbol, LineInfo)>,
-    _main_line: usize,
+    mut self_type: Option<String>,
 ) -> Result<PreprocessSymbol, ProcessorError> {
     let (name, name_line) = tree
         .next()
@@ -236,6 +236,7 @@ fn parse_fn(
     let mut parameters_processed = Vec::new();
     let mut last_line = name_line;
 
+
     for parameter in parameters {
         let mut parameter = parameter.into_iter();
 
@@ -254,26 +255,35 @@ fn parse_fn(
             }
             _ => return Err(ProcessorError::FnExpectedParameterName(arg_line)),
         };
-
-        let Some((colon, colon_line)) = parameter.next() else {
-            return Err(ProcessorError::NameTypeNotDefined(arg_line));
-        };
-
-        if !matches!(colon, BasicSymbol::Punctuation(Punctuation::Colon)) {
-            return Err(ProcessorError::NameTypeNotDefined(colon_line));
-        }
-
-        let Some((param_type, param_type_line)) = parameter.next() else {
-            return Err(ProcessorError::NameTypeNotDefined(colon_line));
-        };
-        let param_type = match param_type {
-            BasicSymbol::Name(mut name) => {
-                if name.len() > 1 {
-                    return Err(ProcessorError::MultipartTypeName(param_type_line));
-                }
-                name.remove(0).0
+        let (param_type, param_type_line) = if arg_name == "self" {
+            if self_type.is_none() {
+                return Err(ProcessorError::FnBadSelf(arg_line));
             }
-            _ => return Err(ProcessorError::NameTypeNotDefined(param_type_line)),
+
+            (self_type.take().unwrap(), arg_line.clone())
+        }
+        else {
+            let Some((colon, colon_line)) = parameter.next() else {
+                return Err(ProcessorError::NameTypeNotDefined(arg_line));
+            };
+
+            if !matches!(colon, BasicSymbol::Punctuation(Punctuation::Colon)) {
+                return Err(ProcessorError::NameTypeNotDefined(colon_line));
+            }
+
+            let Some((param_type, param_type_line)) = parameter.next() else {
+                return Err(ProcessorError::NameTypeNotDefined(colon_line));
+            };
+            let param_type = match param_type {
+                BasicSymbol::Name(mut name) => {
+                    if name.len() > 1 {
+                        return Err(ProcessorError::MultipartTypeName(param_type_line));
+                    }
+                    name.remove(0).0
+                }
+                _ => return Err(ProcessorError::NameTypeNotDefined(param_type_line)),
+            };
+            (param_type, param_type_line)
         };
 
         parameters_processed.push((arg_name, arg_line, param_type, param_type_line.clone())); // TODO:

@@ -1,17 +1,12 @@
-fn main() ~ int {
-    let c: int = 1;
-
-    while (c == 1) {
-        printi(c);
-        c += 1;
-    };
-
-    let d: int = 1;
-
-    while (d != 10) {
-        printi(d);
-        d += 1;
-    };
-
-    return c;
+struct a {}
+impl a {
+    fn b(self) ~ int {
+        return 110;
+    }
 }
+
+fn main() ~ int {
+    let a: int = 4;
+    return int#add(5, 6);
+}
+

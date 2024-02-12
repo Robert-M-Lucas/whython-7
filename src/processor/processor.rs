@@ -41,6 +41,8 @@ pub enum ProcessorError {
     FnNoBraces(LineInfo),
     #[error("Error: Expected function return type after '~'\n{0}")]
     FnExpectedReturnType(LineInfo),
+    #[error("Error: 'self' can only be used as the first parameter in an impl function with no type specifier\n{0}")]
+    FnBadSelf(LineInfo),
     #[error("Error: Parameter name '{1}' already in use\n{0}")]
     ParameterNameInUse(LineInfo, String),
     #[error("[TODO] Error: Tried to use a type name with multiple parts\n{0}")]
@@ -71,10 +73,10 @@ pub enum ProcessorError {
     // StandaloneOperator(LineInfo),
     #[error("Error: This must evaluate to a value but doesn't\n{0}")]
     DoesntEvaluate(LineInfo),
-    #[error("Error: Bad argument type for function. Expected {1}, found {2}\n{0}")]
-    BadArgType(LineInfo, String, String),
-    #[error("Error: Wrong amount of arguments for function. Expected {1}, found{2}\n{0}")]
-    BadArgCount(LineInfo, usize, usize),
+    #[error("Error: Bad argument type for function - expected '{1}', found '{2}'. Called:\n{0}\nDefined:\n{3}")]
+    BadArgType(LineInfo, String, String, LineInfo),
+    #[error("Error: Wrong amount of arguments for function - expected {1}, found {2} (including automatic self passing where applicable). Called:\n{0}\nDefined:\n{3}")]
+    BadArgCount(LineInfo, usize, usize, LineInfo),
     #[error(
         "Error: Functions with a return type must have a return statement as their last line\n{0}"
     )]
@@ -111,6 +113,10 @@ pub enum ProcessorError {
     SingleOpFunctionNotFound(LineInfo, String, String),
     #[error("Error: Operator function '{1}' not found for type '{2}' (LHS) and '{3}' (RHS)\n{0}")]
     OpFunctionNotFound(LineInfo, String, String, String),
+    #[error("Error: Nothing can follow a 'break'\n{0}")]
+    BreakLineNotEmpty(LineInfo),
+    #[error("Error: Nothing to break out of\n{0}")]
+    NothingToBreak(LineInfo),
     #[error("TODO: Placeholder")]
     Placeholder2,
 }

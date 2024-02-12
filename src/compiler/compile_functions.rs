@@ -275,6 +275,7 @@ pub fn compile_functions(
             &mut lines,
             &mut name_handler,
             &function_holder,
+            None
         )?;
 
         if return_type.is_some() && !last_return {
@@ -308,6 +309,7 @@ fn process_lines(
     lines: &mut Vec<Line>,
     name_handler: &mut NameHandler,
     function_holder: &FunctionHolder,
+    mut break_label: Option<String>
 ) -> Result<bool, ProcessorError> {
     let mut last_return = false;
 
@@ -481,6 +483,7 @@ fn process_lines(
                     get_function_sublabel(current_id, &name_handler.get_uid().to_string());
                 let end_label =
                     get_function_sublabel(current_id, &name_handler.get_uid().to_string());
+                break_label = Some(end_label.clone());
 
                 lines.push(Line::InlineAsm(vec![format!("{}:", start_label)]));
                 let evaluated = evaluate(expr, lines, name_handler, function_holder, None)?
@@ -515,6 +518,7 @@ fn process_lines(
                     lines,
                     name_handler,
                     function_holder,
+                    break_label.clone()
                 )?;
                 lines.push(Line::InlineAsm(vec![
                     format!("jmp {}", start_label),
@@ -524,6 +528,13 @@ fn process_lines(
                 if line.len() > 3 {
                     return Err(ProcessorError::WhileMoreAfterBraces(line[3].1.clone()));
                 }
+            }
+            BasicSymbol::Keyword(Keyword::Break) => {
+                if line.len() > 1 {
+                    return Err(ProcessorError::BreakLineNotEmpty(line[1].1.clone()))
+                }
+                let Some(break_label) = &break_label else { return Err(ProcessorError::NothingToBreak(line[0].1.clone())); };
+                lines.push(Line::InlineAsm(vec![format!("jmp {}", break_label)]));
             }
             _ => {
                 evaluate(line, lines, name_handler, function_holder, None)?;
@@ -647,25 +658,31 @@ fn call_function(
 ) -> Result<Option<(isize, isize)>, ProcessorError> {
     name_handler.use_function(function);
     let target_args = function.get_args();
-    if args.len() > target_args.len() {
-        return Err(ProcessorError::BadArgCount(
-            args[target_args.len()][0].1.clone(),
+    let mut args_len = args.len();
+    if default_arg.is_some() { args_len += 1; }
+
+    if args_len > target_args.len() {
+        return Err(ProcessorError::BadArgCount( // TODO: Bad line location
+            args[target_args.len() - (args_len - args.len())][0].1.clone(),
             target_args.len(),
-            args.len(),
+            args_len,
+            function.get_line()
         ));
     }
-    if args.len() < target_args.len() {
-        if !args.is_empty() {
-            return Err(ProcessorError::BadArgCount(
-                args[args.len() - 1].last().unwrap().1.clone(),
+    if args_len < target_args.len() {
+        if args.is_empty() {
+            return Err(ProcessorError::BadArgCount( // TODO: Bad line location
+                start_line.clone(),
                 target_args.len(),
-                args.len(),
+                args_len,
+                function.get_line()
             ));
         } else {
-            return Err(ProcessorError::BadArgCount(
-                function.get_line(),
+            return Err(ProcessorError::BadArgCount( // TODO: Bad line location
+                args[args.len()-1].last().unwrap().1.clone(),
                 target_args.len(),
-                args.len(),
+                args_len,
+                function.get_line()
             ));
         }
     }
@@ -705,6 +722,7 @@ fn call_function(
                     .unwrap()
                     .get_name()
                     .to_string(),
+                function.get_line()
             ));
         }
         call_args.push((
