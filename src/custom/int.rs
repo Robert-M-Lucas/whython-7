@@ -394,7 +394,7 @@ impl TypedFunction for IntEQ {
             format!("mov rax, [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cmp rcx, rax".to_string(),
-            format!("setz [{}]", get_local_address(args[2])),
+            format!("setnz [{}]", get_local_address(args[2])),
         ]
     }
 }
@@ -438,7 +438,7 @@ impl TypedFunction for IntNE {
             format!("mov rax, [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cmp rcx, rax".to_string(),
-            format!("setnz [{}]", get_local_address(args[2])),
+            format!("setz [{}]", get_local_address(args[2])),
         ]
     }
 }
