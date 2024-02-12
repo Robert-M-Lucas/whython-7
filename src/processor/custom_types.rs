@@ -50,7 +50,7 @@ impl Type for Bool {
             )])
         } else {
             Ok(vec![format!(
-                "mov qword [{}], -1",
+                "mov qword [{}], 1",
                 get_local_address(local_address)
             )])
         }

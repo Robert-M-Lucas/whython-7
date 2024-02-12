@@ -49,13 +49,15 @@ fn main() {
 
     print!("Compiling...");
     time!(generate_assembly(&PathBuf::from("output"), functions));
-    #[cfg(target_os = "windows")]
     print!("Assembling (NASM)...");
     time!(assemble());
-    println!("Linking (MSVC)...");
-    time!(link());
-    println!("Executing...");
-    time!(run());
+    #[cfg(target_os = "windows")]
+    {
+        println!("Linking (MSVC)...");
+        time!(link());
+        println!("Executing...");
+        time!(run());
+    }
     #[cfg(not(target_os = "windows"))]
     println!("Assembling, linking, and execution omitted due to unsupported platform")
 }

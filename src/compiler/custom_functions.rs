@@ -504,7 +504,7 @@ impl TypedFunction for BoolNot {
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
             format!("mov rax, [{}]", get_local_address(args[0])),
-            "not rax".to_string(),
+            "setz rax".to_string(),
             format!("mov [{}], rax", get_local_address(args[1])),
         ]
     }

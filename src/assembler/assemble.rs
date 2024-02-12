@@ -21,12 +21,12 @@ pub fn generate_assembly(_output: &PathBuf, functions: Vec<Box<dyn Function>>) {
     if !PathBuf::from("output").as_path().is_dir() {
         fs::create_dir("output").expect("Failed to create output folder");
     }
-    fs::write("output\\out.asm", out).expect("Failed to write assembly to file");
+    fs::write("output/out.asm", out).expect("Failed to write assembly to file");
 }
 
 pub fn assemble() {
     if !Command::new("nasm")
-        .args(["-f", "win64", ".\\output\\out.asm"])
+        .args(["-f", "win64", "./output/out.asm"])
         .status()
         .unwrap().success() {
         panic!("NASM assembler step failed");
