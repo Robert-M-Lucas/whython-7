@@ -9,7 +9,7 @@ use crate::processor::type_builder::{Type, TypedFunction};
 use lazy_static::lazy_static;
 use unique_type_id::UniqueTypeId;
 use crate::custom::bool::BoolNot;
-use crate::custom::int::{IntAdd, IntDiv, IntGT, IntLT, IntMul, IntSub};
+use crate::custom::int::{IntAdd, IntDiv, IntGE, IntGT, IntLE, IntLT, IntMul, IntSub};
 
 pub fn get_custom_function_signatures() -> Vec<(Option<isize>, Box<dyn TypedFunction>)> {
     vec![
@@ -22,6 +22,8 @@ pub fn get_custom_function_signatures() -> Vec<(Option<isize>, Box<dyn TypedFunc
         (Some(-1), Box::new(IntDiv {})),
         (Some(-1), Box::new(IntLT {})),
         (Some(-1), Box::new(IntGT {})),
+        (Some(-1), Box::new(IntLE {})),
+        (Some(-1), Box::new(IntGE {})),
         (Some(-2), Box::new(BoolNot {})),
     ]
 }

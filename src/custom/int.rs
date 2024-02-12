@@ -242,7 +242,7 @@ impl TypedFunction for IntGT {
     }
 
     fn get_args(&self) -> &[(String, isize)] {
-        INT_LT_ARGS.as_ref()
+        INT_GT_ARGS.as_ref()
     }
 
     fn get_line(&self) -> LineInfo {
@@ -263,6 +263,94 @@ impl TypedFunction for IntGT {
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cmp rax, rcx".to_string(),
             format!("setle [{}]", get_local_address(args[2])),
+        ]
+    }
+}
+
+#[derive(UniqueTypeId)]
+#[UniqueTypeIdType = "u16"]
+pub struct IntLE {}
+lazy_static! {
+    static ref INT_LE_ARGS: [(String, isize); 2] = [
+        (String::from("lhs"), Int::get_id()),
+        (String::from("rhs"), Int::get_id())
+    ];
+}
+impl TypedFunction for IntLE {
+    fn get_id(&self) -> isize {
+        -(Self::id().0 as isize)
+    }
+
+    fn get_name(&self) -> &str {
+        "le"
+    }
+
+    fn get_args(&self) -> &[(String, isize)] {
+        INT_LE_ARGS.as_ref()
+    }
+
+    fn get_line(&self) -> LineInfo {
+        LineInfo::builtin()
+    }
+
+    fn get_return_type(&self) -> Option<isize> {
+        Some(Bool::get_id())
+    }
+
+    fn is_inline(&self) -> bool {
+        true
+    }
+
+    fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
+        vec![
+            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rcx, [{}]", get_local_address(args[1])),
+            "cmp rax, rcx".to_string(),
+            format!("setnle [{}]", get_local_address(args[2])),
+        ]
+    }
+}
+
+#[derive(UniqueTypeId)]
+#[UniqueTypeIdType = "u16"]
+pub struct IntGE {}
+lazy_static! {
+    static ref INT_GE_ARGS: [(String, isize); 2] = [
+        (String::from("lhs"), Int::get_id()),
+        (String::from("rhs"), Int::get_id())
+    ];
+}
+impl TypedFunction for IntGE {
+    fn get_id(&self) -> isize {
+        -(Self::id().0 as isize)
+    }
+
+    fn get_name(&self) -> &str {
+        "ge"
+    }
+
+    fn get_args(&self) -> &[(String, isize)] {
+        INT_GE_ARGS.as_ref()
+    }
+
+    fn get_line(&self) -> LineInfo {
+        LineInfo::builtin()
+    }
+
+    fn get_return_type(&self) -> Option<isize> {
+        Some(Bool::get_id())
+    }
+
+    fn is_inline(&self) -> bool {
+        true
+    }
+
+    fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
+        vec![
+            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rcx, [{}]", get_local_address(args[1])),
+            "cmp rcx, rax".to_string(),
+            format!("setnle [{}]", get_local_address(args[2])),
         ]
     }
 }

@@ -60,7 +60,7 @@ fn main() {
         time!(run());
     }
     #[cfg(not(target_os = "windows"))]
-    println!("Assembling, linking, and execution omitted due to unsupported platform")
+    println!("Linking and execution omitted due to unsupported platform")
 }
 
 fn run() {

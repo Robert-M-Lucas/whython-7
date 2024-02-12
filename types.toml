@@ -22,3 +22,6 @@ IntLe=20
 IntLT=21
 IntT=22
 IntGT=23
+IntG=24
+IntE=25
+IntGE=26
