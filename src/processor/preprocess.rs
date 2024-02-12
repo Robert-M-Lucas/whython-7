@@ -212,7 +212,7 @@ fn parse_fn(
 ) -> Result<PreprocessSymbol, ProcessorError> {
     let (name, name_line) = tree
         .next()
-        .ok_or(ProcessorError::FnNoName(start_line_info))?;
+        .ok_or(ProcessorError::FnNoName(start_line_info.clone()))?;
     let mut name = match name {
         BasicSymbol::Name(name) => name,
         _ => return Err(ProcessorError::FnNoName(name_line)),
@@ -303,7 +303,7 @@ fn parse_fn(
         let Some((next_symbol, next_line)) = tree.next() else {
             return Err(ProcessorError::FnExpectedReturnType(contents_line))
         };
-        contents_line = next_line;
+        contents_line = next_line.clone();
         match next_symbol {
             BasicSymbol::Name(mut name) => {
                 if name.len() > 1 {

@@ -26,21 +26,12 @@ macro_rules! time {
 }
 
 fn main() {
-    print!("{}", LineInfo{
-        file: Rc::new(String::from("main.why")),
-        line: 2,
-        char_start: 22
-    });
-    return;
-
     let mut asts = Vec::new();
     print!("Parsing...");
     time!(
         if let Err(e) = parse(PathBuf::from("main.why"), &mut asts) {
-            println!("Parse Error:\n{}", e);
+            println!("\n{}", e);
             return;
-        } else {
-            println!("Parse Result:\n{:?}", asts);
         }
     );
 
@@ -48,7 +39,7 @@ fn main() {
     time!(
         let functions = match process(asts) {
             Err(e) => {
-                println!("Processing Error:\n{}", e);
+                println!("\n{}", e);
                 return
             }
             Ok(functions) => functions

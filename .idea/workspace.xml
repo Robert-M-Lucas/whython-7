@@ -8,26 +8,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Commit">
-      <change afterPath="$PROJECT_DIR$/src/parser/line_info.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/output/out.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/output/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/output/out.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/output/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/output/out.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/basic_ast/symbol.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/basic_ast/symbol.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/custom_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/custom_functions.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/file_reader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/file_reader.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/normal_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/normal_parser.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/parse.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/parse.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/string_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/string_parser.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/custom_types.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/custom_types.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/line_info.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/line_info.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/processor/preprocess.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/preprocess.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/processor/processor.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/processor.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/type_builder.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/type_builder.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/types.toml" beforeDir="false" afterPath="$PROJECT_DIR$/types.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -247,7 +236,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707688757644</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Commit">
+      <option name="closed" value="true" />
+      <created>1707722524228</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1707722524228</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

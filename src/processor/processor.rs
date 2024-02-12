@@ -63,7 +63,7 @@ pub enum ProcessorError {
     MainFunctionBadReturn, // TODO
     #[error("Error: Expected semicolon\n{0}")]
     ExpectedSemicolon(LineInfo),
-    #[error("Error: Bad operator position for '{1}'\n{0}")] // TODO
+    #[error("Error: Bad operator position for '{1}'\n{0}")]
     BadOperatorPosition(LineInfo, Operator),
     #[error("Error: Standalone type\n{0}")]
     StandaloneType(LineInfo),
@@ -75,8 +75,6 @@ pub enum ProcessorError {
     BadArgType(LineInfo, String, String),
     #[error("Error: Wrong amount of arguments for function. Expected {1}, found{2}\n{0}")]
     BadArgCount(LineInfo, usize, usize),
-    #[error("Error: Bad evaluable layout - Expected `[VALUE]`, `[PREFIX-OPERATOR] [VALUE]`, or `[VALUE] [POSTFIX-OPERATOR] [OTHER-VALUE]`")]
-    BadEvaluableLayout(LineInfo),
     #[error("Error: Functions with a return type must have a return statement as their last line\n{0}")]
     NoReturnStatement(LineInfo),
     #[error("Error: You can only assign to names\n{0}")]
@@ -88,7 +86,31 @@ pub enum ProcessorError {
     #[error("Error: Can't return a value from a function with no return type\n{0}")]
     TypeReturnOnVoidFunction(LineInfo),
     #[error("Error: Returned type '{2}' doesn't match function return type '{1}\n{0}")]
-    BadReturnType(LineInfo, String, String)
+    BadReturnType(LineInfo, String, String),
+    #[error("Error: Can only assign to variables")]
+    AssignToNonVariable(LineInfo),
+    #[error("Error: 'let' must be followed by a variable name")]
+    LetNoName(LineInfo),
+    #[error("Error: `let [NAME]: [TYPE]` must be followed by `= [VALUE]`")]
+    LetNoValue(LineInfo),
+    #[error("Error: While must be followed by brackets containing the condition\n{0}")]
+    WhileNoBrackets(LineInfo),
+    #[error("Error: Condition must evaluate to boolean (not '{1}')\n{0}")]
+    BadConditionType(LineInfo, String),
+    #[error("Error: While condition must be followed by braces containing the contents of the loop\n{0}")]
+    WhileNoBraces(LineInfo),
+    #[error("Error: While contents must be followed by semicolon\n{0}")]
+    WhileMoreAfterBraces(LineInfo),
+    #[error("Error: Evaluable layout must be `[VALUE]`, `[PREFIX OPERATOR] [VALUE]`, or `[VALUE] [POSTFIX OPERATOR] [OTHER VALUE]`\n\0")]
+    BadEvaluableLayout(LineInfo),
+    #[error("Error: Expected evaluation to type '{1}' but found '{2}'\n{0}")]
+    BadEvaluatedType(LineInfo, String, String),
+    #[error("Error: Operator function '{1}' not found for type '{2}'\n{0}")]
+    SingleOpFunctionNotFound(LineInfo, String, String),
+    #[error("Error: Operator function '{1}' not found for type '{2}' (LHS) and '{3}' (RHS)\n{0}")]
+    OpFunctionNotFound(LineInfo, String, String, String),
+    #[error("TODO: Placeholder")]
+    Placeholder2
 }
 
 pub fn process(ast: Vec<BasicAbstractSyntaxTree>) -> Result<Vec<Box<dyn Function>>, ProcessorError> {

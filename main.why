@@ -1,7 +1,7 @@
 fn main() ~ int {
     let c: bool = true;
 
-    while (c) {
+    while (c) a {
         printi(1);
         c = false;
     };

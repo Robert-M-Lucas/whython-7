@@ -59,11 +59,11 @@ impl FileReader {
     }
     
     pub fn get_line_char(&self) -> (usize, usize) {
-        if self.cursor - self.line_start == 0 {
+        if self.cursor - self.line_start < 2 {
             (self.line, self.cursor - self.line_start)
         }
         else {
-            (self.line, self.cursor - self.line_start - 1)
+            (self.line, self.cursor - self.line_start - 2)
         }
     }
     

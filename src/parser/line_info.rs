@@ -35,10 +35,10 @@ impl Display for LineInfo {
             return Ok(());
         }
 
-        writeln!(f, "In file: {:?}", self.file.unwrap().as_os_str())?;
+        writeln!(f, "In file: {:?}", self.file.as_ref().unwrap().as_os_str())?;
         let line_text = self.line.to_string();
         write!(f, "{}| ", line_text)?;
-        let t = fs::read_to_string(self.file.unwrap().as_ref()).unwrap();
+        let t = fs::read_to_string(self.file.as_ref().unwrap().as_ref()).unwrap();
         let line = t.split('\n').nth(self.line - 1).unwrap();
 
         let mut changed_start = false;
