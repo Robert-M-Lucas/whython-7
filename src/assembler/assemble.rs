@@ -3,7 +3,7 @@ use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
 
-pub fn generate_assembly(output: &PathBuf, functions: Vec<Box<dyn Function>>) {
+pub fn generate_assembly(_output: &PathBuf, functions: Vec<Box<dyn Function>>) {
     let mut out = String::from(
         "    global main
     extern ExitProcess

@@ -1,5 +1,5 @@
 use crate::parser::line_info::LineInfo;
-use crate::parser::parse::ParseError;
+
 use std::path::PathBuf;
 use std::rc::Rc;
 

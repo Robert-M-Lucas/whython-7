@@ -13,7 +13,7 @@ use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::{Type, TypeTable, TypedFunction};
 use either::{Either, Left, Right};
 use std::collections::{HashMap, HashSet};
-use std::slice::Iter;
+
 
 pub enum Line {
     ReturnCall(isize, Vec<(isize, usize)>, isize),
@@ -67,8 +67,7 @@ impl FunctionHolder {
         name: &str,
     ) -> Option<&Box<dyn TypedFunction>> {
         self.functions_table.get(&_type).and_then(|x| {
-            x.get(name)
-                .and_then(|x| Some(self.functions.get(x).unwrap()))
+            x.get(name).map(|x| self.functions.get(x).unwrap())
         })
     }
 
@@ -172,7 +171,7 @@ impl NameHandler {
 
             match name_type {
                 NameType::Normal => {
-                    if current_type != None || current_variable != None {
+                    if current_type.is_some() || current_variable.is_some() {
                         todo!()
                     }
                     if let Some((_, addr, _type)) = self
@@ -184,13 +183,11 @@ impl NameHandler {
                         // println!("{}, {}", addr, _type);
                         current_variable = Some(*addr);
                         current_type = Some(*_type);
+                    } else if let Some(_type) = self.type_table.get_id_by_name(name) {
+                        current_variable = None;
+                        current_type = Some(_type);
                     } else {
-                        if let Some(_type) = self.type_table.get_id_by_name(&name) {
-                            current_variable = None;
-                            current_type = Some(_type);
-                        } else {
-                            return Err(ProcessorError::NameNotFound(line.clone(), name.clone()));
-                        }
+                        return Err(ProcessorError::NameNotFound(line.clone(), name.clone()));
                     }
                 }
                 NameType::Function(contents) => {
@@ -316,7 +313,7 @@ fn process_lines(
     let mut last_return = false;
 
     for line in section.split(|x| matches!(x.0, BasicSymbol::Punctuation(Punctuation::Semicolon))) {
-        if line.len() == 0 {
+        if line.is_empty() {
             continue;
         }
         last_return = false;
@@ -329,7 +326,7 @@ fn process_lines(
                         _ => return Err(ProcessorError::NonNameAssignment(line[0].1.clone())),
                     };
                     let Left(variable) =
-                        name_handler.resolve_name(&function_holder, name, &line[0].1)?
+                        name_handler.resolve_name(function_holder, name, &line[0].1)?
                     else {
                         return Err(ProcessorError::AssignToNonVariable(line[0].1.clone()));
                     };
@@ -385,7 +382,7 @@ fn process_lines(
                     &line[1..],
                     lines,
                     name_handler,
-                    &function_holder,
+                    function_holder,
                     Some((return_into, return_type)),
                 )?;
                 if return_value.is_none() {
@@ -469,7 +466,7 @@ fn process_lines(
                     &line[5..],
                     lines,
                     name_handler,
-                    &function_holder,
+                    function_holder,
                     Some((addr, type_id)),
                 )?;
             }
@@ -530,7 +527,7 @@ fn process_lines(
                 }
             }
             _ => {
-                evaluate(line, lines, name_handler, &function_holder, None)?;
+                evaluate(line, lines, name_handler, function_holder, None)?;
             }
         };
     }
@@ -635,7 +632,7 @@ fn evaluate_symbol(
                 )?,
             }
         }
-        other => return Err(ProcessorError::BadEvaluableLayout(symbol.1.clone())),
+        _other => return Err(ProcessorError::BadEvaluableLayout(symbol.1.clone())),
     })
 }
 
@@ -659,7 +656,7 @@ fn call_function(
         ));
     }
     if args.len() < target_args.len() {
-        if args.len() > 0 {
+        if !args.is_empty() {
             return Err(ProcessorError::BadArgCount(
                 args[args.len() - 1].last().unwrap().1.clone(),
                 target_args.len(),
@@ -791,9 +788,9 @@ fn call_function(
     })
 }
 
-fn evaluate_operator<'a>(
-    symbol: &'a (BasicSymbol, LineInfo),
-) -> Result<&'a Operator, ProcessorError> {
+fn evaluate_operator(
+    symbol: &(BasicSymbol, LineInfo),
+) -> Result<&Operator, ProcessorError> {
     match &symbol.0 {
         BasicSymbol::Operator(operator) => Ok(operator),
         _ => Err(ProcessorError::BadEvaluableLayout(symbol.1.clone())),

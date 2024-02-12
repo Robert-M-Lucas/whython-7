@@ -1,10 +1,10 @@
 use crate::ast::operators::Operator;
-use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol};
+use crate::basic_ast::symbol::{BasicAbstractSyntaxTree};
 use crate::compiler::compile_functions::{compile_functions, Function};
 use crate::parser::line_info::LineInfo;
 use crate::processor::preprocess::preprocess;
 use crate::processor::type_builder::build_types;
-use std::path::PathBuf;
+
 use thiserror::Error;
 
 #[derive(Error, Debug)]

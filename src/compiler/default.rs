@@ -4,6 +4,12 @@ pub struct Output {
     inner: String,
 }
 
+impl Default for Output {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Output {
     pub fn new() -> Output {
         Output {
@@ -66,7 +72,7 @@ pub fn compile_user_function(function: &UserFunction) -> String {
         match line {
             Line::ReturnCall(function, local_args, return_addr) => {
                 // Push args to stack
-                for (local_addr, size) in local_args.iter().rev() {
+                for (local_addr, _size) in local_args.iter().rev() {
                     output.push(&format!(
                         "mov rax, qword [{}]",
                         get_local_address(*local_addr)
@@ -88,7 +94,7 @@ pub fn compile_user_function(function: &UserFunction) -> String {
             }
             Line::NoReturnCall(function, local_args) => {
                 // Push args to stack
-                for (local_addr, size) in local_args.iter().rev() {
+                for (local_addr, _size) in local_args.iter().rev() {
                     output.push(&format!(
                         "mov rax, qword [{}]",
                         get_local_address(*local_addr)
@@ -136,7 +142,7 @@ pub fn compile_user_function(function: &UserFunction) -> String {
         }
     }
 
-    return if function.id == 0 {
+    if function.id == 0 {
         output.push("mov rcx, 0");
         output.push("call ExitProcess");
         output.into()
@@ -144,5 +150,5 @@ pub fn compile_user_function(function: &UserFunction) -> String {
         output.push("leave");
         output.push("ret");
         output.into()
-    };
+    }
 }

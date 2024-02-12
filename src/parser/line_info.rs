@@ -1,4 +1,4 @@
-use std::fmt::{write, Display, Formatter};
+use std::fmt::{Display, Formatter};
 use std::fs;
 use std::path::PathBuf;
 use std::rc::Rc;
@@ -67,7 +67,7 @@ impl Display for LineInfo {
         if changed_start {
             write!(f, " ...")?;
         }
-        write!(f, "\n")?;
+        writeln!(f)?;
 
         let mut offset = line_text.len() + 2;
         if changed_start {

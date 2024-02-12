@@ -53,7 +53,7 @@ pub fn parse_normal(
         match next {
             '"' => {
                 process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
-                let start = reader.line();
+                let _start = reader.line();
                 reader.checkpoint();
                 symbols.push((parse_string(reader)?, reader.get_line_info()));
                 continue;
@@ -112,7 +112,7 @@ pub fn parse_normal(
                             NameType::Normal
                         )
                     {
-                        let (s, l) = &mut symbols.last_mut().unwrap();
+                        let (s, _l) = &mut symbols.last_mut().unwrap();
                         let BasicSymbol::Name(v) = s else { panic!() };
 
                         intercepted = true;
@@ -129,11 +129,11 @@ pub fn parse_normal(
                                 symbol => arguments.last_mut().unwrap().push((symbol, line)),
                             }
                         }
-                        if arguments.len() == 1 && arguments.last().unwrap().len() == 0 {
+                        if arguments.len() == 1 && arguments.last().unwrap().is_empty() {
                             arguments.pop();
                         }
 
-                        *(&mut v.last_mut().unwrap().2) = NameType::Function(arguments);
+                        v.last_mut().unwrap().2 = NameType::Function(arguments);
                     } else {
                         symbols.push((parsed, parsed_pos));
                     }
@@ -305,7 +305,7 @@ fn process_operator_buffer(
         return Ok(BasicSymbol::Operator(operator));
     } else if buffer == "=" {
         return Ok(BasicSymbol::Assigner(None));
-    } else if buffer.chars().last().unwrap() == '=' {
+    } else if buffer.ends_with('=') {
         if let Some(operator) =
             Operator::get_operator(&buffer[..buffer.char_indices().last().unwrap().0])
         {

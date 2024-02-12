@@ -1,10 +1,10 @@
 use crate::assembler::assemble::{assemble, generate_assembly, link};
-use crate::parser::line_info::LineInfo;
+
 use crate::parser::parse::parse;
 use crate::processor::processor::process;
 use std::path::PathBuf;
 use std::process::Command;
-use std::rc::Rc;
+
 use std::time::Instant;
 
 mod assembler;

@@ -1,15 +1,15 @@
 use crate::processor::preprocess::{PreProcessFunction, PreprocessSymbol};
 use crate::processor::processor::ProcessorError;
-use crate::processor::processor::ProcessorError::TypeNotFound;
-use std::borrow::Cow;
 
-use std::collections::{HashMap, HashSet};
+
+
+use std::collections::{HashMap};
 
 use crate::ast::literals::Literal;
 use crate::basic_ast::symbol::BasicSymbol;
 use crate::parser::line_info::LineInfo;
 use crate::processor::custom_types::{Bool, Int};
-use std::path::PathBuf;
+
 use unique_type_id::UniqueTypeId;
 
 struct UninitialisedType {
@@ -114,7 +114,7 @@ impl Type for UserType {
 
         let mut size = 0;
 
-        for (name, id) in &self.attributes {
+        for (_name, id) in &self.attributes {
             size += type_table
                 .get_type(*id)
                 .unwrap()
@@ -126,8 +126,8 @@ impl Type for UserType {
 
     fn instantiate(
         &self,
-        literal: Option<&Literal>,
-        local_address: isize,
+        _literal: Option<&Literal>,
+        _local_address: isize,
     ) -> Result<Vec<String>, ProcessorError> {
         todo!()
     }
@@ -188,7 +188,7 @@ impl TypeTable {
     }
 
     pub fn get_type_size(&self, id: isize) -> Result<usize, ProcessorError> {
-        self.types.get(&id).unwrap().get_size(&self, None)
+        self.types.get(&id).unwrap().get_size(self, None)
     }
 }
 
@@ -235,7 +235,7 @@ impl TypedFunction for UserTypedFunction {
         self.contents.take().unwrap()
     }
 
-    fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
+    fn get_inline(&self, _args: Vec<isize>) -> Vec<String> {
         panic!()
     }
 }
@@ -328,7 +328,7 @@ pub fn build_types(
             }
 
             let type_ = uninitialised_types.remove(i).1;
-            let (line, mut attributes) = (type_.path, type_.attributes);
+            let (_line, mut attributes) = (type_.path, type_.attributes);
             let (type_name, line) = attributes.remove(a).1.unwrap_err();
             return Err(ProcessorError::TypeNotFound(line, type_name));
         }
@@ -363,9 +363,7 @@ pub fn build_types(
                 let type_id = type_table
                     .get_id_by_name(&type_name)
                     .ok_or(ProcessorError::BadImplType(line))?;
-                if !fn_name_map.contains_key(&Some(type_id)) {
-                    fn_name_map.insert(Some(type_id), HashMap::new());
-                }
+                fn_name_map.entry(Some(type_id)).or_insert_with(HashMap::new);
                 for (function, line) in functions {
                     fn_name_map
                         .get_mut(&Some(type_id))
@@ -397,7 +395,7 @@ pub fn build_types(
     }
 
     if let Some(main) = typed_fns.get(&0) {
-        if main.get_args().len() != 0 {
+        if !main.get_args().is_empty() {
             return Err(ProcessorError::MainFunctionParams);
         }
         if main.get_return_type() != Some(-1) {
@@ -414,7 +412,7 @@ fn process_function(
     function: PreProcessFunction,
     type_table: &TypeTable,
     id: isize,
-    impl_type: Option<isize>,
+    _impl_type: Option<isize>,
     line: LineInfo,
 ) -> Result<Box<dyn TypedFunction>, ProcessorError> {
     let (name, args, return_type, contents) = function;

@@ -5,9 +5,9 @@ use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol, NameType};
 use crate::parser::line_info::LineInfo;
 use crate::processor::processor::ProcessorError;
 use crate::processor::processor::ProcessorError::{
-    FnNoBraces, FnParamsTrailingComma, MultipartNameDef, MultipartTypeName, NameTypeNotDefined,
+    FnNoBraces,
 };
-use std::path::PathBuf;
+
 use std::vec::IntoIter;
 
 pub type PreProcessFunction = (
@@ -52,7 +52,7 @@ pub fn preprocess(
                     _ => {}
                 },
                 BasicSymbol::AbstractSyntaxTree(_) => panic!(),
-                symbol => return Err(ProcessorError::BadTopLevelSymbol(first_line)),
+                _symbol => return Err(ProcessorError::BadTopLevelSymbol(first_line)),
             }
         }
     }
@@ -201,7 +201,7 @@ fn parse_impl(
 fn parse_fn(
     start_line_info: LineInfo,
     tree: &mut IntoIter<(BasicSymbol, LineInfo)>,
-    main_line: usize,
+    _main_line: usize,
 ) -> Result<PreprocessSymbol, ProcessorError> {
     let (name, name_line) = tree
         .next()
@@ -239,7 +239,7 @@ fn parse_fn(
     for parameter in parameters {
         let mut parameter = parameter.into_iter();
 
-        let Some((mut first_item, first_line)) = parameter.next() else {
+        let Some((first_item, first_line)) = parameter.next() else {
             return Err(ProcessorError::FnParamsTrailingComma(last_line));
         };
 
@@ -318,7 +318,7 @@ fn parse_fn(
         (
             name,
             parameters_processed,
-            return_type.and_then(|x| Some((x.0 .0, x.1))),
+            return_type.map(|x| (x.0 .0, x.1)),
             contents,
         ),
     ))

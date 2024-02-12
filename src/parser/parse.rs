@@ -47,7 +47,7 @@ pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(
             reader.move_to_next_char(' ');
 
             reader.checkpoint();
-            let (file, eof) = reader.move_read_to_next_char(';');
+            let (file, _eof) = reader.move_read_to_next_char(';');
             let trimmed = file.trim();
             if trimmed.is_empty() {
                 return Err(ModNotFollowedByPath(reader.get_line_info()));

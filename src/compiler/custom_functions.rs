@@ -1,7 +1,7 @@
 use crate::basic_ast::symbol::BasicSymbol;
 use crate::compiler::compile_functions::{Function, Line, UserFunction};
 use crate::compiler::default::{
-    compile_user_function, get_function_sublabel, get_local_address, Output,
+    compile_user_function, get_function_sublabel, get_local_address,
 };
 use crate::parser::line_info::LineInfo;
 use crate::processor::custom_types::{Bool, Int};
@@ -116,7 +116,7 @@ impl TypedFunction for PrintI {
         panic!()
     }
 
-    fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
+    fn get_inline(&self, _args: Vec<isize>) -> Vec<String> {
         panic!()
     }
 }
@@ -208,7 +208,7 @@ impl TypedFunction for PrintB {
         panic!()
     }
 
-    fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
+    fn get_inline(&self, _args: Vec<isize>) -> Vec<String> {
         panic!()
     }
 }
