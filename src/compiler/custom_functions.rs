@@ -479,7 +479,7 @@ impl TypedFunction for IntLT {
     }
 
     fn get_args(&self) -> &[(String, isize)] {
-        INT_LE_ARGS.as_ref()
+        INT_LT_ARGS.as_ref()
     }
 
     fn get_line(&self) -> LineInfo {
