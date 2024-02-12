@@ -9,11 +9,12 @@ impl Bool {
     pub fn new() -> Bool {
         Bool {}
     }
+    pub fn get_id() -> isize { -2 }
 }
 
 impl Type for Bool {
     fn get_id(&self) -> isize {
-        -2
+        Self::get_id()
     }
 
     fn get_name(&self) -> &str {

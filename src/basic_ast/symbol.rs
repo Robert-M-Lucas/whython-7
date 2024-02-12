@@ -3,9 +3,10 @@ use crate::ast::literals::Literal;
 use crate::ast::operators::Operator;
 use crate::basic_ast::punctuation::Punctuation;
 use std::path::PathBuf;
+use crate::parser::line_info::LineInfo;
 
 
-pub type BasicAbstractSyntaxTree = (PathBuf, Vec<BasicSymbol>);
+pub type BasicAbstractSyntaxTree = Vec<(BasicSymbol, LineInfo)>;
 
 #[derive(PartialEq, Clone, strum_macros::Display, Debug)]
 pub enum NameAccessType {
@@ -14,21 +15,21 @@ pub enum NameAccessType {
     Normal
 }
 
-#[derive(PartialEq, Clone, strum_macros::Display, Debug)]
+#[derive(Clone, strum_macros::Display, Debug)]
 pub enum NameType {
     Normal,
-    Function(Vec<Vec<BasicSymbol>>)
+    Function(Vec<Vec<(BasicSymbol, LineInfo)>>)
 }
 
-#[derive(PartialEq, Clone, strum_macros::Display, Debug)]
+#[derive(Clone, strum_macros::Display, Debug)]
 pub enum BasicSymbol {
-    AbstractSyntaxTree(Vec<BasicSymbol>),
+    AbstractSyntaxTree(Vec<(BasicSymbol, LineInfo)>),
     Literal(Literal),
     Operator(Operator),
-    Assigner(Operator),
-    BracedSection(Vec<BasicSymbol>),
-    BracketedSection(Vec<BasicSymbol>),
-    SquareBracketedSection(Vec<BasicSymbol>),
+    Assigner(Option<Operator>),
+    BracedSection(Vec<(BasicSymbol, LineInfo)>),
+    BracketedSection(Vec<(BasicSymbol, LineInfo)>),
+    SquareBracketedSection(Vec<(BasicSymbol, LineInfo)>),
     Punctuation(Punctuation),
     Keyword(Keyword),
     Name(Vec<(String, NameAccessType, NameType)>),

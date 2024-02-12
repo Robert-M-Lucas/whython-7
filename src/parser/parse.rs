@@ -8,15 +8,29 @@ use std::path::PathBuf;
 use std::{fs, io};
 use thiserror::Error;
 use ParseError::{Nested};
+use crate::parser::line_info::LineInfo;
+use crate::parser::parse::ParseError::ModNotFollowedByPath;
 
 #[derive(Error, Debug)]
 pub enum ParseError {
-    #[error("file read error on path '{0}'")]
+    #[error("File read error on path '{0}'")]
     FileRead(PathBuf, io::Error),
-    #[error("syntax error in file {0}:{1} - {2}")]
-    Syntax(PathBuf, usize, String),
-    #[error("In file {0}:{1}:\n{2}")]
-    Nested(PathBuf, usize, Box<ParseError>),
+    #[error("Error: {1}\n{0}")]
+    Nested(LineInfo, Box<ParseError>),
+    #[error("Error: Operator '{1}' not recognised\n{0}")]
+    OperatorNotRecognised(LineInfo, String),
+    #[error("Error: 'mod' must be followed by a path\n{0}")]
+    ModNotFollowedByPath(LineInfo),
+    #[error("Error: Keyword ('{1}') cannot be followed by . or #\n{0}")]
+    KeywordFollowed(LineInfo, String),
+    #[error("Error: Closing '{1}' not found (started on line {2})\n{0}")]
+    NotClosed(LineInfo, char, usize),
+    #[error("Error: Unknown escape code '{1}'\n{0}")]
+    UnknownEscapeCode(LineInfo, char),
+    #[error("Error: String literal started on line {1} not closed\n{0}")]
+    UnclosedString(LineInfo, usize),
+    #[error("Error: Closing '{1}' found with no corresponding opening bracket\n{0}")]
+    NoOpening(LineInfo, char)
 }
 
 pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(), ParseError> {
@@ -32,25 +46,22 @@ pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(
         while reader.read_until_char(' ').0 == MOD_KEYWORD {
             reader.move_to_next_char(' ');
 
+            reader.checkpoint();
             let (file, eof) = reader.move_read_to_next_char(';');
             let trimmed = file.trim();
             if trimmed.is_empty() {
                 return Err(
-                    reader.syntax_error(format!("'{MOD_KEYWORD}' must be followed by a path"))
+                    ModNotFollowedByPath(reader.get_line_info())
                 );
             }
-            if eof {
-                return Err(
-                    reader.syntax_error("import path must be followed by a ';'".to_string())
-                );
-            }
-
+            
             if let Err(e) = parse(PathBuf::from(file), asts) {
-                return Err(Nested(reader.get_path(), reader.line(), Box::new(e)));
+                return Err(Nested(reader.get_line_info(), Box::new(e)));
             }
         }
     }
 
+    reader.checkpoint();
     let ast = parse_normal(&mut reader, BlockType::Base)?;
 
     let inner = match ast {
@@ -58,7 +69,7 @@ pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(
         _ => panic!(),
     };
 
-    asts.push((reader.get_path(), inner));
+    asts.push(inner);
     Ok(())
 }
 

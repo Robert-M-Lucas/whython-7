@@ -3,60 +3,92 @@ use crate::processor::preprocess::preprocess;
 use crate::processor::type_builder::build_types;
 use std::path::PathBuf;
 use thiserror::Error;
+use crate::ast::operators::Operator;
 use crate::compiler::compile_functions::{Function, compile_functions};
+use crate::parser::line_info::LineInfo;
 
 #[derive(Error, Debug)]
 pub enum ProcessorError {
-    #[error("syntax error in file {0}:{1} - {2}")]
-    Syntax(PathBuf, usize, String),
-    #[error("type '{2}' in file {0}:{1} not found")]
-    TypeNotFound(PathBuf, usize, String),
-    #[error("TODO: name '{0}' not found")] // TODO:
-    NameNotFound(String),
-    #[error("type '{2}' in file {0}:{1} also defined in file {3}:{4}")]
-    TypeRedefinition(PathBuf, usize, String, PathBuf, usize),
-    #[error("type '{2}' has an infinite size")]
-    CircularType(PathBuf, usize, String),
-    #[error("TODO: BadImplType")]
-    BadImplType(PathBuf), // TODO:
-    #[error("TODO: No main")]
+    #[error("Error: Expected name after 'struct'\n{0}")]
+    StructNoName(LineInfo),
+    #[error("Error: Tried to define a name with multiple parts\n{0}")]
+    MultipartNameDef(LineInfo),
+    #[error("Error: Expected braces after struct name\n{0}")]
+    StructNoBraces(LineInfo),
+    #[error("Error: Struct attributes must be ',' separated\n{0}")]
+    StructNoAttrSeparator(LineInfo),
+    #[error("Error: Expected struct attribute name\n{0}")]
+    StructExpectedAttributeName(LineInfo),
+    #[error("Error: Expected `: [TYPE]` after name to define type\n{0}")]
+    NameTypeNotDefined(LineInfo),
+    #[error("Error: Expected 'struct', 'impl' or 'fn' at top level\n{0}")]
+    BadTopLevelSymbol(LineInfo),
+    #[error("Error: Expected name after 'impl'\n{0}")]
+    ImplNoName(LineInfo),
+    #[error("Error: Expected braces after impl name\n{0}")]
+    ImplNoBraces(LineInfo),
+    #[error("Error: Only function definitions are allowed within impls\n{0}")]
+    ImplNonFnContent(LineInfo),
+    #[error("Error: Expected name after 'fn'\n{0}")]
+    FnNoName(LineInfo),
+    #[error("Error: Function parameters cannot have a trailing ','\n{0}")]
+    FnParamsTrailingComma(LineInfo),
+    #[error("Error: Expected parameter name \n{0}")]
+    FnExpectedParameterName(LineInfo),
+    #[error("Error: Expected '~ [RETURN TYPE]' or braces after function parameters\n{0}")]
+    FnNoBracesOrReturn(LineInfo),
+    #[error("Error: Expected braces after function parameters\n{0}")]
+    FnNoBraces(LineInfo),
+    #[error("Error: Expected function return type after '~'\n{0}")]
+    FnExpectedReturnType(LineInfo),
+    #[error("Error: Parameter name '{1}' already in use\n{0}")]
+    ParameterNameInUse(LineInfo, String),
+    #[error("[TODO] Error: Tried to use a type name with multiple parts\n{0}")]
+    MultipartTypeName(LineInfo),
+    #[error("Error: Type '{1}' not found\n{0}")]
+    TypeNotFound(LineInfo, String),
+    #[error("Error: Name '{1}' not found\n{0}")] // TODO:
+    NameNotFound(LineInfo, String),
+    #[error("Error: Type '{1}' defined...\n{0}{2}")]
+    TypeRedefinition(LineInfo, String, LineInfo),
+    #[error("Error: Type '{1}' has an infinite size [{2}]\n{0}")]
+    CircularType(LineInfo, String, String),
+    #[error("Error: Impl type not found\n{0}")]
+    BadImplType(LineInfo),
+    #[error("Error: No main function found")]
     NoMainFunction,
-    #[error("TODO: Function redefinition")]
-    FunctionRedefinition,
-    #[error("TODO: Bad main function - {0}")]
-    BadMainFunction(String),
-    #[error("TODO: variable already defined - {0}")]
-    VariableAlreadyDefined(String),
-    #[error("TODO: Bad keyword")]
-    BadKeyword,
-    #[error("TODO: Expected semicolon")]
-    ExpectedSemicolon,
-    #[error("TODO: Empty brackets")]
-    EmptyBrackets,
-    #[error("TODO: Bad item in evaluated section")]
-    BadItemInEvaluation,
-    #[error("TODO: Expected operator and operand")]
-    ExpectedOperatorOperand,
-    #[error("TODO: Bad operator position")]
-    BadOperatorPosition,
-    #[error("TODO: Bad operator function (did you override an operator?)")]
-    BadOperatorFunction,
-    #[error("TODO: Standalone type")]
-    StandaloneType,
-    #[error("TODO: Standalone operator")]
-    StandaloneOperator,
-    #[error("TODO: Doesn't evaluate")]
-    DoesntEvaluate,
-    #[error("TODO: Bad arg type")]
-    BadArgType,
-    #[error("TODO: Bad arg count")]
-    BadArgCount,
-    #[error("TODO: Bad evaluable layout - Expected `value`, `prefix-operator value`, or `value postfix-operator other-value`")]
-    BadEvaluableLayout,
-    #[error("TODO: Unexpected symbol")]
-    UnexpectedSymbol(BasicSymbol),
-    #[error("Placeholder")]
-    Placeholder
+    #[error("Error: Main function cannot have parameters")]
+    MainFunctionParams, // TODO
+    #[error("Error: Main function must return 'int'")]
+    MainFunctionBadReturn, // TODO
+    #[error("Error: Expected semicolon\n{0}")]
+    ExpectedSemicolon(LineInfo),
+    #[error("Error: Bad operator position for '{1}'\n{0}")] // TODO
+    BadOperatorPosition(LineInfo, Operator),
+    #[error("Error: Standalone type\n{0}")]
+    StandaloneType(LineInfo),
+    #[error("Error: Standalone operator\n{0}")]
+    StandaloneOperator(LineInfo),
+    #[error("Error: This must evaluate to a value but doesn't\n{0}")]
+    DoesntEvaluate(LineInfo),
+    #[error("Error: Bad argument type for function. Expected {1}, found {2}\n{0}")]
+    BadArgType(LineInfo, String, String),
+    #[error("Error: Wrong amount of arguments for function. Expected {1}, found{2}\n{0}")]
+    BadArgCount(LineInfo, usize, usize),
+    #[error("Error: Bad evaluable layout - Expected `[VALUE]`, `[PREFIX-OPERATOR] [VALUE]`, or `[VALUE] [POSTFIX-OPERATOR] [OTHER-VALUE]`")]
+    BadEvaluableLayout(LineInfo),
+    #[error("Error: Functions with a return type must have a return statement as their last line\n{0}")]
+    NoReturnStatement(LineInfo),
+    #[error("Error: You can only assign to names\n{0}")]
+    NonNameAssignment(LineInfo),
+    #[error("Error: Assignment operator must have value on RHS\n{0}")]
+    NoAssignmentRHS(LineInfo),
+    #[error("Error: Can't return nothing from a function with a return type\n{0}")]
+    NoneReturnOnTypedFunction(LineInfo),
+    #[error("Error: Can't return a value from a function with no return type\n{0}")]
+    TypeReturnOnVoidFunction(LineInfo),
+    #[error("Error: Returned type '{2}' doesn't match function return type '{1}\n{0}")]
+    BadReturnType(LineInfo, String, String)
 }
 
 pub fn process(ast: Vec<BasicAbstractSyntaxTree>) -> Result<Vec<Box<dyn Function>>, ProcessorError> {

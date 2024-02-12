@@ -3,6 +3,7 @@ use unique_type_id::UniqueTypeId;
 use crate::basic_ast::symbol::BasicSymbol;
 use crate::compiler::compile_functions::{Function, Line, UserFunction};
 use crate::compiler::default::{compile_user_function, get_function_sublabel, get_local_address, Output};
+use crate::parser::line_info::LineInfo;
 use crate::processor::custom_types::{Bool, Int};
 use crate::processor::type_builder::{Type, TypedFunction};
 
@@ -45,6 +46,10 @@ impl TypedFunction for WindowsExit {
         WINDOWS_EXIT_ARGS.as_ref()
     }
 
+    fn get_line(&self) -> LineInfo {
+        LineInfo::builtin()
+    }
+
     fn get_return_type(&self) -> Option<isize> {
         None
     }
@@ -53,11 +58,11 @@ impl TypedFunction for WindowsExit {
         true
     }
 
-    fn contents(&self) -> &Vec<BasicSymbol> {
+    fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)> {
         panic!()
     }
 
-    fn take_contents(&mut self) -> Vec<BasicSymbol> {
+    fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)> {
         panic!()
     }
 
@@ -88,6 +93,10 @@ impl TypedFunction for PrintI {
         PRINT_I_ARGS.as_ref()
     }
 
+    fn get_line(&self) -> LineInfo {
+        LineInfo::builtin()
+    }
+
     fn get_return_type(&self) -> Option<isize> {
         None
     }
@@ -96,11 +105,11 @@ impl TypedFunction for PrintI {
         false
     }
 
-    fn contents(&self) -> &Vec<BasicSymbol> {
+    fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)> {
         panic!()
     }
 
-    fn take_contents(&mut self) -> Vec<BasicSymbol> {
+    fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)> {
         panic!()
     }
 
@@ -176,6 +185,10 @@ impl TypedFunction for PrintB {
         crate::compiler::custom_functions::PRINT_B_ARGS.as_ref()
     }
 
+    fn get_line(&self) -> LineInfo {
+        LineInfo::builtin()
+    }
+
     fn get_return_type(&self) -> Option<isize> {
         None
     }
@@ -184,11 +197,11 @@ impl TypedFunction for PrintB {
         false
     }
 
-    fn contents(&self) -> &Vec<BasicSymbol> {
+    fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)> {
         panic!()
     }
 
-    fn take_contents(&mut self) -> Vec<BasicSymbol> {
+    fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)> {
         panic!()
     }
 
@@ -261,19 +274,23 @@ impl TypedFunction for IntAdd {
         INT_ADD_ARGS.as_ref()
     }
 
+    fn get_line(&self) -> LineInfo {
+        LineInfo::builtin()
+    }
+
     fn get_return_type(&self) -> Option<isize> {
-        Some(-1)
+        Some(Int::get_id())
     }
 
     fn is_inline(&self) -> bool {
         true
     }
 
-    fn contents(&self) -> &Vec<BasicSymbol> {
+    fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)> {
         panic!()
     }
 
-    fn take_contents(&mut self) -> Vec<BasicSymbol> {
+    fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)> {
         panic!()
     }
 
@@ -305,19 +322,23 @@ impl TypedFunction for IntSub {
         INT_SUB_ARGS.as_ref()
     }
 
+    fn get_line(&self) -> LineInfo {
+        LineInfo::builtin()
+    }
+
     fn get_return_type(&self) -> Option<isize> {
-        Some(-1)
+        Some(Int::get_id())
     }
 
     fn is_inline(&self) -> bool {
         true
     }
 
-    fn contents(&self) -> &Vec<BasicSymbol> {
+    fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)> {
         panic!()
     }
 
-    fn take_contents(&mut self) -> Vec<BasicSymbol> {
+    fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)> {
         panic!()
     }
 
@@ -349,19 +370,23 @@ impl TypedFunction for IntMul {
         crate::compiler::custom_functions::INT_SUB_ARGS.as_ref()
     }
 
+    fn get_line(&self) -> LineInfo {
+        LineInfo::builtin()
+    }
+
     fn get_return_type(&self) -> Option<isize> {
-        Some(-1)
+        Some(Int::get_id())
     }
 
     fn is_inline(&self) -> bool {
         true
     }
 
-    fn contents(&self) -> &Vec<BasicSymbol> {
+    fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)> {
         panic!()
     }
 
-    fn take_contents(&mut self) -> Vec<BasicSymbol> {
+    fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)> {
         panic!()
     }
 
@@ -394,19 +419,23 @@ impl TypedFunction for IntDiv {
         crate::compiler::custom_functions::INT_SUB_ARGS.as_ref()
     }
 
+    fn get_line(&self) -> LineInfo {
+        LineInfo::builtin()
+    }
+
     fn get_return_type(&self) -> Option<isize> {
-        Some(-1)
+        Some(Int::get_id())
     }
 
     fn is_inline(&self) -> bool {
         true
     }
 
-    fn contents(&self) -> &Vec<BasicSymbol> {
+    fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)> {
         panic!()
     }
 
-    fn take_contents(&mut self) -> Vec<BasicSymbol> {
+    fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)> {
         panic!()
     }
 
@@ -439,19 +468,23 @@ impl TypedFunction for BoolNot {
         BOOL_NOT_ARGS.as_ref()
     }
 
+    fn get_line(&self) -> LineInfo {
+        LineInfo::builtin()
+    }
+
     fn get_return_type(&self) -> Option<isize> {
-        Some(-2)
+        Some(Bool::get_id())
     }
 
     fn is_inline(&self) -> bool {
         true
     }
 
-    fn contents(&self) -> &Vec<BasicSymbol> {
+    fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)> {
         panic!()
     }
 
-    fn take_contents(&mut self) -> Vec<BasicSymbol> {
+    fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)> {
         panic!()
     }
 
@@ -463,3 +496,48 @@ impl TypedFunction for BoolNot {
         ]
     }
 }
+
+#[derive(UniqueTypeId)]
+#[UniqueTypeIdType = "u16"]
+pub struct IntLT {}
+lazy_static! {
+    static ref INT_LT_ARGS: [(String, isize); 2] = [(String::from("lhs"), Int{}.get_id()), (String::from("rhs"), Int{}.get_id())];
+}
+// impl TypedFunction for IntLT {
+//     fn get_id(&self) -> isize {
+//         -(Self::id().0 as isize)
+//     }
+//
+//     fn get_name(&self) -> &str {
+//         "lt"
+//     }
+//
+//     fn get_args(&self) -> &[(String, isize)] {
+//         crate::compiler::custom_functions::BOOL_NOT_ARGS.as_ref()
+//     }
+//
+//     fn get_return_type(&self) -> Option<isize> {
+//         Some(Bool::get_id())
+//     }
+//
+//     fn is_inline(&self) -> bool {
+//         true
+//     }
+//
+//     fn contents(&self) -> &Vec<BasicSymbol> {
+//         panic!()
+//     }
+//
+//     fn take_contents(&mut self) -> Vec<BasicSymbol> {
+//         panic!()
+//     }
+//
+//     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
+//         vec![
+//             format!("mov rax, [{}]", get_local_address(args[0])),
+//             format!("mov rcx, [{}]", get_local_address(args[1])),
+//             "cmp rcx".to_string(),
+//             format!("mov [{}], rax", get_local_address(args[1])),
+//         ]
+//     }
+// }

@@ -7,9 +7,12 @@ use crate::ast::operators::Operator;
 use crate::basic_ast::punctuation::Punctuation;
 use crate::basic_ast::symbol::{BasicSymbol, NameAccessType, NameType};
 use crate::compiler::custom_functions::{get_custom_function_implementations, get_custom_function_signatures};
-use crate::compiler::default::compile_user_function;
+use crate::compiler::default::{compile_user_function, get_function_sublabel, get_local_address};
+use crate::parser::line_info::LineInfo;
+use crate::processor::custom_types::Bool;
 use crate::processor::processor::ProcessorError;
-use crate::processor::type_builder::{TypedFunction, TypeTable};
+use crate::processor::processor::ProcessorError::DoesntEvaluate;
+use crate::processor::type_builder::{Type, TypedFunction, TypeTable};
 
 pub enum Line {
     ReturnCall(isize, Vec<(isize, usize)>, isize),
@@ -77,7 +80,7 @@ pub struct NameHandler {
     local_variables: Vec<(String, isize, isize)>,
     local_variables_size: usize,
     used_functions: HashSet<isize>,
-    nest_stack: Vec<String>
+    uid: usize
 }
 
 impl NameHandler {
@@ -88,7 +91,7 @@ impl NameHandler {
             local_variables: Vec::new(),
             local_variables_size: 0,
             used_functions: HashSet::new(),
-            nest_stack: Vec::new()
+            uid: 0
         }
     }
 
@@ -97,12 +100,15 @@ impl NameHandler {
     }
 
     pub fn reset(&mut self) {
-        if !self.nest_stack.is_empty() {
-            panic!();
-        }
+        self.uid = 0;
         self.args.clear();
         self.local_variables.clear();
         self.local_variables_size = 0;
+    }
+
+    pub fn get_uid(&mut self) -> usize {
+        self.uid += 1;
+        self.uid - 1
     }
 
     pub fn type_table(&self) -> &TypeTable {
@@ -127,7 +133,7 @@ impl NameHandler {
         self.local_variables.push((name, addr, _type));
     }
 
-    pub fn resolve_name<'b>(&self, function_holder: &'b FunctionHolder, name: &'b Vec<(String, NameAccessType, NameType)>) -> Result<Either<(isize, isize), (&'b Box<dyn TypedFunction>, Option<(isize, isize)>, &'b Vec<Vec<BasicSymbol>>)>, ProcessorError> {
+    pub fn resolve_name<'b>(&self, function_holder: &'b FunctionHolder, name: &'b Vec<(String, NameAccessType, NameType)>, line: &LineInfo) -> Result<Either<(isize, isize), (&'b Box<dyn TypedFunction>, Option<(isize, isize)>, &'b Vec<Vec<(BasicSymbol, LineInfo)>>)>, ProcessorError> {
         let mut current_type = None;
         let mut current_variable = None;
         let mut return_func = None;
@@ -153,7 +159,7 @@ impl NameHandler {
                             current_type = Some(_type);
                         }
                         else {
-                            return Err(ProcessorError::NameNotFound(name.clone()));
+                            return Err(ProcessorError::NameNotFound(line.clone(), name.clone()));
                         }
                     }
                 }
@@ -176,7 +182,7 @@ impl NameHandler {
         }
 
         Ok(Left((
-            current_variable.ok_or(ProcessorError::StandaloneType)?,
+            current_variable.ok_or(ProcessorError::StandaloneType(line.clone()))?,
             current_type.unwrap()
         )))
     }
@@ -198,7 +204,7 @@ impl NameHandler {
 
 
 pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<String, isize>>, mut functions: HashMap<isize, Box<dyn TypedFunction>>, type_table: TypeTable) -> Result<Vec<Box<dyn Function>>, ProcessorError> {
-    let mut function_contents: HashMap<isize, Vec<BasicSymbol>> = HashMap::new();
+    let mut function_contents: HashMap<isize, Vec<(BasicSymbol, LineInfo)>> = HashMap::new();
     for (id, func) in &mut functions {
         function_contents.insert(*id, func.take_contents());
     }
@@ -221,49 +227,11 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
         name_handler.set_args(function.get_args_positioned(name_handler.type_table()));
         let return_type = function.get_return_type();
         let mut lines = Vec::new();
-        let mut last_return = false;
 
-        for line in contents.split(|x| matches!(x, BasicSymbol::Punctuation(Punctuation::Semicolon))) {
-            if line.len() == 0 { continue; }
-            last_return = false;
-
-            match &line[0] {
-                BasicSymbol::Keyword(Keyword::Return) => {
-                    last_return = true;
-                    if line.len() == 1 {
-                        if return_type.is_none() {
-                            lines.push(Line::Return(None));
-                            continue;
-                        }
-                        else {
-                            println!("a");
-                            return Err(ProcessorError::Placeholder);
-                        }
-                    }
-                    else if return_type.is_none() {
-                        return Err(ProcessorError::Placeholder);
-                    }
-
-                    let return_into = name_handler.add_local_variable(None, return_type.unwrap());
-                    let return_value = evaluate(&line[1..], &mut lines, &mut name_handler, &function_holder, Some((return_into, return_type.unwrap())))?;
-                    if return_value.is_none() {
-                        println!("b");
-                        return Err(ProcessorError::Placeholder);
-                    }
-                    let return_value = return_value.unwrap();
-                    if return_type.is_none() || return_type.unwrap() != return_value.1 {
-                        println!("c");
-                        return Err(ProcessorError::Placeholder);
-                    }
-                    lines.push(Line::Return(Some(return_value.0)));
-                }
-                _ => { evaluate(line, &mut lines, &mut name_handler, &function_holder, None)?; }
-            };
-        }
+        let last_return = process_lines(&contents, id, return_type, &mut lines, &mut name_handler, &function_holder)?;
 
         if return_type.is_some() && !last_return {
-            println!("d");
-            return Err(ProcessorError::Placeholder);
+            return Err(ProcessorError::NoReturnStatement(function.get_line()));
         }
 
         processed_functions.push(Box::new(UserFunction {
@@ -278,17 +246,155 @@ pub fn compile_functions(mut function_name_map: HashMap<Option<isize>, HashMap<S
     Ok(processed_functions)
 }
 
+fn process_lines(section: &[(BasicSymbol, LineInfo)], current_id: isize, return_type: Option<isize>, lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder) -> Result<bool, ProcessorError> {
+    let mut last_return = false;
 
-fn evaluate<'a>(section: &[BasicSymbol], lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder,
-    return_into: Option<(isize, isize)>
-    )-> Result<Option<(isize, isize)>, ProcessorError> { // addr, type
+    for line in section.split(|x| matches!(x.0, BasicSymbol::Punctuation(Punctuation::Semicolon))) {
+        if line.len() == 0 { continue; }
+        last_return = false;
+
+        if line.len() > 1 {
+            match &line[1].0 {
+                BasicSymbol::Assigner(assigner) => {
+                    let name = match &line[0].0 {
+                        BasicSymbol::Name(name) => name,
+                        _ => return Err(ProcessorError::NonNameAssignment(line[0].1.clone()))
+                    };
+                    let Left(variable) = name_handler.resolve_name(&function_holder, name, &line[0].1)? else { return Err(ProcessorError::Placeholder) };
+                    if line.len() < 3 { return Err(ProcessorError::NoAssignmentRHS(line[1].1.clone())); }
+                    if let Some(assigner) = assigner {
+                        let result = evaluate(&line[2..], lines, name_handler, function_holder, None)?.ok_or(ProcessorError::Placeholder)?;
+                        evaluate_operation(variable, assigner, Some(result), lines, name_handler, function_holder, Some(variable))?;
+                    }
+                    else {
+                        evaluate(&line[2..], lines, name_handler, function_holder, Some(variable))?;
+                    }
+
+                    continue;
+                }
+                _ => {}
+            }
+        }
+
+        match &line[0].0 {
+            BasicSymbol::Keyword(Keyword::Return) => {
+                last_return = true;
+                if line.len() == 1 {
+                    if return_type.is_none() {
+                        lines.push(Line::Return(None));
+                        continue;
+                    }
+                    else {
+                        return Err(ProcessorError::NoneReturnOnTypedFunction(line[0].1.clone()));
+                    }
+                }
+                else if return_type.is_none() {
+                    return Err(ProcessorError::TypeReturnOnVoidFunction(line[1].1.clone()));
+                }
+                let return_type = return_type.unwrap();
+
+                let return_into = name_handler.add_local_variable(None, return_type);
+                let return_value = evaluate(&line[1..], lines, name_handler, &function_holder, Some((return_into, return_type.unwrap())))?;
+                if return_value.is_none() {
+                    return Err(DoesntEvaluate(line[1].1.clone()));
+                }
+                let return_value = return_value.unwrap();
+                if return_type != return_value.1 {
+                    return Err(
+                        ProcessorError::BadReturnType(
+                            line[1].1.clone(),
+                            name_handler.type_table().get_type(return_type).unwrap().get_name().to_string(),
+                            name_handler.type_table().get_type(return_value.1).unwrap().get_name().to_string(),
+                        ));
+                }
+                lines.push(Line::Return(Some(return_value.0)));
+            }
+            BasicSymbol::Keyword(Keyword::Let) => {
+                println!("a");
+                if line.len() < 2 { return Err(ProcessorError::Placeholder); }
+                println!("a");
+                let BasicSymbol::Name(name) = &line[1] else { return Err(ProcessorError::Placeholder); };
+                println!("a");
+                if name.len() > 1 { return Err(ProcessorError::Placeholder); }
+                let name = &name[0];
+                println!("a");
+                if !matches!(&name.2, NameType::Normal) { return Err(ProcessorError::Placeholder); }
+                let name = &name.0;
+
+                println!("b");
+                if line.len() < 4 { return Err(ProcessorError::Placeholder); }
+                println!("b");
+                if !matches!(&line[2], BasicSymbol::Punctuation(Punctuation::Colon)) { return Err(ProcessorError::Placeholder); }
+                println!("b");
+                let BasicSymbol::Name(type_name) = &line[3] else { return Err(ProcessorError::Placeholder); };
+                println!("b");
+                if type_name.len() > 1 { return Err(ProcessorError::Placeholder); }
+                let type_name = &type_name[0];
+                println!("b");
+                if !matches!(&type_name.2, NameType::Normal) { return Err(ProcessorError::Placeholder); }
+                println!("b");
+                let type_id = name_handler.type_table().get_id_by_name(&type_name.0).ok_or(ProcessorError::Placeholder)?;
+                let addr = name_handler.add_local_variable(Some(name.clone()), type_id);
+
+                println!("c");
+                if line.len() < 6 { return Err(ProcessorError::Placeholder); }
+                if !matches!(&line[4], BasicSymbol::Assigner(None)) { return Err(ProcessorError::Placeholder); }
+
+                evaluate(&line[5..], lines, name_handler, &function_holder, Some((addr, type_id)))?;
+            }
+            BasicSymbol::Keyword(Keyword::While) => {
+                println!("xa");
+                if line.len() < 3 {
+                    return Err(ProcessorError::Placeholder);
+                }
+                println!("xa");
+                let BasicSymbol::BracketedSection(expr) = &line[1] else { return Err(ProcessorError::Placeholder) };
+                let start_label = get_function_sublabel(current_id, &name_handler.get_uid().to_string());
+                let end_label = get_function_sublabel(current_id, &name_handler.get_uid().to_string());
+
+                lines.push(Line::InlineAsm(vec![format!("{}:", start_label)]));
+                println!("xa");
+                let evaluated = evaluate(expr, lines, name_handler, function_holder, None)?.ok_or(ProcessorError::Placeholder)?;
+                lines.push(Line::InlineAsm(vec![
+                    format!("mov rax, [{}]", get_local_address(evaluated.0)),
+                    "cmp rax, 0".to_string(),
+                    format!("jnz {}", end_label)
+                ]));
+
+                println!("xa");
+                if evaluated.1 != Bool::new().get_id() { return Err(ProcessorError::Placeholder); }
+                println!("xa");
+                let BasicSymbol::BracedSection(inner) = &line[2] else { return Err(ProcessorError::Placeholder) };
+                process_lines(inner, current_id, return_type, lines, name_handler, function_holder)?;
+                lines.push(Line::InlineAsm(vec![
+                    format!("jmp {}", start_label),
+                    format!("{}:", end_label)
+                ]));
+
+                if line.len() > 3 {
+                    return Err(ProcessorError::Placeholder);
+                }
+            }
+            _ => {
+                evaluate(line, lines, name_handler, &function_holder, None)?;
+            }
+        };
+    }
+
+    Ok(last_return)
+}
+
+
+fn evaluate<'a>(section: &[(BasicSymbol, LineInfo)], lines: &mut Vec<Line>, name_handler: &mut NameHandler, function_holder: &FunctionHolder,
+                return_into: Option<(isize, isize)>
+)-> Result<Option<(isize, isize)>, ProcessorError> { // addr, type
     Ok(if section.len() == 1 {
         evaluate_symbol(&section[0], lines, name_handler, function_holder, return_into)?
     }
     else if section.len() == 2 {
         let op = evaluate_operator(&section[0])?;
         let Some(value) = evaluate_symbol(&section[1], lines, name_handler, function_holder, None)?
-        else { return Err(ProcessorError::BadEvaluableLayout); };
+            else { return Err(ProcessorError::BadEvaluableLayout); };
         evaluate_operation(value, op, None, lines, name_handler, function_holder, return_into)?
     }
     else if section.len() == 3 {

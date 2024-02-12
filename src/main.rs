@@ -2,8 +2,10 @@ use crate::parser::parse::parse;
 use crate::processor::processor::process;
 use std::path::PathBuf;
 use std::process::Command;
+use std::rc::Rc;
 use std::time::Instant;
 use crate::assembler::assemble::{assemble, generate_assembly, link};
+use crate::parser::line_info::LineInfo;
 
 mod ast;
 mod basic_ast;
@@ -24,6 +26,13 @@ macro_rules! time {
 }
 
 fn main() {
+    print!("{}", LineInfo{
+        file: Rc::new(String::from("main.why")),
+        line: 2,
+        char_start: 22
+    });
+    return;
+
     let mut asts = Vec::new();
     print!("Parsing...");
     time!(
@@ -45,6 +54,7 @@ fn main() {
             Ok(functions) => functions
         }
     );
+    // let functions = process(asts).unwrap();
 
     print!("Compiling...");
     time!(generate_assembly(&PathBuf::from("output"), functions));

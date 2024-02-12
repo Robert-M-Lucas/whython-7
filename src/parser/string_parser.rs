@@ -3,6 +3,7 @@ use crate::basic_ast::symbol::BasicSymbol;
 use crate::parser::escape_codes::get_escape_code;
 use crate::parser::file_reader::FileReader;
 use crate::parser::parse::ParseError;
+use crate::parser::parse::ParseError::UnclosedString;
 
 const ESCAPE_CHAR: char = '\\';
 const STRING_LITERAL_TERMINATOR: char = '"';
@@ -25,7 +26,9 @@ pub fn parse_string(reader: &mut FileReader) -> Result<BasicSymbol, ParseError> 
         if escape {
             let char = get_escape_code(next);
             if char.is_none() {
-                return Err(reader.syntax_error(format!("unknown escape code '{next}'")));
+                return Err(
+                    ParseError::UnknownEscapeCode(reader.get_line_info_current(), next)
+                );
             }
             string.push(char.unwrap());
             escape = false;
@@ -46,9 +49,7 @@ pub fn parse_string(reader: &mut FileReader) -> Result<BasicSymbol, ParseError> 
     }
 
     if eof {
-        return Err(reader.syntax_error(format!(
-            "string literal started on line {start_line} not closed"
-        )));
+        return Err(UnclosedString(reader.get_line_info_current(), start_line));
     }
 
     Ok(BasicSymbol::Literal(Literal::String(string)))
