@@ -1,30 +1,16 @@
 fn main() ~ int {
     let c: int = 1;
 
-    while (c < 10) {
+    while (c == 1) {
         printi(c);
         c += 1;
     };
 
-    let c: int = 1;
+    let d: int = 1;
 
-    while (c <= 10) {
-        printi(c);
-        c += 1;
-    };
-
-    let c: int = 10;
-
-    while (c > 1) {
-        printi(c);
-        c -= 1;
-    };
-
-    let c: int = 10;
-
-    while (c >= 1) {
-        printi(c);
-        c -= 1;
+    while (d != 10) {
+        printi(d);
+        d += 1;
     };
 
     return c;

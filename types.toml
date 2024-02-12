@@ -25,3 +25,6 @@ IntGT=23
 IntG=24
 IntE=25
 IntGE=26
+IntEQ=27
+IntNEQ=28
+IntNE=29

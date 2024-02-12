@@ -522,7 +522,7 @@ fn process_lines(
                 ]));
 
                 if line.len() > 3 {
-                    return Err(ProcessorError::WhileMoreAfterBraces(line[4].1.clone()));
+                    return Err(ProcessorError::WhileMoreAfterBraces(line[3].1.clone()));
                 }
             }
             _ => {
