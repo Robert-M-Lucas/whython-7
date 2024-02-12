@@ -105,7 +105,7 @@ pub enum ProcessorError {
     WhileNoBraces(LineInfo),
     #[error("Error: While contents must be followed by semicolon\n{0}")]
     WhileMoreAfterBraces(LineInfo),
-    #[error("Error: Evaluable layout must be `[VALUE]`, `[PREFIX OPERATOR] [VALUE]`, or `[VALUE] [POSTFIX OPERATOR] [OTHER VALUE]`\n\0")]
+    #[error("Error: Evaluable layout must be `[VALUE]`, `[PREFIX OPERATOR] [VALUE]`, or `[VALUE] [POSTFIX OPERATOR] [OTHER VALUE]`\n{0}")]
     BadEvaluableLayout(LineInfo),
     #[error("Error: Expected evaluation to type '{1}' but found '{2}'\n{0}")]
     BadEvaluatedType(LineInfo, String, String),

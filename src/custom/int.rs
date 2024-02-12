@@ -173,8 +173,54 @@ impl TypedFunction for IntDiv {
         vec![
             format!("mov rax, [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
-            "div rcx".to_string(),
+            "cqo".to_string(),
+            "idiv rcx".to_string(),
             format!("mov [{}], rax", get_local_address(args[2])),
+        ]
+    }
+}
+
+#[derive(UniqueTypeId)]
+#[UniqueTypeIdType = "u16"]
+pub struct IntMod {}
+lazy_static! {
+    static ref INT_MOD_ARGS: [(String, isize); 2] = [
+        (String::from("lhs"), Int::get_id()),
+        (String::from("rhs"), Int::get_id())
+    ];
+}
+impl TypedFunction for IntMod {
+    fn get_id(&self) -> isize {
+        -(Self::id().0 as isize)
+    }
+
+    fn get_name(&self) -> &str {
+        "mod"
+    }
+
+    fn get_args(&self) -> &[(String, isize)] {
+        INT_MOD_ARGS.as_ref()
+    }
+
+    fn get_line(&self) -> LineInfo {
+        LineInfo::builtin()
+    }
+
+    fn get_return_type(&self) -> Option<isize> {
+        Some(Int::get_id())
+    }
+
+    fn is_inline(&self) -> bool {
+        true
+    }
+
+    fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
+        vec![
+            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rcx, [{}]", get_local_address(args[1])),
+            "cqo".to_string(),
+            "idiv rcx".to_string(),
+            format!("mov [{}], rdx", get_local_address(args[2])),
         ]
     }
 }

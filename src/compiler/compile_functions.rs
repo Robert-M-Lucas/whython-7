@@ -1084,6 +1084,7 @@ fn evaluate_operation(
                 Operator::Subtract => "sub",
                 Operator::Product => "mul",
                 Operator::Divide => "div",
+                Operator::Modulo => "mod",
                 Operator::Greater => "gt",
                 Operator::Less => "lt",
                 Operator::GreaterEqual => "ge",

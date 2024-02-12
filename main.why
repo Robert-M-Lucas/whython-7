@@ -1,21 +1,17 @@
-struct a {}
-impl a {
-    fn b(self) ~ int {
-        return 110;
-    }
-}
-
 fn main() ~ int {
-    let a: int = 6;
-    if (a == 4) {
-        printi(1);
-    }
-    elif (a == 5) {
-        printi(3);
-    }
-    else {
-        printi(6);
+    let i: int = 0;
+
+    while (i < 100) {
+        printi(i);
+        if ((i % 3) == 0) {
+            printb(true);
+        };
+        if ((i % 5) == 0) {
+            printb(false);
+        };
+        i += 1;
     };
-    return 1;
+
+    return 0;
 }
 

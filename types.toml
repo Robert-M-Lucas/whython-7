@@ -36,3 +36,6 @@ BNE=34
 BoNE=35
 BooNE=36
 BoolNE=37
+IntM=38
+IntMo=39
+IntMod=40

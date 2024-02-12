@@ -10,12 +10,13 @@ pub enum Operator {
     LessEqual,
     Equal,
     NotEqual,
+    Modulo,
     Or,
     And,
     Not,
 }
 
-pub const ALL_SYMBOLS: [char; 10] = ['+', '-', '*', '/', '>', '<', '=', '|', '&', '!'];
+pub const ALL_SYMBOLS: [char; 11] = ['+', '-', '*', '/', '>', '<', '=', '|', '&', '!', '%'];
 
 impl Operator {
     pub fn get_operator(string: &str) -> Option<Operator> {
@@ -33,6 +34,7 @@ impl Operator {
             "|" => Some(Operator::Or),
             "&" => Some(Operator::And),
             "!" => Some(Operator::Not),
+            "%" => Some(Operator::Modulo),
             _ => None,
         }
     }
