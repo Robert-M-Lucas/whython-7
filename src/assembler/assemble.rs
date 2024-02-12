@@ -18,18 +18,23 @@ pub fn generate_assembly(_output: &PathBuf, functions: Vec<Box<dyn Function>>) {
         out += &(f.get_asm());
     }
 
-    fs::write("output\\out.asm", out).unwrap();
+    if PathBuf::from("output").as_path().is_dir() {
+        fs::create_dir("output").expect("Failed to create output folder");
+    }
+    fs::write("output\\out.asm", out).expect("Failed to write assembly to file");
 }
 
 pub fn assemble() {
-    Command::new("nasm")
+    if !Command::new("nasm")
         .args(["-f", "win64", ".\\output\\out.asm"])
         .status()
-        .unwrap();
+        .unwrap().success() {
+        panic!("NASM assembler step failed");
+    }
 }
 
 pub fn link() {
-    Command::new("link")
+    if !Command::new("link")
         .args([
             "/entry:main",
             "/out:.\\output\\out.exe",
@@ -39,5 +44,7 @@ pub fn link() {
             ".\\libs\\kernel32.lib",
         ])
         .status()
-        .unwrap();
+        .unwrap().success() {
+        panic!("MSVC linking step failed");
+    }
 }
