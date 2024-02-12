@@ -20,3 +20,5 @@ IntL=18
 IntLE=19
 IntLe=20
 IntLT=21
+IntT=22
+IntGT=23

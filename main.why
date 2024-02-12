@@ -8,13 +8,3 @@ fn main() ~ int {
 
     return c;
 }
-
-impl int {
-    fn mul(lhs: int, rhs: int) ~ int {
-        while (0 < rhs) {
-            lhs += lhs;
-            rhs -= 1;
-        }
-        return lhs;
-    }
-}
