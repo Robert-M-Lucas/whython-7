@@ -247,7 +247,7 @@ impl TypedFunction for UserTypedFunction {
 }
 
 pub trait TypedFunction {
-    fn get_id(&self) -> isize;
+    fn get_id(&self) -> isize { panic!(); }
     fn get_name(&self) -> &str;
     fn get_args(&self) -> &[(String, isize)];
     fn get_line(&self) -> LineInfo;
@@ -264,9 +264,9 @@ pub trait TypedFunction {
     }
     fn get_return_type(&self) -> Option<isize>;
     fn is_inline(&self) -> bool;
-    fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)>;
-    fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)>;
-    fn get_inline(&self, args: Vec<isize>) -> Vec<String>;
+    fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)> { panic!() }
+    fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)> { panic!() }
+    fn get_inline(&self, args: Vec<isize>) -> Vec<String> { panic!(); }
 }
 
 // #[derive(Debug)]

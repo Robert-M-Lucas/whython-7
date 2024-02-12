@@ -18,6 +18,7 @@ pub fn get_custom_function_signatures() -> Vec<(Option<isize>, Box<dyn TypedFunc
         (Some(-1), Box::new(IntSub {})),
         (Some(-1), Box::new(IntMul {})),
         (Some(-1), Box::new(IntDiv {})),
+        (Some(-1), Box::new(IntLE {})),
         (Some(-2), Box::new(BoolNot {})),
     ]
 }
@@ -199,18 +200,6 @@ impl TypedFunction for PrintB {
     fn is_inline(&self) -> bool {
         false
     }
-
-    fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)> {
-        panic!()
-    }
-
-    fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)> {
-        panic!()
-    }
-
-    fn get_inline(&self, _args: Vec<isize>) -> Vec<String> {
-        panic!()
-    }
 }
 
 impl Function for PrintB {
@@ -290,14 +279,6 @@ impl TypedFunction for IntAdd {
         true
     }
 
-    fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)> {
-        panic!()
-    }
-
-    fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)> {
-        panic!()
-    }
-
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
             format!("mov rax, [{}]", get_local_address(args[0])),
@@ -341,14 +322,6 @@ impl TypedFunction for IntSub {
         true
     }
 
-    fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)> {
-        panic!()
-    }
-
-    fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)> {
-        panic!()
-    }
-
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
             format!("mov rax, [{}]", get_local_address(args[0])),
@@ -390,14 +363,6 @@ impl TypedFunction for IntMul {
 
     fn is_inline(&self) -> bool {
         true
-    }
-
-    fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)> {
-        panic!()
-    }
-
-    fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)> {
-        panic!()
     }
 
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
@@ -444,14 +409,6 @@ impl TypedFunction for IntDiv {
         true
     }
 
-    fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)> {
-        panic!()
-    }
-
-    fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)> {
-        panic!()
-    }
-
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
             format!("mov rax, [{}]", get_local_address(args[0])),
@@ -493,17 +450,10 @@ impl TypedFunction for BoolNot {
         true
     }
 
-    fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)> {
-        panic!()
-    }
-
-    fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)> {
-        panic!()
-    }
-
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
             format!("mov rax, [{}]", get_local_address(args[0])),
+            "cmp rax, 0".to_string(),
             "setz rax".to_string(),
             format!("mov [{}], rax", get_local_address(args[1])),
         ]
@@ -512,48 +462,44 @@ impl TypedFunction for BoolNot {
 
 #[derive(UniqueTypeId)]
 #[UniqueTypeIdType = "u16"]
-pub struct IntLT {}
+pub struct IntLE {}
 lazy_static! {
-    static ref INT_LT_ARGS: [(String, isize); 2] = [
+    static ref INT_LE_ARGS: [(String, isize); 2] = [
         (String::from("lhs"), Int {}.get_id()),
         (String::from("rhs"), Int {}.get_id())
     ];
 }
-// impl TypedFunction for IntLT {
-//     fn get_id(&self) -> isize {
-//         -(Self::id().0 as isize)
-//     }
-//
-//     fn get_name(&self) -> &str {
-//         "lt"
-//     }
-//
-//     fn get_args(&self) -> &[(String, isize)] {
-//         crate::compiler::custom_functions::BOOL_NOT_ARGS.as_ref()
-//     }
-//
-//     fn get_return_type(&self) -> Option<isize> {
-//         Some(Bool::get_id())
-//     }
-//
-//     fn is_inline(&self) -> bool {
-//         true
-//     }
-//
-//     fn contents(&self) -> &Vec<BasicSymbol> {
-//         panic!()
-//     }
-//
-//     fn take_contents(&mut self) -> Vec<BasicSymbol> {
-//         panic!()
-//     }
-//
-//     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
-//         vec![
-//             format!("mov rax, [{}]", get_local_address(args[0])),
-//             format!("mov rcx, [{}]", get_local_address(args[1])),
-//             "cmp rcx".to_string(),
-//             format!("mov [{}], rax", get_local_address(args[1])),
-//         ]
-//     }
-// }
+impl TypedFunction for IntLE {
+    fn get_id(&self) -> isize {
+        -(Self::id().0 as isize)
+    }
+
+    fn get_name(&self) -> &str {
+        "le"
+    }
+
+    fn get_args(&self) -> &[(String, isize)] {
+        INT_LE_ARGS.as_ref()
+    }
+
+    fn get_line(&self) -> LineInfo {
+        LineInfo::builtin()
+    }
+
+    fn get_return_type(&self) -> Option<isize> {
+        Some(Bool::get_id())
+    }
+
+    fn is_inline(&self) -> bool {
+        true
+    }
+
+    fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
+        vec![
+            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rcx, [{}]", get_local_address(args[1])),
+            "cmp rax, rcx".to_string(),
+            format!("setle [{}]", get_local_address(args[1])),
+        ]
+    }
+}

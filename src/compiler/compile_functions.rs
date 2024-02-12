@@ -974,6 +974,7 @@ fn evaluate_operation(
                         .to_string(),
                 ));
             }
+
             let output = if let Some(return_into) = return_into {
                 return_into
             } else {
@@ -1003,6 +1004,7 @@ fn evaluate_operation(
                     None,
                 )?
             };
+
             let func = function_holder.functions().get(&func_id).unwrap();
             if func.is_inline() {
                 lines.push(Line::InlineAsm(

@@ -1,10 +1,9 @@
 fn main() ~ int {
-    let c: bool = true;
+    let c: int = 1;
 
-    while (c) {
-        printi(1);
-        c = false;
+    while (c <= 10) {
+        printi(c);
     };
 
-    return 1;
+    return c;
 }
