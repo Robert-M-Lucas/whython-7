@@ -1,17 +1,14 @@
 fn main() ~ int {
     let i: int = 0;
-
-    while (i < 100) {
-        printi(i);
-        if ((i % 3) == 0) {
-            printb(true);
-        };
-        if ((i % 5) == 0) {
-            printb(false);
-        };
+    while (i < 25) {
+        printi(fibb(0, 1, i));
         i += 1;
     };
+    return fibb(0, 1, 21);
+}
 
-    return 0;
+fn fibb(a: int, b: int, n: int) ~ int {
+    if (n <= 0) { return a; };
+    return fibb(b, a + b, n - 1);
 }
 
