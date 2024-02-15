@@ -270,7 +270,7 @@ pub trait TypedFunction {
     fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)> {
         panic!()
     }
-    fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
+    fn get_inline(&self, _args: Vec<isize>) -> Vec<String> {
         panic!();
     }
 }

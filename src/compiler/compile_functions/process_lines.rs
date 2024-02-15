@@ -294,7 +294,7 @@ pub fn process_lines(
 
                 let mut i = 3;
                 let mut ended = false;
-                while line.len() >= i + 1 {
+                while line.len() > i {
                     lines.push(Line::InlineAsm(vec![
                         format!("jmp {}", end_label),
                         format!("{}:", next_label),

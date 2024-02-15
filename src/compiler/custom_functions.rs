@@ -1,7 +1,7 @@
 use crate::basic_ast::symbol::BasicSymbol;
 use crate::compiler::compile_functions::{Function, Line, UserFunction};
 use crate::compiler::generate_asm::{
-    compile_user_function, get_function_sublabel, get_local_address,
+    compile_user_function, get_function_sublabel,
 };
 use crate::custom::bool::{BoolEQ, BoolNE, BoolNot};
 use crate::custom::int::{
