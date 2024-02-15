@@ -1,5 +1,5 @@
 use crate::ast::operators::Operator;
-use crate::basic_ast::symbol::{BasicAbstractSyntaxTree};
+use crate::basic_ast::symbol::BasicAbstractSyntaxTree;
 use crate::compiler::compile_functions::{compile_functions, Function};
 use crate::parser::line_info::LineInfo;
 use crate::processor::preprocess::preprocess;

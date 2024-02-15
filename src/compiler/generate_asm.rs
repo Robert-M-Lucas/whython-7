@@ -66,7 +66,10 @@ pub fn compile_user_function(function: &UserFunction) -> String {
     let mut output = Output::new_with_name(function.id);
     output.push("push rbp");
     output.push("mov rbp, rsp");
-    output.push(&format!("sub rsp, {}", (function.local_variable_count * 8) + ((function.local_variable_count + 1) % 2) * 8));
+    output.push(&format!(
+        "sub rsp, {}",
+        (function.local_variable_count * 8) + ((function.local_variable_count + 1) % 2) * 8
+    ));
 
     let mut last_return = false;
     for line in &function.lines {

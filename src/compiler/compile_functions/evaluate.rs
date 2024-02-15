@@ -1,5 +1,7 @@
 use crate::basic_ast::symbol::BasicSymbol;
-use crate::compiler::compile_functions::{evaluate_symbol, FunctionHolder, Line, NameHandler, operators};
+use crate::compiler::compile_functions::{
+    evaluate_symbol, operators, FunctionHolder, Line, NameHandler,
+};
 use crate::parser::line_info::LineInfo;
 use crate::processor::processor::ProcessorError;
 
@@ -21,7 +23,13 @@ pub fn evaluate<'a>(
         )?
     } else if section.len() == 2 {
         let op = operators::evaluate_operator(&section[0])?;
-        let Some(value) = evaluate_symbol::evaluate_symbol(&section[1], lines, name_handler, function_holder, None)?
+        let Some(value) = evaluate_symbol::evaluate_symbol(
+            &section[1],
+            lines,
+            name_handler,
+            function_holder,
+            None,
+        )?
         else {
             return Err(ProcessorError::DoesntEvaluate(section[1].1.clone()));
         };
@@ -35,12 +43,24 @@ pub fn evaluate<'a>(
             return_into,
         )?
     } else if section.len() == 3 {
-        let Some(lhs) = evaluate_symbol::evaluate_symbol(&section[0], lines, name_handler, function_holder, None)?
+        let Some(lhs) = evaluate_symbol::evaluate_symbol(
+            &section[0],
+            lines,
+            name_handler,
+            function_holder,
+            None,
+        )?
         else {
             return Err(ProcessorError::DoesntEvaluate(section[0].1.clone()));
         };
         let op = operators::evaluate_operator(&section[1])?;
-        let Some(rhs) = evaluate_symbol::evaluate_symbol(&section[2], lines, name_handler, function_holder, None)?
+        let Some(rhs) = evaluate_symbol::evaluate_symbol(
+            &section[2],
+            lines,
+            name_handler,
+            function_holder,
+            None,
+        )?
         else {
             return Err(ProcessorError::DoesntEvaluate(section[2].1.clone()));
         };

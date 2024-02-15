@@ -1,8 +1,10 @@
-use either::{Left, Right};
 use crate::basic_ast::symbol::BasicSymbol;
-use crate::compiler::compile_functions::{call_function, evaluate, FunctionHolder, instantiate_literal, Line, NameHandler};
+use crate::compiler::compile_functions::{
+    call_function, evaluate, instantiate_literal, FunctionHolder, Line, NameHandler,
+};
 use crate::parser::line_info::LineInfo;
 use crate::processor::processor::ProcessorError;
+use either::{Left, Right};
 
 pub fn evaluate_symbol(
     symbol: &(BasicSymbol, LineInfo),

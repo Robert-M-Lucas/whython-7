@@ -4,9 +4,7 @@ use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol, NameType};
 
 use crate::parser::line_info::LineInfo;
 use crate::processor::processor::ProcessorError;
-use crate::processor::processor::ProcessorError::{
-    FnNoBraces,
-};
+use crate::processor::processor::ProcessorError::FnNoBraces;
 
 use std::vec::IntoIter;
 
@@ -184,7 +182,8 @@ fn parse_impl(
         let (symbol, symbol_line) = symbol.unwrap();
         match symbol {
             BasicSymbol::Keyword(Keyword::Fn) => {
-                let function = parse_fn(start_line_info.clone(), &mut contents, Some(name.0.clone()))?;
+                let function =
+                    parse_fn(start_line_info.clone(), &mut contents, Some(name.0.clone()))?;
                 let function = match function {
                     PreprocessSymbol::Fn(_, function) => function,
                     _ => panic!(),
@@ -236,7 +235,6 @@ fn parse_fn(
     let mut parameters_processed = Vec::new();
     let mut last_line = name_line;
 
-
     for parameter in parameters {
         let mut parameter = parameter.into_iter();
 
@@ -261,8 +259,7 @@ fn parse_fn(
             }
 
             (self_type.take().unwrap(), arg_line.clone())
-        }
-        else {
+        } else {
             let Some((colon, colon_line)) = parameter.next() else {
                 return Err(ProcessorError::NameTypeNotDefined(arg_line));
             };

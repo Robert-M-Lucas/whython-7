@@ -1,13 +1,13 @@
-use either::Left;
 use crate::ast::keywords::Keyword;
 use crate::basic_ast::punctuation::Punctuation;
 use crate::basic_ast::symbol::{BasicSymbol, NameType};
-use crate::compiler::compile_functions::{evaluate, FunctionHolder, Line, NameHandler, operators};
+use crate::compiler::compile_functions::{evaluate, operators, FunctionHolder, Line, NameHandler};
 use crate::compiler::generate_asm::{get_function_sublabel, get_local_address};
 use crate::parser::line_info::LineInfo;
 use crate::processor::custom_types::Bool;
 use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::Type;
+use either::Left;
 
 pub fn process_lines(
     section: &[(BasicSymbol, LineInfo)],
@@ -16,7 +16,7 @@ pub fn process_lines(
     lines: &mut Vec<Line>,
     name_handler: &mut NameHandler,
     function_holder: &FunctionHolder,
-    mut break_label: Option<String>
+    mut break_label: Option<String>,
 ) -> Result<bool, ProcessorError> {
     let mut last_return = false;
 
@@ -42,9 +42,14 @@ pub fn process_lines(
                         return Err(ProcessorError::NoAssignmentRHS(line[1].1.clone()));
                     }
                     if let Some(assigner) = assigner {
-                        let result =
-                            evaluate::evaluate(&line[2..], lines, name_handler, function_holder, None)?
-                                .ok_or(ProcessorError::DoesntEvaluate(line[2].1.clone()))?;
+                        let result = evaluate::evaluate(
+                            &line[2..],
+                            lines,
+                            name_handler,
+                            function_holder,
+                            None,
+                        )?
+                        .ok_or(ProcessorError::DoesntEvaluate(line[2].1.clone()))?;
                         operators::evaluate_operation(
                             variable,
                             (assigner, &line[1].1),
@@ -193,8 +198,9 @@ pub fn process_lines(
                 break_label = Some(end_label.clone());
 
                 lines.push(Line::InlineAsm(vec![format!("{}:", start_label)]));
-                let evaluated = evaluate::evaluate(expr, lines, name_handler, function_holder, None)?
-                    .ok_or(ProcessorError::DoesntEvaluate(line[1].1.clone()))?;
+                let evaluated =
+                    evaluate::evaluate(expr, lines, name_handler, function_holder, None)?
+                        .ok_or(ProcessorError::DoesntEvaluate(line[1].1.clone()))?;
                 lines.push(Line::InlineAsm(vec![
                     format!("mov rax, [{}]", get_local_address(evaluated.0)),
                     "cmp rax, 0".to_string(),
@@ -225,7 +231,7 @@ pub fn process_lines(
                     lines,
                     name_handler,
                     function_holder,
-                    break_label.clone()
+                    break_label.clone(),
                 )?;
                 lines.push(Line::InlineAsm(vec![
                     format!("jmp {}", start_label),
@@ -250,8 +256,9 @@ pub fn process_lines(
                 let end_label =
                     get_function_sublabel(current_id, &name_handler.get_uid().to_string());
 
-                let evaluated = evaluate::evaluate(expr, lines, name_handler, function_holder, None)?
-                    .ok_or(ProcessorError::DoesntEvaluate(line[1].1.clone()))?;
+                let evaluated =
+                    evaluate::evaluate(expr, lines, name_handler, function_holder, None)?
+                        .ok_or(ProcessorError::DoesntEvaluate(line[1].1.clone()))?;
                 if evaluated.1 != Bool::new().get_id() {
                     return Err(ProcessorError::BadConditionType(
                         line[1].1.clone(),
@@ -282,7 +289,7 @@ pub fn process_lines(
                     lines,
                     name_handler,
                     function_holder,
-                    break_label.clone()
+                    break_label.clone(),
                 )?;
 
                 let mut i = 3;
@@ -303,15 +310,23 @@ pub fn process_lines(
                             }
                             i += 1;
                             if line.len() <= i {
-                                return Err(ProcessorError::IfElifNoBrackets(line[i - 1].1.clone()));
+                                return Err(ProcessorError::IfElifNoBrackets(
+                                    line[i - 1].1.clone(),
+                                ));
                             }
 
                             let BasicSymbol::BracketedSection(expr) = &line[i].0 else {
                                 return Err(ProcessorError::IfElifNoBrackets(line[i].1.clone()));
                             };
 
-                            let evaluated = evaluate::evaluate(expr, lines, name_handler, function_holder, None)?
-                                .ok_or(ProcessorError::DoesntEvaluate(line[i].1.clone()))?;
+                            let evaluated = evaluate::evaluate(
+                                expr,
+                                lines,
+                                name_handler,
+                                function_holder,
+                                None,
+                            )?
+                            .ok_or(ProcessorError::DoesntEvaluate(line[i].1.clone()))?;
                             if evaluated.1 != Bool::new().get_id() {
                                 return Err(ProcessorError::BadConditionType(
                                     line[i].1.clone(),
@@ -330,8 +345,10 @@ pub fn process_lines(
                             ]));
 
                             i += 1;
-                            if line.len() <= i  {
-                                return Err(ProcessorError::IfElifElseNoBraces(line[i-1].1.clone()));
+                            if line.len() <= i {
+                                return Err(ProcessorError::IfElifElseNoBraces(
+                                    line[i - 1].1.clone(),
+                                ));
                             }
                             let BasicSymbol::BracedSection(inner) = &line[i].0 else {
                                 return Err(ProcessorError::IfElifElseNoBraces(line[i].1.clone()));
@@ -343,15 +360,17 @@ pub fn process_lines(
                                 lines,
                                 name_handler,
                                 function_holder,
-                                break_label.clone()
+                                break_label.clone(),
                             )?;
                             i += 1;
                         }
                         BasicSymbol::Keyword(Keyword::Else) => {
                             ended = true;
                             i += 1;
-                            if line.len() <= i  {
-                                return Err(ProcessorError::IfElifElseNoBraces(line[i-1].1.clone()));
+                            if line.len() <= i {
+                                return Err(ProcessorError::IfElifElseNoBraces(
+                                    line[i - 1].1.clone(),
+                                ));
                             }
                             let BasicSymbol::BracedSection(inner) = &line[i].0 else {
                                 return Err(ProcessorError::IfElifElseNoBraces(line[i].1.clone()));
@@ -363,20 +382,18 @@ pub fn process_lines(
                                 lines,
                                 name_handler,
                                 function_holder,
-                                break_label.clone()
+                                break_label.clone(),
                             )?;
                             i += 1;
                         }
-                        _ => {
-                            return Err(ProcessorError::ElseMoreAfterBraces(line[i].1.clone()))
-                        }
+                        _ => return Err(ProcessorError::ElseMoreAfterBraces(line[i].1.clone())),
                     }
                 }
 
                 println!("end");
                 lines.push(Line::InlineAsm(vec![
                     format!("{}:", next_label),
-                    format!("{}:", end_label)
+                    format!("{}:", end_label),
                 ]));
             }
             BasicSymbol::Keyword(Keyword::Elif | Keyword::Else) => {
@@ -384,9 +401,11 @@ pub fn process_lines(
             }
             BasicSymbol::Keyword(Keyword::Break) => {
                 if line.len() > 1 {
-                    return Err(ProcessorError::BreakLineNotEmpty(line[1].1.clone()))
+                    return Err(ProcessorError::BreakLineNotEmpty(line[1].1.clone()));
                 }
-                let Some(break_label) = &break_label else { return Err(ProcessorError::NothingToBreak(line[0].1.clone())); };
+                let Some(break_label) = &break_label else {
+                    return Err(ProcessorError::NothingToBreak(line[0].1.clone()));
+                };
                 lines.push(Line::InlineAsm(vec![format!("jmp {}", break_label)]));
             }
             _ => {

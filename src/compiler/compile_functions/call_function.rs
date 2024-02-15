@@ -17,30 +17,37 @@ pub fn call_function(
     name_handler.use_function(function);
     let target_args = function.get_args();
     let mut args_len = args.len();
-    if default_arg.is_some() { args_len += 1; }
+    if default_arg.is_some() {
+        args_len += 1;
+    }
 
     if args_len > target_args.len() {
-        return Err(ProcessorError::BadArgCount( // TODO: Bad line location
-            args[target_args.len() - (args_len - args.len())][0].1.clone(),
+        return Err(ProcessorError::BadArgCount(
+            // TODO: Bad line location
+            args[target_args.len() - (args_len - args.len())][0]
+                .1
+                .clone(),
             target_args.len(),
             args_len,
-            function.get_line()
+            function.get_line(),
         ));
     }
     if args_len < target_args.len() {
         if args.is_empty() {
-            return Err(ProcessorError::BadArgCount( // TODO: Bad line location
+            return Err(ProcessorError::BadArgCount(
+                // TODO: Bad line location
                 start_line.clone(),
                 target_args.len(),
                 args_len,
-                function.get_line()
+                function.get_line(),
             ));
         } else {
-            return Err(ProcessorError::BadArgCount( // TODO: Bad line location
-                args[args.len()-1].last().unwrap().1.clone(),
+            return Err(ProcessorError::BadArgCount(
+                // TODO: Bad line location
+                args[args.len() - 1].last().unwrap().1.clone(),
                 target_args.len(),
                 args_len,
-                function.get_line()
+                function.get_line(),
             ));
         }
     }
@@ -80,7 +87,7 @@ pub fn call_function(
                     .unwrap()
                     .get_name()
                     .to_string(),
-                function.get_line()
+                function.get_line(),
             ));
         }
         call_args.push((

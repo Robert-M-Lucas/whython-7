@@ -1,8 +1,8 @@
-use either::{Either, Left, Right};
 use crate::ast::literals::Literal;
 use crate::compiler::compile_functions::{FunctionHolder, Line, NameHandler};
 use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::Type;
+use either::{Either, Left, Right};
 
 fn try_instantiate_literal(
     literal: Either<(isize, isize), &Literal>,

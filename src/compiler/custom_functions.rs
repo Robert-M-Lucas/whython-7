@@ -3,13 +3,15 @@ use crate::compiler::compile_functions::{Function, Line, UserFunction};
 use crate::compiler::generate_asm::{
     compile_user_function, get_function_sublabel, get_local_address,
 };
+use crate::custom::bool::{BoolEQ, BoolNE, BoolNot};
+use crate::custom::int::{
+    IntAdd, IntDiv, IntEQ, IntGE, IntGT, IntLE, IntLT, IntMod, IntMul, IntNE, IntSub,
+};
 use crate::parser::line_info::LineInfo;
 use crate::processor::custom_types::{Bool, Int};
 use crate::processor::type_builder::{Type, TypedFunction};
 use lazy_static::lazy_static;
 use unique_type_id::UniqueTypeId;
-use crate::custom::bool::{BoolEQ, BoolNE, BoolNot};
-use crate::custom::int::{IntAdd, IntDiv, IntEQ, IntGE, IntGT, IntLE, IntLT, IntMod, IntMul, IntNE, IntSub};
 
 pub fn get_custom_function_signatures() -> Vec<(Option<isize>, Box<dyn TypedFunction>)> {
     vec![

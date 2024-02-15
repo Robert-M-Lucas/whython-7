@@ -1,14 +1,12 @@
-use either::Right;
 use crate::ast::operators::Operator;
 use crate::basic_ast::symbol::BasicSymbol;
-use crate::compiler::compile_functions::{FunctionHolder, instantiate_literal, Line, NameHandler};
+use crate::compiler::compile_functions::{instantiate_literal, FunctionHolder, Line, NameHandler};
 use crate::parser::line_info::LineInfo;
 use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::{Type, TypedFunction};
+use either::Right;
 
-pub fn evaluate_operator(
-    symbol: &(BasicSymbol, LineInfo),
-) -> Result<&Operator, ProcessorError> {
+pub fn evaluate_operator(symbol: &(BasicSymbol, LineInfo)) -> Result<&Operator, ProcessorError> {
     match &symbol.0 {
         BasicSymbol::Operator(operator) => Ok(operator),
         _ => Err(ProcessorError::BadEvaluableLayout(symbol.1.clone())),

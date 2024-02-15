@@ -28,7 +28,9 @@ pub fn assemble() {
     if !Command::new("nasm")
         .args(["-f", "win64", "./output/out.asm"])
         .status()
-        .unwrap().success() {
+        .unwrap()
+        .success()
+    {
         panic!("NASM assembler step failed");
     }
 }
@@ -44,7 +46,9 @@ pub fn link() {
             ".\\libs\\kernel32.lib",
         ])
         .status()
-        .unwrap().success() {
+        .unwrap()
+        .success()
+    {
         panic!("MSVC linking step failed");
     }
 }

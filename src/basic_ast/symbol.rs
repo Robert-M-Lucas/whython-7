@@ -4,7 +4,6 @@ use crate::ast::operators::Operator;
 use crate::basic_ast::punctuation::Punctuation;
 use crate::parser::line_info::LineInfo;
 
-
 pub type BasicAbstractSyntaxTree = Vec<(BasicSymbol, LineInfo)>;
 
 #[derive(PartialEq, Clone, strum_macros::Display, Debug)]

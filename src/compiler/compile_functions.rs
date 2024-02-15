@@ -1,10 +1,9 @@
-mod process_lines;
+mod call_function;
 mod evaluate;
 mod evaluate_symbol;
-mod call_function;
-mod operators;
 mod instantiate_literal;
-
+mod operators;
+mod process_lines;
 
 use crate::basic_ast::symbol::{BasicSymbol, NameAccessType, NameType};
 use crate::compiler::custom_functions::{
@@ -13,7 +12,7 @@ use crate::compiler::custom_functions::{
 use crate::compiler::generate_asm::compile_user_function;
 use crate::parser::line_info::LineInfo;
 use crate::processor::processor::ProcessorError;
-use crate::processor::type_builder::{Type, TypedFunction, TypeTable};
+use crate::processor::type_builder::{Type, TypeTable, TypedFunction};
 use either::{Either, Left, Right};
 use std::collections::{HashMap, HashSet};
 
@@ -68,9 +67,9 @@ impl FunctionHolder {
         _type: Option<isize>,
         name: &str,
     ) -> Option<&Box<dyn TypedFunction>> {
-        self.functions_table.get(&_type).and_then(|x| {
-            x.get(name).map(|x| self.functions.get(x).unwrap())
-        })
+        self.functions_table
+            .get(&_type)
+            .and_then(|x| x.get(name).map(|x| self.functions.get(x).unwrap()))
     }
 
     pub fn functions(&self) -> &HashMap<isize, Box<dyn TypedFunction>> {
@@ -127,7 +126,11 @@ impl NameHandler {
         self.local_variables_size
     }
 
-    pub fn add_local_variable(&mut self, name: Option<String>, _type: isize) -> Result<isize, ProcessorError> {
+    pub fn add_local_variable(
+        &mut self,
+        name: Option<String>,
+        _type: isize,
+    ) -> Result<isize, ProcessorError> {
         let size = self
             .type_table
             .get_type(_type)
@@ -277,7 +280,7 @@ pub fn compile_functions(
             &mut lines,
             &mut name_handler,
             &function_holder,
-            None
+            None,
         )?;
 
         if return_type.is_some() && !last_return {

@@ -1,9 +1,7 @@
 use crate::processor::preprocess::{PreProcessFunction, PreprocessSymbol};
 use crate::processor::processor::ProcessorError;
 
-
-
-use std::collections::{HashMap};
+use std::collections::HashMap;
 
 use crate::ast::literals::Literal;
 use crate::basic_ast::symbol::BasicSymbol;
@@ -247,7 +245,9 @@ impl TypedFunction for UserTypedFunction {
 }
 
 pub trait TypedFunction {
-    fn get_id(&self) -> isize { panic!(); }
+    fn get_id(&self) -> isize {
+        panic!();
+    }
     fn get_name(&self) -> &str;
     fn get_args(&self) -> &[(String, isize)];
     fn get_line(&self) -> LineInfo;
@@ -264,9 +264,15 @@ pub trait TypedFunction {
     }
     fn get_return_type(&self) -> Option<isize>;
     fn is_inline(&self) -> bool;
-    fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)> { panic!() }
-    fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)> { panic!() }
-    fn get_inline(&self, args: Vec<isize>) -> Vec<String> { panic!(); }
+    fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)> {
+        panic!()
+    }
+    fn take_contents(&mut self) -> Vec<(BasicSymbol, LineInfo)> {
+        panic!()
+    }
+    fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
+        panic!();
+    }
 }
 
 // #[derive(Debug)]
@@ -369,7 +375,9 @@ pub fn build_types(
                 let type_id = type_table
                     .get_id_by_name(&type_name)
                     .ok_or(ProcessorError::BadImplType(line))?;
-                fn_name_map.entry(Some(type_id)).or_insert_with(HashMap::new);
+                fn_name_map
+                    .entry(Some(type_id))
+                    .or_insert_with(HashMap::new);
                 for (function, line) in functions {
                     fn_name_map
                         .get_mut(&Some(type_id))
