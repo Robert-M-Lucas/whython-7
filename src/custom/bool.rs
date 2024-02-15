@@ -1,6 +1,6 @@
 use lazy_static::lazy_static;
 use unique_type_id::UniqueTypeId;
-use crate::compiler::default::get_local_address;
+use crate::compiler::generate_asm::get_local_address;
 use crate::parser::line_info::LineInfo;
 use crate::processor::custom_types::Bool;
 use crate::processor::type_builder::TypedFunction;

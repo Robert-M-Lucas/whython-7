@@ -1,5 +1,5 @@
 use crate::ast::literals::Literal;
-use crate::compiler::default::get_local_address;
+use crate::compiler::generate_asm::get_local_address;
 use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::{Type, TypeTable};
 

@@ -11,9 +11,9 @@ mod assembler;
 mod ast;
 mod basic_ast;
 mod compiler;
+mod custom;
 mod parser;
 mod processor;
-mod custom;
 
 // TODO: Handle circular imports
 

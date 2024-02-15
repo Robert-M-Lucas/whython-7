@@ -1,6 +1,6 @@
 use crate::basic_ast::symbol::BasicSymbol;
 use crate::compiler::compile_functions::{Function, Line, UserFunction};
-use crate::compiler::default::{
+use crate::compiler::generate_asm::{
     compile_user_function, get_function_sublabel, get_local_address,
 };
 use crate::parser::line_info::LineInfo;
@@ -81,7 +81,7 @@ impl TypedFunction for WindowsExit {
         vec![
             format!(
                 "mov rcx, [{}]",
-                crate::compiler::default::get_local_address(args[0])
+                crate::compiler::generate_asm::get_local_address(args[0])
             ),
             "call ExitProcess".to_string(),
         ]
