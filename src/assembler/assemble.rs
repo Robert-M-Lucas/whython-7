@@ -14,7 +14,7 @@ pub fn generate_assembly(_output: &PathBuf, functions: Vec<Box<dyn Function>>) {
     section .text\n",
     );
     for f in functions {
-        out.push('\n');
+        out += "\r\n";
         out += &(f.get_asm());
     }
 

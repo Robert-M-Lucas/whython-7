@@ -1,1 +1,3 @@
-"This is test.why"
+fn extern() {
+    printi(101);
+}
