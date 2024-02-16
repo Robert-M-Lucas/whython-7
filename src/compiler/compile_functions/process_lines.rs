@@ -243,7 +243,6 @@ pub fn process_lines(
                 }
             }
             BasicSymbol::Keyword(Keyword::If) => {
-                println!("started");
                 if line.len() < 2 {
                     return Err(ProcessorError::IfElifNoBrackets(line[0].1.clone()));
                 }
@@ -275,7 +274,6 @@ pub fn process_lines(
                     "cmp rax, 0".to_string(),
                     format!("jnz {}", next_label),
                 ]));
-                println!("jnz");
                 if line.len() < 3 {
                     return Err(ProcessorError::IfElifElseNoBraces(line[1].1.clone()));
                 }
@@ -390,7 +388,6 @@ pub fn process_lines(
                     }
                 }
 
-                println!("end");
                 lines.push(Line::InlineAsm(vec![
                     format!("{}:", next_label),
                     format!("{}:", end_label),

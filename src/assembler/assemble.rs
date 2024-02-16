@@ -52,3 +52,19 @@ pub fn link() {
         panic!("MSVC linking step failed");
     }
 }
+
+pub fn link_gcc_experimental() {
+    if !Command::new("x86_64-w64-mingw32-gcc")
+        .args([
+            "./output/out.obj",
+            "./libs/kernel32.lib",
+            "-o",
+            "./output/out.exe"
+        ])
+        .status()
+        .unwrap()
+        .success()
+    {
+        panic!("gcc linking step failed");
+    }
+}

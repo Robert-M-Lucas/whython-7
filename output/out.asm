@@ -39,6 +39,45 @@ __4:
 	leave
 	ret
 
+_1:
+	push rbp
+	mov rbp, rsp
+	sub rsp, 8
+	mov qword [rbp-8], 101
+	mov rax, qword [rbp-8]
+	push rax
+	call __4
+	add rsp, 8
+	leave
+	ret
+
+_6:
+	push rbp
+	mov rbp, rsp
+	sub rsp, 40
+	mov qword [rbp-8], 0
+	mov rax, [rbp+16]
+	cmp rax, 0
+	jnz .6.0
+	mov qword [rbp-16], 1
+	mov rax, [rbp-8]
+	add rax, [rbp-16]
+	mov [rbp-8], rax
+	.6.0:
+	.6.1:
+	mov rax, [rbp+24]
+	cmp rax, 0
+	jnz .6.2
+	mov qword [rbp-24], 1
+	mov rax, [rbp-8]
+	add rax, [rbp-24]
+	mov [rbp-8], rax
+	.6.2:
+	.6.3:
+	mov rax, [rbp-8]
+	leave
+	ret
+
 _4:
 	push rbp
 	mov rbp, rsp
@@ -73,18 +112,6 @@ _4:
 	add rsp, 24
 	mov qword [rbp-32], rax
 	mov rax, [rbp-32]
-	leave
-	ret
-
-_1:
-	push rbp
-	mov rbp, rsp
-	sub rsp, 8
-	mov qword [rbp-8], 101
-	mov rax, qword [rbp-8]
-	push rax
-	call __4
-	add rsp, 8
 	leave
 	ret
 
@@ -178,30 +205,3 @@ main:
 	mov qword [rbp-136], rax
 	mov rcx, [rbp-136]
 	call ExitProcess
-
-_6:
-	push rbp
-	mov rbp, rsp
-	sub rsp, 40
-	mov qword [rbp-8], 0
-	mov rax, [rbp+16]
-	cmp rax, 0
-	jnz .6.0
-	mov qword [rbp-16], 1
-	mov rax, [rbp-8]
-	add rax, [rbp-16]
-	mov [rbp-8], rax
-	.6.0:
-	.6.1:
-	mov rax, [rbp+24]
-	cmp rax, 0
-	jnz .6.2
-	mov qword [rbp-24], 1
-	mov rax, [rbp-8]
-	add rax, [rbp-24]
-	mov [rbp-8], rax
-	.6.2:
-	.6.3:
-	mov rax, [rbp-8]
-	leave
-	ret

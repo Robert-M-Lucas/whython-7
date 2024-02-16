@@ -1,4 +1,4 @@
-use crate::assembler::assemble::{assemble, generate_assembly, link};
+use crate::assembler::assemble::{assemble, generate_assembly, link, link_gcc_experimental};
 
 use crate::parser::parse::parse;
 use crate::processor::processor::process;
@@ -59,14 +59,32 @@ fn main() {
         println!("Executing...");
         time!(run());
     }
-    #[cfg(not(target_os = "windows"))]
-    println!("Linking and execution omitted due to unsupported platform")
+    #[cfg(target_os = "linux")]
+    {
+        println!("Linking and execution might be buggy due to Linux being unsupported");
+        println!("Linking (gcc)...");
+        link_gcc_experimental();
+        println!("Executing (wine)...");
+        run_win_experimental();
+    }
 }
 
 fn run() {
     println!(
         "\nExited with return code {}",
         Command::new(".\\output\\out.exe")
+            .status()
+            .unwrap()
+            .code()
+            .unwrap()
+    )
+}
+
+fn run_win_experimental() {
+    println!(
+        "\nExited with return code {}",
+        Command::new("wine")
+            .args(["./output/out.exe"])
             .status()
             .unwrap()
             .code()
