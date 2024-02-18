@@ -1,4 +1,4 @@
-IntDiv=0
+_=0
 IntMul=1
 IntSub=2
 IntAdd=3
@@ -39,3 +39,4 @@ BoolNE=37
 IntM=38
 IntMo=39
 IntMod=40
+IntDiv=41

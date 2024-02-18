@@ -41,7 +41,7 @@ pub fn link() {
             "/entry:main",
             "/out:.\\output\\out.exe",
             "/SUBSYSTEM:CONSOLE",
-            "/LARGEADDRESSAWARE:NO",
+            // "/LARGEADDRESSAWARE:NO",
             ".\\output\\out.obj",
             ".\\libs\\kernel32.lib",
         ])

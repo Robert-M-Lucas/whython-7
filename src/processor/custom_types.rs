@@ -98,10 +98,11 @@ impl Type for Int {
             panic!()
         };
 
-        Ok(vec![format!(
-            "mov qword [{}], {}",
+        Ok(vec![
+            format!("mov rax, qword {}", *val),
+            format!(
+            "mov qword [{}], rax",
             get_local_address(local_address),
-            *val
         )])
     }
 }

@@ -26,6 +26,7 @@ pub enum Line {
 
 pub struct UserFunction {
     pub id: isize,
+    pub name: String,
     pub local_variable_count: usize,
     pub arg_count: usize,
     pub lines: Vec<Line>,
@@ -268,6 +269,7 @@ pub fn compile_functions(
 
     for (id, contents) in function_contents {
         let function = function_holder.functions.get(&id).unwrap();
+        let name = function.get_name().to_string();
         name_handler.reset();
         name_handler.set_args(function.get_args_positioned(name_handler.type_table()));
         let return_type = function.get_return_type();
@@ -297,6 +299,7 @@ pub fn compile_functions(
                 .get_args()
                 .len(),
             lines,
+            name
         }));
     }
 

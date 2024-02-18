@@ -65,22 +65,24 @@ fn main() {
         println!("Linking (gcc)...");
         link_gcc_experimental();
         println!("Executing (wine)...");
-        run_win_experimental();
+        run_wine_experimental();
     }
 }
 
 fn run() {
+    let code = Command::new(".\\output\\out.exe")
+        .status()
+        .unwrap()
+        .code()
+        .unwrap();
     println!(
-        "\nExited with return code {}",
-        Command::new(".\\output\\out.exe")
-            .status()
-            .unwrap()
-            .code()
-            .unwrap()
+        "\nExited with return code {} ({:?})",
+        code,
+        code % 16 == 0
     )
 }
 
-fn run_win_experimental() {
+fn run_wine_experimental() {
     println!(
         "\nExited with return code {}",
         Command::new("wine")
