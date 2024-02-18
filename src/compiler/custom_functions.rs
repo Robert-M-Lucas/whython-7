@@ -150,7 +150,7 @@ impl Function for PrintI {
                 "mov dword [rbp-4], `\\0\\0\\0\\n`".to_string(),
                 "cmp rax, 0".to_string(),
                 format!(
-                    "jg {}",
+                    "jge {}",
                     get_function_sublabel(TypedFunction::get_id(self), "positive")
                 ),
                 "mov dword [rbp-20], \"-\"".to_string(),
