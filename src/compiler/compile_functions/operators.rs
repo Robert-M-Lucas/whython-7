@@ -4,7 +4,10 @@ use crate::compiler::compile_functions::{instantiate_literal, FunctionHolder, Li
 use crate::parser::line_info::LineInfo;
 use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::{Type, TypedFunction};
-use either::Right;
+use either::{Left, Right};
+use crate::ast::literals::Literal;
+use crate::compiler::compile_functions::instantiate_literal::instantiate_literal;
+use crate::processor::custom_types::Int;
 
 pub fn evaluate_operator(symbol: &(BasicSymbol, LineInfo)) -> Result<&Operator, ProcessorError> {
     match &symbol.0 {
@@ -87,10 +90,17 @@ pub fn evaluate_operation(
             output
         }
         op_ => {
-            let rhs = rhs.ok_or(ProcessorError::BadOperatorPosition(
-                op.1.clone(),
-                op.0.clone(),
-            ))?;
+            let (lhs, rhs) = if matches!(op_, Operator::Subtract) && rhs.is_none() && lhs.1 == Int::get_id() {
+                (instantiate_literal(Left(&Literal::Int(0)), lines, name_handler, function_holder, None).unwrap(), lhs)
+            } else {
+                (lhs,
+                rhs.ok_or(ProcessorError::BadOperatorPosition(
+                    op.1.clone(),
+                    op.0.clone(),
+                ))?)
+            };
+
+
             let func_name = match op_ {
                 Operator::Add => "add",
                 Operator::Subtract => "sub",
