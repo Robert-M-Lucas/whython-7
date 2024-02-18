@@ -264,6 +264,7 @@ impl TypedFunction for IntLT {
             format!("mov rax, [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cmp rcx, rax".to_string(),
+            format!("mov qword [{}], 0", get_local_address(args[2])),
             format!("setle [{}]", get_local_address(args[2])),
         ]
     }
@@ -308,6 +309,7 @@ impl TypedFunction for IntGT {
             format!("mov rax, [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cmp rax, rcx".to_string(),
+            format!("mov qword [{}], 0", get_local_address(args[2])),
             format!("setle [{}]", get_local_address(args[2])),
         ]
     }
@@ -352,6 +354,7 @@ impl TypedFunction for IntLE {
             format!("mov rax, [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cmp rax, rcx".to_string(),
+            format!("mov qword [{}], 0", get_local_address(args[2])),
             format!("setnle [{}]", get_local_address(args[2])),
         ]
     }
@@ -396,6 +399,7 @@ impl TypedFunction for IntGE {
             format!("mov rax, [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cmp rcx, rax".to_string(),
+            format!("mov qword [{}], 0", get_local_address(args[2])),
             format!("setnle [{}]", get_local_address(args[2])),
         ]
     }
@@ -440,6 +444,7 @@ impl TypedFunction for IntEQ {
             format!("mov rax, [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cmp rcx, rax".to_string(),
+            format!("mov qword [{}], 0", get_local_address(args[2])),
             format!("setnz [{}]", get_local_address(args[2])),
         ]
     }
@@ -484,6 +489,7 @@ impl TypedFunction for IntNE {
             format!("mov rax, [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cmp rcx, rax".to_string(),
+            format!("mov qword [{}], 0", get_local_address(args[2])),
             format!("setz [{}]", get_local_address(args[2])),
         ]
     }

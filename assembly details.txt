@@ -1,6 +1,0 @@
-        mov     DWORD ptr [rbp-20], edi
-        mov     DWORD ptr [rbp-24], esi
-        mov     DWORD ptr [rbp-28], edx
-        mov     DWORD ptr [rbp-32], ecx
-        mov     DWORD ptr [rbp-36], r8d
-        mov     DWORD ptr [rbp-40], r9d
