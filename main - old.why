@@ -9,7 +9,7 @@ fn main() ~ int {
     extern();
 
     let i: int = 0;
-    while (i < 20) {
+    while (i < 90) {
         printi(fibb(0, 1, i));
         i += 1;
     };
@@ -17,7 +17,6 @@ fn main() ~ int {
 }
 
 fn fibb(a: int, b: int, n: int) ~ int {
-    printi(a);
     if (n <= 0) { return a; };
     return fibb(b, a + b, n - 1);
 }
