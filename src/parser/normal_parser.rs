@@ -3,8 +3,9 @@ use crate::ast::literals::Literal;
 use crate::ast::operators;
 use crate::ast::operators::Operator;
 use crate::basic_ast::punctuation::Punctuation;
-use crate::basic_ast::symbol::{BasicSymbol, NameAccessType, NameType};
+use crate::basic_ast::symbol::{BasicSymbol, NAME_VALID_CHARS, NameAccessType, NameType};
 use crate::parser::file_reader::FileReader;
+use crate::parser::initialiser_parser::parse_initialiser;
 use crate::parser::line_info::LineInfo;
 use crate::parser::parse::{BlockType, ParseError};
 use crate::parser::string_parser::parse_string;
@@ -201,6 +202,11 @@ pub fn parse_normal(
             continue;
         }
 
+        if next == '@' && buffer.is_empty() {
+            parse_initialiser(&mut symbols, reader)?;
+            continue;
+        }
+
         if buffer.is_empty() {
             reader.checkpoint();
         }
@@ -274,6 +280,12 @@ fn process_buffer(
             continue;
         }
 
+        if !NAME_VALID_CHARS.contains(&c) {
+            let mut utf8 = Vec::with_capacity(c.len_utf8());
+            for _ in 0..c.len_utf8() { utf8.push(0); }
+            c.encode_utf8(&mut utf8);
+            return Err(ParseError::BadName(reader.get_line_info(), c, utf8))
+        }
         section_buffer.push(c);
     }
 

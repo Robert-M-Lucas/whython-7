@@ -1,9 +1,10 @@
-mod test.why;
+struct A {
+    b: int
+}
 
 fn main() ~ int {
-    let a: int = 1;
-    let a: int = 2;
-    let a: bool = false;
-    printb(a);
-    return -7;
+    let c: A = @A{
+        1,
+        3,
+    };
 }

@@ -4,3 +4,4 @@ pub mod line_info;
 mod normal_parser;
 pub mod parse;
 mod string_parser;
+mod initialiser_parser;

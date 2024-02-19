@@ -31,7 +31,10 @@ pub enum BasicSymbol {
     Punctuation(Punctuation),
     Keyword(Keyword),
     Name(Vec<(String, NameAccessType, NameType)>),
+    Initialiser(String, Vec<Vec<(BasicSymbol, LineInfo)>>)
 }
+
+pub const NAME_VALID_CHARS: [char; 63] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 
 impl BasicSymbol {
     pub fn get_name_contents(&self) -> &Vec<(String, NameAccessType, NameType)> {
@@ -57,6 +60,7 @@ impl BasicSymbol {
             }
             BasicSymbol::Name(_) => "Name".to_string(),
             BasicSymbol::Keyword(_) => "Keyword".to_string(),
+            BasicSymbol::Initialiser(_, _) => "Initialiser".to_string()
         }
     }
 }

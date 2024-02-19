@@ -31,6 +31,14 @@ pub enum ParseError {
     UnclosedString(LineInfo, usize),
     #[error("Error: Closing '{1}' found with no corresponding opening bracket\n{0}")]
     NoOpening(LineInfo, char),
+    #[error("Error: Names cannot contain character '{1}' (UTF-8 Code: {2:?})\n{0}")]
+    BadName(LineInfo, char, Vec<u8>),
+    #[error("Initialiser must specify a type after '@'")]
+    NoInitialiserType(LineInfo),
+    #[error("Error: Initialiser type must be followed by braces containing attribute values\n{0}")]
+    NoInitialiserContents(LineInfo),
+    #[error("Error: Attribute cannot be empty (must be a value between commas)\n{0}")]
+    NoInitialiserAttribute(LineInfo)
 }
 
 pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(), ParseError> {

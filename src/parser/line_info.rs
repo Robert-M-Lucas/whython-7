@@ -50,7 +50,7 @@ impl Display for LineInfo {
 
         let mut changed_end = false;
         let mut end = line.chars().count() - 1;
-        if line.len() - self.char_start > 10 {
+        if line.chars().count() - self.char_start > 10 {
             end = self.char_start + 10;
             changed_end = true;
         }
@@ -58,13 +58,14 @@ impl Display for LineInfo {
         if changed_start {
             write!(f, "... ")?;
         }
+
         write!(
             f,
             "{}",
             &line[line.char_indices().nth(start).unwrap().0
                 ..line.char_indices().nth(end).unwrap().0]
         )?;
-        if changed_start {
+        if changed_end {
             write!(f, " ...")?;
         }
         writeln!(f)?;
