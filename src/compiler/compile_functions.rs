@@ -182,6 +182,7 @@ impl NameHandler {
                     if let Some((_, addr, _type)) = self
                         .local_variables
                         .iter()
+                        .rev()
                         .chain(self.args.iter())
                         .find(|(n, _, _)| n == name)
                     {

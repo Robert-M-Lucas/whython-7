@@ -47,21 +47,45 @@ __4: ; printi
 	leave
 	ret
 
+__14: ; printb
+	push rbp
+	mov rbp, rsp
+	sub rsp, 64
+	mov qword [rbp-16], "true"
+	mov qword [rbp-8], `\n\r`
+	mov rax, [rbp+16]
+	cmp rax, 0
+	jz ._14.true
+	mov qword [rbp-16], "fals"
+	mov qword [rbp-8], `e\n\r`
+	._14.true:
+	mov ecx, -11
+	call GetStdHandle
+	mov rcx, rax
+	mov rdx, rbp
+	sub rdx, 16
+	mov r8, 16
+	mov qword [rbp - 24], 0
+	mov r9, rbp
+	sub r9, 24
+	mov qword [rbp - 32], 0
+	call WriteFile
+	leave
+	ret
+
 main: ; main
 	push rbp
 	mov rbp, rsp
 	sub rsp, 48
 	mov rax, qword 1
 	mov qword [rbp-8], rax
-	mov rax, qword 0
+	mov rax, qword 2
 	mov qword [rbp-16], rax
-	mov rax, [rbp-16]
-	sub rax, [rbp-8]
-	mov [rbp-24], rax
+	mov qword [rbp-24], 1
 	push qword 0
 	mov rax, qword [rbp-24]
 	push rax
-	call __4
+	call __14
 	add rsp, 16
 	mov rax, qword 7
 	mov qword [rbp-40], rax

@@ -51,6 +51,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "b-box"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "79a7873ba5be66516cc71605969989bea6de94f2a3b5215bcd8c60169ce2e268"
+
+[[package]]
 name = "bitflags"
 version = "2.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -254,6 +260,7 @@ checksum = "711b9620af191e0cdc7468a8d14e709c3dcdb115b36f838e601583af800a370a"
 name = "whython-7"
 version = "0.1.0"
 dependencies = [
+ "b-box",
  "bitflags",
  "bytes",
  "clap",

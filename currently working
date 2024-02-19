@@ -6,18 +6,16 @@ Working
 - return
 - while
 - break
+- if/elif/else
 - int type w/ most operators
 - bool type w/ some operator
 - variable initialisation
 - variable assignments
-- printi w/ small numbers
-- printb truncated
+- recursion
+- showing
 
 Silent Fail
-- printi w/ large numbers
-- full printb output
-- shadowing
+- None (yet :D)
 
 Error
 - instantiating custom structs
-- if/elif/else

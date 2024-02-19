@@ -1,6 +1,9 @@
 mod test.why;
 
 fn main() ~ int {
-    printi(-1);
+    let a: int = 1;
+    let a: int = 2;
+    let a: bool = false;
+    printb(a);
     return -7;
 }
