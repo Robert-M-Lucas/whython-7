@@ -60,13 +60,14 @@ pub fn process_lines(
                             Some(variable),
                         )?;
                     } else {
+                        println!("{:?}, {:?}", variable,
                         evaluate::evaluate(
                             &line[2..],
                             lines,
                             name_handler,
                             function_holder,
                             Some(variable),
-                        )?;
+                        )?);
                     }
 
                     continue;

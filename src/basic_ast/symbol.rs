@@ -30,8 +30,7 @@ pub enum BasicSymbol {
     SquareBracketedSection(Vec<(BasicSymbol, LineInfo)>),
     Punctuation(Punctuation),
     Keyword(Keyword),
-    Name(Vec<(String, NameAccessType, NameType)>),
-    Initialiser(String, Vec<Vec<(BasicSymbol, LineInfo)>>)
+    Name(Vec<(String, NameAccessType, NameType)>)
 }
 
 pub const NAME_VALID_CHARS: [char; 63] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
@@ -49,7 +48,7 @@ impl BasicSymbol {
     pub fn instead_found(&self) -> String {
         match &self {
             BasicSymbol::AbstractSyntaxTree(_) => panic!(),
-            BasicSymbol::Literal(_literal) => "Literal".to_string(),
+            BasicSymbol::Literal(_literal) => "Literal (or initialiser)".to_string(),
             BasicSymbol::Operator(_) => "Operator".to_string(),
             BasicSymbol::Assigner(_) => "Assigner".to_string(),
             BasicSymbol::BracedSection(_) => "BracedSection".to_string(),
@@ -60,7 +59,6 @@ impl BasicSymbol {
             }
             BasicSymbol::Name(_) => "Name".to_string(),
             BasicSymbol::Keyword(_) => "Keyword".to_string(),
-            BasicSymbol::Initialiser(_, _) => "Initialiser".to_string()
         }
     }
 }

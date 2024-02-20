@@ -1,9 +1,13 @@
-#[derive(PartialEq, Clone, strum_macros::Display, Debug)]
+use crate::basic_ast::symbol::BasicSymbol;
+use crate::parser::line_info::LineInfo;
+
+#[derive(Clone, strum_macros::Display, Debug)]
 pub enum Literal {
     String(String),
     Char(char),
     Int(i128),
     Bool(bool),
+    Initialiser(String, Vec<Vec<(BasicSymbol, LineInfo)>>),
     None,
 }
 

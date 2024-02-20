@@ -81,11 +81,19 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 }
                 // Push args to stack
                 for (local_addr, _size) in local_args.iter().rev() {
-                    output.push(&format!(
-                        "mov rax, qword [{}]",
-                        get_local_address(*local_addr)
-                    ));
-                    output.push("push rax");
+                    let mut local_addr = *local_addr;
+                    let mut size = *_size as isize;
+                    local_addr += size;
+                    local_addr -= 8;
+                    while size > 0 {
+                        output.push(&format!(
+                            "mov rax, qword [{}]",
+                            get_local_address(local_addr)
+                        ));
+                        output.push("push rax");
+                        local_addr -= 8;
+                        size -= 8;
+                    }
                 }
                 // Call
                 output.push(&format!("call {}", get_function_name(*function)));
@@ -106,27 +114,41 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 }
                 // Push args to stack
                 for (local_addr, _size) in local_args.iter().rev() {
-                    output.push(&format!(
-                        "mov rax, qword [{}]",
-                        get_local_address(*local_addr)
-                    ));
-                    output.push("push rax");
+                    let mut local_addr = *local_addr;
+                    let mut size = *_size as isize;
+                    local_addr += size;
+                    local_addr -= 8;
+                    while size > 0 {
+                        output.push(&format!(
+                            "mov rax, qword [{}]",
+                            get_local_address(local_addr)
+                        ));
+                        output.push("push rax");
+                        local_addr -= 8;
+                        size -= 8;
+                    }
                 }
                 // Call
                 output.push(&format!("call {}", get_function_name(*function)));
 
                 // Release stack space used
-                output.push(&format!("add rsp, {}", local_args.len() * 8 + (local_args.len() % 2) * 8));
+                if !local_args.is_empty() {
+                    output.push(&format!("add rsp, {}", local_args.len() * 8 + (local_args.len() % 2) * 8));
+                }
             }
-            Line::Copy(local_from, local_to) => {
-                output.push(&format!(
-                    "mov rax, qword [{}]",
-                    get_local_address(*local_from)
-                ));
-                output.push(&format!(
-                    "mov qword [{}], rax",
-                    get_local_address(*local_to)
-                ));
+            Line::Copy(local_from, local_to, amount) => {
+                let mut done = 0;
+                while done < *amount {
+                    output.push(&format!(
+                        "mov rax, qword [{}]",
+                        get_local_address(*local_from + (done as isize))
+                    ));
+                    output.push(&format!(
+                        "mov qword [{}], rax",
+                        get_local_address(*local_to + (done as isize))
+                    ));
+                    done += 8;
+                }
             }
             Line::Return(local_return_val) => {
                 last_return = true;

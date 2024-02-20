@@ -6,7 +6,7 @@ use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::{Type, TypedFunction};
 use either::{Left, Right};
 use crate::ast::literals::Literal;
-use crate::compiler::compile_functions::instantiate_literal::instantiate_literal;
+use crate::compiler::compile_functions::instantiate_literal::instantiate_variable;
 use crate::processor::custom_types::Int;
 
 pub fn evaluate_operator(symbol: &(BasicSymbol, LineInfo)) -> Result<&Operator, ProcessorError> {
@@ -57,7 +57,7 @@ pub fn evaluate_operation(
             let output = if let Some(return_into) = return_into {
                 return_into
             } else {
-                instantiate_literal::instantiate_literal(
+                instantiate_literal::instantiate_variable(
                     Right(
                         func.get_return_type()
                             .ok_or(ProcessorError::SingleOpFunctionNotFound(
@@ -91,7 +91,7 @@ pub fn evaluate_operation(
         }
         op_ => {
             let (lhs, rhs) = if matches!(op_, Operator::Subtract) && rhs.is_none() && lhs.1 == Int::get_id() {
-                (instantiate_literal(Left(&Literal::Int(0)), lines, name_handler, function_holder, None).unwrap(), lhs)
+                (instantiate_variable(Left((&Literal::Int(0), &op.1)), lines, name_handler, function_holder, None).unwrap(), lhs)
             } else {
                 (lhs,
                 rhs.ok_or(ProcessorError::BadOperatorPosition(
@@ -162,7 +162,7 @@ pub fn evaluate_operation(
             let output = if let Some(return_into) = return_into {
                 return_into
             } else {
-                instantiate_literal::instantiate_literal(
+                instantiate_literal::instantiate_variable(
                     Right(
                         func.get_return_type()
                             .ok_or(ProcessorError::OpFunctionNotFound(

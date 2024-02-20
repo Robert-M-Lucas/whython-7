@@ -8,7 +8,7 @@ use crate::basic_ast::symbol::BasicSymbol;
 use crate::parser::line_info::LineInfo;
 use crate::processor::custom_types::{Bool, Int};
 
-use unique_type_id::UniqueTypeId;
+use crate::processor::user_type::UserType;
 
 struct UninitialisedType {
     pub path: LineInfo,
@@ -49,93 +49,6 @@ impl UninitialisedType {
     // }
 }
 
-pub struct UserType {
-    name: String,
-    id: isize,
-    path: LineInfo,
-    attributes: Vec<(String, isize)>,
-}
-
-impl UserType {
-    pub fn new(
-        name: String,
-        id: isize,
-        path: LineInfo,
-        attributes: Vec<(String, isize)>,
-    ) -> UserType {
-        UserType {
-            name,
-            id,
-            path,
-            attributes,
-        }
-    }
-}
-
-impl Type for UserType {
-    fn get_id(&self) -> isize {
-        self.id
-    }
-
-    fn get_name(&self) -> &str {
-        &self.name
-    }
-
-    fn get_size(
-        &self,
-        type_table: &TypeTable,
-        mut path: Option<Vec<isize>>,
-    ) -> Result<usize, ProcessorError> {
-        if path.is_none() {
-            path = Some(vec![self.get_id()])
-        } else {
-            let mut failed_check = false;
-            for id in &**path.as_ref().unwrap() {
-                if *id == self.get_id() {
-                    failed_check = true;
-                    break;
-                }
-            }
-
-            if failed_check {
-                let mut debug_str = String::new();
-                for id in &**path.as_ref().unwrap() {
-                    debug_str += &type_table.get_type(*id).unwrap().get_name();
-                    debug_str += "->";
-                }
-
-                debug_str += &self.get_name();
-
-                return Err(ProcessorError::CircularType(
-                    self.path.clone(),
-                    self.name.clone(),
-                    debug_str,
-                ));
-            }
-
-            path.as_mut().unwrap().push(self.get_id());
-        };
-
-        let mut size = 0;
-
-        for (_name, id) in &self.attributes {
-            size += type_table
-                .get_type(*id)
-                .unwrap()
-                .get_size(type_table, Some(path.as_ref().unwrap().clone()))?;
-        }
-
-        Ok(size)
-    }
-
-    fn instantiate(
-        &self,
-        _literal: Option<&Literal>,
-        _local_address: isize,
-    ) -> Result<Vec<String>, ProcessorError> {
-        todo!()
-    }
-}
 
 pub trait Type {
     fn get_id(&self) -> isize;
@@ -153,6 +66,8 @@ pub trait Type {
         literal: Option<&Literal>,
         local_address: isize,
     ) -> Result<Vec<String>, ProcessorError>;
+
+    fn get_user_type(&self) -> Option<&UserType> { None }
 }
 
 pub struct TypeTable {

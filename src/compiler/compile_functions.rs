@@ -19,7 +19,7 @@ use std::collections::{HashMap, HashSet};
 pub enum Line {
     ReturnCall(isize, Vec<(isize, usize)>, isize),
     NoReturnCall(isize, Vec<(isize, usize)>),
-    Copy(isize, isize),
+    Copy(isize, isize, usize),
     Return(Option<isize>),
     InlineAsm(Vec<String>),
 }
@@ -176,10 +176,28 @@ impl NameHandler {
 
             match name_type {
                 NameType::Normal => {
-                    if current_type.is_some() || current_variable.is_some() {
-                        todo!()
+                    if current_type.is_some() && current_variable.is_some() {
+                        let user_type = self.type_table.get_type(current_type.unwrap()).unwrap().get_user_type()
+                            .ok_or(ProcessorError::AttributeDoesntExist(
+                                line.clone(),
+                                self.type_table.get_type(current_type.unwrap()).unwrap().get_name().to_string(),
+                                name.clone()
+                            ))?;
+
+                        let t = user_type.get_attribute_offset_and_type(name, &self.type_table)?
+                            .ok_or(ProcessorError::AttributeDoesntExist(
+                                line.clone(),
+                                self.type_table.get_type(current_type.unwrap()).unwrap().get_name().to_string(),
+                                name.clone()
+                            ))?;
+
+                        current_variable = Some(current_variable.unwrap() + (t.0 as isize));
+                        current_type = Some(t.1);
                     }
-                    if let Some((_, addr, _type)) = self
+                    else if current_type.is_some() {
+                        return Err(ProcessorError::AttemptedTypeAttribAccess(line.clone()));
+                    }
+                    else if let Some((_, addr, _type)) = self
                         .local_variables
                         .iter()
                         .rev()
@@ -204,6 +222,9 @@ impl NameHandler {
                         .get(name)
                     {
                         let default_arg = if matches!(access_type, NameAccessType::Normal) {
+                            if current_variable.is_none() {
+                                return Err(ProcessorError::TypeNonStaticFunctionCall(line.clone()));
+                            }
                             Some((current_variable.unwrap(), current_type.unwrap()))
                         } else {
                             None

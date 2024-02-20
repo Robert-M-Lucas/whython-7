@@ -1,3 +1,4 @@
+use crate::ast::literals::Literal;
 use crate::basic_ast::punctuation::Punctuation;
 use crate::basic_ast::symbol::{BasicSymbol, NAME_VALID_CHARS};
 use crate::parser::file_reader::FileReader;
@@ -45,14 +46,16 @@ pub fn parse_initialiser(symbols: &mut Vec<(BasicSymbol, LineInfo)>,
     );
 
     for (i, attribute) in attributes.iter().enumerate() {
-        if attribute.is_empty() && i != attribute.len() - 1 { return Err(ParseError::NoInitialiserAttribute(reader.get_line_info_current())) }
+        if attribute.is_empty() && i + 1 != attributes.len() {
+            return Err(ParseError::NoInitialiserAttribute(reader.get_line_info_current()))
+        }
     }
 
-    if !attributes.is_empty() {
+    if attributes.last().is_some_and(|x| x.is_empty()) {
         attributes.pop();
     }
 
-    symbols.push((BasicSymbol::Initialiser(name, attributes), reader.get_line_info_changed(line_info.0, line_info.1)));
+    symbols.push((BasicSymbol::Literal(Literal::Initialiser(name, attributes)), reader.get_line_info_changed(line_info.0, line_info.1)));
 
     Ok(())
 }

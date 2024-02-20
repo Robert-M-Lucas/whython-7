@@ -127,6 +127,16 @@ pub enum ProcessorError {
     ElseMoreAfterBraces(LineInfo),
     #[error("Error: Can't have anything after an else in an if/elif/else\n{0}")]
     IfElifAfterElse(LineInfo),
+    #[error("Error: Builtin types cannot be initialised with an explicit initialiser\n{0}")]
+    AttemptedBuiltinInitialiser(LineInfo),
+    #[error("Error: Incorrect number of attributes in initialise. Expected {1}, found {2}\n{0}")]
+    IncorrectAttribCount(LineInfo, usize, usize),
+    #[error("Error: Attempted to access attribute of a type, not an initialised variable of that type\n{0}")]
+    AttemptedTypeAttribAccess(LineInfo),
+    #[error("Error: Type '{1}' has no attribute '{2}'\n{0}")]
+    AttributeDoesntExist(LineInfo, String, String),
+    #[error("Error: Tried to call non-static function on a type, not an initialised variable of that type\n{0}")]
+    TypeNonStaticFunctionCall(LineInfo),
     #[error("TODO: Placeholder")]
     Placeholder2,
 }

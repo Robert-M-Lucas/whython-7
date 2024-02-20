@@ -19,8 +19,8 @@ pub fn evaluate_symbol(
         BasicSymbol::Operator(_) => {
             return Err(ProcessorError::BadEvaluableLayout(symbol.1.clone()))
         }
-        BasicSymbol::Literal(literal) => Some(instantiate_literal::instantiate_literal(
-            Left(literal),
+        BasicSymbol::Literal(literal) => Some(instantiate_literal::instantiate_variable(
+            Left((literal, &symbol.1)),
             lines,
             name_handler,
             function_holder,
@@ -32,9 +32,25 @@ pub fn evaluate_symbol(
         BasicSymbol::Name(name) => {
             // println!("{:?}", name);
             match name_handler.resolve_name(function_holder, name, &symbol.1)? {
-                Left(variable) => {
-                    // println!("{:?}", variable);
-                    Some(variable)
+                Left(new_variable) => {
+                    if let Some(return_into) = return_into {
+                        if return_into.1 != new_variable.1 {
+                            return Err(ProcessorError::BadEvaluatedType(
+                                symbol.1.clone(),
+                                name_handler.type_table().get_type(return_into.1).unwrap().get_name().to_string(),
+                                name_handler.type_table().get_type(new_variable.1).unwrap().get_name().to_string()
+                            ));
+                        }
+
+                        lines.push(
+                            Line::Copy(new_variable.0, return_into.0, name_handler.type_table().get_type(return_into.1).unwrap().get_size(name_handler.type_table(), None)?)
+                        );
+
+                        Some(return_into)
+                    }
+                    else {
+                        Some(new_variable)
+                    }
                 }
                 Right((function, default_args, args)) => call_function::call_function(
                     function,

@@ -47,52 +47,73 @@ __4: ; printi
 	leave
 	ret
 
-__14: ; printb
+_1: ; start
 	push rbp
 	mov rbp, rsp
-	sub rsp, 64
-	mov qword [rbp-16], "true"
-	mov qword [rbp-8], `\n\r`
-	mov rax, [rbp+16]
+	sub rsp, 32
+	mov rax, qword 0
+	mov qword [rbp-8], rax
+	mov rax, [rbp+32]
+	mov rcx, [rbp-8]
+	cmp rcx, rax
+	mov qword [rbp-16], 0
+	setnz [rbp-16]
+	mov rax, [rbp-16]
 	cmp rax, 0
-	jz ._14.true
-	mov qword [rbp-16], "fals"
-	mov qword [rbp-8], `e\n\r`
-	._14.true:
-	mov ecx, -11
-	call GetStdHandle
-	mov rcx, rax
-	mov rdx, rbp
-	sub rdx, 16
-	mov r8, 16
-	mov qword [rbp - 24], 0
-	mov r9, rbp
-	sub r9, 24
-	mov qword [rbp - 32], 0
-	call WriteFile
+	jnz .1.0
+	push qword 0
+	mov rax, qword [rbp+16]
+	push rax
+	call __4
+	add rsp, 16
+	jmp .1.1
+	.1.0:
+	mov rax, [rbp+16]
+	add rax, [rbp+24]
+	mov [rbp-24], rax
+	mov rax, qword [rbp+24]
+	mov qword [rbp+16], rax
+	mov rax, qword [rbp-24]
+	mov qword [rbp+24], rax
+	mov rax, qword 1
+	mov qword [rbp-32], rax
+	mov rax, [rbp+32]
+	sub rax, [rbp-32]
+	mov [rbp+32], rax
+	push qword 0
+	mov rax, qword [rbp+32]
+	push rax
+	mov rax, qword [rbp+24]
+	push rax
+	mov rax, qword [rbp+16]
+	push rax
+	call _1
+	add rsp, 16
+	.1.2:
+	.1.1:
 	leave
 	ret
 
 main: ; main
 	push rbp
 	mov rbp, rsp
-	sub rsp, 48
+	sub rsp, 32
+	mov rax, qword 0
+	mov qword [rbp-24], rax
 	mov rax, qword 1
-	mov qword [rbp-8], rax
-	mov rax, qword 2
 	mov qword [rbp-16], rax
-	mov qword [rbp-24], 1
+	mov rax, qword 13
+	mov qword [rbp-8], rax
 	push qword 0
+	mov rax, qword [rbp-8]
+	push rax
+	mov rax, qword [rbp-16]
+	push rax
 	mov rax, qword [rbp-24]
 	push rax
-	call __14
+	call _1
 	add rsp, 16
-	mov rax, qword 7
-	mov qword [rbp-40], rax
 	mov rax, qword 0
-	mov qword [rbp-48], rax
-	mov rax, [rbp-48]
-	sub rax, [rbp-40]
-	mov [rbp-32], rax
+	mov qword [rbp-32], rax
 	mov rcx, [rbp-32]
 	call ExitProcess
