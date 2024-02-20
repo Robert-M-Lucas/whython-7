@@ -4,6 +4,7 @@ use crate::parser::parse::parse;
 use crate::processor::processor::process;
 use std::path::PathBuf;
 use std::process::Command;
+use clap::Parser;
 
 use std::time::Instant;
 use b_box::b;
@@ -27,11 +28,26 @@ macro_rules! time {
     };
 }
 
+/// Compiler for Whython files (.why)
+#[derive(Parser)]
+#[command(version, about, long_about = None)]
+struct Args {
+    /// Main input file
+    #[arg(short, long, default_value = "main.why")]
+    input: String,
+    /// Output files name without extension
+    /// Main input file
+    #[arg(short, long, default_value = "out")]
+    output: String
+}
+
 fn main() {
+    let args = Args::parse();
+
     let mut asts = Vec::new();
     print!("Parsing...");
     time!(
-        if let Err(e) = parse(PathBuf::from("main.why"), &mut asts) {
+        if let Err(e) = parse(PathBuf::from(&args.input), &mut asts) {
             println!("\n{}", e);
             return;
         }
@@ -55,7 +71,7 @@ fn main() {
     time!(assemble());
     #[cfg(target_os = "windows")]
     {
-        println!("Linking (MSVC)...");
+        println!("Linking (MSVC - link.exe)...");
         time!(link());
         println!("Executing...");
         time!(run());
@@ -64,30 +80,29 @@ fn main() {
     {
         println!("Linking and execution might be buggy due to Linux being unsupported");
         println!("Linking (gcc)...");
-        link_gcc_experimental();
+        time!(link_gcc_experimental());
         println!("Executing (wine)...");
-        run_wine_experimental();
+        time!(run_wine_experimental());
     }
 }
 
-fn run() {
-    let code = Command::new(".\\output\\out.exe")
+fn run(output: &str) {
+    let code = Command::new(format!("{output}.exe"))
         .status()
         .unwrap()
         .code()
         .unwrap();
     println!(
-        "\nExited with return code {} ({:?})",
+        "\nExited with return code {}",
         code,
-        code % 16 == 0
     )
 }
 
-fn run_wine_experimental() {
+fn run_wine_experimental(output: &str) {
     println!(
         "\nExited with return code {}",
         Command::new("wine")
-            .args(["./output/out.exe"])
+            .args([format!("{output}.exe")])
             .status()
             .unwrap()
             .code()

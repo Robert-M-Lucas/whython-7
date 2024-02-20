@@ -3,7 +3,7 @@ use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
 
-pub fn generate_assembly(_output: &PathBuf, functions: Vec<Box<dyn Function>>) {
+pub fn generate_assembly(output: &str, functions: Vec<Box<dyn Function>>) {
     let mut out = String::from(
         "    global main
     extern ExitProcess
@@ -18,15 +18,12 @@ pub fn generate_assembly(_output: &PathBuf, functions: Vec<Box<dyn Function>>) {
         out += &(f.get_asm());
     }
 
-    if !PathBuf::from("output").as_path().is_dir() {
-        fs::create_dir("output").expect("Failed to create output folder");
-    }
-    fs::write("output/out.asm", out).expect("Failed to write assembly to file");
+    fs::write(format!("{output}.asm"), out).expect("Failed to write assembly to file");
 }
 
-pub fn assemble() {
+pub fn assemble(output: &str) {
     if !Command::new("nasm")
-        .args(["-f", "win64", "./output/out.asm"])
+        .args(["-f", "win64", format!("{output}.asm")])
         .status()
         .unwrap()
         .success()
@@ -35,14 +32,14 @@ pub fn assemble() {
     }
 }
 
-pub fn link() {
+pub fn link(output: &str) {
     if !Command::new("link")
         .args([
             "/entry:main",
-            "/out:.\\output\\out.exe",
+            format!("/out:{output}.exe"),
             "/SUBSYSTEM:CONSOLE",
             // "/LARGEADDRESSAWARE:NO",
-            ".\\output\\out.obj",
+            format!("{output}.obj"),
             ".\\libs\\kernel32.lib",
         ])
         .status()
@@ -53,13 +50,13 @@ pub fn link() {
     }
 }
 
-pub fn link_gcc_experimental() {
+pub fn link_gcc_experimental(output: &str) {
     if !Command::new("x86_64-w64-mingw32-gcc")
         .args([
-            "./output/out.obj",
+            format!("{output}.asm"),
             "./libs/kernel32.lib",
             "-o",
-            "./output/out.exe"
+            format!("{output}.exe")
         ])
         .status()
         .unwrap()
