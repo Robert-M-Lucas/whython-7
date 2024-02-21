@@ -7,8 +7,11 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Added support gor parsing initialisers">
-      <change beforePath="$PROJECT_DIR$/output/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/output/out.asm" afterDir="false" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Commit">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assembler/assemble.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/assembler/assemble.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -151,14 +154,7 @@
       <workItem from="1708389551937" duration="8190000" />
       <workItem from="1708443054042" duration="78000" />
       <workItem from="1708444249472" duration="435000" />
-    </task>
-    <task id="LOCAL-00005" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707577741928</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1707577741928</updated>
+      <workItem from="1708446636633" duration="1360000" />
     </task>
     <task id="LOCAL-00006" summary="Commit">
       <option name="closed" value="true" />
@@ -544,7 +540,15 @@
       <option name="project" value="LOCAL" />
       <updated>1708374408506</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="Commit">
+      <option name="closed" value="true" />
+      <created>1708446689753</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1708446689753</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -575,13 +579,13 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Cargo fmt" />
     <MESSAGE value="Cargo Clippy" />
-    <MESSAGE value="Commit" />
     <MESSAGE value="Fixed the most annoying bug I've ever had the displeasure of trying to find" />
     <MESSAGE value="Fixed 0 showing up as -0 from printi" />
     <MESSAGE value="Added support for negative integers without needing to utilise 0-(int)" />
     <MESSAGE value="Fixed shadowing" />
     <MESSAGE value="Added support gor parsing initialisers" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added support gor parsing initialisers" />
+    <MESSAGE value="Commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Commit" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

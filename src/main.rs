@@ -1,3 +1,4 @@
+use std::fs;
 use crate::assembler::assemble::{assemble, generate_assembly, link, link_gcc_experimental};
 
 use crate::parser::parse::parse;
@@ -66,28 +67,29 @@ fn main() {
     // let functions = process(asts).unwrap();
 
     print!("Compiling...");
-    time!(generate_assembly(&PathBuf::from("output"), functions));
+    time!(generate_assembly(&args.output, functions));
     print!("Assembling (NASM)...");
-    time!(assemble());
+    time!(assemble(&args.output));
     #[cfg(target_os = "windows")]
     {
         println!("Linking (MSVC - link.exe)...");
-        time!(link());
+        time!(link(&args.output));
         println!("Executing...");
-        time!(run());
+        time!(run(&args.output));
     }
     #[cfg(target_os = "linux")]
     {
         println!("Linking and execution might be buggy due to Linux being unsupported");
         println!("Linking (gcc)...");
-        time!(link_gcc_experimental());
+        time!(link_gcc_experimental(&args.output));
         println!("Executing (wine)...");
-        time!(run_wine_experimental());
+        time!(run_wine_experimental(&args.output));
     }
 }
 
 fn run(output: &str) {
-    let code = Command::new(format!("{output}.exe"))
+    let full = fs::canonicalize(format!("{output}.exe")).unwrap();
+    let code = Command::new(full)
         .status()
         .unwrap()
         .code()
@@ -99,10 +101,11 @@ fn run(output: &str) {
 }
 
 fn run_wine_experimental(output: &str) {
+    let full = fs::canonicalize(format!("{output}.exe")).unwrap();
     println!(
         "\nExited with return code {}",
         Command::new("wine")
-            .args([format!("{output}.exe")])
+            .args([full])
             .status()
             .unwrap()
             .code()

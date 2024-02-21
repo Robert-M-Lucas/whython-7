@@ -23,7 +23,7 @@ pub fn generate_assembly(output: &str, functions: Vec<Box<dyn Function>>) {
 
 pub fn assemble(output: &str) {
     if !Command::new("nasm")
-        .args(["-f", "win64", format!("{output}.asm")])
+        .args(["-f", "win64", format!("{output}.asm").as_str()])
         .status()
         .unwrap()
         .success()
@@ -36,10 +36,10 @@ pub fn link(output: &str) {
     if !Command::new("link")
         .args([
             "/entry:main",
-            format!("/out:{output}.exe"),
+            format!("/out:{output}.exe").as_str(),
             "/SUBSYSTEM:CONSOLE",
             // "/LARGEADDRESSAWARE:NO",
-            format!("{output}.obj"),
+            format!("{output}.obj").as_str(),
             ".\\libs\\kernel32.lib",
         ])
         .status()
@@ -51,12 +51,13 @@ pub fn link(output: &str) {
 }
 
 pub fn link_gcc_experimental(output: &str) {
+
     if !Command::new("x86_64-w64-mingw32-gcc")
         .args([
-            format!("{output}.asm"),
+            format!("{output}.asm").as_str(),
             "./libs/kernel32.lib",
             "-o",
-            format!("{output}.exe")
+            format!("{output}.exe").as_str()
         ])
         .status()
         .unwrap()
