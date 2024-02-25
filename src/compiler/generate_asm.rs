@@ -149,7 +149,22 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                     ));
                     done += 8;
                 }
-            }
+            },
+            Line::DynFromCopy(local_dyn_from, local_to, amount) => {
+                let mut done = 0;
+                output.push(&format!("mov r9, qword [{}]", get_local_address(*local_dyn_from)));
+                while done < *amount {
+                    output.push(&format!(
+                        "mov rax, qword [r9+{}]",
+                        done
+                    ));
+                    output.push(&format!(
+                        "mov qword [{}], rax",
+                        get_local_address(*local_to + (done as isize))
+                    ));
+                    done += 8;
+                }
+            },
             Line::Return(local_return_val) => {
                 last_return = true;
                 if function.id == 0 {

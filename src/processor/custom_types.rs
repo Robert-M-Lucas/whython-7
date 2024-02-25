@@ -78,7 +78,7 @@ impl Int {
         
         vec![
             "mov rax, rbp".to_string(),
-            if offset > 0 { format!("add rax, {offset}") } else { format!("sub rax, {offset}") },
+            format!("add rax, {offset}"),
             format!(
                 "mov qword [{}], rax",
                 get_local_address(local_address),

@@ -21,6 +21,7 @@ pub enum Line {
     ReturnCall(isize, Vec<(isize, usize)>, isize),
     NoReturnCall(isize, Vec<(isize, usize)>),
     Copy(isize, isize, usize),
+    DynFromCopy(isize, isize, usize),
     Return(Option<isize>),
     InlineAsm(Vec<String>),
 }

@@ -139,6 +139,8 @@ pub enum ProcessorError {
     TypeNonStaticFunctionCall(LineInfo),
     #[error("Error: Name cannot have a '$' prefix. Use `& [NAME]` to get a reference to a variable and `* [NAME]` to dereference\n{0}")]
     NameWithRefPrefix(LineInfo),
+    #[error("Error: Can't dereference non-reference type\n{0}")]
+    CantDerefNonRef(LineInfo),
     #[error("Error: Feature '{1}' not implemented yet\n{0}")]
     NotImplemented(LineInfo, String),
 }

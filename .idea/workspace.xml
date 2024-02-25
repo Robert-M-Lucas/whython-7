@@ -7,30 +7,17 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Commit">
-      <change afterPath="$PROJECT_DIR$/src/compiler/compile_functions/reference.rs" afterDir="false" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Began adding support for reference types">
+      <change afterPath="$PROJECT_DIR$/main-c.why" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/out.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/out.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/out.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/basic_ast/symbol.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/basic_ast/symbol.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/call_function.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/call_function.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/evaluate.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/evaluate.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/evaluate_symbol.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/evaluate_symbol.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/instantiate_literal.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/instantiate_literal.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/operators.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/process_lines.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/process_lines.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/custom_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/custom_functions.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/custom/bool.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/custom/bool.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/custom/int.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/custom/int.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/initialiser_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/initialiser_parser.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/normal_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/normal_parser.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/generate_asm.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/generate_asm.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/processor/custom_types.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/custom_types.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/preprocess.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/preprocess.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/processor/processor.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/processor.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/type_builder.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/type_builder.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/user_type.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/user_type.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,15 +167,7 @@
       <workItem from="1708530621877" duration="3489000" />
       <workItem from="1708629674803" duration="690000" />
       <workItem from="1708687088255" duration="177000" />
-      <workItem from="1708882042489" duration="5957000" />
-    </task>
-    <task id="LOCAL-00008" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707679264000</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1707679264000</updated>
+      <workItem from="1708882042489" duration="6671000" />
     </task>
     <task id="LOCAL-00009" summary="Commit">
       <option name="closed" value="true" />
@@ -574,7 +553,15 @@
       <option name="project" value="LOCAL" />
       <updated>1708882059656</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="Began adding support for reference types">
+      <option name="closed" value="true" />
+      <created>1708888153620</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1708888153620</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -611,7 +598,8 @@
     <MESSAGE value="Fixed shadowing" />
     <MESSAGE value="Added support gor parsing initialisers" />
     <MESSAGE value="Commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Commit" />
+    <MESSAGE value="Began adding support for reference types" />
+    <option name="LAST_COMMIT_MESSAGE" value="Began adding support for reference types" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
