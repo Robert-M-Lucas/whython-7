@@ -17,14 +17,14 @@ pub fn evaluate_operator(symbol: &(BasicSymbol, LineInfo)) -> Result<&Operator, 
 }
 
 pub fn evaluate_operation(
-    lhs: (isize, isize),
+    lhs: (isize, (isize, usize)),
     op: (&Operator, &LineInfo),
-    rhs: Option<(isize, isize)>,
+    rhs: Option<(isize, (isize, usize))>,
     lines: &mut Vec<Line>,
     name_handler: &mut NameHandler,
     function_holder: &FunctionHolder,
-    return_into: Option<(isize, isize)>,
-) -> Result<Option<(isize, isize)>, ProcessorError> {
+    return_into: Option<(isize, (isize, usize))>,
+) -> Result<Option<(isize, (isize, usize))>, ProcessorError> {
     Ok(Some(match &op.0 {
         Operator::Not => {
             let func = function_holder.get_function(Some(lhs.1), "not").ok_or(
@@ -33,9 +33,9 @@ pub fn evaluate_operation(
                     "not".to_string(),
                     name_handler
                         .type_table
-                        .get_type(lhs.1)
+                        .get_type(lhs.1.0)
                         .unwrap()
-                        .get_name()
+                        .get_indirect_name(lhs.1.1)
                         .to_string(),
                 ),
             )?;
@@ -48,16 +48,16 @@ pub fn evaluate_operation(
                     "not".to_string(),
                     name_handler
                         .type_table
-                        .get_type(lhs.1)
+                        .get_type(lhs.1.0)
                         .unwrap()
-                        .get_name()
+                        .get_indirect_name(lhs.1.1)
                         .to_string(),
                 ));
             }
             let output = if let Some(return_into) = return_into {
                 return_into
             } else {
-                instantiate_literal::instantiate_variable(
+                instantiate_variable(
                     Right(
                         func.get_return_type()
                             .ok_or(ProcessorError::SingleOpFunctionNotFound(
@@ -65,9 +65,9 @@ pub fn evaluate_operation(
                                 "not".to_string(),
                                 name_handler
                                     .type_table
-                                    .get_type(lhs.1)
+                                    .get_type(lhs.1.0)
                                     .unwrap()
-                                    .get_name()
+                                    .get_indirect_name(lhs.1.1)
                                     .to_string(),
                             ))?,
                     ),
@@ -90,7 +90,35 @@ pub fn evaluate_operation(
             output
         }
         op_ => {
-            let (lhs, rhs) = if matches!(op_, Operator::Subtract) && rhs.is_none() && lhs.1 == Int::get_id() {
+            if matches!(op_, Operator::And) && rhs.is_none() {
+                let return_into = if let Some(return_into) = return_into {
+                    if return_into.1.0 != lhs.1.0 || return_into.1.1 != lhs.1.1 + 1 {
+                        return Err(ProcessorError::BadEvaluatedType(
+                            op.1.clone(),
+                            name_handler
+                                .type_table
+                                .get_type(return_into.1.0)
+                                .unwrap()
+                                .get_indirect_name(return_into.1.1)
+                                .to_string(),
+                            name_handler
+                                .type_table
+                                .get_type(lhs.1.0)
+                                .unwrap()
+                                .get_indirect_name(lhs.1.1 + 1)
+                                .to_string(),
+                        ));
+                    }
+                    return_into
+                }
+                else {
+                    (name_handler.add_local_variable(None, (lhs.1.0, lhs.1.1 + 1))?, (lhs.1.0, lhs.1.1 + 1))
+                };
+                lines.push(Line::InlineAsm(Int::instantiate_ref(lhs.0, return_into.0)));
+                return Ok(Some(return_into));
+            }
+            
+            let (lhs, rhs) = if matches!(op_, Operator::Subtract) && rhs.is_none() && lhs.1 == (Int::get_id(), 0) {
                 (instantiate_variable(Left((&Literal::Int(0), &op.1)), lines, name_handler, function_holder, None).unwrap(), lhs)
             } else {
                 (lhs,
@@ -124,15 +152,15 @@ pub fn evaluate_operation(
                     func_name.to_string(),
                     name_handler
                         .type_table
-                        .get_type(lhs.1)
+                        .get_type(lhs.1.0)
                         .unwrap()
-                        .get_name()
+                        .get_indirect_name(lhs.1.1)
                         .to_string(),
                     name_handler
                         .type_table
-                        .get_type(rhs.1)
+                        .get_type(rhs.1.0)
                         .unwrap()
-                        .get_name()
+                        .get_indirect_name(rhs.1.1)
                         .to_string(),
                 ),
             )?;
@@ -146,42 +174,59 @@ pub fn evaluate_operation(
                     func_name.to_string(),
                     name_handler
                         .type_table
-                        .get_type(lhs.1)
+                        .get_type(lhs.1.0)
                         .unwrap()
-                        .get_name()
+                        .get_indirect_name(lhs.1.1)
                         .to_string(),
                     name_handler
                         .type_table
-                        .get_type(rhs.1)
+                        .get_type(rhs.1.0)
                         .unwrap()
-                        .get_name()
+                        .get_indirect_name(rhs.1.1)
                         .to_string(),
                 ));
             }
+            
+            let ret_type = func.get_return_type()
+                .ok_or(ProcessorError::OpFunctionNotFound(
+                    op.1.clone(),
+                    func_name.to_string(),
+                    name_handler
+                        .type_table
+                        .get_type(lhs.1.0)
+                        .unwrap()
+                        .get_indirect_name(lhs.1.1)
+                        .to_string(),
+                    name_handler
+                        .type_table
+                        .get_type(rhs.1.0)
+                        .unwrap()
+                        .get_indirect_name(rhs.1.1)
+                        .to_string(),
+                ))?;
 
             let output = if let Some(return_into) = return_into {
+                if return_into.1 != ret_type {
+                    return Err(ProcessorError::BadEvaluatedType(
+                        op.1.clone(),
+                        name_handler
+                            .type_table
+                            .get_type(return_into.1.0)
+                            .unwrap()
+                            .get_indirect_name(return_into.1.1)
+                            .to_string(),
+                        name_handler
+                            .type_table
+                            .get_type(ret_type.0)
+                            .unwrap()
+                            .get_indirect_name(ret_type.1)
+                            .to_string(),
+                    ))
+                }
                 return_into
             } else {
-                instantiate_literal::instantiate_variable(
-                    Right(
-                        func.get_return_type()
-                            .ok_or(ProcessorError::OpFunctionNotFound(
-                                op.1.clone(),
-                                func_name.to_string(),
-                                name_handler
-                                    .type_table
-                                    .get_type(lhs.1)
-                                    .unwrap()
-                                    .get_name()
-                                    .to_string(),
-                                name_handler
-                                    .type_table
-                                    .get_type(rhs.1)
-                                    .unwrap()
-                                    .get_name()
-                                    .to_string(),
-                            ))?,
-                    ),
+                instantiate_variable(
+                    Right(ret_type),
                     lines,
                     name_handler,
                     function_holder,

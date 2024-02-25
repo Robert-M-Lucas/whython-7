@@ -70,6 +70,22 @@ impl Int {
     }
 }
 
+impl Int {
+    pub fn instantiate_ref(
+        offset: isize,
+        local_address: isize,
+    ) -> Vec<String> {
+        
+        vec![
+            "mov rax, rbp".to_string(),
+            if offset > 0 { format!("add rax, {offset}") } else { format!("sub rax, {offset}") },
+            format!(
+                "mov qword [{}], rax",
+                get_local_address(local_address),
+        )]
+    }
+}
+
 impl Type for Int {
     fn get_id(&self) -> isize {
         Int::get_id()

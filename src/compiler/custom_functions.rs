@@ -43,8 +43,8 @@ pub fn get_custom_function_implementations() -> Vec<Box<dyn Function>> {
 #[UniqueTypeIdType = "u16"]
 pub struct WindowsExit {}
 lazy_static! {
-    static ref WINDOWS_EXIT_ARGS: [(String, isize); 1] =
-        [(String::from("exit_code"), Int::get_id())];
+    static ref WINDOWS_EXIT_ARGS: [(String, (isize, usize)); 1] =
+        [(String::from("exit_code"), (Int::get_id(), 0))];
 }
 impl TypedFunction for WindowsExit {
     fn get_id(&self) -> isize {
@@ -55,7 +55,7 @@ impl TypedFunction for WindowsExit {
         "exit"
     }
 
-    fn get_args(&self) -> &[(String, isize)] {
+    fn get_args(&self) -> &[(String, (isize, usize))] {
         WINDOWS_EXIT_ARGS.as_ref()
     }
 
@@ -63,7 +63,7 @@ impl TypedFunction for WindowsExit {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<isize> {
+    fn get_return_type(&self) -> Option<(isize, usize)> {
         None
     }
 
@@ -94,7 +94,7 @@ impl TypedFunction for WindowsExit {
 #[UniqueTypeIdType = "u16"]
 pub struct PrintI {}
 lazy_static! {
-    static ref PRINT_I_ARGS: [(String, isize); 1] = [(String::from("integer"), Int::get_id())];
+    static ref PRINT_I_ARGS: [(String, (isize, usize)); 1] = [(String::from("integer"), (Int::get_id(), 0))];
 }
 impl TypedFunction for PrintI {
     fn get_id(&self) -> isize {
@@ -105,7 +105,7 @@ impl TypedFunction for PrintI {
         "printi"
     }
 
-    fn get_args(&self) -> &[(String, isize)] {
+    fn get_args(&self) -> &[(String, (isize, usize))] {
         PRINT_I_ARGS.as_ref()
     }
 
@@ -113,7 +113,7 @@ impl TypedFunction for PrintI {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<isize> {
+    fn get_return_type(&self) -> Option<(isize, usize)> {
         None
     }
 
@@ -204,7 +204,7 @@ impl Function for PrintI {
 #[UniqueTypeIdType = "u16"]
 pub struct PrintB {}
 lazy_static! {
-    static ref PRINT_B_ARGS: [(String, isize); 1] = [(String::from("bool"), Bool {}.get_id())];
+    static ref PRINT_B_ARGS: [(String, (isize, usize)); 1] = [(String::from("bool"), (Bool {}.get_id(), 0))];
 }
 impl TypedFunction for PrintB {
     fn get_id(&self) -> isize {
@@ -215,15 +215,15 @@ impl TypedFunction for PrintB {
         "printb"
     }
 
-    fn get_args(&self) -> &[(String, isize)] {
-        crate::compiler::custom_functions::PRINT_B_ARGS.as_ref()
+    fn get_args(&self) -> &[(String, (isize, usize))] {
+        PRINT_B_ARGS.as_ref()
     }
 
     fn get_line(&self) -> LineInfo {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<isize> {
+    fn get_return_type(&self) -> Option<(isize, usize)> {
         None
     }
 

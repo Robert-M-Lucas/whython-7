@@ -11,8 +11,8 @@ pub fn evaluate_symbol(
     lines: &mut Vec<Line>,
     name_handler: &mut NameHandler,
     function_holder: &FunctionHolder,
-    return_into: Option<(isize, isize)>,
-) -> Result<Option<(isize, isize)>, ProcessorError> {
+    return_into: Option<(isize, (isize, usize))>,
+) -> Result<Option<(isize, (isize, usize))>, ProcessorError> {
     // println!("{:?}", symbol);
     Ok(match &symbol.0 {
         BasicSymbol::AbstractSyntaxTree(_) => panic!(),
@@ -37,13 +37,13 @@ pub fn evaluate_symbol(
                         if return_into.1 != new_variable.1 {
                             return Err(ProcessorError::BadEvaluatedType(
                                 symbol.1.clone(),
-                                name_handler.type_table().get_type(return_into.1).unwrap().get_name().to_string(),
-                                name_handler.type_table().get_type(new_variable.1).unwrap().get_name().to_string()
+                                name_handler.type_table().get_type(return_into.1.0).unwrap().get_indirect_name(return_into.1.1).to_string(),
+                                name_handler.type_table().get_type(new_variable.1.0).unwrap().get_indirect_name(new_variable.1.1).to_string()
                             ));
                         }
 
                         lines.push(
-                            Line::Copy(new_variable.0, return_into.0, name_handler.type_table().get_type(return_into.1).unwrap().get_size(name_handler.type_table(), None)?)
+                            Line::Copy(new_variable.0, return_into.0, name_handler.type_table().get_type_size(return_into.1)?)
                         );
 
                         Some(return_into)

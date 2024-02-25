@@ -10,8 +10,8 @@ pub fn evaluate<'a>(
     lines: &mut Vec<Line>,
     name_handler: &mut NameHandler,
     function_holder: &FunctionHolder,
-    return_into: Option<(isize, isize)>,
-) -> Result<Option<(isize, isize)>, ProcessorError> {
+    return_into: Option<(isize, (isize, usize))>,
+) -> Result<Option<(isize, (isize, usize))>, ProcessorError> {
     // addr, type
     Ok(if section.len() == 1 {
         evaluate_symbol::evaluate_symbol(

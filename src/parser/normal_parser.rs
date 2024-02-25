@@ -264,22 +264,30 @@ fn process_buffer(
     let mut section_buffer = String::new();
     let mut section_type = NameType::Normal;
     let mut last_separator = NameAccessType::Base;
+    let mut indirection: usize = 0;
     for c in buffer.chars() {
         if c == '.' {
-            sections.push((section_buffer, last_separator, section_type));
+            sections.push((section_buffer, last_separator, section_type, indirection));
             section_buffer = String::new();
             section_type = NameType::Normal;
             last_separator = NameAccessType::Normal;
+            indirection = 0;
             continue;
         }
         if c == '#' {
-            sections.push((section_buffer, last_separator, section_type));
+            sections.push((section_buffer, last_separator, section_type, indirection));
             section_buffer = String::new();
             section_type = NameType::Normal;
             last_separator = NameAccessType::Static;
+            indirection = 0;
             continue;
         }
-
+        
+        if c == '$' && section_buffer.is_empty() {
+            indirection += 1;
+            continue;
+        }
+        
         if !NAME_VALID_CHARS.contains(&c) {
             let mut utf8 = Vec::with_capacity(c.len_utf8());
             for _ in 0..c.len_utf8() { utf8.push(0); }
@@ -289,7 +297,7 @@ fn process_buffer(
         section_buffer.push(c);
     }
 
-    sections.push((section_buffer, last_separator, section_type));
+    sections.push((section_buffer, last_separator, section_type, indirection));
 
     if let Some(kwd) = Keyword::get_enum(&sections.first().unwrap().0) {
         if sections.len() > 1 {

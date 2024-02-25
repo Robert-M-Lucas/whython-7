@@ -12,7 +12,7 @@ use either::Left;
 pub fn process_lines(
     section: &[(BasicSymbol, LineInfo)],
     current_id: isize,
-    return_type: Option<isize>,
+    return_type: Option<(isize, usize)>,
     lines: &mut Vec<Line>,
     name_handler: &mut NameHandler,
     function_holder: &FunctionHolder,
@@ -107,15 +107,15 @@ pub fn process_lines(
                         line[1].1.clone(),
                         name_handler
                             .type_table()
-                            .get_type(return_type)
+                            .get_type(return_type.0)
                             .unwrap()
-                            .get_name()
+                            .get_indirect_name(return_type.1)
                             .to_string(),
                         name_handler
                             .type_table()
-                            .get_type(return_value.1)
+                            .get_type(return_value.1.0)
                             .unwrap()
-                            .get_name()
+                            .get_indirect_name(return_value.1.1)
                             .to_string(),
                     ));
                 }
@@ -133,6 +133,9 @@ pub fn process_lines(
                     return Err(ProcessorError::MultipartNameDef(line[1].1.clone()));
                 }
                 let name = &name[0];
+                if name.3 != 0 {
+                    return Err(ProcessorError::NameWithRefPrefix(line[0].1.clone()))
+                }
 
                 if !matches!(&name.2, NameType::Normal) {
                     return Err(ProcessorError::LetNoName(line[0].1.clone()));
@@ -166,7 +169,7 @@ pub fn process_lines(
                         line[3].1.clone(),
                         type_name.0.clone(),
                     ))?;
-                let addr = name_handler.add_local_variable(Some(name.clone()), type_id)?;
+                let addr = name_handler.add_local_variable(Some(name.clone()), (type_id, type_name.3))?;
 
                 if line.len() < 6 {
                     return Err(ProcessorError::LetNoValue(line[3].1.clone()));
@@ -180,7 +183,7 @@ pub fn process_lines(
                     lines,
                     name_handler,
                     function_holder,
-                    Some((addr, type_id)),
+                    Some((addr, (type_id, type_name.3))),
                 )?;
             }
             BasicSymbol::Keyword(Keyword::While) => {
@@ -207,14 +210,14 @@ pub fn process_lines(
                     format!("jnz {}", end_label),
                 ]));
 
-                if evaluated.1 != Bool::new().get_id() {
+                if evaluated.1 != (Bool::new().get_id(), 0) {
                     return Err(ProcessorError::BadConditionType(
                         line[1].1.clone(),
                         name_handler
                             .type_table()
-                            .get_type(evaluated.1)
+                            .get_type(evaluated.1.0)
                             .unwrap()
-                            .get_name()
+                            .get_indirect_name(evaluated.1.1)
                             .to_string(),
                     ));
                 }
@@ -258,14 +261,14 @@ pub fn process_lines(
                 let evaluated =
                     evaluate::evaluate(expr, lines, name_handler, function_holder, None)?
                         .ok_or(ProcessorError::DoesntEvaluate(line[1].1.clone()))?;
-                if evaluated.1 != Bool::new().get_id() {
+                if evaluated.1 != (Bool::new().get_id(), 0) {
                     return Err(ProcessorError::BadConditionType(
                         line[1].1.clone(),
                         name_handler
                             .type_table()
-                            .get_type(evaluated.1)
+                            .get_type(evaluated.1.0)
                             .unwrap()
-                            .get_name()
+                            .get_indirect_name(evaluated.1.1)
                             .to_string(),
                     ));
                 }
@@ -325,14 +328,14 @@ pub fn process_lines(
                                 None,
                             )?
                             .ok_or(ProcessorError::DoesntEvaluate(line[i].1.clone()))?;
-                            if evaluated.1 != Bool::new().get_id() {
+                            if evaluated.1 != (Bool::new().get_id(), 0) {
                                 return Err(ProcessorError::BadConditionType(
                                     line[i].1.clone(),
                                     name_handler
                                         .type_table()
-                                        .get_type(evaluated.1)
+                                        .get_type(evaluated.1.0)
                                         .unwrap()
-                                        .get_name()
+                                        .get_indirect_name(evaluated.1.1)
                                         .to_string(),
                                 ));
                             }

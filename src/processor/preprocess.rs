@@ -4,20 +4,19 @@ use crate::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol, NameType};
 
 use crate::parser::line_info::LineInfo;
 use crate::processor::processor::ProcessorError;
-use crate::processor::processor::ProcessorError::FnNoBraces;
 
 use std::vec::IntoIter;
 
 pub type PreProcessFunction = (
     String,
-    Vec<(String, LineInfo, String, LineInfo)>,
-    Option<(String, LineInfo)>,
+    Vec<(String, LineInfo, String, usize, LineInfo)>,
+    Option<((String, usize), LineInfo)>,
     Vec<(BasicSymbol, LineInfo)>,
 );
 
 #[derive(Clone, strum_macros::Display, Debug)]
 pub enum PreprocessSymbol {
-    Struct(LineInfo, String, Vec<(String, LineInfo, String, LineInfo)>),
+    Struct(LineInfo, String, Vec<(String, LineInfo, (String, usize), LineInfo)>),
     Impl(LineInfo, String, Vec<(PreProcessFunction, LineInfo)>),
     Fn(LineInfo, PreProcessFunction),
 }
@@ -117,6 +116,9 @@ fn parse_struct(
             }
             _ => return Err(ProcessorError::StructExpectedAttributeName(attr_name_line)),
         };
+        if attr_name.3 != 0 {
+            return Err(ProcessorError::NameWithRefPrefix(attr_name_line));
+        }
         let Some((colon, colon_line)) = contents.next() else {
             return Err(ProcessorError::NameTypeNotDefined(attr_name_line));
         };
@@ -136,8 +138,8 @@ fn parse_struct(
             }
             _ => return Err(ProcessorError::NameTypeNotDefined(attr_type_line)),
         };
-
-        attributes.push((attr_name.0, attr_name_line, attr_type.0, attr_type_line));
+        
+        attributes.push((attr_name.0, attr_name_line, (attr_type.0, attr_type.3), attr_type_line));
         first = false;
     }
 
@@ -213,10 +215,13 @@ fn parse_fn(
     if name.len() > 1 {
         return Err(ProcessorError::MultipartNameDef(name_line));
     }
-    let (name, _, name_type) = name.remove(0);
+    let (name, _, name_type, indirection) = name.remove(0);
+    if indirection != 0 {
+        return Err(ProcessorError::NameWithRefPrefix(name_line))
+    }
 
     let parameters = match name_type {
-        NameType::Normal => return Err(FnNoBraces(name_line)),
+        NameType::Normal => return Err(ProcessorError::FnNoBraces(name_line)),
         NameType::Function(arguments) => arguments,
     };
 
@@ -258,7 +263,7 @@ fn parse_fn(
                 return Err(ProcessorError::FnBadSelf(arg_line));
             }
 
-            (self_type.take().unwrap(), arg_line.clone())
+            ((self_type.take().unwrap(), 1), arg_line.clone())
         } else {
             let Some((colon, colon_line)) = parameter.next() else {
                 return Err(ProcessorError::NameTypeNotDefined(arg_line));
@@ -276,14 +281,15 @@ fn parse_fn(
                     if name.len() > 1 {
                         return Err(ProcessorError::MultipartTypeName(param_type_line));
                     }
-                    name.remove(0).0
+                    let part = name.remove(0);
+                    (part.0, part.3)
                 }
                 _ => return Err(ProcessorError::NameTypeNotDefined(param_type_line)),
             };
             (param_type, param_type_line)
         };
 
-        parameters_processed.push((arg_name, arg_line, param_type, param_type_line.clone())); // TODO:
+        parameters_processed.push((arg_name, arg_line, param_type.0, param_type.1, param_type_line.clone())); // TODO:
         last_line = param_type_line;
     }
 
@@ -325,7 +331,7 @@ fn parse_fn(
         (
             name,
             parameters_processed,
-            return_type.map(|x| (x.0 .0, x.1)),
+            return_type.map(|x| ((x.0.0, x.0.3), x.1)),
             contents,
         ),
     ))

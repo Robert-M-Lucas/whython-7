@@ -9,9 +9,9 @@ use unique_type_id::UniqueTypeId;
 #[UniqueTypeIdType = "u16"]
 pub struct IntAdd {}
 lazy_static! {
-    static ref INT_ADD_ARGS: [(String, isize); 2] = [
-        (String::from("lhs"), Int::get_id()),
-        (String::from("rhs"), Int::get_id())
+    static ref INT_ADD_ARGS: [(String, (isize, usize)); 2] = [
+        (String::from("lhs"), (Int::get_id(), 0)),
+        (String::from("rhs"), (Int::get_id(), 0))
     ];
 }
 impl TypedFunction for IntAdd {
@@ -23,7 +23,7 @@ impl TypedFunction for IntAdd {
         "add"
     }
 
-    fn get_args(&self) -> &[(String, isize)] {
+    fn get_args(&self) -> &[(String, (isize, usize))] {
         INT_ADD_ARGS.as_ref()
     }
 
@@ -31,8 +31,8 @@ impl TypedFunction for IntAdd {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<isize> {
-        Some(Int::get_id())
+    fn get_return_type(&self) -> Option<(isize, usize)> {
+        Some((Int::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -52,9 +52,9 @@ impl TypedFunction for IntAdd {
 #[UniqueTypeIdType = "u16"]
 pub struct IntSub {}
 lazy_static! {
-    static ref INT_SUB_ARGS: [(String, isize); 2] = [
-        (String::from("lhs"), Int::get_id()),
-        (String::from("rhs"), Int::get_id())
+    static ref INT_SUB_ARGS: [(String, (isize, usize)); 2] = [
+        (String::from("lhs"), (Int::get_id(), 0)),
+        (String::from("rhs"), (Int::get_id(), 0))
     ];
 }
 impl TypedFunction for IntSub {
@@ -66,7 +66,7 @@ impl TypedFunction for IntSub {
         "sub"
     }
 
-    fn get_args(&self) -> &[(String, isize)] {
+    fn get_args(&self) -> &[(String, (isize, usize))] {
         INT_SUB_ARGS.as_ref()
     }
 
@@ -74,8 +74,8 @@ impl TypedFunction for IntSub {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<isize> {
-        Some(Int::get_id())
+    fn get_return_type(&self) -> Option<(isize, usize)> {
+        Some((Int::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -95,9 +95,9 @@ impl TypedFunction for IntSub {
 #[UniqueTypeIdType = "u16"]
 pub struct IntMul {}
 lazy_static! {
-    static ref INT_MUL_ARGS: [(String, isize); 2] = [
-        (String::from("lhs"), Int::get_id()),
-        (String::from("rhs"), Int::get_id())
+    static ref INT_MUL_ARGS: [(String, (isize, usize)); 2] = [
+        (String::from("lhs"), (Int::get_id(), 0)),
+        (String::from("rhs"), (Int::get_id(), 0))
     ];
 }
 impl TypedFunction for IntMul {
@@ -109,7 +109,7 @@ impl TypedFunction for IntMul {
         "mul"
     }
 
-    fn get_args(&self) -> &[(String, isize)] {
+    fn get_args(&self) -> &[(String, (isize, usize))] {
         INT_SUB_ARGS.as_ref()
     }
 
@@ -117,8 +117,8 @@ impl TypedFunction for IntMul {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<isize> {
-        Some(Int::get_id())
+    fn get_return_type(&self) -> Option<(isize, usize)> {
+        Some((Int::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -139,9 +139,9 @@ impl TypedFunction for IntMul {
 #[UniqueTypeIdType = "u16"]
 pub struct IntDiv {}
 lazy_static! {
-    static ref INT_DIV_ARGS: [(String, isize); 2] = [
-        (String::from("lhs"), Int::get_id()),
-        (String::from("rhs"), Int::get_id())
+    static ref INT_DIV_ARGS: [(String, (isize, usize)); 2] = [
+        (String::from("lhs"), (Int::get_id(), 0)),
+        (String::from("rhs"), (Int::get_id(), 0))
     ];
 }
 impl TypedFunction for IntDiv {
@@ -153,7 +153,7 @@ impl TypedFunction for IntDiv {
         "div"
     }
 
-    fn get_args(&self) -> &[(String, isize)] {
+    fn get_args(&self) -> &[(String, (isize, usize))] {
         INT_SUB_ARGS.as_ref()
     }
 
@@ -161,8 +161,8 @@ impl TypedFunction for IntDiv {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<isize> {
-        Some(Int::get_id())
+    fn get_return_type(&self) -> Option<(isize, usize)> {
+        Some((Int::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -184,9 +184,9 @@ impl TypedFunction for IntDiv {
 #[UniqueTypeIdType = "u16"]
 pub struct IntMod {}
 lazy_static! {
-    static ref INT_MOD_ARGS: [(String, isize); 2] = [
-        (String::from("lhs"), Int::get_id()),
-        (String::from("rhs"), Int::get_id())
+    static ref INT_MOD_ARGS: [(String, (isize, usize)); 2] = [
+        (String::from("lhs"), (Int::get_id(), 0)),
+        (String::from("rhs"), (Int::get_id(), 0))
     ];
 }
 impl TypedFunction for IntMod {
@@ -198,7 +198,7 @@ impl TypedFunction for IntMod {
         "mod"
     }
 
-    fn get_args(&self) -> &[(String, isize)] {
+    fn get_args(&self) -> &[(String, (isize, usize))] {
         INT_MOD_ARGS.as_ref()
     }
 
@@ -206,8 +206,8 @@ impl TypedFunction for IntMod {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<isize> {
-        Some(Int::get_id())
+    fn get_return_type(&self) -> Option<(isize, usize)> {
+        Some((Int::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -229,9 +229,9 @@ impl TypedFunction for IntMod {
 #[UniqueTypeIdType = "u16"]
 pub struct IntLT {}
 lazy_static! {
-    static ref INT_LT_ARGS: [(String, isize); 2] = [
-        (String::from("lhs"), Int::get_id()),
-        (String::from("rhs"), Int::get_id())
+    static ref INT_LT_ARGS: [(String, (isize, usize)); 2] = [
+        (String::from("lhs"), (Int::get_id(), 0)),
+        (String::from("rhs"), (Int::get_id(), 0))
     ];
 }
 impl TypedFunction for IntLT {
@@ -243,7 +243,7 @@ impl TypedFunction for IntLT {
         "lt"
     }
 
-    fn get_args(&self) -> &[(String, isize)] {
+    fn get_args(&self) -> &[(String, (isize, usize))] {
         INT_LT_ARGS.as_ref()
     }
 
@@ -251,8 +251,8 @@ impl TypedFunction for IntLT {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<isize> {
-        Some(Bool::get_id())
+    fn get_return_type(&self) -> Option<(isize, usize)> {
+        Some((Bool::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -274,9 +274,9 @@ impl TypedFunction for IntLT {
 #[UniqueTypeIdType = "u16"]
 pub struct IntGT {}
 lazy_static! {
-    static ref INT_GT_ARGS: [(String, isize); 2] = [
-        (String::from("lhs"), Int::get_id()),
-        (String::from("rhs"), Int::get_id())
+    static ref INT_GT_ARGS: [(String, (isize, usize)); 2] = [
+        (String::from("lhs"), (Int::get_id(), 0)),
+        (String::from("rhs"), (Int::get_id(), 0))
     ];
 }
 impl TypedFunction for IntGT {
@@ -288,7 +288,7 @@ impl TypedFunction for IntGT {
         "gt"
     }
 
-    fn get_args(&self) -> &[(String, isize)] {
+    fn get_args(&self) -> &[(String, (isize, usize))] {
         INT_GT_ARGS.as_ref()
     }
 
@@ -296,8 +296,8 @@ impl TypedFunction for IntGT {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<isize> {
-        Some(Bool::get_id())
+    fn get_return_type(&self) -> Option<(isize, usize)> {
+        Some((Bool::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -319,9 +319,9 @@ impl TypedFunction for IntGT {
 #[UniqueTypeIdType = "u16"]
 pub struct IntLE {}
 lazy_static! {
-    static ref INT_LE_ARGS: [(String, isize); 2] = [
-        (String::from("lhs"), Int::get_id()),
-        (String::from("rhs"), Int::get_id())
+    static ref INT_LE_ARGS: [(String, (isize, usize)); 2] = [
+        (String::from("lhs"), (Int::get_id(), 0)),
+        (String::from("rhs"), (Int::get_id(), 0))
     ];
 }
 impl TypedFunction for IntLE {
@@ -333,7 +333,7 @@ impl TypedFunction for IntLE {
         "le"
     }
 
-    fn get_args(&self) -> &[(String, isize)] {
+    fn get_args(&self) -> &[(String, (isize, usize))] {
         INT_LE_ARGS.as_ref()
     }
 
@@ -341,8 +341,8 @@ impl TypedFunction for IntLE {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<isize> {
-        Some(Bool::get_id())
+    fn get_return_type(&self) -> Option<(isize, usize)> {
+        Some((Bool::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -364,9 +364,9 @@ impl TypedFunction for IntLE {
 #[UniqueTypeIdType = "u16"]
 pub struct IntGE {}
 lazy_static! {
-    static ref INT_GE_ARGS: [(String, isize); 2] = [
-        (String::from("lhs"), Int::get_id()),
-        (String::from("rhs"), Int::get_id())
+    static ref INT_GE_ARGS: [(String, (isize, usize)); 2] = [
+        (String::from("lhs"), (Int::get_id(), 0)),
+        (String::from("rhs"), (Int::get_id(), 0))
     ];
 }
 impl TypedFunction for IntGE {
@@ -378,7 +378,7 @@ impl TypedFunction for IntGE {
         "ge"
     }
 
-    fn get_args(&self) -> &[(String, isize)] {
+    fn get_args(&self) -> &[(String, (isize, usize))] {
         INT_GE_ARGS.as_ref()
     }
 
@@ -386,8 +386,8 @@ impl TypedFunction for IntGE {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<isize> {
-        Some(Bool::get_id())
+    fn get_return_type(&self) -> Option<(isize, usize)> {
+        Some((Bool::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -409,9 +409,9 @@ impl TypedFunction for IntGE {
 #[UniqueTypeIdType = "u16"]
 pub struct IntEQ {}
 lazy_static! {
-    static ref INT_EQ_ARGS: [(String, isize); 2] = [
-        (String::from("lhs"), Int::get_id()),
-        (String::from("rhs"), Int::get_id())
+    static ref INT_EQ_ARGS: [(String, (isize, usize)); 2] = [
+        (String::from("lhs"), (Int::get_id(), 0)),
+        (String::from("rhs"), (Int::get_id(), 0))
     ];
 }
 impl TypedFunction for IntEQ {
@@ -423,7 +423,7 @@ impl TypedFunction for IntEQ {
         "eq"
     }
 
-    fn get_args(&self) -> &[(String, isize)] {
+    fn get_args(&self) -> &[(String, (isize, usize))] {
         INT_EQ_ARGS.as_ref()
     }
 
@@ -431,8 +431,8 @@ impl TypedFunction for IntEQ {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<isize> {
-        Some(Bool::get_id())
+    fn get_return_type(&self) -> Option<(isize, usize)> {
+        Some((Bool::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -454,9 +454,9 @@ impl TypedFunction for IntEQ {
 #[UniqueTypeIdType = "u16"]
 pub struct IntNE {}
 lazy_static! {
-    static ref INT_NE_ARGS: [(String, isize); 2] = [
-        (String::from("lhs"), Int::get_id()),
-        (String::from("rhs"), Int::get_id())
+    static ref INT_NE_ARGS: [(String, (isize, usize)); 2] = [
+        (String::from("lhs"), (Int::get_id(), 0)),
+        (String::from("rhs"), (Int::get_id(), 0))
     ];
 }
 impl TypedFunction for IntNE {
@@ -468,7 +468,7 @@ impl TypedFunction for IntNE {
         "ne"
     }
 
-    fn get_args(&self) -> &[(String, isize)] {
+    fn get_args(&self) -> &[(String, (isize, usize))] {
         INT_NE_ARGS.as_ref()
     }
 
@@ -476,8 +476,8 @@ impl TypedFunction for IntNE {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<isize> {
-        Some(Bool::get_id())
+    fn get_return_type(&self) -> Option<(isize, usize)> {
+        Some((Bool::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {

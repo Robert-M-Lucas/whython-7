@@ -21,7 +21,7 @@ impl Fib {
 
 
 fn main() ~ int {
-    let f: Fib = @Fib{ 0, 1, 13 };
+    let f: Fib = @ Fib { 0, 1, 13 };
 
     f.start();
 

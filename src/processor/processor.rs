@@ -137,8 +137,10 @@ pub enum ProcessorError {
     AttributeDoesntExist(LineInfo, String, String),
     #[error("Error: Tried to call non-static function on a type, not an initialised variable of that type\n{0}")]
     TypeNonStaticFunctionCall(LineInfo),
-    #[error("TODO: Placeholder")]
-    Placeholder2,
+    #[error("Error: Name cannot have a '$' prefix. Use `& [NAME]` to get a reference to a variable and `* [NAME]` to dereference\n{0}")]
+    NameWithRefPrefix(LineInfo),
+    #[error("Error: Feature '{1}' not implemented yet\n{0}")]
+    NotImplemented(LineInfo, String),
 }
 
 pub fn process(

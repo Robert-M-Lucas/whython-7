@@ -1,5 +1,7 @@
+use crate::ast::operators::Operator;
 use crate::basic_ast::symbol::BasicSymbol;
 use crate::compiler::compile_functions::{evaluate, FunctionHolder, Line, NameHandler};
+use crate::compiler::compile_functions::operators::evaluate_operation;
 use crate::parser::line_info::LineInfo;
 use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::{Type, TypedFunction};
@@ -7,13 +9,13 @@ use crate::processor::type_builder::{Type, TypedFunction};
 pub fn call_function(
     function: &Box<dyn TypedFunction>,
     start_line: &LineInfo,
-    default_arg: Option<(isize, isize)>,
+    default_arg: Option<(isize, (isize, usize))>,
     args: &Vec<Vec<(BasicSymbol, LineInfo)>>,
     lines: &mut Vec<Line>,
     name_handler: &mut NameHandler,
     function_holder: &FunctionHolder,
-    return_into: Option<(isize, isize)>,
-) -> Result<Option<(isize, isize)>, ProcessorError> {
+    return_into: Option<(isize, (isize, usize))>,
+) -> Result<Option<(isize, (isize, usize))>, ProcessorError> {
     name_handler.use_function(function);
     let target_args = function.get_args();
     let mut args_len = args.len();
@@ -54,15 +56,22 @@ pub fn call_function(
 
     let mut call_args = Vec::new();
     if let Some(default_arg) = default_arg {
+        let default_arg = if default_arg.1.1 == 0 && target_args[0].1.1 == 1 {
+            // TODO: Bad operator line
+            let into = name_handler.add_local_variable(None, target_args[0].1)?;
+            evaluate_operation(default_arg, (&Operator::And, start_line), None, lines, name_handler, function_holder, Some((into, target_args[0].1)))?.unwrap()
+        }
+        else {
+            default_arg
+        };
         if default_arg.1 != target_args[0].1 {
-            return Err(ProcessorError::Placeholder2); // TODO:
+            panic!("Default arg doesn't match first target arg")
         }
         call_args.push((
             default_arg.0,
             name_handler
                 .type_table()
-                .get_type_size(default_arg.1)
-                .unwrap(),
+                .get_type_size(default_arg.1)?,
         ));
     }
     for arg in args {
@@ -77,15 +86,15 @@ pub fn call_function(
                 arg[0].1.clone(),
                 name_handler
                     .type_table()
-                    .get_type(target_args[call_args.len()].1)
+                    .get_type(target_args[call_args.len()].1.0)
                     .unwrap()
-                    .get_name()
+                    .get_indirect_name(target_args[call_args.len()].1.1)
                     .to_string(),
                 name_handler
                     .type_table()
-                    .get_type(evaluated.1)
+                    .get_type(evaluated.1.0)
                     .unwrap()
-                    .get_name()
+                    .get_indirect_name(evaluated.1.1)
                     .to_string(),
                 function.get_line(),
             ));
@@ -94,8 +103,7 @@ pub fn call_function(
             evaluated.0,
             name_handler
                 .type_table()
-                .get_type_size(evaluated.1)
-                .unwrap(),
+                .get_type_size(evaluated.1)?,
         ));
     }
 
@@ -105,15 +113,15 @@ pub fn call_function(
                 start_line.clone(),
                 name_handler
                     .type_table()
-                    .get_type(return_into.unwrap().1)
+                    .get_type(return_into.unwrap().1.0)
                     .unwrap()
-                    .get_name()
+                    .get_indirect_name(return_into.unwrap().1.1)
                     .to_string(),
                 name_handler
                     .type_table()
-                    .get_type(return_type)
+                    .get_type(return_type.0)
                     .unwrap()
-                    .get_name()
+                    .get_indirect_name(return_type.1)
                     .to_string(),
             ));
         }
@@ -122,8 +130,7 @@ pub fn call_function(
                 return_into.0,
                 name_handler
                     .type_table()
-                    .get_type_size(return_type)
-                    .unwrap(),
+                    .get_type_size(return_type)?,
             )
         } else {
             (
@@ -151,9 +158,9 @@ pub fn call_function(
                 start_line.clone(),
                 name_handler
                     .type_table()
-                    .get_type(return_into.unwrap().1)
+                    .get_type(return_into.unwrap().1.0)
                     .unwrap()
-                    .get_name()
+                    .get_indirect_name(return_into.unwrap().1.1)
                     .to_string(),
                 "None".to_string(),
             ));
