@@ -9,7 +9,7 @@ use unique_type_id::UniqueTypeId;
 #[UniqueTypeIdType = "u16"]
 pub struct BoolNot {}
 lazy_static! {
-    static ref BOOL_NOT_ARGS: [(String, isize); 1] = [(String::from("lhs"), Bool::get_id())];
+    static ref BOOL_NOT_ARGS: [(String, (isize, usize)); 1] = [(String::from("lhs"), (Bool::get_id(), 0))];
 }
 impl TypedFunction for BoolNot {
     fn get_id(&self) -> isize {
@@ -20,7 +20,7 @@ impl TypedFunction for BoolNot {
         "not"
     }
 
-    fn get_args(&self) -> &[(String, isize)] {
+    fn get_args(&self) -> &[(String, (isize, usize))] {
         BOOL_NOT_ARGS.as_ref()
     }
 
@@ -28,8 +28,8 @@ impl TypedFunction for BoolNot {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<isize> {
-        Some(Bool::get_id())
+    fn get_return_type(&self) -> Option<(isize, usize)> {
+        Some((Bool::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -50,9 +50,9 @@ impl TypedFunction for BoolNot {
 #[UniqueTypeIdType = "u16"]
 pub struct BoolEQ {}
 lazy_static! {
-    static ref BOOL_EQ_ARGS: [(String, isize); 2] = [
-        (String::from("lhs"), Bool::get_id()),
-        (String::from("rhs"), Bool::get_id())
+    static ref BOOL_EQ_ARGS: [(String, (isize, usize)); 2] = [
+        (String::from("lhs"), (Bool::get_id(), 0)),
+        (String::from("rhs"), (Bool::get_id(), 0))
     ];
 }
 impl TypedFunction for BoolEQ {
@@ -64,7 +64,7 @@ impl TypedFunction for BoolEQ {
         "eq"
     }
 
-    fn get_args(&self) -> &[(String, isize)] {
+    fn get_args(&self) -> &[(String, (isize, usize))] {
         BOOL_EQ_ARGS.as_ref()
     }
 
@@ -72,8 +72,8 @@ impl TypedFunction for BoolEQ {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<isize> {
-        Some(Bool::get_id())
+    fn get_return_type(&self) -> Option<(isize, usize)> {
+        Some((Bool::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -95,9 +95,9 @@ impl TypedFunction for BoolEQ {
 #[UniqueTypeIdType = "u16"]
 pub struct BoolNE {}
 lazy_static! {
-    static ref BOOL_NE_ARGS: [(String, isize); 2] = [
-        (String::from("lhs"), Bool::get_id()),
-        (String::from("rhs"), Bool::get_id())
+    static ref BOOL_NE_ARGS: [(String, (isize, usize)); 2] = [
+        (String::from("lhs"), (Bool::get_id(), 0)),
+        (String::from("rhs"), (Bool::get_id(), 0))
     ];
 }
 impl TypedFunction for BoolNE {
@@ -109,7 +109,7 @@ impl TypedFunction for BoolNE {
         "ne"
     }
 
-    fn get_args(&self) -> &[(String, isize)] {
+    fn get_args(&self) -> &[(String, (isize, usize))] {
         BOOL_NE_ARGS.as_ref()
     }
 
@@ -117,8 +117,8 @@ impl TypedFunction for BoolNE {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<isize> {
-        Some(Bool::get_id())
+    fn get_return_type(&self) -> Option<(isize, usize)> {
+        Some((Bool::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {

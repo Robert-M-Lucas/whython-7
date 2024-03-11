@@ -11,6 +11,7 @@ pub fn parse_initialiser(symbols: &mut Vec<(BasicSymbol, LineInfo)>,
     ) -> Result<(), ParseError> {
     let line_info = reader.checkpoint();
     let (name, eof) = reader.move_read_to_next_char('{');
+    let name = name.trim();
     for c in name.chars() {
         if !NAME_VALID_CHARS.contains(&c) {
             let mut utf8 = Vec::with_capacity(c.len_utf8());
@@ -55,7 +56,7 @@ pub fn parse_initialiser(symbols: &mut Vec<(BasicSymbol, LineInfo)>,
         attributes.pop();
     }
 
-    symbols.push((BasicSymbol::Literal(Literal::Initialiser(name, attributes)), reader.get_line_info_changed(line_info.0, line_info.1)));
+    symbols.push((BasicSymbol::Literal(Literal::Initialiser(name.to_string(), attributes)), reader.get_line_info_changed(line_info.0, line_info.1)));
 
     Ok(())
 }

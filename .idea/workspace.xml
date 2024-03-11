@@ -7,10 +7,12 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Commit">
-      <change afterPath="$PROJECT_DIR$/reference implementation.txt" afterDir="false" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Continued adding support for reference types">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_20_02_2024_16_29_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_20_02_2024_16_29__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/type_builder.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/type_builder.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +66,7 @@
     &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/rober/Documents/Coding/RustProjects/whython-7&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/rober/Documents/Coding/RustProjects/wiki-4&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -72,7 +74,7 @@
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
     &quot;org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon&quot;: &quot;&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;language.rust.cargo.check&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editing.templates&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -80,6 +82,9 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7" />
     </key>
+  </component>
+  <component name="RsExternalLinterProjectSettings">
+    <option name="runOnTheFly" value="true" />
   </component>
   <component name="RunManager" selected="Cargo.Run whython-7">
     <configuration name="Run whython-7" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
@@ -154,38 +159,14 @@
       <workItem from="1708443054042" duration="78000" />
       <workItem from="1708444249472" duration="435000" />
       <workItem from="1708446636633" duration="1360000" />
-    </task>
-    <task id="LOCAL-00006" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707577819456</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1707577819456</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707670816437</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1707670816437</updated>
-    </task>
-    <task id="LOCAL-00008" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707679264000</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1707679264000</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707679319201</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1707679319201</updated>
+      <workItem from="1708530621877" duration="3489000" />
+      <workItem from="1708629674803" duration="690000" />
+      <workItem from="1708687088255" duration="177000" />
+      <workItem from="1708882042489" duration="7450000" />
+      <workItem from="1709038220033" duration="774000" />
+      <workItem from="1709176246128" duration="14000" />
+      <workItem from="1709383015105" duration="86000" />
+      <workItem from="1709383107736" duration="392000" />
     </task>
     <task id="LOCAL-00010" summary="Commit">
       <option name="closed" value="true" />
@@ -547,7 +528,39 @@
       <option name="project" value="LOCAL" />
       <updated>1708446689753</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="Commit">
+      <option name="closed" value="true" />
+      <created>1708530697176</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1708530697177</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Commit">
+      <option name="closed" value="true" />
+      <created>1708882059655</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1708882059656</updated>
+    </task>
+    <task id="LOCAL-00057" summary="Began adding support for reference types">
+      <option name="closed" value="true" />
+      <created>1708888153620</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1708888153620</updated>
+    </task>
+    <task id="LOCAL-00058" summary="Continued adding support for reference types">
+      <option name="closed" value="true" />
+      <created>1708889183047</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1708889183047</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -584,7 +597,9 @@
     <MESSAGE value="Fixed shadowing" />
     <MESSAGE value="Added support gor parsing initialisers" />
     <MESSAGE value="Commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Commit" />
+    <MESSAGE value="Began adding support for reference types" />
+    <MESSAGE value="Continued adding support for reference types" />
+    <option name="LAST_COMMIT_MESSAGE" value="Continued adding support for reference types" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

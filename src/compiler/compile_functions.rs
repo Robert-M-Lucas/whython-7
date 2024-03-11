@@ -4,6 +4,7 @@ mod evaluate_symbol;
 mod instantiate_literal;
 mod operators;
 mod process_lines;
+mod reference;
 
 use crate::basic_ast::symbol::{BasicSymbol, NameAccessType, NameType};
 use crate::compiler::custom_functions::{
@@ -20,6 +21,7 @@ pub enum Line {
     ReturnCall(isize, Vec<(isize, usize)>, isize),
     NoReturnCall(isize, Vec<(isize, usize)>),
     Copy(isize, isize, usize),
+    DynFromCopy(isize, isize, usize),
     Return(Option<isize>),
     InlineAsm(Vec<String>),
 }
@@ -65,11 +67,11 @@ impl FunctionHolder {
 
     pub fn get_function(
         &self,
-        _type: Option<isize>,
+        _type: Option<(isize, usize)>,
         name: &str,
     ) -> Option<&Box<dyn TypedFunction>> {
         self.functions_table
-            .get(&_type)
+            .get(&_type.and_then(|x| Some(x.0)))
             .and_then(|x| x.get(name).map(|x| self.functions.get(x).unwrap()))
     }
 
@@ -84,8 +86,8 @@ impl FunctionHolder {
 
 pub struct NameHandler {
     type_table: TypeTable,
-    args: Vec<(String, isize, isize)>,
-    local_variables: Vec<(String, isize, isize)>,
+    args: Vec<(String, isize, (isize, usize))>,
+    local_variables: Vec<(String, isize, (isize, usize))>,
     local_variables_size: usize,
     used_functions: HashSet<isize>,
     uid: usize,
@@ -103,7 +105,7 @@ impl NameHandler {
         }
     }
 
-    pub fn set_args(&mut self, args: Vec<(String, isize, isize)>) {
+    pub fn set_args(&mut self, args: Vec<(String, isize, (isize, usize))>) {
         self.args = args
     }
 
@@ -130,13 +132,11 @@ impl NameHandler {
     pub fn add_local_variable(
         &mut self,
         name: Option<String>,
-        _type: isize,
+        _type: (isize, usize),
     ) -> Result<isize, ProcessorError> {
         let size = self
             .type_table
-            .get_type(_type)
-            .unwrap()
-            .get_size(&self.type_table, None)?;
+            .get_type_size(_type)?;
         let addr = -(self.local_variables_size as isize) - size as isize;
         self.local_variables_size += size;
         if let Some(name) = name {
@@ -145,49 +145,55 @@ impl NameHandler {
         Ok(addr)
     }
 
-    pub fn name_variable(&mut self, name: String, addr: isize, _type: isize) {
+    pub fn name_variable(&mut self, name: String, addr: isize, _type: (isize, usize)) {
         self.local_variables.push((name, addr, _type));
     }
 
     pub fn resolve_name<'b>(
         &self,
         function_holder: &'b FunctionHolder,
-        name: &'b Vec<(String, NameAccessType, NameType)>,
+        name: &'b Vec<(String, NameAccessType, NameType, usize)>,
         line: &LineInfo,
     ) -> Result<
         Either<
-            (isize, isize),
+            (isize, (isize, usize)),
             (
                 &'b Box<dyn TypedFunction>,
-                Option<(isize, isize)>,
+                Option<(isize, (isize, usize))>,
                 &'b Vec<Vec<(BasicSymbol, LineInfo)>>,
             ),
         >,
         ProcessorError,
     > {
-        let mut current_type = None;
+        let mut current_type: Option<(isize, usize)> = None;
         let mut current_variable = None;
         let mut return_func = None;
 
-        for (name, access_type, name_type) in name {
+        for (name, access_type, name_type, indirection) in name {
             if return_func.is_some() {
-                todo!()
+                // TODO
+                return Err(ProcessorError::NotImplemented(line.clone(), "Using '.' or '#' after a function call".to_string()))
             }
 
             match name_type {
                 NameType::Normal => {
                     if current_type.is_some() && current_variable.is_some() {
-                        let user_type = self.type_table.get_type(current_type.unwrap()).unwrap().get_user_type()
+                        if current_type.unwrap().1 != 0 {
+                            println!("{}", line);
+                            todo!()
+                        }
+                        
+                        let user_type = self.type_table.get_type(current_type.unwrap().0).unwrap().get_user_type()
                             .ok_or(ProcessorError::AttributeDoesntExist(
                                 line.clone(),
-                                self.type_table.get_type(current_type.unwrap()).unwrap().get_name().to_string(),
+                                self.type_table.get_type(current_type.unwrap().0).unwrap().get_name().to_string(),
                                 name.clone()
                             ))?;
 
                         let t = user_type.get_attribute_offset_and_type(name, &self.type_table)?
                             .ok_or(ProcessorError::AttributeDoesntExist(
                                 line.clone(),
-                                self.type_table.get_type(current_type.unwrap()).unwrap().get_name().to_string(),
+                                self.type_table.get_type(current_type.unwrap().0).unwrap().get_name().to_string(),
                                 name.clone()
                             ))?;
 
@@ -209,7 +215,7 @@ impl NameHandler {
                         current_type = Some(*_type);
                     } else if let Some(_type) = self.type_table.get_id_by_name(name) {
                         current_variable = None;
-                        current_type = Some(_type);
+                        current_type = Some((_type, *indirection));
                     } else {
                         return Err(ProcessorError::NameNotFound(line.clone(), name.clone()));
                     }
@@ -217,7 +223,7 @@ impl NameHandler {
                 NameType::Function(contents) => {
                     if let Some(func) = function_holder
                         .functions_table()
-                        .get(&current_type)
+                        .get(&current_type.and_then(|x| Some(x.0)))
                         .unwrap()
                         .get(name)
                     {

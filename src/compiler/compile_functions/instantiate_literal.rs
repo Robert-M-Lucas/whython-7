@@ -6,14 +6,15 @@ use either::{Either, Left, Right};
 use crate::basic_ast::symbol::BasicSymbol;
 use crate::compiler::compile_functions::evaluate::evaluate;
 use crate::parser::line_info::LineInfo;
+use crate::processor::custom_types::Int;
 
 fn try_instantiate_literal(
-    literal: Either<(isize, isize), (&Literal, &LineInfo)>,
+    literal: Either<(isize, (isize, usize)), (&Literal, &LineInfo)>,
     lines: &mut Vec<Line>,
     name_handler: &mut NameHandler,
     function_holder: &FunctionHolder,
-    return_into: Option<(isize, isize)>,
-) -> Result<(isize, isize), ProcessorError> {
+    return_into: Option<(isize, (isize, usize))>,
+) -> Result<(isize, (isize, usize)), ProcessorError> {
     match literal {
         Left(r) => Ok(r),
         Right(literal) => instantiate_variable(
@@ -27,20 +28,29 @@ fn try_instantiate_literal(
 }
 
 pub fn instantiate_variable(
-    literal: Either<(&Literal, &LineInfo), isize>,
+    literal: Either<(&Literal, &LineInfo), (isize, usize)>,
     lines: &mut Vec<Line>,
     name_handler: &mut NameHandler,
     function_holder: &FunctionHolder,
-    return_into: Option<(isize, isize)>,
-) -> Result<(isize, isize), ProcessorError> {
+    return_into: Option<(isize, (isize, usize))>,
+) -> Result<(isize, (isize, usize)), ProcessorError> {
     let (addr, id) = if let Some((addr, id)) = return_into {
         (addr, id)
     } else {
         let id = match &literal {
-            Left((literal, _)) => literal.get_type_id(),
+            Left((literal, _)) => (literal.get_type_id(), 0),
             Right(id) => *id,
         };
         (name_handler.add_local_variable(None, id)?, id)
+    };
+    // Indirect
+    let true_id = id.0;
+    let indirection = id.1;
+    let id = if indirection != 0 {
+        Int::get_id()
+    }
+    else { 
+        id.0
     };
     let _type = name_handler.type_table().get_type(id).unwrap();
     let asm = match &literal {
@@ -84,5 +94,5 @@ pub fn instantiate_variable(
         Right(_id) => _type.instantiate(None, addr)?,
     };
     lines.push(Line::InlineAsm(asm));
-    Ok((addr, id))
+    Ok((addr, (true_id, indirection)))
 }
