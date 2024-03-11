@@ -70,6 +70,11 @@ pub trait Type {
     fn get_user_type(&self) -> Option<&UserType> { None }
 }
 
+pub struct TypeIdentifier {
+    id: isize,
+    indirections: usize
+}
+
 pub struct TypeTable {
     types: HashMap<isize, Box<dyn Type>>,
 }
