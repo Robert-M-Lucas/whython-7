@@ -120,7 +120,7 @@ impl NameHandler {
                             let ref_addr = self.add_local_variable(None, (t.1.0, current_type.unwrap().1)).unwrap();
                             lines.push(Line::InlineAsm(Int::instantiate_ref(current_variable.unwrap(), t.0 as isize, ref_addr)));
                             current_variable = Some(ref_addr);
-                            current_type = Some((t.1.0, current_type.unwrap().1));
+                            current_type = Some((t.1.0, current_type.unwrap().1 + t.1.1));
                         }
                         else {
                             current_variable = Some(current_variable.unwrap() + (t.0 as isize));

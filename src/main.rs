@@ -79,7 +79,7 @@ fn main() {
     }
     #[cfg(target_os = "linux")]
     {
-        println!("Compilation and execution on Linux may be buggy!s");
+        println!("Compilation and execution on Linux may be buggy!");
         println!("Linking (gcc)...");
         time!(link_gcc_experimental(&args.output));
         println!("Executing (wine)...");
