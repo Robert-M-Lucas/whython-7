@@ -1,10 +1,10 @@
 use crate::ast::literals::Literal;
-use crate::compiler::compile_functions::{FunctionHolder, Line, NameHandler};
+use crate::compiler::compile_functions::{FunctionHolder, Line};
 use crate::processor::processor::ProcessorError;
-use crate::processor::type_builder::{Type};
+use crate::processor::type_builder::Type;
 use either::{Either, Left, Right};
-use crate::basic_ast::symbol::BasicSymbol;
 use crate::compiler::compile_functions::evaluate::evaluate;
+use crate::compiler::compile_functions::name_handler::NameHandler;
 use crate::parser::line_info::LineInfo;
 use crate::processor::custom_types::Int;
 

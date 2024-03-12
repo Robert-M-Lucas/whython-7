@@ -9,12 +9,16 @@ fn main() ~ int {
         7
     };
 
-    printi(test.a);
-    printi(test.b);
-
     let lest: $Test = &test;
+    let b: $int = lest.b;
 
-    let b: $int = lest.a;
+    *test.a += 1;
+
+    printi(*b);
+
+    test.b += 1;
+
+    printi(*b);
 
     return 0;
 }

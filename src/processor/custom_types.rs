@@ -71,7 +71,7 @@ impl Int {
 }
 
 impl Int {
-    pub fn instantiate_ref(
+    pub fn instantiate_local_ref(
         offset: isize,
         local_address: isize,
     ) -> Vec<String> {
@@ -83,6 +83,20 @@ impl Int {
                 "mov qword [{}], rax",
                 get_local_address(local_address),
         )]
+    }
+
+    pub fn instantiate_ref(
+        base_variable: isize,
+        offset: isize,
+        ref_address: isize
+    ) -> Vec<String> {
+        vec![
+            format!("mov rax, qword [{}]", get_local_address(base_variable)),
+            format!("add rax, {offset}"),
+            format!(
+                "mov qword [{}], rax",
+                get_local_address(ref_address),
+            )]
     }
 }
 

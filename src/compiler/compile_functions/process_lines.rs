@@ -2,7 +2,7 @@ use std::fs;
 use crate::ast::keywords::Keyword;
 use crate::basic_ast::punctuation::Punctuation;
 use crate::basic_ast::symbol::{BasicSymbol, NameType};
-use crate::compiler::compile_functions::{evaluate, operators, FunctionHolder, Line, NameHandler};
+use crate::compiler::compile_functions::{evaluate, FunctionHolder, Line, operators};
 use crate::compiler::generate_asm::{get_function_sublabel, get_local_address};
 use crate::parser::line_info::LineInfo;
 use crate::processor::custom_types::Bool;
@@ -10,6 +10,7 @@ use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::Type;
 use either::Left;
 use itertools::Itertools;
+use crate::compiler::compile_functions::name_handler::NameHandler;
 
 pub fn process_lines(
     section: &[(BasicSymbol, LineInfo)],
@@ -54,7 +55,7 @@ pub fn process_lines(
                         _ => return Err(ProcessorError::NonNameAssignment(line[0].1.clone())),
                     };
                     let Left(variable) =
-                        name_handler.resolve_name(function_holder, name, &line[0].1)?
+                        name_handler.resolve_name(function_holder, name, &line[0].1, lines)?
                     else {
                         return Err(ProcessorError::AssignToNonVariable(line[0].1.clone()));
                     };

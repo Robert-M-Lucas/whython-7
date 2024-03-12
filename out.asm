@@ -50,7 +50,7 @@ __4: ; printi
 main: ; main
 	push rbp
 	mov rbp, rsp
-	sub rsp, 48
+	sub rsp, 80
 	; '    let test: Test = @Test {'
 	mov rax, qword 2
 	mov qword [rbp-16], rax
@@ -60,30 +60,46 @@ main: ; main
 	; '        7'
 	; '    };'
 	; ''
-	; '    printi(test.a);'
-	push qword 0
-	mov rax, qword [rbp-16]
-	push rax
-	call __4
-	add rsp, 16
-	; '    printi(test.b);'
-	push qword 0
-	mov rax, qword [rbp-8]
-	push rax
-	call __4
-	add rsp, 16
-	; ''
 	; '    let lest: $Test = &test;'
 	mov rax, rbp
 	add rax, -16
 	mov qword [rbp-24], rax
-	; ''
-	; '    let b: $int = lest.a;'
+	; '    let b: $int = lest.b;'
 	mov rax, qword [rbp-24]
+	add rax, 8
+	mov qword [rbp-40], rax
+	mov rax, qword [rbp-40]
 	mov qword [rbp-32], rax
+	; ''
+	; '    printi(*b);'
+	mov r9, qword [rbp-32]
+	mov rax, qword [r9+0]
+	mov qword [rbp-48], rax
+	push qword 0
+	mov rax, qword [rbp-48]
+	push rax
+	call __4
+	add rsp, 16
+	; ''
+	; '    test.b += 1;'
+	mov rax, qword 1
+	mov qword [rbp-56], rax
+	mov rax, [rbp-8]
+	add rax, [rbp-56]
+	mov [rbp-8], rax
+	; ''
+	; '    printi(*b);'
+	mov r9, qword [rbp-32]
+	mov rax, qword [r9+0]
+	mov qword [rbp-64], rax
+	push qword 0
+	mov rax, qword [rbp-64]
+	push rax
+	call __4
+	add rsp, 16
 	; ''
 	; '    return 0;'
 	mov rax, qword 0
-	mov qword [rbp-40], rax
-	mov rcx, [rbp-40]
+	mov qword [rbp-72], rax
+	mov rcx, [rbp-72]
 	call ExitProcess

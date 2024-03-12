@@ -1,10 +1,11 @@
 use crate::basic_ast::symbol::BasicSymbol;
 use crate::compiler::compile_functions::{
-    call_function, evaluate, instantiate_literal, FunctionHolder, Line, NameHandler,
+    call_function, evaluate, FunctionHolder, instantiate_literal, Line,
 };
 use crate::parser::line_info::LineInfo;
 use crate::processor::processor::ProcessorError;
 use either::{Left, Right};
+use crate::compiler::compile_functions::name_handler::NameHandler;
 
 pub fn evaluate_symbol(
     symbol: &(BasicSymbol, LineInfo),
@@ -31,7 +32,7 @@ pub fn evaluate_symbol(
         }
         BasicSymbol::Name(name) => {
             // println!("{:?}", name);
-            match name_handler.resolve_name(function_holder, name, &symbol.1)? {
+            match name_handler.resolve_name(function_holder, name, &symbol.1, lines)? {
                 Left(new_variable) => {
                     if let Some(return_into) = return_into {
                         if return_into.1 != new_variable.1 {

@@ -1,12 +1,13 @@
 use crate::ast::operators::Operator;
 use crate::basic_ast::symbol::BasicSymbol;
-use crate::compiler::compile_functions::{instantiate_literal, FunctionHolder, Line, NameHandler};
+use crate::compiler::compile_functions::{FunctionHolder, Line};
 use crate::parser::line_info::LineInfo;
 use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::{Type, TypedFunction};
 use either::{Left, Right};
 use crate::ast::literals::Literal;
 use crate::compiler::compile_functions::instantiate_literal::instantiate_variable;
+use crate::compiler::compile_functions::name_handler::NameHandler;
 use crate::processor::custom_types::Int;
 
 pub fn evaluate_operator(symbol: &(BasicSymbol, LineInfo)) -> Result<&Operator, ProcessorError> {
@@ -32,7 +33,7 @@ pub fn evaluate_operation(
                     op.1.clone(),
                     "not".to_string(),
                     name_handler
-                        .type_table
+                        .type_table()
                         .get_type(lhs.1.0)
                         .unwrap()
                         .get_indirect_name(lhs.1.1)
@@ -47,7 +48,7 @@ pub fn evaluate_operation(
                     op.1.clone(),
                     "not".to_string(),
                     name_handler
-                        .type_table
+                        .type_table()
                         .get_type(lhs.1.0)
                         .unwrap()
                         .get_indirect_name(lhs.1.1)
@@ -64,7 +65,7 @@ pub fn evaluate_operation(
                                 op.1.clone(),
                                 "not".to_string(),
                                 name_handler
-                                    .type_table
+                                    .type_table()
                                     .get_type(lhs.1.0)
                                     .unwrap()
                                     .get_indirect_name(lhs.1.1)
@@ -96,13 +97,13 @@ pub fn evaluate_operation(
                         return Err(ProcessorError::BadEvaluatedType(
                             op.1.clone(),
                             name_handler
-                                .type_table
+                                .type_table()
                                 .get_type(return_into.1.0)
                                 .unwrap()
                                 .get_indirect_name(return_into.1.1)
                                 .to_string(),
                             name_handler
-                                .type_table
+                                .type_table()
                                 .get_type(lhs.1.0)
                                 .unwrap()
                                 .get_indirect_name(lhs.1.1 + 1)
@@ -114,7 +115,7 @@ pub fn evaluate_operation(
                 else {
                     (name_handler.add_local_variable(None, (lhs.1.0, lhs.1.1 + 1))?, (lhs.1.0, lhs.1.1 + 1))
                 };
-                lines.push(Line::InlineAsm(Int::instantiate_ref(lhs.0, return_into.0)));
+                lines.push(Line::InlineAsm(Int::instantiate_local_ref(lhs.0, return_into.0)));
                 return Ok(Some(return_into));
             }
 
@@ -127,13 +128,13 @@ pub fn evaluate_operation(
                         return Err(ProcessorError::BadEvaluatedType(
                             op.1.clone(),
                             name_handler
-                                .type_table
+                                .type_table()
                                 .get_type(return_into.1.0)
                                 .unwrap()
                                 .get_indirect_name(return_into.1.1)
                                 .to_string(),
                             name_handler
-                                .type_table
+                                .type_table()
                                 .get_type(lhs.1.0)
                                 .unwrap()
                                 .get_indirect_name(lhs.1.1 - 1)
@@ -182,13 +183,13 @@ pub fn evaluate_operation(
                     op.1.clone(),
                     func_name.to_string(),
                     name_handler
-                        .type_table
+                        .type_table()
                         .get_type(lhs.1.0)
                         .unwrap()
                         .get_indirect_name(lhs.1.1)
                         .to_string(),
                     name_handler
-                        .type_table
+                        .type_table()
                         .get_type(rhs.1.0)
                         .unwrap()
                         .get_indirect_name(rhs.1.1)
@@ -204,13 +205,13 @@ pub fn evaluate_operation(
                     op.1.clone(),
                     func_name.to_string(),
                     name_handler
-                        .type_table
+                        .type_table()
                         .get_type(lhs.1.0)
                         .unwrap()
                         .get_indirect_name(lhs.1.1)
                         .to_string(),
                     name_handler
-                        .type_table
+                        .type_table()
                         .get_type(rhs.1.0)
                         .unwrap()
                         .get_indirect_name(rhs.1.1)
@@ -223,13 +224,13 @@ pub fn evaluate_operation(
                     op.1.clone(),
                     func_name.to_string(),
                     name_handler
-                        .type_table
+                        .type_table()
                         .get_type(lhs.1.0)
                         .unwrap()
                         .get_indirect_name(lhs.1.1)
                         .to_string(),
                     name_handler
-                        .type_table
+                        .type_table()
                         .get_type(rhs.1.0)
                         .unwrap()
                         .get_indirect_name(rhs.1.1)
@@ -241,13 +242,13 @@ pub fn evaluate_operation(
                     return Err(ProcessorError::BadEvaluatedType(
                         op.1.clone(),
                         name_handler
-                            .type_table
+                            .type_table()
                             .get_type(return_into.1.0)
                             .unwrap()
                             .get_indirect_name(return_into.1.1)
                             .to_string(),
                         name_handler
-                            .type_table
+                            .type_table()
                             .get_type(ret_type.0)
                             .unwrap()
                             .get_indirect_name(ret_type.1)

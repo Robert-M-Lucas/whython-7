@@ -1,7 +1,8 @@
 use crate::basic_ast::symbol::BasicSymbol;
 use crate::compiler::compile_functions::{
-    evaluate_symbol, operators, FunctionHolder, Line, NameHandler,
+    evaluate_symbol, FunctionHolder, Line, operators,
 };
+use crate::compiler::compile_functions::name_handler::NameHandler;
 use crate::parser::line_info::LineInfo;
 use crate::processor::processor::ProcessorError;
 

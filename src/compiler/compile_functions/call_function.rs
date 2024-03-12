@@ -1,6 +1,7 @@
 use crate::ast::operators::Operator;
 use crate::basic_ast::symbol::BasicSymbol;
-use crate::compiler::compile_functions::{evaluate, FunctionHolder, Line, NameHandler};
+use crate::compiler::compile_functions::{evaluate, FunctionHolder, Line};
+use crate::compiler::compile_functions::name_handler::NameHandler;
 use crate::compiler::compile_functions::operators::evaluate_operation;
 use crate::parser::line_info::LineInfo;
 use crate::processor::processor::ProcessorError;
@@ -135,7 +136,7 @@ pub fn call_function(
         } else {
             (
                 name_handler.add_local_variable(None, return_type)?,
-                name_handler.type_table.get_type_size(return_type)?,
+                name_handler.type_table().get_type_size(return_type)?,
             )
         };
 
