@@ -1,3 +1,4 @@
+use std::fs;
 use crate::ast::keywords::Keyword;
 use crate::basic_ast::punctuation::Punctuation;
 use crate::basic_ast::symbol::{BasicSymbol, NameType};
@@ -8,6 +9,7 @@ use crate::processor::custom_types::Bool;
 use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::Type;
 use either::Left;
+use itertools::Itertools;
 
 pub fn process_lines(
     section: &[(BasicSymbol, LineInfo)],
@@ -20,7 +22,25 @@ pub fn process_lines(
 ) -> Result<bool, ProcessorError> {
     let mut last_return = false;
 
+    #[cfg(debug_assertions)]
+    let mut prev_line = None;
     for line in section.split(|x| matches!(x.0, BasicSymbol::Punctuation(Punctuation::Semicolon))) {
+        #[cfg(debug_assertions)]
+        if line.last().is_some() {
+            let mut new_line = line.last().unwrap().1.line();
+            let mut file = line.last().unwrap().1.file().unwrap();
+            let mut start = if let Some(prev_line) = prev_line { prev_line } else { line.first().unwrap().1.line() };
+
+            let text = fs::read_to_string(file.as_path()).unwrap();
+            let text = &text.lines().collect_vec()[(start - 1)..(new_line)];
+
+            for l in text {
+                lines.push(Line::Annotation(l.to_string()));
+            }
+
+            prev_line = Some(new_line + 1);
+        }
+
         if line.is_empty() {
             continue;
         }
@@ -169,7 +189,7 @@ pub fn process_lines(
                         line[3].1.clone(),
                         type_name.0.clone(),
                     ))?;
-                let addr = name_handler.add_local_variable(Some(name.clone()), (type_id, type_name.3))?;
+                let addr = name_handler.add_local_variable(None, (type_id, type_name.3))?;
 
                 if line.len() < 6 {
                     return Err(ProcessorError::LetNoValue(line[3].1.clone()));
@@ -185,6 +205,8 @@ pub fn process_lines(
                     function_holder,
                     Some((addr, (type_id, type_name.3))),
                 )?;
+
+                name_handler.name_variable(name.clone(), addr, (type_id, type_name.3));
             }
             BasicSymbol::Keyword(Keyword::While) => {
                 if line.len() < 2 {

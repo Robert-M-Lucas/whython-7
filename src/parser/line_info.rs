@@ -26,6 +26,14 @@ impl LineInfo {
             char_start: 0,
         }
     }
+
+    pub fn line(&self) -> usize {
+        self.line
+    }
+
+    pub fn file(&self) -> Option<Rc<PathBuf>> {
+        self.file.clone()
+    }
 }
 
 impl Display for LineInfo {

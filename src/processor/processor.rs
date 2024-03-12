@@ -93,7 +93,7 @@ pub enum ProcessorError {
     BadReturnType(LineInfo, String, String),
     #[error("Error: Can only assign to variables")]
     AssignToNonVariable(LineInfo),
-    #[error("Error: 'let' must be followed by a variable name")]
+    #[error("Error: 'let' must be followed by a variable name\n{0}")]
     LetNoName(LineInfo),
     #[error("Error: `let [NAME]: [TYPE]` must be followed by `= [VALUE]`")]
     LetNoValue(LineInfo),

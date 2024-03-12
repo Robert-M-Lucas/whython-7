@@ -1,6 +1,20 @@
+struct Test {
+    a: int,
+    b: int
+}
+
 fn main() ~ int {
-    let a: int = 12;
-    *a += 1;
+    let test: Test = @Test {
+        2,
+        7
+    };
+
+    printi(test.a);
+    printi(test.b);
+
+    let lest: $Test = &test;
+
+    let b: $int = lest.a;
 
     return 0;
 }

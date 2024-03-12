@@ -1,0 +1,53 @@
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_16_02_2024_23_46__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_16_02_2024_23_46__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Update_at_16_02_2024_23_46__Changes_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_16_02_2024_23_46__Changes_.xml	(revision 8b0272cda9036cd7b5947d5886bac357ff122b42)
++++ /dev/null	(revision 8b0272cda9036cd7b5947d5886bac357ff122b42)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Update_at_16_02_2024_23_46_[Changes]" date="1708127223846" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_16_02_2024_23_46_[Changes]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Update at 16/02/2024 23:46 [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_20_02_2024_16_29__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_20_02_2024_16_29__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Update_at_20_02_2024_16_29__Changes_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_20_02_2024_16_29__Changes_.xml	(revision 8b0272cda9036cd7b5947d5886bac357ff122b42)
++++ /dev/null	(revision 8b0272cda9036cd7b5947d5886bac357ff122b42)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Update_at_20_02_2024_16_29_[Changes]" date="1708446556521" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_20_02_2024_16_29_[Changes]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Update at 20/02/2024 16:29 [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_22_02_2024__18_23__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_22_02_2024__18_23__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Update_at_22_02_2024__18_23__Changes_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_22_02_2024__18_23__Changes_.xml	(revision 8b0272cda9036cd7b5947d5886bac357ff122b42)
++++ /dev/null	(revision 8b0272cda9036cd7b5947d5886bac357ff122b42)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Update_at_22_02_2024,_18_23_[Changes]" date="1708626428130" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_22_02_2024,_18_23_[Changes]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Update at 22/02/2024, 18:23 [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_16_02_2024__22_28__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_16_02_2024__22_28__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Update_at_16_02_2024__22_28__Changes_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_16_02_2024__22_28__Changes_.xml	(revision 8b0272cda9036cd7b5947d5886bac357ff122b42)
++++ /dev/null	(revision 8b0272cda9036cd7b5947d5886bac357ff122b42)
+@@ -1,9 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Update_at_16_02_2024,_22_28_[Changes]" date="1708122509542" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_16_02_2024,_22_28_[Changes]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Update at 16/02/2024, 22:28 [Changes]" />
+-  <binary>
+-    <option name="BEFORE_PATH" value="output/out.exe" />
+-    <option name="AFTER_PATH" value="output/out.exe" />
+-    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_16_02_2024,_22_28_[Changes]/out.exe" />
+-  </binary>
+-</changelist>
+\ No newline at end of file

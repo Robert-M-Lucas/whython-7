@@ -7,3 +7,4 @@
 
 Implementing special case:
  - Have first part of names (and types) store indirection amount
+

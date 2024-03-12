@@ -51,10 +51,9 @@ pub fn link(output: &str) {
 }
 
 pub fn link_gcc_experimental(output: &str) {
-
     if !Command::new("x86_64-w64-mingw32-gcc")
         .args([
-            format!("{output}.asm").as_str(),
+            format!("{output}.obj").as_str(),
             "./libs/kernel32.lib",
             "-o",
             format!("{output}.exe").as_str()

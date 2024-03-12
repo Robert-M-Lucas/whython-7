@@ -186,6 +186,9 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                     output.push(line);
                 }
             }
+            Line::Annotation(annotation) => {
+                output.push(&format!("; '{}'", annotation));
+            }
         }
     }
 

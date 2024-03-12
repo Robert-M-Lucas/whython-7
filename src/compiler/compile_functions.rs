@@ -24,6 +24,7 @@ pub enum Line {
     DynFromCopy(isize, isize, usize),
     Return(Option<isize>),
     InlineAsm(Vec<String>),
+    Annotation(String)
 }
 
 pub struct UserFunction {
@@ -178,11 +179,6 @@ impl NameHandler {
             match name_type {
                 NameType::Normal => {
                     if current_type.is_some() && current_variable.is_some() {
-                        if current_type.unwrap().1 != 0 {
-                            println!("{}", line);
-                            todo!()
-                        }
-                        
                         let user_type = self.type_table.get_type(current_type.unwrap().0).unwrap().get_user_type()
                             .ok_or(ProcessorError::AttributeDoesntExist(
                                 line.clone(),
@@ -198,7 +194,8 @@ impl NameHandler {
                             ))?;
 
                         current_variable = Some(current_variable.unwrap() + (t.0 as isize));
-                        current_type = Some(t.1);
+                        current_type = Some((t.1.0, current_type.and_then(|x| Some(x.1)).unwrap_or(t.1.1)));
+                        // current_type = Some(t.1.0, current_type.and_then(|x| Some(x.1)).unwrap_or(t.1.1)));
                     }
                     else if current_type.is_some() {
                         return Err(ProcessorError::AttemptedTypeAttribAccess(line.clone()));
