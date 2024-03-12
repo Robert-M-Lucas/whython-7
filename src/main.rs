@@ -79,7 +79,7 @@ fn main() {
     }
     #[cfg(target_os = "linux")]
     {
-        println!("Linking and execution might be buggy due to Linux being unsupported");
+        println!("Compilation and execution on Linux may be buggy!s");
         println!("Linking (gcc)...");
         time!(link_gcc_experimental(&args.output));
         println!("Executing (wine)...");

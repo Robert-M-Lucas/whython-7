@@ -1,24 +1,34 @@
-struct Test {
+struct Fib {
     a: int,
-    b: int
+    b: int,
+    n: int
 }
 
+impl Fib {
+    fn start(self) {
+        if ((*self.n) == 0) {
+            printi(*self.a);
+        }
+        else {
+            let temp: int = (*self.a) + (*self.b);
+            *self.a = *self.b;
+            *self.b = temp;
+            *self.n -= 1;
+            self.start();
+        };
+    }
+}
+
+
 fn main() ~ int {
-    let test: Test = @Test {
-        2,
-        7
+    let i: int = 1;
+
+    while (i < 10) {
+        let f: Fib = @ Fib { 0, 1, i };
+        f.start();
+        i += 1;
     };
-
-    let lest: $Test = &test;
-    let b: $int = lest.b;
-
-    *test.a += 1;
-
-    printi(*b);
-
-    test.b += 1;
-
-    printi(*b);
 
     return 0;
 }
+

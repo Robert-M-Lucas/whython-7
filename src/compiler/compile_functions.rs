@@ -6,6 +6,7 @@ mod operators;
 mod process_lines;
 mod reference;
 mod name_handler;
+mod assignment;
 
 use crate::basic_ast::symbol::BasicSymbol;
 use crate::compiler::custom_functions::{
@@ -23,6 +24,7 @@ pub enum Line {
     NoReturnCall(isize, Vec<(isize, usize)>),
     Copy(isize, isize, usize),
     DynFromCopy(isize, isize, usize),
+    DynToCopy(isize, isize, usize),
     Return(Option<isize>),
     InlineAsm(Vec<String>),
     Annotation(String)

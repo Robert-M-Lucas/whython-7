@@ -10,6 +10,8 @@ use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::Type;
 use either::Left;
 use itertools::Itertools;
+use crate::ast::operators::Operator;
+use crate::compiler::compile_functions::assignment::process_assignment;
 use crate::compiler::compile_functions::name_handler::NameHandler;
 
 pub fn process_lines(
@@ -26,8 +28,12 @@ pub fn process_lines(
     #[cfg(debug_assertions)]
     let mut prev_line = None;
     for line in section.split(|x| matches!(x.0, BasicSymbol::Punctuation(Punctuation::Semicolon))) {
+        if line.is_empty() {
+            continue;
+        }
+
         #[cfg(debug_assertions)]
-        if line.last().is_some() {
+        {
             let mut new_line = line.last().unwrap().1.line();
             let mut file = line.last().unwrap().1.file().unwrap();
             let mut start = if let Some(prev_line) = prev_line { prev_line } else { line.first().unwrap().1.line() };
@@ -42,58 +48,16 @@ pub fn process_lines(
             prev_line = Some(new_line + 1);
         }
 
-        if line.is_empty() {
-            continue;
-        }
         last_return = false;
 
-        if line.len() > 1 {
-            match &line[1].0 {
-                BasicSymbol::Assigner(assigner) => {
-                    let name = match &line[0].0 {
-                        BasicSymbol::Name(name) => name,
-                        _ => return Err(ProcessorError::NonNameAssignment(line[0].1.clone())),
-                    };
-                    let Left(variable) =
-                        name_handler.resolve_name(function_holder, name, &line[0].1, lines)?
-                    else {
-                        return Err(ProcessorError::AssignToNonVariable(line[0].1.clone()));
-                    };
-                    if line.len() < 3 {
-                        return Err(ProcessorError::NoAssignmentRHS(line[1].1.clone()));
-                    }
-                    if let Some(assigner) = assigner {
-                        let result = evaluate::evaluate(
-                            &line[2..],
-                            lines,
-                            name_handler,
-                            function_holder,
-                            None,
-                        )?
-                        .ok_or(ProcessorError::DoesntEvaluate(line[2].1.clone()))?;
-                        operators::evaluate_operation(
-                            variable,
-                            (assigner, &line[1].1),
-                            Some(result),
-                            lines,
-                            name_handler,
-                            function_holder,
-                            Some(variable),
-                        )?;
-                    } else {
-                        evaluate::evaluate(
-                            &line[2..],
-                            lines,
-                            name_handler,
-                            function_holder,
-                            Some(variable),
-                        )?;
-                    }
+        if line.len() > 2 && matches!(&line[0].0, BasicSymbol::Operator(Operator::Product)) && matches!(&line[2].0, BasicSymbol::Assigner(_)) {
+            process_assignment(lines, name_handler, function_holder, &line[1..], true)?;
+            continue;
+        }
 
-                    continue;
-                }
-                _ => {}
-            }
+        if line.len() > 1 && matches!(&line[1].0, BasicSymbol::Assigner(_)) {
+            process_assignment(lines, name_handler, function_holder, line, false)?;
+            continue;
         }
 
         match &line[0].0 {

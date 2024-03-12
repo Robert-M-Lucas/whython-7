@@ -8,16 +8,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Continued work on reference system">
-      <change afterPath="$PROJECT_DIR$/src/compiler/compile_functions/name_handler.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/compile_functions/assignment.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/out.asm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/out.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/out.obj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/call_function.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/call_function.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/evaluate.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/evaluate.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/evaluate_symbol.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/evaluate_symbol.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/instantiate_literal.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/instantiate_literal.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/operators.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/process_lines.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/process_lines.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/user_type.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/user_type.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/generate_asm.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/generate_asm.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -169,15 +169,7 @@
       <workItem from="1709176246128" duration="14000" />
       <workItem from="1709383015105" duration="86000" />
       <workItem from="1709383107736" duration="392000" />
-      <workItem from="1710243512001" duration="4438000" />
-    </task>
-    <task id="LOCAL-00011" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707683459104</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1707683459104</updated>
+      <workItem from="1710243512001" duration="8659000" />
     </task>
     <task id="LOCAL-00012" summary="Commit">
       <option name="closed" value="true" />
@@ -563,7 +555,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710247471819</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="Continued work on reference system">
+      <option name="closed" value="true" />
+      <created>1710250720696</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1710250720696</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
