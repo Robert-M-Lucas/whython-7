@@ -10,17 +10,32 @@ struct LL {
 }
 
 impl LL {
+    fn new() ~ LL {
+        return @LL {
+            0,
+            false
+        };
+    }
+
     fn add(self, next: int) {
+        printb(true);
+
         let new_node: Node = @Node {
             next,
             true,
             0
         };
 
+        printb(false);
+
         if (!(*self.has_first)) {
+            printb(false);
+
             self.base = ^new_node;
             return;
         };
+
+        printb(true);
 
         let curr: $Node = self.base;
         while (!(*curr.last)) {
@@ -46,15 +61,21 @@ impl LL {
 }
 
 fn main() ~ int {
-    let ll: LL = @LL {
-        0,
-        false
-    };
+    let ll: LL = LL#new();
+
+    printb(true);
 
     ll.add(12);
+
+    printb(false);
+
     ll.add(18);
 
+    printb(true);
+
     ll.print();
+
+    printb(false);
 
     return 7;
 }
