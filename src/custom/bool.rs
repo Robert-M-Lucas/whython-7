@@ -40,7 +40,7 @@ impl TypedFunction for BoolNot {
         vec![
             format!("mov rax, [{}]", get_local_address(args[0])),
             "cmp rax, 0".to_string(),
-            "setz rax".to_string(),
+            "setz [rax]".to_string(),
             format!("mov [{}], rax", get_local_address(args[1])),
         ]
     }

@@ -141,6 +141,8 @@ pub enum ProcessorError {
     NameWithRefPrefix(LineInfo),
     #[error("Error: Can't dereference non-reference type\n{0}")]
     CantDerefNonRef(LineInfo),
+    #[error("TODO: Bad literal type")]
+    BadLiteralType(),
     #[error("Error: Feature '{1}' not implemented yet\n{0}")]
     NotImplemented(LineInfo, String),
 }

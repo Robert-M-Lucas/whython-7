@@ -7,7 +7,7 @@ struct Fib {
 impl Fib {
     fn start(self) {
         if ((*self.n) == 0) {
-            printi(self.a);
+            printi(*self.a);
         }
         else {
             let temp: int = (*self.a) + (*self.b);
@@ -21,9 +21,13 @@ impl Fib {
 
 
 fn main() ~ int {
-    let f: Fib = @ Fib { 0, 1, 13 };
+    let i: int = 1;
 
-    f.start();
+    while (i < 10) {
+        let f: Fib = @ Fib { 0, 1, i };
+        f.start();
+        i += 1;
+    };
 
     return 0;
 }

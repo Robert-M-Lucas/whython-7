@@ -9,8 +9,8 @@ pub fn generate_assembly(output: &str, functions: Vec<Box<dyn Function>>) {
     extern ExitProcess
     extern GetStdHandle
     extern WriteFile
-    extern WriteConsoleA
-    extern WriteConsoleW
+    extern HeapAlloc
+    extern GetProcessHeap
     section .text\n",
     );
     for f in functions {

@@ -26,6 +26,7 @@ pub enum Line {
     DynFromCopy(isize, isize, usize),
     DynToCopy(isize, isize, usize),
     Return(Option<isize>),
+    HeapAlloc(usize, isize),
     InlineAsm(Vec<String>),
     Annotation(String)
 }

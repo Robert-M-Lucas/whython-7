@@ -7,17 +7,24 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Continued work on reference system">
-      <change afterPath="$PROJECT_DIR$/src/compiler/compile_functions/assignment.rs" afterDir="false" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Untested reference types working">
+      <change afterPath="$PROJECT_DIR$/- c2.why" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main - c.why" beforeDir="false" afterPath="$PROJECT_DIR$/main - c.why" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/out.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/out.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/out.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assembler/assemble.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/assembler/assemble.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/literals.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/literals.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/operators.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/process_lines.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/process_lines.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/instantiate_literal.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/instantiate_literal.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/operators.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/generate_asm.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/generate_asm.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/custom/bool.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/custom/bool.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/normal_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/normal_parser.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/processor/processor.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/processor.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,7 +78,7 @@
     "RunOnceActivity.rust.reset.selective.auto.import": "true",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/rober/Documents/Coding/RustProjects/wiki-4",
+    "last_opened_file_path": "/home/robertlucas/RustroverProjects/whython-7",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -85,6 +92,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7" />
     </key>
   </component>
@@ -169,15 +177,7 @@
       <workItem from="1709176246128" duration="14000" />
       <workItem from="1709383015105" duration="86000" />
       <workItem from="1709383107736" duration="392000" />
-      <workItem from="1710243512001" duration="8659000" />
-    </task>
-    <task id="LOCAL-00012" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707684009416</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1707684009416</updated>
+      <workItem from="1710243512001" duration="11746000" />
     </task>
     <task id="LOCAL-00013" summary="Commit">
       <option name="closed" value="true" />
@@ -563,7 +563,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710250720696</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="Untested reference types working">
+      <option name="closed" value="true" />
+      <created>1710252458295</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1710252458295</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -603,7 +611,8 @@
     <MESSAGE value="Began adding support for reference types" />
     <MESSAGE value="Continued adding support for reference types" />
     <MESSAGE value="Continued work on reference system" />
-    <option name="LAST_COMMIT_MESSAGE" value="Continued work on reference system" />
+    <MESSAGE value="Untested reference types working" />
+    <option name="LAST_COMMIT_MESSAGE" value="Untested reference types working" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

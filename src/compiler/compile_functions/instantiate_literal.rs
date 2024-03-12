@@ -38,7 +38,7 @@ pub fn instantiate_variable(
         (addr, id)
     } else {
         let id = match &literal {
-            Left((literal, _)) => (literal.get_type_id(), 0),
+            Left((literal, _)) => literal.get_type_id(),
             Right(id) => *id,
         };
         (name_handler.add_local_variable(None, id)?, id)
@@ -90,7 +90,12 @@ pub fn instantiate_variable(
 
             Vec::new()
         }
-        Left((literal, _line_info)) => _type.instantiate(Some(literal), addr)?,
+        Left((literal, _line_info)) => {
+            if literal.get_type_id() != (id, 0) {
+                return Err(ProcessorError::BadLiteralType());
+            }
+            _type.instantiate(Some(literal), addr)?
+        },
         Right(_id) => _type.instantiate(None, addr)?,
     };
     lines.push(Line::InlineAsm(asm));

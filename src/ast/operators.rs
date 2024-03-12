@@ -14,9 +14,10 @@ pub enum Operator {
     Or,
     And,
     Not,
+    HeapAlloc
 }
 
-pub const ALL_SYMBOLS: [char; 11] = ['+', '-', '*', '/', '>', '<', '=', '|', '&', '!', '%'];
+pub const ALL_SYMBOLS: [char; 12] = ['+', '-', '*', '/', '>', '<', '=', '|', '&', '!', '%', '^'];
 
 impl Operator {
     pub fn get_operator(string: &str) -> Option<Operator> {
@@ -35,6 +36,7 @@ impl Operator {
             "&" => Some(Operator::And),
             "!" => Some(Operator::Not),
             "%" => Some(Operator::Modulo),
+            "^" => Some(Operator::HeapAlloc),
             _ => None,
         }
     }

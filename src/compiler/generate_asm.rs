@@ -195,7 +195,15 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                     output.push("leave");
                     output.push("ret");
                 }
-            }
+            },
+            Line::HeapAlloc(amount, local_ref_addr) => {
+                output.push("call GetProcessHeap"); // Get process heap
+                output.push("mov rcx, rax"); // Heap handle
+                output.push("mov rdx, rax"); // Flags
+                output.push(&format!("mov r8, {}", *amount));
+                output.push("call HeapAlloc");
+                output.push(&format!("mov qword [{}], rax", get_local_address(*local_ref_addr)));
+            },
             Line::InlineAsm(asm) => {
                 for line in asm {
                     output.push(line);
