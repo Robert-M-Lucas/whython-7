@@ -71,32 +71,20 @@ impl Int {
 }
 
 impl Int {
-    pub fn instantiate_local_ref(
-        offset: isize,
-        local_address: isize,
-    ) -> Vec<String> {
-        
+    pub fn instantiate_local_ref(offset: isize, local_address: isize) -> Vec<String> {
         vec![
             "mov rax, rbp".to_string(),
             format!("add rax, {offset}"),
-            format!(
-                "mov qword [{}], rax",
-                get_local_address(local_address),
-        )]
+            format!("mov qword [{}], rax", get_local_address(local_address),),
+        ]
     }
 
-    pub fn instantiate_ref(
-        base_variable: isize,
-        offset: isize,
-        ref_address: isize
-    ) -> Vec<String> {
+    pub fn instantiate_ref(base_variable: isize, offset: isize, ref_address: isize) -> Vec<String> {
         vec![
             format!("mov rax, qword [{}]", get_local_address(base_variable)),
             format!("add rax, {offset}"),
-            format!(
-                "mov qword [{}], rax",
-                get_local_address(ref_address),
-            )]
+            format!("mov qword [{}], rax", get_local_address(ref_address),),
+        ]
     }
 }
 
@@ -131,9 +119,7 @@ impl Type for Int {
 
         Ok(vec![
             format!("mov rax, qword {}", *val),
-            format!(
-            "mov qword [{}], rax",
-            get_local_address(local_address),
-        )])
+            format!("mov qword [{}], rax", get_local_address(local_address),),
+        ])
     }
 }

@@ -25,7 +25,11 @@ impl UserType {
         }
     }
 
-    pub fn get_attribute_offset_and_type(&self, name: &str, type_table: &TypeTable) -> Result<Option<(usize, (isize, usize))>, ProcessorError> {
+    pub fn get_attribute_offset_and_type(
+        &self,
+        name: &str,
+        type_table: &TypeTable,
+    ) -> Result<Option<(usize, (isize, usize))>, ProcessorError> {
         let mut offset = 0;
         for (attrib_name, attrib_type) in &self.attributes {
             if name == attrib_name {
@@ -92,8 +96,7 @@ impl Type for UserType {
         let mut size = 0;
 
         for (_name, id) in &self.attributes {
-            size += type_table
-                .get_type_size(*id)?;
+            size += type_table.get_type_size(*id)?;
         }
 
         Ok(size)

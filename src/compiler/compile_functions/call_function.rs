@@ -1,8 +1,8 @@
 use crate::ast::operators::Operator;
 use crate::basic_ast::symbol::BasicSymbol;
-use crate::compiler::compile_functions::{evaluate, FunctionHolder, Line};
 use crate::compiler::compile_functions::name_handler::NameHandler;
 use crate::compiler::compile_functions::operators::evaluate_operation;
+use crate::compiler::compile_functions::{evaluate, FunctionHolder, Line};
 use crate::parser::line_info::LineInfo;
 use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::{Type, TypedFunction};
@@ -57,12 +57,20 @@ pub fn call_function(
 
     let mut call_args = Vec::new();
     if let Some(default_arg) = default_arg {
-        let default_arg = if default_arg.1.1 == 0 && target_args[0].1.1 == 1 {
+        let default_arg = if default_arg.1 .1 == 0 && target_args[0].1 .1 == 1 {
             // TODO: Bad operator line
             let into = name_handler.add_local_variable(None, target_args[0].1)?;
-            evaluate_operation(default_arg, (&Operator::And, start_line), None, lines, name_handler, function_holder, Some((into, target_args[0].1)))?.unwrap()
-        }
-        else {
+            evaluate_operation(
+                default_arg,
+                (&Operator::And, start_line),
+                None,
+                lines,
+                name_handler,
+                function_holder,
+                Some((into, target_args[0].1)),
+            )?
+            .unwrap()
+        } else {
             default_arg
         };
         if default_arg.1 != target_args[0].1 {
@@ -70,9 +78,7 @@ pub fn call_function(
         }
         call_args.push((
             default_arg.0,
-            name_handler
-                .type_table()
-                .get_type_size(default_arg.1)?,
+            name_handler.type_table().get_type_size(default_arg.1)?,
         ));
     }
     for arg in args {
@@ -87,24 +93,22 @@ pub fn call_function(
                 arg[0].1.clone(),
                 name_handler
                     .type_table()
-                    .get_type(target_args[call_args.len()].1.0)
+                    .get_type(target_args[call_args.len()].1 .0)
                     .unwrap()
-                    .get_indirect_name(target_args[call_args.len()].1.1)
+                    .get_indirect_name(target_args[call_args.len()].1 .1)
                     .to_string(),
                 name_handler
                     .type_table()
-                    .get_type(evaluated.1.0)
+                    .get_type(evaluated.1 .0)
                     .unwrap()
-                    .get_indirect_name(evaluated.1.1)
+                    .get_indirect_name(evaluated.1 .1)
                     .to_string(),
                 function.get_line(),
             ));
         }
         call_args.push((
             evaluated.0,
-            name_handler
-                .type_table()
-                .get_type_size(evaluated.1)?,
+            name_handler.type_table().get_type_size(evaluated.1)?,
         ));
     }
 
@@ -114,9 +118,9 @@ pub fn call_function(
                 start_line.clone(),
                 name_handler
                     .type_table()
-                    .get_type(return_into.unwrap().1.0)
+                    .get_type(return_into.unwrap().1 .0)
                     .unwrap()
-                    .get_indirect_name(return_into.unwrap().1.1)
+                    .get_indirect_name(return_into.unwrap().1 .1)
                     .to_string(),
                 name_handler
                     .type_table()
@@ -129,9 +133,7 @@ pub fn call_function(
         let return_into = if let Some(return_into) = return_into {
             (
                 return_into.0,
-                name_handler
-                    .type_table()
-                    .get_type_size(return_type)?,
+                name_handler.type_table().get_type_size(return_type)?,
             )
         } else {
             (
@@ -159,9 +161,9 @@ pub fn call_function(
                 start_line.clone(),
                 name_handler
                     .type_table()
-                    .get_type(return_into.unwrap().1.0)
+                    .get_type(return_into.unwrap().1 .0)
                     .unwrap()
-                    .get_indirect_name(return_into.unwrap().1.1)
+                    .get_indirect_name(return_into.unwrap().1 .1)
                     .to_string(),
                 "None".to_string(),
             ));

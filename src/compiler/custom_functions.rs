@@ -1,8 +1,6 @@
 use crate::basic_ast::symbol::BasicSymbol;
 use crate::compiler::compile_functions::{Function, Line, UserFunction};
-use crate::compiler::generate_asm::{
-    compile_user_function, get_function_sublabel,
-};
+use crate::compiler::generate_asm::{compile_user_function, get_function_sublabel};
 use crate::custom::bool::{BoolEQ, BoolNE, BoolNot};
 use crate::custom::int::{
     IntAdd, IntDiv, IntEQ, IntGE, IntGT, IntLE, IntLT, IntMod, IntMul, IntNE, IntSub,
@@ -94,7 +92,8 @@ impl TypedFunction for WindowsExit {
 #[UniqueTypeIdType = "u16"]
 pub struct PrintI {}
 lazy_static! {
-    static ref PRINT_I_ARGS: [(String, (isize, usize)); 1] = [(String::from("integer"), (Int::get_id(), 0))];
+    static ref PRINT_I_ARGS: [(String, (isize, usize)); 1] =
+        [(String::from("integer"), (Int::get_id(), 0))];
 }
 impl TypedFunction for PrintI {
     fn get_id(&self) -> isize {
@@ -176,22 +175,20 @@ impl Function for PrintI {
                     "jnz {}",
                     get_function_sublabel(TypedFunction::get_id(self), "loop")
                 ),
-
                 "mov ecx, -11".to_string(), // Get std handle (32 bit arg)
                 "call GetStdHandle".to_string(), // Get
-
                 //; You have to reserve space for these despite not being on the stack!
-                "mov rcx, rax".to_string(), // ; STD Handle
-                "mov rdx, rbp".to_string(), // ; Data pointer
-                "sub rdx, 24".to_string(), // ; cont.
-                "mov r8, 24".to_string(), // ; Bytes to write
+                "mov rcx, rax".to_string(),            // ; STD Handle
+                "mov rdx, rbp".to_string(),            // ; Data pointer
+                "sub rdx, 24".to_string(),             // ; cont.
+                "mov r8, 24".to_string(),              // ; Bytes to write
                 "mov qword [rbp - 40], 0".to_string(), // ; optional out bytes written
-                "mov r9, rbp".to_string(), //
-                "sub r9, 24".to_string(), // ; contd.
+                "mov r9, rbp".to_string(),             //
+                "sub r9, 24".to_string(),              // ; contd.
                 "mov qword [rbp - 48], 0".to_string(), // ; optional lpOverlapped
-                "call WriteFile".to_string()
+                "call WriteFile".to_string(),
             ])],
-            name: "printi".to_string()
+            name: "printi".to_string(),
         })
     }
 
@@ -204,7 +201,8 @@ impl Function for PrintI {
 #[UniqueTypeIdType = "u16"]
 pub struct PrintB {}
 lazy_static! {
-    static ref PRINT_B_ARGS: [(String, (isize, usize)); 1] = [(String::from("bool"), (Bool {}.get_id(), 0))];
+    static ref PRINT_B_ARGS: [(String, (isize, usize)); 1] =
+        [(String::from("bool"), (Bool {}.get_id(), 0))];
 }
 impl TypedFunction for PrintB {
     fn get_id(&self) -> isize {
@@ -253,22 +251,20 @@ impl Function for PrintB {
                     "{}:",
                     get_function_sublabel(TypedFunction::get_id(self), "true")
                 ),
-
                 "mov ecx, -11".to_string(), // Get std handle (32 bit arg)
                 "call GetStdHandle".to_string(), // Get
-
                 //; You have to reserve space for these despite not being on the stack!
-                "mov rcx, rax".to_string(), // ; STD Handle
-                "mov rdx, rbp".to_string(), // ; Data pointer
-                "sub rdx, 16".to_string(), // ; cont.
-                "mov r8, 16".to_string(), // ; Bytes to write
+                "mov rcx, rax".to_string(),            // ; STD Handle
+                "mov rdx, rbp".to_string(),            // ; Data pointer
+                "sub rdx, 16".to_string(),             // ; cont.
+                "mov r8, 16".to_string(),              // ; Bytes to write
                 "mov qword [rbp - 24], 0".to_string(), // ; optional out bytes written
-                "mov r9, rbp".to_string(), //
-                "sub r9, 24".to_string(), // ; contd.
+                "mov r9, rbp".to_string(),             //
+                "sub r9, 24".to_string(),              // ; contd.
                 "mov qword [rbp - 32], 0".to_string(), // ; optional lpOverlapped
-	            "call WriteFile".to_string()
+                "call WriteFile".to_string(),
             ])],
-            name: "printb".to_string()
+            name: "printb".to_string(),
         })
     }
 

@@ -1,8 +1,10 @@
-use std::fs;
 use crate::ast::keywords::Keyword;
+use crate::ast::operators::Operator;
 use crate::basic_ast::punctuation::Punctuation;
 use crate::basic_ast::symbol::{BasicSymbol, NameType};
-use crate::compiler::compile_functions::{evaluate, FunctionHolder, Line, operators};
+use crate::compiler::compile_functions::assignment::process_assignment;
+use crate::compiler::compile_functions::name_handler::NameHandler;
+use crate::compiler::compile_functions::{evaluate, operators, FunctionHolder, Line};
 use crate::compiler::generate_asm::{get_function_sublabel, get_local_address};
 use crate::parser::line_info::LineInfo;
 use crate::processor::custom_types::Bool;
@@ -10,9 +12,7 @@ use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::Type;
 use either::Left;
 use itertools::Itertools;
-use crate::ast::operators::Operator;
-use crate::compiler::compile_functions::assignment::process_assignment;
-use crate::compiler::compile_functions::name_handler::NameHandler;
+use std::fs;
 
 pub fn process_lines(
     section: &[(BasicSymbol, LineInfo)],
@@ -36,7 +36,11 @@ pub fn process_lines(
         {
             let mut new_line = line.last().unwrap().1.line();
             let mut file = line.last().unwrap().1.file().unwrap();
-            let mut start = if let Some(prev_line) = prev_line { prev_line } else { line.first().unwrap().1.line() };
+            let mut start = if let Some(prev_line) = prev_line {
+                prev_line
+            } else {
+                line.first().unwrap().1.line()
+            };
 
             let text = fs::read_to_string(file.as_path()).unwrap();
             let text = &text.lines().collect_vec()[(start - 1)..(new_line)];
@@ -50,7 +54,10 @@ pub fn process_lines(
 
         last_return = false;
 
-        if line.len() > 2 && matches!(&line[0].0, BasicSymbol::Operator(Operator::Product)) && matches!(&line[2].0, BasicSymbol::Assigner(_)) {
+        if line.len() > 2
+            && matches!(&line[0].0, BasicSymbol::Operator(Operator::Product))
+            && matches!(&line[2].0, BasicSymbol::Assigner(_))
+        {
             process_assignment(lines, name_handler, function_holder, &line[1..], true)?;
             continue;
         }
@@ -98,9 +105,9 @@ pub fn process_lines(
                             .to_string(),
                         name_handler
                             .type_table()
-                            .get_type(return_value.1.0)
+                            .get_type(return_value.1 .0)
                             .unwrap()
-                            .get_indirect_name(return_value.1.1)
+                            .get_indirect_name(return_value.1 .1)
                             .to_string(),
                     ));
                 }
@@ -119,7 +126,7 @@ pub fn process_lines(
                 }
                 let name = &name[0];
                 if name.3 != 0 {
-                    return Err(ProcessorError::NameWithRefPrefix(line[0].1.clone()))
+                    return Err(ProcessorError::NameWithRefPrefix(line[0].1.clone()));
                 }
 
                 if !matches!(&name.2, NameType::Normal) {
@@ -202,9 +209,9 @@ pub fn process_lines(
                         line[1].1.clone(),
                         name_handler
                             .type_table()
-                            .get_type(evaluated.1.0)
+                            .get_type(evaluated.1 .0)
                             .unwrap()
-                            .get_indirect_name(evaluated.1.1)
+                            .get_indirect_name(evaluated.1 .1)
                             .to_string(),
                     ));
                 }
@@ -253,9 +260,9 @@ pub fn process_lines(
                         line[1].1.clone(),
                         name_handler
                             .type_table()
-                            .get_type(evaluated.1.0)
+                            .get_type(evaluated.1 .0)
                             .unwrap()
-                            .get_indirect_name(evaluated.1.1)
+                            .get_indirect_name(evaluated.1 .1)
                             .to_string(),
                     ));
                 }
@@ -320,9 +327,9 @@ pub fn process_lines(
                                     line[i].1.clone(),
                                     name_handler
                                         .type_table()
-                                        .get_type(evaluated.1.0)
+                                        .get_type(evaluated.1 .0)
                                         .unwrap()
-                                        .get_indirect_name(evaluated.1.1)
+                                        .get_indirect_name(evaluated.1 .1)
                                         .to_string(),
                                 ));
                             }

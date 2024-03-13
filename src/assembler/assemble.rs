@@ -56,7 +56,7 @@ pub fn link_gcc_experimental(output: &str) {
             format!("{output}.obj").as_str(),
             "./libs/kernel32.lib",
             "-o",
-            format!("{output}.exe").as_str()
+            format!("{output}.exe").as_str(),
         ])
         .status()
         .unwrap()

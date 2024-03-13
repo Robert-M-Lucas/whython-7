@@ -30,10 +30,15 @@ pub enum BasicSymbol {
     SquareBracketedSection(Vec<(BasicSymbol, LineInfo)>),
     Punctuation(Punctuation),
     Keyword(Keyword),
-    Name(Vec<(String, NameAccessType, NameType, usize)>)
+    Name(Vec<(String, NameAccessType, NameType, usize)>),
 }
 
-pub const NAME_VALID_CHARS: [char; 63] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+pub const NAME_VALID_CHARS: [char; 63] = [
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+    't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+    'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', '1', '2', '3', '4',
+    '5', '6', '7', '8', '9', '0',
+];
 
 impl BasicSymbol {
     pub fn get_name_contents(&self) -> &Vec<(String, NameAccessType, NameType, usize)> {

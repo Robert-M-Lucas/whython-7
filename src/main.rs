@@ -1,14 +1,14 @@
-use std::fs;
 use crate::assembler::assemble::{assemble, generate_assembly, link, link_gcc_experimental};
+use std::fs;
 
 use crate::parser::parse::parse;
 use crate::processor::processor::process;
+use clap::Parser;
 use std::path::PathBuf;
 use std::process::Command;
-use clap::Parser;
 
-use std::time::Instant;
 use b_box::b;
+use std::time::Instant;
 
 mod assembler;
 mod ast;
@@ -39,7 +39,7 @@ struct Args {
     /// Output files name without extension
     /// Main input file
     #[arg(short, long, default_value = "out")]
-    output: String
+    output: String,
 }
 
 fn main() {
@@ -89,15 +89,8 @@ fn main() {
 
 fn run(output: &str) {
     let full = fs::canonicalize(format!("{output}.exe")).unwrap();
-    let code = Command::new(full)
-        .status()
-        .unwrap()
-        .code()
-        .unwrap();
-    println!(
-        "\nExited with return code {}",
-        code,
-    )
+    let code = Command::new(full).status().unwrap().code().unwrap();
+    println!("\nExited with return code {}", code,)
 }
 
 fn run_wine_experimental(output: &str) {

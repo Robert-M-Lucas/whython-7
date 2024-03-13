@@ -38,7 +38,7 @@ pub enum ParseError {
     #[error("Error: Initialiser type must be followed by braces containing attribute values\n{0}")]
     NoInitialiserContents(LineInfo),
     #[error("Error: Attribute cannot be empty (must be a value between commas)\n{0}")]
-    NoInitialiserAttribute(LineInfo)
+    NoInitialiserAttribute(LineInfo),
 }
 
 pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(), ParseError> {

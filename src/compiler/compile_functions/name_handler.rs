@@ -1,11 +1,11 @@
-use std::collections::HashSet;
-use either::{Either, Left, Right};
 use crate::basic_ast::symbol::{BasicSymbol, NameAccessType, NameType};
 use crate::compiler::compile_functions::{FunctionHolder, Line};
 use crate::parser::line_info::LineInfo;
 use crate::processor::custom_types::Int;
 use crate::processor::processor::ProcessorError;
-use crate::processor::type_builder::{Type, TypedFunction, TypeTable};
+use crate::processor::type_builder::{Type, TypeTable, TypedFunction};
+use either::{Either, Left, Right};
+use std::collections::HashSet;
 
 pub struct NameHandler {
     type_table: TypeTable,
@@ -57,9 +57,7 @@ impl NameHandler {
         name: Option<String>,
         _type: (isize, usize),
     ) -> Result<isize, ProcessorError> {
-        let size = self
-            .type_table
-            .get_type_size(_type)?;
+        let size = self.type_table.get_type_size(_type)?;
         let addr = -(self.local_variables_size as isize) - size as isize;
         self.local_variables_size += size;
         if let Some(name) = name {
@@ -77,7 +75,7 @@ impl NameHandler {
         function_holder: &'b FunctionHolder,
         name: &'b Vec<(String, NameAccessType, NameType, usize)>,
         line: &LineInfo,
-        lines: &mut Vec<Line>
+        lines: &mut Vec<Line>,
     ) -> Result<
         Either<
             (isize, (isize, usize)),
@@ -96,41 +94,60 @@ impl NameHandler {
         for (name, access_type, name_type, indirection) in name {
             if return_func.is_some() {
                 // TODO
-                return Err(ProcessorError::NotImplemented(line.clone(), "Using '.' or '#' after a function call".to_string()))
+                return Err(ProcessorError::NotImplemented(
+                    line.clone(),
+                    "Using '.' or '#' after a function call".to_string(),
+                ));
             }
 
             match name_type {
                 NameType::Normal => {
                     if current_type.is_some() && current_variable.is_some() {
-                        let user_type = self.type_table.get_type(current_type.unwrap().0).unwrap().get_user_type()
+                        let user_type = self
+                            .type_table
+                            .get_type(current_type.unwrap().0)
+                            .unwrap()
+                            .get_user_type()
                             .ok_or(ProcessorError::AttributeDoesntExist(
                                 line.clone(),
-                                self.type_table.get_type(current_type.unwrap().0).unwrap().get_name().to_string(),
-                                name.clone()
+                                self.type_table
+                                    .get_type(current_type.unwrap().0)
+                                    .unwrap()
+                                    .get_name()
+                                    .to_string(),
+                                name.clone(),
                             ))?;
 
-                        let t = user_type.get_attribute_offset_and_type(name, &self.type_table)?
+                        let t = user_type
+                            .get_attribute_offset_and_type(name, &self.type_table)?
                             .ok_or(ProcessorError::AttributeDoesntExist(
                                 line.clone(),
-                                self.type_table.get_type(current_type.unwrap().0).unwrap().get_name().to_string(),
-                                name.clone()
+                                self.type_table
+                                    .get_type(current_type.unwrap().0)
+                                    .unwrap()
+                                    .get_name()
+                                    .to_string(),
+                                name.clone(),
                             ))?;
 
                         if current_type.unwrap().1 > 0 {
-                            let ref_addr = self.add_local_variable(None, (t.1.0, current_type.unwrap().1)).unwrap();
-                            lines.push(Line::InlineAsm(Int::instantiate_ref(current_variable.unwrap(), t.0 as isize, ref_addr)));
+                            let ref_addr = self
+                                .add_local_variable(None, (t.1 .0, current_type.unwrap().1))
+                                .unwrap();
+                            lines.push(Line::InlineAsm(Int::instantiate_ref(
+                                current_variable.unwrap(),
+                                t.0 as isize,
+                                ref_addr,
+                            )));
                             current_variable = Some(ref_addr);
-                            current_type = Some((t.1.0, current_type.unwrap().1 + t.1.1));
-                        }
-                        else {
+                            current_type = Some((t.1 .0, current_type.unwrap().1 + t.1 .1));
+                        } else {
                             current_variable = Some(current_variable.unwrap() + (t.0 as isize));
                             current_type = Some(t.1);
                         }
-                    }
-                    else if current_type.is_some() {
+                    } else if current_type.is_some() {
                         return Err(ProcessorError::AttemptedTypeAttribAccess(line.clone()));
-                    }
-                    else if let Some((_, addr, _type)) = self
+                    } else if let Some((_, addr, _type)) = self
                         .local_variables
                         .iter()
                         .rev()
@@ -156,7 +173,9 @@ impl NameHandler {
                     {
                         let default_arg = if matches!(access_type, NameAccessType::Normal) {
                             if current_variable.is_none() {
-                                return Err(ProcessorError::TypeNonStaticFunctionCall(line.clone()));
+                                return Err(ProcessorError::TypeNonStaticFunctionCall(
+                                    line.clone(),
+                                ));
                             }
                             Some((current_variable.unwrap(), current_type.unwrap()))
                         } else {

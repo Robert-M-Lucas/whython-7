@@ -3,7 +3,7 @@ use crate::ast::literals::Literal;
 use crate::ast::operators;
 use crate::ast::operators::Operator;
 use crate::basic_ast::punctuation::Punctuation;
-use crate::basic_ast::symbol::{BasicSymbol, NAME_VALID_CHARS, NameAccessType, NameType};
+use crate::basic_ast::symbol::{BasicSymbol, NameAccessType, NameType, NAME_VALID_CHARS};
 use crate::parser::file_reader::FileReader;
 use crate::parser::initialiser_parser::parse_initialiser;
 use crate::parser::line_info::LineInfo;
@@ -291,17 +291,19 @@ fn process_buffer(
             indirection = 0;
             continue;
         }
-        
+
         if c == '$' && section_buffer.is_empty() {
             indirection += 1;
             continue;
         }
-        
+
         if !NAME_VALID_CHARS.contains(&c) {
             let mut utf8 = Vec::with_capacity(c.len_utf8());
-            for _ in 0..c.len_utf8() { utf8.push(0); }
+            for _ in 0..c.len_utf8() {
+                utf8.push(0);
+            }
             c.encode_utf8(&mut utf8);
-            return Err(ParseError::BadName(reader.get_line_info(), c, utf8))
+            return Err(ParseError::BadName(reader.get_line_info(), c, utf8));
         }
         section_buffer.push(c);
     }

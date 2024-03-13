@@ -1,11 +1,11 @@
 use crate::basic_ast::symbol::BasicSymbol;
+use crate::compiler::compile_functions::name_handler::NameHandler;
 use crate::compiler::compile_functions::{
-    call_function, evaluate, FunctionHolder, instantiate_literal, Line,
+    call_function, evaluate, instantiate_literal, FunctionHolder, Line,
 };
 use crate::parser::line_info::LineInfo;
 use crate::processor::processor::ProcessorError;
 use either::{Left, Right};
-use crate::compiler::compile_functions::name_handler::NameHandler;
 
 pub fn evaluate_symbol(
     symbol: &(BasicSymbol, LineInfo),
@@ -38,18 +38,29 @@ pub fn evaluate_symbol(
                         if return_into.1 != new_variable.1 {
                             return Err(ProcessorError::BadEvaluatedType(
                                 symbol.1.clone(),
-                                name_handler.type_table().get_type(return_into.1.0).unwrap().get_indirect_name(return_into.1.1).to_string(),
-                                name_handler.type_table().get_type(new_variable.1.0).unwrap().get_indirect_name(new_variable.1.1).to_string()
+                                name_handler
+                                    .type_table()
+                                    .get_type(return_into.1 .0)
+                                    .unwrap()
+                                    .get_indirect_name(return_into.1 .1)
+                                    .to_string(),
+                                name_handler
+                                    .type_table()
+                                    .get_type(new_variable.1 .0)
+                                    .unwrap()
+                                    .get_indirect_name(new_variable.1 .1)
+                                    .to_string(),
                             ));
                         }
 
-                        lines.push(
-                            Line::Copy(new_variable.0, return_into.0, name_handler.type_table().get_type_size(return_into.1)?)
-                        );
+                        lines.push(Line::Copy(
+                            new_variable.0,
+                            return_into.0,
+                            name_handler.type_table().get_type_size(return_into.1)?,
+                        ));
 
                         Some(return_into)
-                    }
-                    else {
+                    } else {
                         Some(new_variable)
                     }
                 }

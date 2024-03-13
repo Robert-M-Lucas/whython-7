@@ -9,7 +9,8 @@ use unique_type_id::UniqueTypeId;
 #[UniqueTypeIdType = "u16"]
 pub struct BoolNot {}
 lazy_static! {
-    static ref BOOL_NOT_ARGS: [(String, (isize, usize)); 1] = [(String::from("lhs"), (Bool::get_id(), 0))];
+    static ref BOOL_NOT_ARGS: [(String, (isize, usize)); 1] =
+        [(String::from("lhs"), (Bool::get_id(), 0))];
 }
 impl TypedFunction for BoolNot {
     fn get_id(&self) -> isize {

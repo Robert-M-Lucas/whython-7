@@ -49,12 +49,11 @@ impl UninitialisedType {
     // }
 }
 
-
 pub trait Type {
     fn get_id(&self) -> isize;
 
     fn get_name(&self) -> &str;
-    
+
     fn get_indirect_name(&self, indirection: usize) -> String {
         let mut out = String::new();
         for _ in 0..indirection {
@@ -76,12 +75,14 @@ pub trait Type {
         local_address: isize,
     ) -> Result<Vec<String>, ProcessorError>;
 
-    fn get_user_type(&self) -> Option<&UserType> { None }
+    fn get_user_type(&self) -> Option<&UserType> {
+        None
+    }
 }
 
 pub struct TypeIdentifier {
     id: isize,
-    indirections: usize
+    indirections: usize,
 }
 
 pub struct TypeTable {
@@ -121,7 +122,9 @@ impl TypeTable {
     }
 
     pub fn get_type_size(&self, id: (isize, usize)) -> Result<usize, ProcessorError> {
-        if id.1 != 0 { return Ok(8); }
+        if id.1 != 0 {
+            return Ok(8);
+        }
         self.types.get(&id.0).unwrap().get_size(self, None)
     }
 }
@@ -250,14 +253,19 @@ pub fn build_types(
                     .1
                     .as_ref()
                     .unwrap_err()
-                    .0.0
+                    .0
+                     .0
                     == uninitialised_types[j].0
                 {
-                    uninitialised_types[i].1.attributes[a].1 = Ok((uninitialised_types[j].1.id, uninitialised_types[i].1.attributes[a]
-                        .1
-                        .as_ref()
-                        .unwrap_err()
-                        .0.1));
+                    uninitialised_types[i].1.attributes[a].1 = Ok((
+                        uninitialised_types[j].1.id,
+                        uninitialised_types[i].1.attributes[a]
+                            .1
+                            .as_ref()
+                            .unwrap_err()
+                            .0
+                             .1,
+                    ));
                     continue 'attr_loop;
                 }
             }
@@ -267,13 +275,18 @@ pub fn build_types(
                     .1
                     .as_ref()
                     .unwrap_err()
-                    .0.0,
+                    .0
+                     .0,
             ) {
-                uninitialised_types[i].1.attributes[a].1 = Ok((id, uninitialised_types[i].1.attributes[a]
-                    .1
-                    .as_ref()
-                    .unwrap_err()
-                    .0.1));
+                uninitialised_types[i].1.attributes[a].1 = Ok((
+                    id,
+                    uninitialised_types[i].1.attributes[a]
+                        .1
+                        .as_ref()
+                        .unwrap_err()
+                        .0
+                         .1,
+                ));
                 continue 'attr_loop;
             }
 
@@ -379,22 +392,22 @@ fn process_function(
         }
         args_processed.push((
             param_name,
-            (type_table
-                .get_id_by_name(&type_name)
-                .ok_or(ProcessorError::TypeNotFound(type_line, type_name))?,
-            indirection),
+            (
+                type_table
+                    .get_id_by_name(&type_name)
+                    .ok_or(ProcessorError::TypeNotFound(type_line, type_name))?,
+                indirection,
+            ),
         ));
     }
 
     let return_type = if let Some((type_name, type_line)) = return_type {
-        Some(
-            (
-                type_table
-                    .get_id_by_name(&type_name.0)
-                    .ok_or(ProcessorError::TypeNotFound(type_line, type_name.0))?,
-                type_name.1
-            )
-        )
+        Some((
+            type_table
+                .get_id_by_name(&type_name.0)
+                .ok_or(ProcessorError::TypeNotFound(type_line, type_name.0))?,
+            type_name.1,
+        ))
     } else {
         None
     };

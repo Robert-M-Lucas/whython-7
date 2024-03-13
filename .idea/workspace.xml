@@ -8,16 +8,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Began adding heap allocation">
-      <change afterPath="$PROJECT_DIR$/example 2.why" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/- c2.why" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main - c.why" beforeDir="false" afterPath="$PROJECT_DIR$/main - c.why" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/out.asm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/out.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/out.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/name_handler.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/name_handler.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/custom/bool.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/custom/bool.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/currently working" beforeDir="false" afterPath="$PROJECT_DIR$/reference/currently working" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example 2.why" beforeDir="false" afterPath="$PROJECT_DIR$/reference/example 2.why" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example.why" beforeDir="false" afterPath="$PROJECT_DIR$/reference/example.why" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main - c.why" beforeDir="false" afterPath="$PROJECT_DIR$/reference/main - c.why" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reference implementation.txt" beforeDir="false" afterPath="$PROJECT_DIR$/reference/reference implementation.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.why" beforeDir="false" afterPath="$PROJECT_DIR$/reference/test.why" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,6 +84,9 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
       <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/reference" />
     </key>
   </component>
   <component name="RunManager" selected="Cargo.Run whython-7">
@@ -172,6 +172,7 @@
       <workItem from="1709383107736" duration="392000" />
       <workItem from="1710243512001" duration="12282000" />
       <workItem from="1710266632374" duration="1766000" />
+      <workItem from="1710288507896" duration="1503000" />
     </task>
     <task id="LOCAL-00014" summary="Commit">
       <option name="closed" value="true" />

@@ -1,12 +1,12 @@
+mod assignment;
 mod call_function;
 mod evaluate;
 mod evaluate_symbol;
 mod instantiate_literal;
+mod name_handler;
 mod operators;
 mod process_lines;
 mod reference;
-mod name_handler;
-mod assignment;
 
 use crate::basic_ast::symbol::BasicSymbol;
 use crate::compiler::custom_functions::{
@@ -15,9 +15,9 @@ use crate::compiler::custom_functions::{
 use crate::compiler::generate_asm::compile_user_function;
 use crate::parser::line_info::LineInfo;
 use crate::processor::processor::ProcessorError;
-use crate::processor::type_builder::{Type, TypedFunction, TypeTable};
-use std::collections::HashMap;
+use crate::processor::type_builder::{Type, TypeTable, TypedFunction};
 use name_handler::NameHandler;
+use std::collections::HashMap;
 
 pub enum Line {
     ReturnCall(isize, Vec<(isize, usize)>, isize),
@@ -28,7 +28,7 @@ pub enum Line {
     Return(Option<isize>),
     HeapAlloc(usize, isize),
     InlineAsm(Vec<String>),
-    Annotation(String)
+    Annotation(String),
 }
 
 pub struct UserFunction {
@@ -146,7 +146,7 @@ pub fn compile_functions(
                 .get_args()
                 .len(),
             lines,
-            name
+            name,
         }));
     }
 

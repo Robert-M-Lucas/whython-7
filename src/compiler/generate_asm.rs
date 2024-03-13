@@ -100,7 +100,10 @@ pub fn compile_user_function(function: &UserFunction) -> String {
 
                 // Release stack space used
                 if !local_args.is_empty() {
-                    output.push(&format!("add rsp, {}", local_args.len() * 8 + (local_args.len() % 2) * 8));
+                    output.push(&format!(
+                        "add rsp, {}",
+                        local_args.len() * 8 + (local_args.len() % 2) * 8
+                    ));
                 }
                 // Move return value
                 output.push(&format!(
@@ -133,7 +136,10 @@ pub fn compile_user_function(function: &UserFunction) -> String {
 
                 // Release stack space used
                 if !local_args.is_empty() {
-                    output.push(&format!("add rsp, {}", local_args.len() * 8 + (local_args.len() % 2) * 8));
+                    output.push(&format!(
+                        "add rsp, {}",
+                        local_args.len() * 8 + (local_args.len() % 2) * 8
+                    ));
                 }
             }
             Line::Copy(local_from, local_to, amount) => {
@@ -149,37 +155,37 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                     ));
                     done += 8;
                 }
-            },
+            }
             Line::DynFromCopy(local_dyn_from, local_to, amount) => {
                 let mut done = 0;
-                output.push(&format!("mov r9, qword [{}]", get_local_address(*local_dyn_from)));
+                output.push(&format!(
+                    "mov r9, qword [{}]",
+                    get_local_address(*local_dyn_from)
+                ));
                 while done < *amount {
-                    output.push(&format!(
-                        "mov rax, qword [r9+{}]",
-                        done
-                    ));
+                    output.push(&format!("mov rax, qword [r9+{}]", done));
                     output.push(&format!(
                         "mov qword [{}], rax",
                         get_local_address(*local_to + (done as isize))
                     ));
                     done += 8;
                 }
-            },
+            }
             Line::DynToCopy(local_from, local_dyn_to, amount) => {
                 let mut done = 0;
-                output.push(&format!("mov r9, qword [{}]", get_local_address(*local_dyn_to)));
+                output.push(&format!(
+                    "mov r9, qword [{}]",
+                    get_local_address(*local_dyn_to)
+                ));
                 while done < *amount {
                     output.push(&format!(
                         "mov rax, qword [{}]",
                         get_local_address(*local_from + (done as isize))
                     ));
-                    output.push(&format!(
-                        "mov qword [r9+{}], rax",
-                        done
-                    ));
+                    output.push(&format!("mov qword [r9+{}], rax", done));
                     done += 8;
                 }
-            },
+            }
             Line::Return(local_return_val) => {
                 last_return = true;
                 if function.id == 0 {
@@ -195,15 +201,18 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                     output.push("leave");
                     output.push("ret");
                 }
-            },
+            }
             Line::HeapAlloc(amount, local_ref_addr) => {
                 output.push("call GetProcessHeap"); // Get process heap
                 output.push("mov rcx, rax"); // Heap handle
                 output.push("mov rdx, rax"); // Flags
                 output.push(&format!("mov r8, {}", *amount));
                 output.push("call HeapAlloc");
-                output.push(&format!("mov qword [{}], rax", get_local_address(*local_ref_addr)));
-            },
+                output.push(&format!(
+                    "mov qword [{}], rax",
+                    get_local_address(*local_ref_addr)
+                ));
+            }
             Line::InlineAsm(asm) => {
                 for line in asm {
                     output.push(line);

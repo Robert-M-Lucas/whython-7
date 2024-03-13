@@ -16,7 +16,11 @@ pub type PreProcessFunction = (
 
 #[derive(Clone, strum_macros::Display, Debug)]
 pub enum PreprocessSymbol {
-    Struct(LineInfo, String, Vec<(String, LineInfo, (String, usize), LineInfo)>),
+    Struct(
+        LineInfo,
+        String,
+        Vec<(String, LineInfo, (String, usize), LineInfo)>,
+    ),
     Impl(LineInfo, String, Vec<(PreProcessFunction, LineInfo)>),
     Fn(LineInfo, PreProcessFunction),
 }
@@ -138,8 +142,13 @@ fn parse_struct(
             }
             _ => return Err(ProcessorError::NameTypeNotDefined(attr_type_line)),
         };
-        
-        attributes.push((attr_name.0, attr_name_line, (attr_type.0, attr_type.3), attr_type_line));
+
+        attributes.push((
+            attr_name.0,
+            attr_name_line,
+            (attr_type.0, attr_type.3),
+            attr_type_line,
+        ));
         first = false;
     }
 
@@ -217,7 +226,7 @@ fn parse_fn(
     }
     let (name, _, name_type, indirection) = name.remove(0);
     if indirection != 0 {
-        return Err(ProcessorError::NameWithRefPrefix(name_line))
+        return Err(ProcessorError::NameWithRefPrefix(name_line));
     }
 
     let parameters = match name_type {
@@ -289,7 +298,13 @@ fn parse_fn(
             (param_type, param_type_line)
         };
 
-        parameters_processed.push((arg_name, arg_line, param_type.0, param_type.1, param_type_line.clone())); // TODO:
+        parameters_processed.push((
+            arg_name,
+            arg_line,
+            param_type.0,
+            param_type.1,
+            param_type_line.clone(),
+        )); // TODO:
         last_line = param_type_line;
     }
 
@@ -331,7 +346,7 @@ fn parse_fn(
         (
             name,
             parameters_processed,
-            return_type.map(|x| ((x.0.0, x.0.3), x.1)),
+            return_type.map(|x| ((x.0 .0, x.0 .3), x.1)),
             contents,
         ),
     ))

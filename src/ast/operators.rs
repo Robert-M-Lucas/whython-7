@@ -14,7 +14,7 @@ pub enum Operator {
     Or,
     And,
     Not,
-    HeapAlloc
+    HeapAlloc,
 }
 
 pub const ALL_SYMBOLS: [char; 12] = ['+', '-', '*', '/', '>', '<', '=', '|', '&', '!', '%', '^'];
