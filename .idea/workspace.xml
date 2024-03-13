@@ -7,14 +7,14 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Began adding heap allocation">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/currently working" beforeDir="false" afterPath="$PROJECT_DIR$/reference/currently working" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example 2.why" beforeDir="false" afterPath="$PROJECT_DIR$/reference/example 2.why" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example.why" beforeDir="false" afterPath="$PROJECT_DIR$/reference/example.why" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main - c.why" beforeDir="false" afterPath="$PROJECT_DIR$/reference/main - c.why" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reference implementation.txt" beforeDir="false" afterPath="$PROJECT_DIR$/reference/reference implementation.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.why" beforeDir="false" afterPath="$PROJECT_DIR$/reference/test.why" afterDir="false" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Cargo clippy">
+      <change beforePath="$PROJECT_DIR$/src/ast/literals.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/literals.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/call_function.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/call_function.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/evaluate.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/evaluate.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/file_reader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/file_reader.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/initialiser_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/initialiser_parser.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/normal_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/normal_parser.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/processor/type_builder.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/type_builder.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -173,30 +173,7 @@
       <workItem from="1710243512001" duration="12282000" />
       <workItem from="1710266632374" duration="1766000" />
       <workItem from="1710288507896" duration="1503000" />
-    </task>
-    <task id="LOCAL-00014" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707688757644</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1707688757644</updated>
-    </task>
-    <task id="LOCAL-00015" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707722524228</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1707722524228</updated>
-    </task>
-    <task id="LOCAL-00016" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707725704345</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1707725704345</updated>
+      <workItem from="1710325675974" duration="560000" />
     </task>
     <task id="LOCAL-00017" summary="Cargo fmt">
       <option name="closed" value="true" />
@@ -566,7 +543,31 @@
       <option name="project" value="LOCAL" />
       <updated>1710255701419</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="Rust fmt">
+      <option name="closed" value="true" />
+      <created>1710325793601</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1710325793602</updated>
+    </task>
+    <task id="LOCAL-00064" summary="Cargo clippy">
+      <option name="closed" value="true" />
+      <created>1710325846217</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1710325846217</updated>
+    </task>
+    <task id="LOCAL-00065" summary="Cargo clippy">
+      <option name="closed" value="true" />
+      <created>1710326234517</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1710326234517</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -608,7 +609,9 @@
     <MESSAGE value="Continued work on reference system" />
     <MESSAGE value="Untested reference types working" />
     <MESSAGE value="Began adding heap allocation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Began adding heap allocation" />
+    <MESSAGE value="Rust fmt" />
+    <MESSAGE value="Cargo clippy" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cargo clippy" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
