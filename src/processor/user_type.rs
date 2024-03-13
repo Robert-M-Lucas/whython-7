@@ -104,8 +104,8 @@ impl Type for UserType {
 
     fn instantiate(
         &self,
-        literal: Option<&Literal>,
-        local_address: isize,
+        _literal: Option<&Literal>,
+        _local_address: isize,
     ) -> Result<Vec<String>, ProcessorError> {
         panic!()
     }

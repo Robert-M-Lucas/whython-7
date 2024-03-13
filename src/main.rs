@@ -1,4 +1,4 @@
-use crate::assembler::assemble::{assemble, generate_assembly, link, link_gcc_experimental};
+use crate::assembler::assemble::{assemble, generate_assembly, link_gcc_experimental};
 use std::fs;
 
 use crate::parser::parse::parse;
@@ -7,7 +7,7 @@ use clap::Parser;
 use std::path::PathBuf;
 use std::process::Command;
 
-use b_box::b;
+
 use std::time::Instant;
 
 mod assembler;

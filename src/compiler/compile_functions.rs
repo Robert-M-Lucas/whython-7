@@ -76,7 +76,7 @@ impl FunctionHolder {
         name: &str,
     ) -> Option<&Box<dyn TypedFunction>> {
         self.functions_table
-            .get(&_type.and_then(|x| Some(x.0)))
+            .get(&_type.map(|x| x.0))
             .and_then(|x| x.get(name).map(|x| self.functions.get(x).unwrap()))
     }
 

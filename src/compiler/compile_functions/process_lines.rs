@@ -4,13 +4,13 @@ use crate::basic_ast::punctuation::Punctuation;
 use crate::basic_ast::symbol::{BasicSymbol, NameType};
 use crate::compiler::compile_functions::assignment::process_assignment;
 use crate::compiler::compile_functions::name_handler::NameHandler;
-use crate::compiler::compile_functions::{evaluate, operators, FunctionHolder, Line};
+use crate::compiler::compile_functions::{evaluate, FunctionHolder, Line};
 use crate::compiler::generate_asm::{get_function_sublabel, get_local_address};
 use crate::parser::line_info::LineInfo;
 use crate::processor::custom_types::Bool;
 use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::Type;
-use either::Left;
+
 use itertools::Itertools;
 use std::fs;
 
@@ -34,9 +34,9 @@ pub fn process_lines(
 
         #[cfg(debug_assertions)]
         {
-            let mut new_line = line.last().unwrap().1.line();
-            let mut file = line.last().unwrap().1.file().unwrap();
-            let mut start = if let Some(prev_line) = prev_line {
+            let new_line = line.last().unwrap().1.line();
+            let file = line.last().unwrap().1.file().unwrap();
+            let start = if let Some(prev_line) = prev_line {
                 prev_line
             } else {
                 line.first().unwrap().1.line()

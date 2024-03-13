@@ -1,6 +1,6 @@
 use crate::compiler::compile_functions::Function;
 use std::fs;
-use std::path::PathBuf;
+
 use std::process::Command;
 
 pub fn generate_assembly(output: &str, functions: Vec<Box<dyn Function>>) {

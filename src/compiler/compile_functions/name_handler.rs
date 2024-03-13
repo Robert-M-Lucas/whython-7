@@ -167,7 +167,7 @@ impl NameHandler {
                 NameType::Function(contents) => {
                     if let Some(func) = function_holder
                         .functions_table()
-                        .get(&current_type.and_then(|x| Some(x.0)))
+                        .get(&current_type.map(|x| x.0))
                         .unwrap()
                         .get(name)
                     {
