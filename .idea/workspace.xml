@@ -7,14 +7,8 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Cargo clippy">
-      <change beforePath="$PROJECT_DIR$/src/ast/literals.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/literals.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/call_function.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/call_function.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/evaluate.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/evaluate.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/file_reader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/file_reader.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/initialiser_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/initialiser_parser.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/normal_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/normal_parser.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/type_builder.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/type_builder.rs" afterDir="false" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Build config">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -173,15 +167,7 @@
       <workItem from="1710243512001" duration="12282000" />
       <workItem from="1710266632374" duration="1766000" />
       <workItem from="1710288507896" duration="1503000" />
-      <workItem from="1710325675974" duration="560000" />
-    </task>
-    <task id="LOCAL-00017" summary="Cargo fmt">
-      <option name="closed" value="true" />
-      <created>1707725783401</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1707725783401</updated>
+      <workItem from="1710325675974" duration="885000" />
     </task>
     <task id="LOCAL-00018" summary="Cargo Clippy">
       <option name="closed" value="true" />
@@ -567,7 +553,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710326234517</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="Build config">
+      <option name="closed" value="true" />
+      <created>1710326552208</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1710326552208</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -611,7 +605,8 @@
     <MESSAGE value="Began adding heap allocation" />
     <MESSAGE value="Rust fmt" />
     <MESSAGE value="Cargo clippy" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cargo clippy" />
+    <MESSAGE value="Build config" />
+    <option name="LAST_COMMIT_MESSAGE" value="Build config" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
