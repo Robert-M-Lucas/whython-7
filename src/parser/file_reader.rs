@@ -12,6 +12,7 @@ pub struct FileReader {
     checkpoint: (usize, usize),
 }
 
+#[allow(dead_code)]
 impl FileReader {
     pub fn new(path: PathBuf, data: String) -> FileReader {
         FileReader {

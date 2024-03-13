@@ -187,7 +187,7 @@ pub fn parse_normal(
         if next == '¬' {
             process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
             symbols.push((
-                BasicSymbol::Literal(Literal::NullLiteral),
+                BasicSymbol::Literal(Literal::Null),
                 reader.get_line_info_current(),
             ));
             continue;

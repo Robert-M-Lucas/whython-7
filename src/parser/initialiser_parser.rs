@@ -15,10 +15,7 @@ pub fn parse_initialiser(
     let name = name.trim();
     for c in name.chars() {
         if !NAME_VALID_CHARS.contains(&c) {
-            let mut utf8 = Vec::with_capacity(c.len_utf8());
-            for _ in 0..c.len_utf8() {
-                utf8.push(0);
-            }
+            let mut utf8 = vec![0; c.len_utf8()];
             c.encode_utf8(&mut utf8);
             return Err(ParseError::BadName(reader.get_line_info(), c, utf8));
         }

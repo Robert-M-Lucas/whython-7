@@ -80,10 +80,10 @@ pub trait Type {
     }
 }
 
-pub struct TypeIdentifier {
-    id: isize,
-    indirections: usize,
-}
+// pub struct TypeIdentifier {
+//     id: isize,
+//     indirections: usize,
+// }
 
 pub struct TypeTable {
     types: HashMap<isize, Box<dyn Type>>,

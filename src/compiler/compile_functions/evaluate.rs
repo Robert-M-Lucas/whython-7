@@ -4,7 +4,7 @@ use crate::compiler::compile_functions::{evaluate_symbol, operators, FunctionHol
 use crate::parser::line_info::LineInfo;
 use crate::processor::processor::ProcessorError;
 
-pub fn evaluate<'a>(
+pub fn evaluate(
     section: &[(BasicSymbol, LineInfo)],
     lines: &mut Vec<Line>,
     name_handler: &mut NameHandler,

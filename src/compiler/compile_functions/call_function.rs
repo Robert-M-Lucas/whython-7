@@ -156,14 +156,14 @@ pub fn call_function(
 
         Some((return_into.0, return_type))
     } else {
-        if return_into.is_some() {
+        if let Some(return_into) = return_into {
             return Err(ProcessorError::BadEvaluatedType(
                 start_line.clone(),
                 name_handler
                     .type_table()
-                    .get_type(return_into.unwrap().1 .0)
+                    .get_type(return_into.1.0)
                     .unwrap()
-                    .get_indirect_name(return_into.unwrap().1 .1)
+                    .get_indirect_name(return_into.1.1)
                     .to_string(),
                 "None".to_string(),
             ));

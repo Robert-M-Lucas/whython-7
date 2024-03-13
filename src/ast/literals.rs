@@ -8,7 +8,7 @@ pub enum Literal {
     Int(i128),
     Bool(bool),
     Initialiser(String, Vec<Vec<(BasicSymbol, LineInfo)>>),
-    NullLiteral,
+    Null,
     None,
 }
 
@@ -17,7 +17,7 @@ impl Literal {
         match &self {
             Literal::Int(_) => (-1, 0),
             Literal::Bool(_) => (-2, 0),
-            Literal::NullLiteral => (-1, 1),
+            Literal::Null => (-1, 1),
             _ => todo!(),
         }
     }
