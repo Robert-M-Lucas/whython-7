@@ -10,6 +10,7 @@ pub fn generate_assembly(output: &str, functions: Vec<Box<dyn Function>>) {
     extern GetStdHandle
     extern WriteFile
     extern HeapAlloc
+    extern HeapFree
     extern GetProcessHeap
     section .text\n",
     );

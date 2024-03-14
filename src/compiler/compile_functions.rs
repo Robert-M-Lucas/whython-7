@@ -27,6 +27,7 @@ pub enum Line {
     DynToCopy(isize, isize, usize),
     Return(Option<isize>),
     HeapAlloc(usize, isize),
+    HeapDealloc(isize, isize),
     InlineAsm(Vec<String>),
     Annotation(String),
 }
@@ -131,6 +132,8 @@ pub fn compile_functions(
             &function_holder,
             None,
         )?;
+
+        // name_handler.destroy_local_variables(&mut lines)?;
 
         if return_type.is_some() && !last_return {
             return Err(ProcessorError::NoReturnStatement(function.get_line()));

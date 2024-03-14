@@ -3,6 +3,7 @@
     extern GetStdHandle
     extern WriteFile
     extern HeapAlloc
+    extern HeapFree
     extern GetProcessHeap
     section .text
 
@@ -47,88 +48,228 @@ __4: ; printi
 	leave
 	ret
 
-_3: ; print
+main: ; main
 	push rbp
 	mov rbp, rsp
-	sub rsp, 112
+	sub rsp, 128
+	; '    let ll: LL = LL#new();'
+	call _1
+	mov qword [rbp-16], rax
+	; ''
+	; '    ll.add(12);'
+	mov rax, rbp
+	add rax, -16
+	mov qword [rbp-24], rax
+	mov rax, qword 12
+	mov qword [rbp-32], rax
+	mov rax, qword [rbp-32]
+	push rax
+	mov rax, qword [rbp-24]
+	push rax
+	call _2
+	add rsp, 16
+	; ''
+	; '    ll.add(18);'
+	mov rax, rbp
+	add rax, -16
+	mov qword [rbp-40], rax
+	mov rax, qword 18
+	mov qword [rbp-48], rax
+	mov rax, qword [rbp-48]
+	push rax
+	mov rax, qword [rbp-40]
+	push rax
+	call _2
+	add rsp, 16
+	; ''
+	; '    let i: int = 0;'
+	mov rax, qword 0
+	mov qword [rbp-56], rax
+	; ''
+	; '    while (i < 5) {'
+	main.0:
+	mov rax, qword 5
+	mov qword [rbp-64], rax
+	mov rax, [rbp-56]
+	mov rcx, [rbp-64]
+	cmp rcx, rax
+	mov qword [rbp-72], 0
+	setle [rbp-72]
+	mov rax, [rbp-72]
+	cmp rax, 0
+	jnz main.1
+	; '        ll.add(i * 7);'
+	mov rax, rbp
+	add rax, -16
+	mov qword [rbp-80], rax
+	mov rax, qword 7
+	mov qword [rbp-88], rax
+	mov rax, [rbp-56]
+	mov rcx, [rbp-88]
+	mul rcx
+	mov [rbp-96], rax
+	mov rax, qword [rbp-96]
+	push rax
+	mov rax, qword [rbp-80]
+	push rax
+	call _2
+	add rsp, 16
+	; '        i += 1;'
+	mov rax, qword 1
+	mov qword [rbp-104], rax
+	mov rax, [rbp-56]
+	add rax, [rbp-104]
+	mov [rbp-56], rax
+	jmp main.0
+	main.1:
+	; '        ll.add(i * 7);'
+	; '        i += 1;'
+	; '    };'
+	; ''
+	; '    ll.print();'
+	mov rax, rbp
+	add rax, -16
+	mov qword [rbp-112], rax
+	push qword 0
+	mov rax, qword [rbp-112]
+	push rax
+	call _3
+	add rsp, 16
+	; ''
+	; '    return 7;'
+	mov rax, qword 7
+	mov qword [rbp-120], rax
+	mov rcx, [rbp-120]
+	call ExitProcess
+	push qword 0
+	mov rax, qword [rbp-8]
+	push rax
+	mov rax, qword [rbp-16]
+	push rax
+	call _4
+	add rsp, 16
+	mov rcx, 0
+	call ExitProcess
+
+_4: ; destroy
+	push rbp
+	mov rbp, rsp
+	sub rsp, 144
+	; '        printi(118);'
+	mov rax, qword 118
+	mov qword [rbp-8], rax
+	push qword 0
+	mov rax, qword [rbp-8]
+	push rax
+	call __4
+	add rsp, 16
+	; ''
+	; '        if (!(*self.has_first)) {'
 	mov rax, qword [rbp+16]
 	add rax, 8
-	mov qword [rbp-8], rax
-	mov r9, qword [rbp-8]
-	mov rax, qword [r9+0]
 	mov qword [rbp-16], rax
-	mov rax, [rbp-16]
-	cmp rax, 0
-	setz al
+	mov r9, qword [rbp-16]
+	mov rax, qword [r9+0]
 	mov qword [rbp-24], rax
 	mov rax, [rbp-24]
 	cmp rax, 0
-	jnz .3.0
+	setz al
+	mov qword [rbp-32], rax
+	mov rax, [rbp-32]
+	cmp rax, 0
+	jnz .4.0
+	; '            return;'
 	leave
 	ret
-	.3.0:
-	.3.1:
+	.4.0:
+	.4.1:
+	; '            return;'
+	; '        };'
+	; ''
+	; '        let curr: $Node = *self.base;'
 	mov rax, qword [rbp+16]
-	add rax, 0
-	mov qword [rbp-40], rax
-	mov r9, qword [rbp-40]
-	mov rax, qword [r9+0]
-	mov qword [rbp-32], rax
-	mov rax, qword [rbp-32]
 	add rax, 0
 	mov qword [rbp-48], rax
 	mov r9, qword [rbp-48]
 	mov rax, qword [r9+0]
-	mov qword [rbp-56], rax
-	push qword 0
-	mov rax, qword [rbp-56]
-	push rax
-	call __4
-	add rsp, 16
-	.3.2:
-	mov rax, qword [rbp-32]
+	mov qword [rbp-40], rax
+	; ''
+	; '        while (!(*curr.last)) {'
+	.4.2:
+	mov rax, qword [rbp-40]
 	add rax, 8
-	mov qword [rbp-64], rax
-	mov r9, qword [rbp-64]
+	mov qword [rbp-56], rax
+	mov r9, qword [rbp-56]
 	mov rax, qword [r9+0]
+	mov qword [rbp-64], rax
+	mov rax, [rbp-64]
+	cmp rax, 0
+	setz al
 	mov qword [rbp-72], rax
 	mov rax, [rbp-72]
 	cmp rax, 0
-	setz al
+	jnz .4.3
+	; '            let prev: $Node = curr;'
+	mov rax, qword [rbp-40]
 	mov qword [rbp-80], rax
-	mov rax, [rbp-80]
-	cmp rax, 0
-	jnz .3.3
-	mov rax, qword [rbp-32]
+	; '            curr = *curr.next;'
+	mov rax, qword [rbp-40]
 	add rax, 16
 	mov qword [rbp-88], rax
 	mov r9, qword [rbp-88]
 	mov rax, qword [r9+0]
-	mov qword [rbp-32], rax
-	mov rax, qword [rbp-32]
-	add rax, 0
-	mov qword [rbp-96], rax
-	mov r9, qword [rbp-96]
+	mov qword [rbp-40], rax
+	; '            ¬prev;'
+	call GetProcessHeap
+	mov rcx, rax
+	mov rdx, 0
+	mov r8, qword [rbp-80]
+	call HeapFree
+	cmp rax, 0
+	mov rcx, 0
+	setz cl
+	mov qword [rbp-96], rcx
+	jmp .4.2
+	.4.3:
+	; '            let prev: $Node = curr;'
+	; '            curr = *curr.next;'
+	; '            ¬prev;'
+	; '        };'
+	; ''
+	; '        ¬curr;'
+	call GetProcessHeap
+	mov rcx, rax
+	mov rdx, 0
+	mov r8, qword [rbp-40]
+	call HeapFree
+	cmp rax, 0
+	mov rcx, 0
+	setz cl
+	mov qword [rbp-104], rcx
+	; ''
+	; '        *self.has_first = false;'
+	mov rax, qword [rbp+16]
+	add rax, 8
+	mov qword [rbp-112], rax
+	mov r9, qword [rbp-112]
 	mov rax, qword [r9+0]
-	mov qword [rbp-104], rax
-	push qword 0
-	mov rax, qword [rbp-104]
-	push rax
-	call __4
-	add rsp, 16
-	jmp .3.2
-	.3.3:
-	leave
-	ret
-
-_1: ; new
-	push rbp
-	mov rbp, rsp
-	sub rsp, 16
+	mov qword [rbp-120], rax
+	mov qword [rbp-120], 1
+	mov r9, qword [rbp-112]
+	mov rax, qword [rbp-120]
+	mov qword [r9+0], rax
+	; '        *self.base = 0;'
+	mov rax, qword [rbp+16]
+	add rax, 0
+	mov qword [rbp-128], rax
+	mov r9, qword [rbp-128]
+	mov rax, qword [r9+0]
+	mov qword [rbp-136], rax
 	mov rax, qword 0
-	mov qword [rbp-16], rax
-	mov qword [rbp-8], 1
-	mov rax, [rbp-16]
+	mov qword [rbp-136], rax
+	mov r9, qword [rbp-128]
+	mov rax, qword [rbp-136]
+	mov qword [r9+0], rax
 	leave
 	ret
 
@@ -136,11 +277,18 @@ _2: ; add
 	push rbp
 	mov rbp, rsp
 	sub rsp, 160
+	; '        let new_node: Node = @Node {'
 	mov rax, qword [rbp+24]
 	mov qword [rbp-24], rax
 	mov qword [rbp-16], 0
 	mov rax, qword 0
 	mov qword [rbp-8], rax
+	; '            next,'
+	; '            true,'
+	; '            0'
+	; '        };'
+	; ''
+	; '        if (!(*self.has_first)) {'
 	mov rax, qword [rbp+16]
 	add rax, 8
 	mov qword [rbp-32], rax
@@ -154,6 +302,7 @@ _2: ; add
 	mov rax, [rbp-48]
 	cmp rax, 0
 	jnz .2.0
+	; '            *self.base = ^new_node;'
 	mov rax, qword [rbp+16]
 	add rax, 0
 	mov qword [rbp-56], rax
@@ -162,7 +311,7 @@ _2: ; add
 	mov qword [rbp-64], rax
 	call GetProcessHeap
 	mov rcx, rax
-	mov rdx, rax
+	mov rdx, 0
 	mov r8, 24
 	call HeapAlloc
 	mov qword [rbp-64], rax
@@ -176,6 +325,7 @@ _2: ; add
 	mov r9, qword [rbp-56]
 	mov rax, qword [rbp-64]
 	mov qword [r9+0], rax
+	; '            *self.has_first = true;'
 	mov rax, qword [rbp+16]
 	add rax, 8
 	mov qword [rbp-72], rax
@@ -186,16 +336,24 @@ _2: ; add
 	mov r9, qword [rbp-72]
 	mov rax, qword [rbp-80]
 	mov qword [r9+0], rax
+	; '            return;'
 	leave
 	ret
 	.2.0:
 	.2.1:
+	; '            *self.base = ^new_node;'
+	; '            *self.has_first = true;'
+	; '            return;'
+	; '        };'
+	; ''
+	; '        let curr: $Node = *self.base;'
 	mov rax, qword [rbp+16]
 	add rax, 0
 	mov qword [rbp-96], rax
 	mov r9, qword [rbp-96]
 	mov rax, qword [r9+0]
 	mov qword [rbp-88], rax
+	; '        while (!(*curr.last)) {'
 	.2.2:
 	mov rax, qword [rbp-88]
 	add rax, 8
@@ -210,6 +368,7 @@ _2: ; add
 	mov rax, [rbp-120]
 	cmp rax, 0
 	jnz .2.3
+	; '            curr = *curr.next;'
 	mov rax, qword [rbp-88]
 	add rax, 16
 	mov qword [rbp-128], rax
@@ -218,6 +377,10 @@ _2: ; add
 	mov qword [rbp-88], rax
 	jmp .2.2
 	.2.3:
+	; '            curr = *curr.next;'
+	; '        };'
+	; ''
+	; '        *curr.last = false;'
 	mov rax, qword [rbp-88]
 	add rax, 8
 	mov qword [rbp-136], rax
@@ -228,6 +391,7 @@ _2: ; add
 	mov r9, qword [rbp-136]
 	mov rax, qword [rbp-144]
 	mov qword [r9+0], rax
+	; '        *curr.next = ^new_node;'
 	mov rax, qword [rbp-88]
 	add rax, 16
 	mov qword [rbp-152], rax
@@ -236,7 +400,7 @@ _2: ; add
 	mov qword [rbp-160], rax
 	call GetProcessHeap
 	mov rcx, rax
-	mov rdx, rax
+	mov rdx, 0
 	mov r8, 24
 	call HeapAlloc
 	mov qword [rbp-160], rax
@@ -253,78 +417,99 @@ _2: ; add
 	leave
 	ret
 
-main: ; main
+_1: ; new
 	push rbp
 	mov rbp, rsp
-	sub rsp, 128
-	call _1
-	mov qword [rbp-16], rax
-	mov rax, rbp
-	add rax, -16
-	mov qword [rbp-24], rax
-	mov rax, qword 12
-	mov qword [rbp-32], rax
-	mov rax, qword [rbp-32]
-	push rax
-	mov rax, qword [rbp-24]
-	push rax
-	call _2
-	add rsp, 16
-	mov rax, rbp
-	add rax, -16
-	mov qword [rbp-40], rax
-	mov rax, qword 18
-	mov qword [rbp-48], rax
-	mov rax, qword [rbp-48]
-	push rax
-	mov rax, qword [rbp-40]
-	push rax
-	call _2
-	add rsp, 16
+	sub rsp, 16
+	; '        return @LL {'
 	mov rax, qword 0
+	mov qword [rbp-16], rax
+	mov qword [rbp-8], 1
+	mov rax, [rbp-16]
+	leave
+	ret
+
+_3: ; print
+	push rbp
+	mov rbp, rsp
+	sub rsp, 112
+	; '        if (!(*self.has_first)) {'
+	mov rax, qword [rbp+16]
+	add rax, 8
+	mov qword [rbp-8], rax
+	mov r9, qword [rbp-8]
+	mov rax, qword [r9+0]
+	mov qword [rbp-16], rax
+	mov rax, [rbp-16]
+	cmp rax, 0
+	setz al
+	mov qword [rbp-24], rax
+	mov rax, [rbp-24]
+	cmp rax, 0
+	jnz .3.0
+	; '            return;'
+	leave
+	ret
+	.3.0:
+	.3.1:
+	; '            return;'
+	; '        };'
+	; ''
+	; '        let curr: $Node = *self.base;'
+	mov rax, qword [rbp+16]
+	add rax, 0
+	mov qword [rbp-40], rax
+	mov r9, qword [rbp-40]
+	mov rax, qword [r9+0]
+	mov qword [rbp-32], rax
+	; '        printi(*curr.cur);'
+	mov rax, qword [rbp-32]
+	add rax, 0
+	mov qword [rbp-48], rax
+	mov r9, qword [rbp-48]
+	mov rax, qword [r9+0]
 	mov qword [rbp-56], rax
-	main.0:
-	mov rax, qword 5
+	push qword 0
+	mov rax, qword [rbp-56]
+	push rax
+	call __4
+	add rsp, 16
+	; ''
+	; '        while (!(*curr.last)) {'
+	.3.2:
+	mov rax, qword [rbp-32]
+	add rax, 8
 	mov qword [rbp-64], rax
-	mov rax, [rbp-56]
-	mov rcx, [rbp-64]
-	cmp rcx, rax
-	mov qword [rbp-72], 0
-	setle [rbp-72]
+	mov r9, qword [rbp-64]
+	mov rax, qword [r9+0]
+	mov qword [rbp-72], rax
 	mov rax, [rbp-72]
 	cmp rax, 0
-	jnz main.1
-	mov rax, rbp
-	add rax, -16
+	setz al
 	mov qword [rbp-80], rax
-	mov rax, qword 7
+	mov rax, [rbp-80]
+	cmp rax, 0
+	jnz .3.3
+	; '            curr = *curr.next;'
+	mov rax, qword [rbp-32]
+	add rax, 16
 	mov qword [rbp-88], rax
-	mov rax, [rbp-56]
-	mov rcx, [rbp-88]
-	mul rcx
-	mov [rbp-96], rax
-	mov rax, qword [rbp-96]
-	push rax
-	mov rax, qword [rbp-80]
-	push rax
-	call _2
-	add rsp, 16
-	mov rax, qword 1
+	mov r9, qword [rbp-88]
+	mov rax, qword [r9+0]
+	mov qword [rbp-32], rax
+	; '            printi(*curr.cur);'
+	mov rax, qword [rbp-32]
+	add rax, 0
+	mov qword [rbp-96], rax
+	mov r9, qword [rbp-96]
+	mov rax, qword [r9+0]
 	mov qword [rbp-104], rax
-	mov rax, [rbp-56]
-	add rax, [rbp-104]
-	mov [rbp-56], rax
-	jmp main.0
-	main.1:
-	mov rax, rbp
-	add rax, -16
-	mov qword [rbp-112], rax
 	push qword 0
-	mov rax, qword [rbp-112]
+	mov rax, qword [rbp-104]
 	push rax
-	call _3
+	call __4
 	add rsp, 16
-	mov rax, qword 7
-	mov qword [rbp-120], rax
-	mov rcx, [rbp-120]
-	call ExitProcess
+	jmp .3.2
+	.3.3:
+	leave
+	ret

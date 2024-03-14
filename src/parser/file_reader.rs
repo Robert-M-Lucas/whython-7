@@ -96,6 +96,28 @@ impl FileReader {
         (out, eof)
     }
 
+    pub fn skip_until_newline(&mut self) -> (String, bool) {
+        let mut out = String::new();
+
+        let chars = self.data.chars().skip(self.cursor);
+
+        let mut eof = true;
+
+        let mut i = 0;
+        for char in chars {
+            i += 1;
+            if char == '\n' || char == '\r' {
+                eof = false;
+                break;
+            }
+            out.push(char);
+        }
+
+        self.cursor += i;
+
+        (out, eof)
+    }
+
     pub fn move_to_next_char(&mut self, c: char) {
         let chars = self.data.chars().skip(self.cursor);
 

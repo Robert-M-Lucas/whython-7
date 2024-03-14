@@ -76,6 +76,7 @@ pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(
     };
 
     asts.push(inner);
+
     Ok(())
 }
 

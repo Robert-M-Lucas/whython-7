@@ -141,6 +141,14 @@ pub enum ProcessorError {
     NameWithRefPrefix(LineInfo),
     #[error("Error: Can't dereference non-reference type\n{0}")]
     CantDerefNonRef(LineInfo),
+    #[error("Error: Can't deallocate non-reference type\n{0}")]
+    CantDeallocateNonRef(LineInfo),
+    #[error("Error: Can't set the destructor of a built-in type\n{0}")]
+    CantSetBuiltinDestructor(LineInfo),
+    #[error("Error: Destructor must have only take `self` as a parameter\n{0}")]
+    BadDestructorSignature(LineInfo),
+    #[error("Error: Can only have one destructor\n{0}")]
+    MultipleDestructors(LineInfo),
     #[error("TODO: Bad literal type")]
     BadLiteralType(),
     #[error("Error: Feature '{1}' not implemented yet\n{0}")]

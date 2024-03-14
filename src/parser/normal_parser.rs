@@ -187,7 +187,7 @@ pub fn parse_normal(
         if next == '¬' {
             process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
             symbols.push((
-                BasicSymbol::Literal(Literal::Null),
+                BasicSymbol::Operator(Operator::HeapDealloc),
                 reader.get_line_info_current(),
             ));
             continue;
@@ -213,6 +213,12 @@ pub fn parse_normal(
 
         if next == '@' && buffer.is_empty() {
             parse_initialiser(&mut symbols, reader)?;
+            continue;
+        }
+
+        if next == '\\' {
+            process_buffer(&mut buffer, &mut operator_mode, &mut symbols, reader)?;
+            reader.skip_until_newline();
             continue;
         }
 

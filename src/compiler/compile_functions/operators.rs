@@ -5,7 +5,7 @@ use crate::compiler::compile_functions::instantiate_literal::instantiate_variabl
 use crate::compiler::compile_functions::name_handler::NameHandler;
 use crate::compiler::compile_functions::{FunctionHolder, Line};
 use crate::parser::line_info::LineInfo;
-use crate::processor::custom_types::Int;
+use crate::processor::custom_types::{Bool, Int};
 use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::{Type, TypedFunction};
 use either::{Left, Right};
@@ -195,6 +195,42 @@ pub fn evaluate_operation(
                 return Ok(Some(return_into));
             }
 
+            // Heap dealloc
+            if matches!(op_, Operator::HeapDealloc) && rhs.is_none() {
+                let return_into = if let Some(return_into) = return_into {
+                    if return_into.1 != (Bool::get_id(), 0) {
+                        return Err(ProcessorError::BadEvaluatedType(
+                            op.1.clone(),
+                            name_handler
+                                .type_table()
+                                .get_type(return_into.1 .0)
+                                .unwrap()
+                                .get_indirect_name(return_into.1 .1)
+                                .to_string(),
+                            name_handler
+                                .type_table()
+                                .get_type(Bool::get_id())
+                                .unwrap()
+                                .get_indirect_name(0)
+                                .to_string(),
+                        ));
+                    }
+                    return_into
+                } else {
+                    (
+                        name_handler.add_local_variable(None, (Bool::get_id(), 0))?,
+                        (Bool::get_id(), 0),
+                    )
+                };
+
+                if lhs.1.1 == 0 {
+                    return Err(ProcessorError::CantDeallocateNonRef(op.1.clone()));
+                }
+
+                lines.push(Line::HeapDealloc(lhs.0, return_into.0));
+                return Ok(Some(return_into));
+            }
+
             let (lhs, rhs) = if matches!(op_, Operator::Subtract)
                 && rhs.is_none()
                 && lhs.1 == (Int::get_id(), 0)
@@ -235,6 +271,7 @@ pub fn evaluate_operation(
                 Operator::Or => "or",
                 Operator::And => "and",
                 Operator::HeapAlloc => "heap allocate",
+                Operator::HeapDealloc => "heap deallocate",
                 Operator::Not => panic!(),
             };
 

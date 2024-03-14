@@ -205,13 +205,24 @@ pub fn compile_user_function(function: &UserFunction) -> String {
             Line::HeapAlloc(amount, local_ref_addr) => {
                 output.push("call GetProcessHeap"); // Get process heap
                 output.push("mov rcx, rax"); // Heap handle
-                output.push("mov rdx, rax"); // Flags
+                output.push("mov rdx, 0"); // Flags
                 output.push(&format!("mov r8, {}", *amount));
                 output.push("call HeapAlloc");
                 output.push(&format!(
                     "mov qword [{}], rax",
                     get_local_address(*local_ref_addr)
                 ));
+            }
+            Line::HeapDealloc(local_ref_addr, local_success_bool) => {
+                output.push("call GetProcessHeap"); // Get process heap
+                output.push("mov rcx, rax"); // Heap handle
+                output.push("mov rdx, 0"); // Flags
+                output.push(&format!("mov r8, qword [{}]", get_local_address(*local_ref_addr)));
+                output.push("call HeapFree");
+                output.push("cmp rax, 0");
+                output.push("mov rcx, 0");
+                output.push("setz cl");
+                output.push(&format!("mov qword [{}], rcx", get_local_address(*local_success_bool)))
             }
             Line::InlineAsm(asm) => {
                 for line in asm {

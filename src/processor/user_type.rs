@@ -8,6 +8,7 @@ pub struct UserType {
     id: isize,
     path: LineInfo,
     attributes: Vec<(String, (isize, usize))>,
+    destructor: Option<isize>
 }
 
 impl UserType {
@@ -16,12 +17,14 @@ impl UserType {
         id: isize,
         path: LineInfo,
         attributes: Vec<(String, (isize, usize))>,
+        destructor: Option<isize>
     ) -> UserType {
         UserType {
             name,
             id,
             path,
             attributes,
+            destructor
         }
     }
 
@@ -112,5 +115,17 @@ impl Type for UserType {
 
     fn get_user_type(&self) -> Option<&UserType> {
         Some(self)
+    }
+
+    fn try_set_destructor(&mut self, line_info: &LineInfo, func: isize) -> Result<(), ProcessorError> {
+        if self.destructor.is_some() {
+            return Err(ProcessorError::MultipleDestructors(line_info.clone()));
+        }
+        self.destructor = Some(func);
+        Ok(())
+    }
+
+    fn get_destructor(&self) -> Option<isize> {
+        self.destructor
     }
 }

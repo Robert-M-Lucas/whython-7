@@ -66,6 +66,23 @@ impl NameHandler {
         Ok(addr)
     }
 
+    pub fn destroy_local_variables(&mut self, lines: &mut Vec<Line>) -> Result<(), ProcessorError> {
+        let mut used = Vec::new();
+        for (name, addr, (type_id, indirection)) in &self.local_variables {
+            if *indirection != 0 { continue; }
+            let t = self.type_table.get_type(*type_id).unwrap();
+            if let Some(destructor) = t.get_destructor() {
+                lines.push(Line::NoReturnCall(destructor, vec![(*addr, self.type_table.get_type_size((*type_id, 0))?)]));
+                used.push(destructor);
+            }
+        }
+        for d in used {
+            self.use_function_id(d);
+        }
+        self.local_variables.clear();
+        Ok(())
+    }
+
     pub fn name_variable(&mut self, name: String, addr: isize, _type: (isize, usize)) {
         self.local_variables.push((name, addr, _type));
     }
