@@ -41,7 +41,7 @@ impl TypedFunction for IntAdd {
 
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
-            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rax, qword [{}]", get_local_address(args[0])),
             format!("add rax, [{}]", get_local_address(args[1])),
             format!("mov [{}], rax", get_local_address(args[2])),
         ]
@@ -84,7 +84,7 @@ impl TypedFunction for IntSub {
 
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
-            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rax, qword [{}]", get_local_address(args[0])),
             format!("sub rax, [{}]", get_local_address(args[1])),
             format!("mov [{}], rax", get_local_address(args[2])),
         ]
@@ -127,7 +127,7 @@ impl TypedFunction for IntMul {
 
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
-            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rax, qword [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "mul rcx".to_string(),
             format!("mov [{}], rax", get_local_address(args[2])),
@@ -171,7 +171,7 @@ impl TypedFunction for IntDiv {
 
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
-            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rax, qword [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cqo".to_string(),
             "idiv rcx".to_string(),
@@ -216,7 +216,7 @@ impl TypedFunction for IntMod {
 
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
-            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rax, qword [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cqo".to_string(),
             "idiv rcx".to_string(),
@@ -261,7 +261,7 @@ impl TypedFunction for IntLT {
 
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
-            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rax, qword [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cmp rcx, rax".to_string(),
             format!("mov qword [{}], 0", get_local_address(args[2])),
@@ -306,7 +306,7 @@ impl TypedFunction for IntGT {
 
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
-            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rax, qword [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cmp rax, rcx".to_string(),
             format!("mov qword [{}], 0", get_local_address(args[2])),
@@ -351,7 +351,7 @@ impl TypedFunction for IntLE {
 
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
-            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rax, qword [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cmp rax, rcx".to_string(),
             format!("mov qword [{}], 0", get_local_address(args[2])),
@@ -396,7 +396,7 @@ impl TypedFunction for IntGE {
 
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
-            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rax, qword [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cmp rcx, rax".to_string(),
             format!("mov qword [{}], 0", get_local_address(args[2])),
@@ -441,7 +441,7 @@ impl TypedFunction for IntEQ {
 
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
-            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rax, qword [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cmp rcx, rax".to_string(),
             format!("mov qword [{}], 0", get_local_address(args[2])),
@@ -486,7 +486,7 @@ impl TypedFunction for IntNE {
 
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
-            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rax, qword [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cmp rcx, rax".to_string(),
             format!("mov qword [{}], 0", get_local_address(args[2])),

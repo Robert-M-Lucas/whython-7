@@ -54,20 +54,30 @@ impl LL {
     }
 
     fn destroy(self) {
-        printi(123);
+       let a: bool = *self.has_first;
+
         if (!(*self.has_first)) {
+            printi(119);
             return;
         };
+        printi(120);
 
         let curr: $Node = *self.base;
 
+        printi(121);
+
         while (!(*curr.last)) {
+            printi(122);
             let prev: $Node = curr;
             curr = *curr.next;
             ¬prev;
         };
 
+        printi(122);
+
         ¬curr;
+
+        printi(123);
 
         *self.has_first = false;
         *self.base = 0;

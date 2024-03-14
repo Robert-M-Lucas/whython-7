@@ -201,7 +201,7 @@ pub fn process_lines(
                     evaluate::evaluate(expr, lines, name_handler, function_holder, None)?
                         .ok_or(ProcessorError::DoesntEvaluate(line[1].1.clone()))?;
                 lines.push(Line::InlineAsm(vec![
-                    format!("mov rax, [{}]", get_local_address(evaluated.0)),
+                    format!("mov rax, qword [{}]", get_local_address(evaluated.0)),
                     "cmp rax, 0".to_string(),
                     format!("jnz {}", end_label),
                 ]));
@@ -269,7 +269,7 @@ pub fn process_lines(
                     ));
                 }
                 lines.push(Line::InlineAsm(vec![
-                    format!("mov rax, [{}]", get_local_address(evaluated.0)),
+                    format!("mov rax, qword [{}]", get_local_address(evaluated.0)),
                     "cmp rax, 0".to_string(),
                     format!("jnz {}", next_label),
                 ]));
@@ -336,7 +336,7 @@ pub fn process_lines(
                                 ));
                             }
                             lines.push(Line::InlineAsm(vec![
-                                format!("mov rax, [{}]", get_local_address(evaluated.0)),
+                                format!("mov rax, qword [{}]", get_local_address(evaluated.0)),
                                 "cmp rax, 0".to_string(),
                                 format!("jnz {}", next_label),
                             ]));

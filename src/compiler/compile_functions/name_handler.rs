@@ -67,6 +67,8 @@ impl NameHandler {
     }
 
     pub fn destroy_local_variables(&mut self, lines: &mut Vec<Line>) -> Result<(), ProcessorError> {
+        // return Ok(())
+
         for (name, addr, (type_id, indirection)) in self.local_variables.clone() {
             if indirection != 0 { continue; }
             let t = self.type_table.get_type(type_id).unwrap();

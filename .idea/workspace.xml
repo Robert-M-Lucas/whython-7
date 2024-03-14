@@ -7,16 +7,19 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="README update">
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Bug found :) (Not fixed)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/out.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/out.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/out.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/name_handler.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/name_handler.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/process_lines.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/process_lines.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/custom_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/custom_functions.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/generate_asm.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/generate_asm.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/custom/bool.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/custom/bool.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/custom/int.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/custom/int.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,15 +181,8 @@
       <workItem from="1710325675974" duration="885000" />
       <workItem from="1710326655683" duration="779000" />
       <workItem from="1710418785654" duration="5405000" />
-      <workItem from="1710440643344" duration="3139000" />
-    </task>
-    <task id="LOCAL-00019" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707726596106</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1707726596106</updated>
+      <workItem from="1710440643344" duration="4821000" />
+      <workItem from="1710456449212" duration="1764000" />
     </task>
     <task id="LOCAL-00020" summary="Commit">
       <option name="closed" value="true" />
@@ -572,7 +568,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710326834534</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="Bug found :) (Not fixed)">
+      <option name="closed" value="true" />
+      <created>1710453720522</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1710453720522</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -618,7 +622,8 @@
     <MESSAGE value="Cargo clippy" />
     <MESSAGE value="Build config" />
     <MESSAGE value="README update" />
-    <option name="LAST_COMMIT_MESSAGE" value="README update" />
+    <MESSAGE value="Bug found :) (Not fixed)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bug found :) (Not fixed)" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

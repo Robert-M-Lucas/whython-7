@@ -239,7 +239,7 @@ impl Function for PrintB {
             lines: vec![Line::InlineAsm(vec![
                 "mov qword [rbp-16], \"true\"".to_string(),
                 "mov qword [rbp-8], `\\n\\r`".to_string(),
-                "mov rax, [rbp+16]".to_string(),
+                "mov rax, qword [rbp+16]".to_string(),
                 "cmp rax, 0".to_string(),
                 format!(
                     "jz {}",

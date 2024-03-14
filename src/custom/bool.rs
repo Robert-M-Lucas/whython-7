@@ -39,7 +39,7 @@ impl TypedFunction for BoolNot {
 
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
-            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rax, qword [{}]", get_local_address(args[0])),
             "cmp rax, 0".to_string(),
             "setz al".to_string(),
             format!("mov qword [{}], rax", get_local_address(args[1])),
@@ -83,7 +83,7 @@ impl TypedFunction for BoolEQ {
 
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
-            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rax, qword [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cmp rcx, rax".to_string(),
             format!("mov qword [{}], 0", get_local_address(args[2])),
@@ -128,7 +128,7 @@ impl TypedFunction for BoolNE {
 
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
-            format!("mov rax, [{}]", get_local_address(args[0])),
+            format!("mov rax, qword [{}]", get_local_address(args[0])),
             format!("mov rcx, [{}]", get_local_address(args[1])),
             "cmp rcx, rax".to_string(),
             format!("mov qword [{}], 0", get_local_address(args[2])),

@@ -208,7 +208,7 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                     output.push("call ExitProcess");
                 } else {
                     if let Some(val) = local_return_val {
-                        output.push(&format!("mov rax, [{}]", get_local_address(*val)));
+                        output.push(&format!("mov rax, qword [{}]", get_local_address(*val)));
                     }
                     output.push("leave");
                     output.push("ret");
