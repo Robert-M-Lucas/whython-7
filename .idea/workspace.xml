@@ -13,18 +13,10 @@
       <change beforePath="$PROJECT_DIR$/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/out.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/out.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/out.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assembler/assemble.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/assembler/assemble.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/operators.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/name_handler.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/name_handler.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/operators.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/process_lines.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/process_lines.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/generate_asm.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/generate_asm.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/file_reader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/file_reader.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/normal_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/normal_parser.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/parse.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/parse.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/processor.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/processor.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/type_builder.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/type_builder.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/user_type.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/user_type.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -186,6 +178,7 @@
       <workItem from="1710325675974" duration="885000" />
       <workItem from="1710326655683" duration="779000" />
       <workItem from="1710418785654" duration="5405000" />
+      <workItem from="1710440643344" duration="3139000" />
     </task>
     <task id="LOCAL-00019" summary="Commit">
       <option name="closed" value="true" />

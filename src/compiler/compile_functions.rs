@@ -133,7 +133,8 @@ pub fn compile_functions(
             None,
         )?;
 
-        // name_handler.destroy_local_variables(&mut lines)?;
+        // TODO: Don't call if there is a return on the last line
+        name_handler.destroy_local_variables(&mut lines)?;
 
         if return_type.is_some() && !last_return {
             return Err(ProcessorError::NoReturnStatement(function.get_line()));

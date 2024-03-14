@@ -54,6 +54,7 @@ impl LL {
     }
 
     fn destroy(self) {
+        printi(123);
         if (!(*self.has_first)) {
             return;
         };
@@ -73,23 +74,12 @@ impl LL {
     }
 }
 
-fn main() ~ int {
+fn test() {
     let ll: LL = LL#new();
+}
 
-    ll.add(12);
-
-    ll.add(18);
-
-    let i: int = 0;
-
-    while (i < 5) {
-        ll.add(i * 7);
-        i += 1;
-    };
-
-    ll.print();
-
-    ll.destroy();
+fn main() ~ int {
+    test();
 
     return 7;
 }

@@ -72,6 +72,7 @@ pub fn process_lines(
                 last_return = true;
                 if line.len() == 1 {
                     if return_type.is_none() {
+                        name_handler.destroy_local_variables(lines)?;
                         lines.push(Line::Return(None));
                         continue;
                     } else {
@@ -111,6 +112,7 @@ pub fn process_lines(
                             .to_string(),
                     ));
                 }
+                name_handler.destroy_local_variables(lines)?;
                 lines.push(Line::Return(Some(return_value.0)));
             }
             BasicSymbol::Keyword(Keyword::Let) => {

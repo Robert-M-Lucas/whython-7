@@ -76,6 +76,8 @@ pub fn compile_user_function(function: &UserFunction) -> String {
         last_return = false;
         match line {
             Line::ReturnCall(function, local_args, return_addr) => {
+                #[cfg(debug_assertions)]
+                output.push(&format!("; [no return call] {} , {:?}, {}", *function, local_args, *return_addr));
                 if local_args.len() % 2 != 0 {
                     output.push("push qword 0");
                 }
@@ -112,6 +114,8 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 ));
             }
             Line::NoReturnCall(function, local_args) => {
+                #[cfg(debug_assertions)]
+                output.push(&format!("; [no return call] {} , {:?}", *function, local_args));
                 if local_args.len() % 2 != 0 {
                     output.push("push qword 0");
                 }
@@ -143,6 +147,8 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 }
             }
             Line::Copy(local_from, local_to, amount) => {
+                #[cfg(debug_assertions)]
+                output.push(&format!("; [dyn to copy] {} , {}, {}", *local_from, *local_to, *amount));
                 let mut done = 0;
                 while done < *amount {
                     output.push(&format!(
@@ -157,6 +163,8 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 }
             }
             Line::DynFromCopy(local_dyn_from, local_to, amount) => {
+                #[cfg(debug_assertions)]
+                output.push(&format!("; [dyn from copy] {} , {}, {}", *local_dyn_from, *local_to, *amount));
                 let mut done = 0;
                 output.push(&format!(
                     "mov r9, qword [{}]",
@@ -172,6 +180,8 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 }
             }
             Line::DynToCopy(local_from, local_dyn_to, amount) => {
+                #[cfg(debug_assertions)]
+                output.push(&format!("; [dyn to copy] {} , {}, {}", *local_from, *local_dyn_to, *amount));
                 let mut done = 0;
                 output.push(&format!(
                     "mov r9, qword [{}]",
@@ -187,6 +197,8 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 }
             }
             Line::Return(local_return_val) => {
+                #[cfg(debug_assertions)]
+                output.push(&format!("; [return] {:?}", *local_return_val));
                 last_return = true;
                 if function.id == 0 {
                     output.push(&format!(
@@ -203,6 +215,8 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 }
             }
             Line::HeapAlloc(amount, local_ref_addr) => {
+                #[cfg(debug_assertions)]
+                output.push(&format!("; [heap alloc] {} , {}", *amount, *local_ref_addr));
                 output.push("call GetProcessHeap"); // Get process heap
                 output.push("mov rcx, rax"); // Heap handle
                 output.push("mov rdx, 0"); // Flags
@@ -214,6 +228,8 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 ));
             }
             Line::HeapDealloc(local_ref_addr, local_success_bool) => {
+                #[cfg(debug_assertions)]
+                output.push(&format!("; [heap dealloc] {} , {}", *local_ref_addr, *local_success_bool));
                 output.push("call GetProcessHeap"); // Get process heap
                 output.push("mov rcx, rax"); // Heap handle
                 output.push("mov rdx, 0"); // Flags
@@ -225,6 +241,8 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 output.push(&format!("mov qword [{}], rcx", get_local_address(*local_success_bool)))
             }
             Line::InlineAsm(asm) => {
+                #[cfg(debug_assertions)]
+                output.push("; [inline asm]");
                 for line in asm {
                     output.push(line);
                 }
