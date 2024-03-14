@@ -43,10 +43,10 @@ struct Args {
 }
 
 fn main() {
-    assemble("out");
-    link_gcc_experimental("out");
-    run_wine_experimental("out");
-    return;
+    // assemble("out");
+    // link_gcc_experimental("out");
+    // run_wine_experimental("out");
+    // return;
 
     let args = Args::parse();
 
