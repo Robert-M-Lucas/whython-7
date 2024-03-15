@@ -17,25 +17,66 @@ impl LL {
         };
     }
 
-    fn destroy(self) {
-
+    fn add(self, next: int) {
+        let new_node: Node = @Node {
+            next,
+            true,
+            0
+        };
 
         if (!(*self.has_first)) {
-            printi(119);
+            *self.base = ^new_node;
+            *self.has_first = true;
             return;
         };
 
-        printi(120);
+        let curr: $Node = *self.base;
+        while (!(*curr.last)) {
+            curr = *curr.next;
+        };
+
+        *curr.last = false;
+        *curr.next = ^new_node;
+    }
+
+    fn print(self) {
+        if (!(*self.has_first)) {
+            return;
+        };
+
+        let curr: $Node = *self.base;
+        printi(*curr.cur);
+
+        while (!(*curr.last)) {
+            curr = *curr.next;
+            printi(*curr.cur);
+        };
+    }
+
+    fn destroy(self) {
+        if (!(*self.has_first)) {
+            return;
+        };
+
+        let curr: $Node = *self.base;
+
+        while (!(*curr.last)) {
+            let prev: $Node = curr;
+            curr = *curr.next;
+            ¬prev;
+        };
+
+        ¬curr;
+
+        *self.has_first = false;
+        *self.base = 0;
     }
 }
 
 fn test() {
     let ll: LL = LL#new();
-    let b: bool = ll.has_first;
-    printb(b);
 
-    let a: $int = 0;
-    *a = 1;
+    let a = ll.
 }
 
 fn main() ~ int {

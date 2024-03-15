@@ -70,17 +70,19 @@ impl NameHandler {
         // return Ok(())
 
         for (name, addr, (type_id, indirection)) in self.local_variables.clone() {
-            if indirection != 0 { continue; }
+            if indirection != 0 {
+                continue;
+            }
             let t = self.type_table.get_type(type_id).unwrap();
             if let Some(destructor) = t.get_destructor() {
                 let ref_ = self.add_local_variable(None, (type_id, 1))?;
 
-                lines.push(Line::InlineAsm(Int::instantiate_local_ref(
-                    addr,
-                    ref_
-                )));
+                lines.push(Line::InlineAsm(Int::instantiate_local_ref(addr, ref_)));
 
-                lines.push(Line::NoReturnCall(destructor, vec![(ref_, self.type_table.get_type_size((type_id, 1))?)]));
+                lines.push(Line::NoReturnCall(
+                    destructor,
+                    vec![(ref_, self.type_table.get_type_size((type_id, 1))?)],
+                ));
 
                 self.use_function_id(destructor);
             }

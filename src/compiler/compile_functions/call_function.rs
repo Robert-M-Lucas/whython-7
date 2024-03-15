@@ -161,9 +161,9 @@ pub fn call_function(
                 start_line.clone(),
                 name_handler
                     .type_table()
-                    .get_type(return_into.1.0)
+                    .get_type(return_into.1 .0)
                     .unwrap()
-                    .get_indirect_name(return_into.1.1)
+                    .get_indirect_name(return_into.1 .1)
                     .to_string(),
                 "None".to_string(),
             ));

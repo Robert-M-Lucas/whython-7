@@ -18,7 +18,9 @@ pub enum Operator {
     HeapDealloc,
 }
 
-pub const ALL_SYMBOLS: [char; 13] = ['+', '-', '*', '/', '>', '<', '=', '|', '&', '!', '%', '^', '¬'];
+pub const ALL_SYMBOLS: [char; 13] = [
+    '+', '-', '*', '/', '>', '<', '=', '|', '&', '!', '%', '^', '¬',
+];
 
 impl Operator {
     pub fn get_operator(string: &str) -> Option<Operator> {

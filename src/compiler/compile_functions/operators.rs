@@ -223,7 +223,7 @@ pub fn evaluate_operation(
                     )
                 };
 
-                if lhs.1.1 == 0 {
+                if lhs.1 .1 == 0 {
                     return Err(ProcessorError::CantDeallocateNonRef(op.1.clone()));
                 }
 

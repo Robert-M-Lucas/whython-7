@@ -79,11 +79,17 @@ pub trait Type {
         None
     }
 
-    fn try_set_destructor(&mut self, line_info: &LineInfo, func: isize) -> Result<(), ProcessorError> {
+    fn try_set_destructor(
+        &mut self,
+        line_info: &LineInfo,
+        func: isize,
+    ) -> Result<(), ProcessorError> {
         Err(ProcessorError::CantSetBuiltinDestructor(line_info.clone()))
     }
 
-    fn get_destructor(&self) -> Option<isize> { None }
+    fn get_destructor(&self) -> Option<isize> {
+        None
+    }
 }
 
 // pub struct TypeIdentifier {
@@ -322,7 +328,13 @@ pub fn build_types(
 
         type_table.add_type(
             type_.id,
-            Box::new(UserType::new(name, type_.id, line, attributes_processed, None)),
+            Box::new(UserType::new(
+                name,
+                type_.id,
+                line,
+                attributes_processed,
+                None,
+            )),
         )
     }
 
@@ -346,7 +358,10 @@ pub fn build_types(
                         .insert(function.0.clone(), id_counter);
 
                     if function.0 == "destroy" {
-                        type_table.get_type_mut(type_id).unwrap().try_set_destructor(&line, id_counter)?;
+                        type_table
+                            .get_type_mut(type_id)
+                            .unwrap()
+                            .try_set_destructor(&line, id_counter)?;
                     }
 
                     typed_fns.insert(
