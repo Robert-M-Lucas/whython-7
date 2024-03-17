@@ -113,7 +113,7 @@ pub fn process_lines(
                     ));
                 }
                 name_handler.destroy_local_variables(lines)?;
-                lines.push(Line::Return(Some(return_value.0)));
+                lines.push(Line::Return(Some((return_value.0, name_handler.type_table().get_type_size(return_value.1)?))));
             }
             BasicSymbol::Keyword(Keyword::Let) => {
                 if line.len() < 2 {

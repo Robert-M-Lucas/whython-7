@@ -20,12 +20,12 @@ use name_handler::NameHandler;
 use std::collections::HashMap;
 
 pub enum Line {
-    ReturnCall(isize, Vec<(isize, usize)>, isize),
-    NoReturnCall(isize, Vec<(isize, usize)>),
+    ReturnCall(isize, isize, Vec<(isize, usize)>, usize, isize),
+    NoReturnCall(isize, isize, Vec<(isize, usize)>, usize),
     Copy(isize, isize, usize),
     DynFromCopy(isize, isize, usize),
     DynToCopy(isize, isize, usize),
-    Return(Option<isize>),
+    Return(Option<(isize, usize)>),
     HeapAlloc(usize, isize),
     HeapDealloc(isize, isize),
     InlineAsm(Vec<String>),
@@ -119,7 +119,7 @@ pub fn compile_functions(
         let function = function_holder.functions.get(&id).unwrap();
         let name = function.get_name().to_string();
         name_handler.reset();
-        name_handler.set_args(function.get_args_positioned(name_handler.type_table()));
+        name_handler.set_args(function.get_args_positioned(name_handler.type_table())?);
         let return_type = function.get_return_type();
         let mut lines = Vec::new();
 

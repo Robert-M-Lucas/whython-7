@@ -1,4 +1,5 @@
 use crate::compiler::compile_functions::{Line, UserFunction};
+use crate::utils::align;
 
 pub struct Output {
     inner: String,
@@ -75,19 +76,77 @@ pub fn compile_user_function(function: &UserFunction) -> String {
     for line in &function.lines {
         last_return = false;
         match line {
-            Line::ReturnCall(function, local_args, return_addr) => {
+            Line::ReturnCall(function, start_addr, local_args, ret_size, return_addr) => {
+                #[cfg(debug_assertions)]
+                output.push(&format!(
+                    "; [return call] {} , {:?}, {}",
+                    *function, local_args, *return_addr
+                ));
+                
+                let mut sum = local_args.iter().map(|x| align(x.1, 8)).sum::<usize>() + align(*ret_size, 8);
+                
+                // Ensure 16-byte alignment
+                // if (sum / 8) % 2 != 0 {
+                //     sum += 8;
+                //     t += 8;
+                //     output.push("push qword 0");
+                // }
+                
+                // Push args to stack
+                for (local_addr, size) in local_args.iter().rev() {
+                    let mut local_addr = *local_addr;
+                    let mut size = *size as isize;
+                    local_addr += size;
+                    local_addr -= 8;
+                    while size > 0 {
+                        output.push(&format!(
+                            "mov rax, qword [{}]",
+                            get_local_address(local_addr)
+                        ));
+                        output.push("push rax");
+                        local_addr -= 8;
+                        size -= 8;
+                    }
+                }
+
+                // Allocate return space
+                for _ in 0..(ret_size.div_ceil(8)) {
+                    output.push("push 0");
+                }
+                
+                // Call
+                output.push(&format!("call {}", get_function_name(*function)));
+
+                // Move return value
+                local_copy(&mut output, *start_addr - sum as isize - 24, *return_addr, *ret_size);
+                
+                // Release stack space used
+                if !local_args.is_empty() {
+                    output.push(&format!(
+                        "add rsp, {}",
+                        sum
+                    ));
+                }
+            }
+            Line::NoReturnCall(function, start_addr, local_args, ret_size) => {
                 #[cfg(debug_assertions)]
                 output.push(&format!(
                     "; [no return call] {} , {:?}, {}",
-                    *function, local_args, *return_addr
+                    *function, local_args, *ret_size
                 ));
-                if local_args.len() % 2 != 0 {
+
+                let mut sum = local_args.iter().map(|x| align(x.1, 8)).sum::<usize>() + align(*ret_size, 8);
+
+                // Ensure 16-byte alignment
+                if (sum / 8) % 2 != 0 {
                     output.push("push qword 0");
+                    sum += 8;
                 }
+
                 // Push args to stack
-                for (local_addr, _size) in local_args.iter().rev() {
+                for (local_addr, size) in local_args.iter().rev() {
                     let mut local_addr = *local_addr;
-                    let mut size = *_size as isize;
+                    let mut size = *size as isize;
                     local_addr += size;
                     local_addr -= 8;
                     while size > 0 {
@@ -100,6 +159,12 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                         size -= 8;
                     }
                 }
+
+                // Allocate return space
+                for _ in 0..(ret_size.div_ceil(8)) {
+                    output.push("push 0");
+                }
+
                 // Call
                 output.push(&format!("call {}", get_function_name(*function)));
 
@@ -107,69 +172,12 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 if !local_args.is_empty() {
                     output.push(&format!(
                         "add rsp, {}",
-                        local_args.len() * 8 + (local_args.len() % 2) * 8
-                    ));
-                }
-                // Move return value
-                output.push(&format!(
-                    "mov qword [{}], rax",
-                    get_local_address(*return_addr)
-                ));
-            }
-            Line::NoReturnCall(function, local_args) => {
-                #[cfg(debug_assertions)]
-                output.push(&format!(
-                    "; [no return call] {} , {:?}",
-                    *function, local_args
-                ));
-                if local_args.len() % 2 != 0 {
-                    output.push("push qword 0");
-                }
-                // Push args to stack
-                for (local_addr, _size) in local_args.iter().rev() {
-                    let mut local_addr = *local_addr;
-                    let mut size = *_size as isize;
-                    local_addr += size;
-                    local_addr -= 8;
-                    while size > 0 {
-                        output.push(&format!(
-                            "mov rax, qword [{}]",
-                            get_local_address(local_addr)
-                        ));
-                        output.push("push rax");
-                        local_addr -= 8;
-                        size -= 8;
-                    }
-                }
-                // Call
-                output.push(&format!("call {}", get_function_name(*function)));
-
-                // Release stack space used
-                if !local_args.is_empty() {
-                    output.push(&format!(
-                        "add rsp, {}",
-                        local_args.len() * 8 + (local_args.len() % 2) * 8
+                        sum
                     ));
                 }
             }
             Line::Copy(local_from, local_to, amount) => {
-                #[cfg(debug_assertions)]
-                output.push(&format!(
-                    "; [dyn to copy] {} , {}, {}",
-                    *local_from, *local_to, *amount
-                ));
-                let mut done = 0;
-                while done < *amount {
-                    output.push(&format!(
-                        "mov rax, qword [{}]",
-                        get_local_address(*local_from + (done as isize))
-                    ));
-                    output.push(&format!(
-                        "mov qword [{}], rax",
-                        get_local_address(*local_to + (done as isize))
-                    ));
-                    done += 8;
-                }
+                local_copy(&mut output, *local_from, *local_to, *amount);
             }
             Line::DynFromCopy(local_dyn_from, local_to, amount) => {
                 #[cfg(debug_assertions)]
@@ -218,12 +226,12 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 if function.id == 0 {
                     output.push(&format!(
                         "mov rcx, [{}]",
-                        get_local_address(local_return_val.unwrap())
+                        get_local_address(local_return_val.unwrap().0)
                     ));
                     output.push("call ExitProcess");
                 } else {
                     if let Some(val) = local_return_val {
-                        output.push(&format!("mov rax, qword [{}]", get_local_address(*val)));
+                        local_copy(&mut output, val.0, 16, val.1);
                     }
                     output.push("leave");
                     output.push("ret");
@@ -289,5 +297,25 @@ pub fn compile_user_function(function: &UserFunction) -> String {
         output.push("leave");
         output.push("ret");
         output.into()
+    }
+}
+
+fn local_copy(output: &mut Output, local_from: isize, local_to: isize, amount: usize) {
+    #[cfg(debug_assertions)]
+    output.push(&format!(
+        "; [local copy] {} , {}, {}",
+        local_from, local_to, amount
+    ));
+    let mut done = 0;
+    while done < amount {
+        output.push(&format!(
+            "mov rax, qword [{}]",
+            get_local_address(local_from + (done as isize))
+        ));
+        output.push(&format!(
+            "mov qword [{}], rax",
+            get_local_address(local_to + (done as isize))
+        ));
+        done += 8;
     }
 }

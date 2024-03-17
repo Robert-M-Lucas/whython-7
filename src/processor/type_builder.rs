@@ -9,6 +9,7 @@ use crate::parser::line_info::LineInfo;
 use crate::processor::custom_types::{Bool, Int};
 
 use crate::processor::user_type::UserType;
+use crate::utils::align;
 
 struct UninitialisedType {
     pub path: LineInfo,
@@ -200,16 +201,21 @@ pub trait TypedFunction {
     fn get_name(&self) -> &str;
     fn get_args(&self) -> &[(String, (isize, usize))];
     fn get_line(&self) -> LineInfo;
-    fn get_args_positioned(&self, type_table: &TypeTable) -> Vec<(String, isize, (isize, usize))> {
+    fn get_args_positioned(&self, type_table: &TypeTable) -> Result<Vec<(String, isize, (isize, usize))>, ProcessorError> {
         let mut offset = 16isize;
+        if let Some(return_type) = self.get_return_type() {
+            offset += type_table.get_type_size(return_type)? as isize;
+            offset = align(offset, 8);
+        }
         let mut output = Vec::new();
 
         for (name, _type) in self.get_args() {
             output.push((name.clone(), offset, *_type));
             offset += type_table.get_type_size(*_type).unwrap() as isize;
+            offset = align(offset, 8);
         }
 
-        output
+        Ok(output)
     }
     fn get_return_type(&self) -> Option<(isize, usize)>;
     fn is_inline(&self) -> bool;

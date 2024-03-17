@@ -1,3 +1,4 @@
+use crate::assembler::assemble::link;
 use crate::assembler::assemble::{assemble, generate_assembly, link_gcc_experimental};
 use std::fs;
 
@@ -6,7 +7,6 @@ use crate::processor::processor::process;
 use clap::Parser;
 use std::path::PathBuf;
 use std::process::Command;
-
 use std::time::Instant;
 
 mod assembler;
@@ -16,17 +16,9 @@ mod compiler;
 mod custom;
 mod parser;
 mod processor;
+mod utils;
 
 // TODO: Handle circular imports
-
-macro_rules! time {
-    ($($tts:tt)*) => {
-        let t = Instant::now();
-        $($tts)*;
-        let end = t.elapsed();
-        println!("Completed [{:?}]", end);
-    };
-}
 
 /// Compiler for Whython files (.why)
 #[derive(Parser)]
@@ -43,8 +35,8 @@ struct Args {
 
 fn main() {
     // assemble("out");
-    // link_gcc_experimental("out");
-    // run_wine_experimental("out");
+    // link("out");
+    // run("out");
     // return;
 
     let args = Args::parse();

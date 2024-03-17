@@ -149,7 +149,9 @@ pub fn call_function(
         } else {
             lines.push(Line::ReturnCall(
                 function.get_id(),
+                -(name_handler.local_variable_space() as isize),
                 call_args,
+                name_handler.type_table().get_type_size(return_type)?,
                 return_into.0,
             ))
         }
@@ -173,7 +175,7 @@ pub fn call_function(
             let inline_args: Vec<_> = call_args.into_iter().map(|x| x.0).collect();
             lines.push(Line::InlineAsm(function.get_inline(inline_args)));
         } else {
-            lines.push(Line::NoReturnCall(function.get_id(), call_args))
+            lines.push(Line::NoReturnCall(function.get_id(), -(name_handler.local_variable_space() as isize), call_args, 0))
         }
 
         None

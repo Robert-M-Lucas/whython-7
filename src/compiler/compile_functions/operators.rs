@@ -84,7 +84,9 @@ pub fn evaluate_operation(
             } else {
                 lines.push(Line::ReturnCall(
                     func.get_id(),
+                    -(name_handler.local_variable_space() as isize),
                     vec![(lhs.0, name_handler.type_table().get_type_size(lhs.1)?)],
+                    name_handler.type_table().get_type_size(output.1)?,
                     output.0,
                 ));
             }
@@ -366,10 +368,12 @@ pub fn evaluate_operation(
             } else {
                 lines.push(Line::ReturnCall(
                     func.get_id(),
+                    -(name_handler.local_variable_space() as isize),
                     vec![
                         (lhs.0, name_handler.type_table().get_type_size(lhs.1)?),
                         (rhs.0, name_handler.type_table().get_type_size(rhs.1)?),
                     ],
+                    name_handler.type_table().get_type_size(output.1)?,
                     output.0,
                 ));
             }

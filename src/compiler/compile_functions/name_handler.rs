@@ -6,6 +6,7 @@ use crate::processor::processor::ProcessorError;
 use crate::processor::type_builder::{Type, TypeTable, TypedFunction};
 use either::{Either, Left, Right};
 use std::collections::HashSet;
+use crate::utils::align;
 
 pub struct NameHandler {
     type_table: TypeTable,
@@ -29,7 +30,7 @@ impl NameHandler {
     }
 
     pub fn set_args(&mut self, args: Vec<(String, isize, (isize, usize))>) {
-        self.args = args
+        self.args = args;
     }
 
     pub fn reset(&mut self) {
@@ -60,6 +61,7 @@ impl NameHandler {
         let size = self.type_table.get_type_size(_type)?;
         let addr = -(self.local_variables_size as isize) - size as isize;
         self.local_variables_size += size;
+        self.local_variables_size = align(self.local_variables_size, 8);
         if let Some(name) = name {
             self.local_variables.push((name, addr, _type));
         }
@@ -81,7 +83,9 @@ impl NameHandler {
 
                 lines.push(Line::NoReturnCall(
                     destructor,
+                    -(self.local_variable_space() as isize),
                     vec![(ref_, self.type_table.get_type_size((type_id, 1))?)],
+                    0
                 ));
 
                 self.use_function_id(destructor);

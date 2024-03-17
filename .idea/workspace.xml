@@ -8,8 +8,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Figured out why the bug exists, cba to fix atm :)">
+      <change afterPath="$PROJECT_DIR$/src/utils.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_11_03_2024__00_46__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_11_03_2024__00_46__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/out.asm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/out.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/out.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/call_function.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/call_function.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/name_handler.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/name_handler.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/operators.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/process_lines.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/process_lines.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/generate_asm.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/generate_asm.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/processor/type_builder.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/processor/type_builder.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +46,9 @@
     &quot;assignee&quot;: &quot;Robert-M-Lucas&quot;
   }
 }</component>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="5" />
+  </component>
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
@@ -83,6 +100,9 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/reference" />
     </key>
+  </component>
+  <component name="RsExternalLinterProjectSettings">
+    <option name="runOnTheFly" value="true" />
   </component>
   <component name="RunManager" selected="Cargo.Run whython-7">
     <configuration name="Run whython-7" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
@@ -175,6 +195,9 @@
       <workItem from="1710456449212" duration="3203000" />
       <workItem from="1710489150326" duration="24000" />
       <workItem from="1710501995761" duration="599000" />
+      <workItem from="1710643271554" duration="5000" />
+      <workItem from="1710706626985" duration="759000" />
+      <workItem from="1710707943039" duration="4321000" />
     </task>
     <task id="LOCAL-00022" summary="Commit">
       <option name="closed" value="true" />

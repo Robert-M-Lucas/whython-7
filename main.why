@@ -1,86 +1,27 @@
-struct Node {
-    cur: int,
-    last: bool,
-    next: $Node
+struct A {
+    a: int,
+    b: int,
+    c: int
 }
 
-struct LL {
-    base: $Node,
-    has_first: bool
+fn test() ~ A {
+    return @A { 1, 2, 3 };
 }
 
-impl LL {
-    fn new() ~ LL {
-        return @LL {
-            0,
-            false
-        };
-    }
-
-    fn add(self, next: int) {
-        let new_node: Node = @Node {
-            next,
-            true,
-            0
-        };
-
-        if (!(*self.has_first)) {
-            *self.base = ^new_node;
-            *self.has_first = true;
-            return;
-        };
-
-        let curr: $Node = *self.base;
-        while (!(*curr.last)) {
-            curr = *curr.next;
-        };
-
-        *curr.last = false;
-        *curr.next = ^new_node;
-    }
-
-    fn print(self) {
-        if (!(*self.has_first)) {
-            return;
-        };
-
-        let curr: $Node = *self.base;
-        printi(*curr.cur);
-
-        while (!(*curr.last)) {
-            curr = *curr.next;
-            printi(*curr.cur);
-        };
-    }
-
-    fn destroy(self) {
-        if (!(*self.has_first)) {
-            return;
-        };
-
-        let curr: $Node = *self.base;
-
-        while (!(*curr.last)) {
-            let prev: $Node = curr;
-            curr = *curr.next;
-            ¬prev;
-        };
-
-        ¬curr;
-
-        *self.has_first = false;
-        *self.base = 0;
-    }
-}
-
-fn test() {
-    let ll: LL = LL#new();
-
-    let a = ll.
+fn test_two() ~ int {
+    return 103;
 }
 
 fn main() ~ int {
-    test();
+    \let t: A = test();
+\
+    \printi(t.a);
+    \printi(t.b);
+    \printi(t.c);
+
+    let t_t: int = test_two();
+
+    printi(t_t);
 
     return 7;
 }
