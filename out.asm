@@ -49,45 +49,76 @@ __4: ; printi
 	leave
 	ret
 
-_3: ; test_two
+_1: ; test
 	push rbp
 	mov rbp, rsp
-	sub rsp, 16
-	; '    return 103;'
-	; [inline asm]
-	mov rax, qword 103
-	mov qword [rbp-8], rax
-	; [return] Some((-8, 8))
-	; [local copy] -8 , 16, 8
-	mov rax, qword [rbp-8]
-	mov qword [rbp+16], rax
+	sub rsp, 0
+	; '    printi(a.a);'
+	; [no return call] -4 , [(16, 8)], 0
+	push qword 0
+	mov rax, qword [rbp+16]
+	push rax
+	call __4
+	add rsp, 16
+	; '    printi(a.b);'
+	; [no return call] -4 , [(24, 8)], 0
+	push qword 0
+	mov rax, qword [rbp+24]
+	push rax
+	call __4
+	add rsp, 16
+	; '    printi(a.c);'
+	; [no return call] -4 , [(32, 8)], 0
+	push qword 0
+	mov rax, qword [rbp+32]
+	push rax
+	call __4
+	add rsp, 16
 	leave
 	ret
 
 main: ; main
 	push rbp
 	mov rbp, rsp
-	sub rsp, 16
-	; '    let t_t: int = test_two();'
-	; [return call] 3 , [], -8
-	push 0
-	call _3
-	; [local copy] -40 , -8, 8
-	mov rax, qword [rbp-40]
+	sub rsp, 32
+	; '    let a: A = @A { 1, 2, 3 };'
+	; [inline asm]
+	mov rax, qword 1
+	mov qword [rbp-24], rax
+	; [inline asm]
+	mov rax, qword 2
+	mov qword [rbp-16], rax
+	; [inline asm]
+	mov rax, qword 3
 	mov qword [rbp-8], rax
-	; ''
-	; '    printi(t_t);'
-	; [no return call] -4 , [(-8, 8)], 0
+	; [inline asm]
+	; '    test(a);'
+	; [no return call] 1 , [(-24, 24)], 0
 	push qword 0
 	mov rax, qword [rbp-8]
 	push rax
-	call __4
-	add rsp, 16
+	mov rax, qword [rbp-16]
+	push rax
+	mov rax, qword [rbp-24]
+	push rax
+	call _1
+	add rsp, 32
+	; '    test(a);'
+	; [no return call] 1 , [(-24, 24)], 0
+	push qword 0
+	mov rax, qword [rbp-8]
+	push rax
+	mov rax, qword [rbp-16]
+	push rax
+	mov rax, qword [rbp-24]
+	push rax
+	call _1
+	add rsp, 32
 	; ''
 	; '    return 7;'
 	; [inline asm]
 	mov rax, qword 7
-	mov qword [rbp-16], rax
-	; [return] Some((-16, 8))
-	mov rcx, [rbp-16]
+	mov qword [rbp-32], rax
+	; [return] Some((-32, 8))
+	mov rcx, [rbp-32]
 	call ExitProcess

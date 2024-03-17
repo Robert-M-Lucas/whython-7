@@ -4,24 +4,16 @@ struct A {
     c: int
 }
 
-fn test() ~ A {
-    return @A { 1, 2, 3 };
-}
-
-fn test_two() ~ int {
-    return 103;
+fn test(a: A) {
+    printi(a.a);
+    printi(a.b);
+    printi(a.c);
 }
 
 fn main() ~ int {
-    \let t: A = test();
-\
-    \printi(t.a);
-    \printi(t.b);
-    \printi(t.c);
-
-    let t_t: int = test_two();
-
-    printi(t_t);
+    let a: A = @A { 1, 2, 3 };
+    test(a);
+    test(a);
 
     return 7;
 }
