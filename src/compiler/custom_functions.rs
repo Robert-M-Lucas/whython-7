@@ -137,7 +137,7 @@ impl Function for PrintI {
     fn get_asm(&self) -> String {
         compile_user_function(&UserFunction {
             id: TypedFunction::get_id(self),
-            local_variable_count: 10,
+            local_variable_size: 48,
             arg_count: 1,
             lines: vec![Line::InlineAsm(vec![
                 "mov rcx, rbp".to_string(),
@@ -234,7 +234,7 @@ impl Function for PrintB {
     fn get_asm(&self) -> String {
         compile_user_function(&UserFunction {
             id: TypedFunction::get_id(self),
-            local_variable_count: 8,
+            local_variable_size: 32,
             arg_count: 1,
             lines: vec![Line::InlineAsm(vec![
                 "mov qword [rbp-16], \"true\"".to_string(),

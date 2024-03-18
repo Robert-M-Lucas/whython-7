@@ -67,10 +67,10 @@ pub fn compile_user_function(function: &UserFunction) -> String {
     let mut output = Output::new_with_name(function.id, &function.name);
     output.push("push rbp");
     output.push("mov rbp, rsp");
-    // output.push(&format!(
-    //     "sub rsp, {}",
-    //     (function.local_variable_count * 8) + (function.local_variable_count % 2) * 8
-    // ));
+    output.push(&format!(
+        "sub rsp, {}",
+        align(function.local_variable_size, 16)    
+    ));
 
     let mut last_return = false;
     for line in &function.lines {
@@ -136,10 +136,10 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 let mut sum = local_args.iter().map(|x| align(x.1, 8)).sum::<usize>() + align(*ret_size, 8);
 
                 // Ensure 16-byte alignment
-                if (sum / 8) % 2 != 0 {
-                    output.push("push qword 0");
-                    sum += 8;
-                }
+                // if (sum / 8) % 2 != 0 {
+                //     output.push("push qword 0");
+                //     sum += 8;
+                // }
 
                 // Push args to stack
                 for (local_addr, size) in local_args.iter().rev() {

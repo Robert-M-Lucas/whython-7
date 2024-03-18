@@ -1,18 +1,70 @@
-struct A {
-    a: int,
-    b: int,
-    c: int
+struct Node {
+    cur: int,
+    last: bool,
+    next: $Node
 }
 
-fn test() ~ A {
-    return @A {7, 8, 9};
+struct LL {
+    base: $Node,
+    has_first: bool
+}
+
+impl LL {
+    fn new() ~ LL {
+        return @LL {
+            0,
+            false
+        };
+    }
+
+    fn add(self, next: int) {
+        let new_node: Node = @Node {
+            next,
+            true,
+            0
+        };
+
+        if (!(*self.has_first)) {
+            *self.base = ^new_node;
+            *self.has_first = true;
+            return;
+        };
+
+        let curr: $Node = *self.base;
+        while (!(*curr.last)) {
+            curr = *curr.next;
+        };
+
+        *curr.last = false;
+        *curr.next = ^new_node;
+    }
+
+    fn destroy(self) {
+        if (!(*self.has_first)) {
+            return;
+        };
+
+        let curr: $Node = *self.base;
+
+        while (!(*curr.last)) {
+            let prev: $Node = curr;
+            curr = *curr.next;
+            ¬prev;
+        };
+
+        ¬curr;
+
+        *self.has_first = false;
+        *self.base = 0;
+    }
+}
+
+fn test() {
+    let ll: LL = LL#new();
 }
 
 fn main() ~ int {
-    let a: A = test();
+    test();
 
-
-    let b: A = test();
-
-    return b.c;
+    return 7;
 }

@@ -35,7 +35,7 @@ pub enum Line {
 pub struct UserFunction {
     pub id: isize,
     pub name: String,
-    pub local_variable_count: usize,
+    pub local_variable_size: usize,
     pub arg_count: usize,
     pub lines: Vec<Line>,
 }
@@ -142,7 +142,7 @@ pub fn compile_functions(
 
         processed_functions.push(Box::new(UserFunction {
             id,
-            local_variable_count: name_handler.local_variable_space() / 8,
+            local_variable_size: name_handler.local_variable_space(),
             arg_count: function_holder
                 .functions()
                 .get(&id)

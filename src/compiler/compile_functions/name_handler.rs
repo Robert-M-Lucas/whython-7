@@ -62,7 +62,7 @@ impl NameHandler {
         let size = align(self.type_table.get_type_size(_type)?, 8);
         let addr = -(self.local_variables_size as isize) - size as isize;
         self.local_variables_size += size;
-        lines.push(Line::InlineAsm(vec![format!("sub rsp, {}", size)]));
+        // lines.push(Line::InlineAsm(vec![format!("sub rsp, {}", size)]));
         if let Some(name) = name {
             self.local_variables.push((name, addr, _type));
         }
