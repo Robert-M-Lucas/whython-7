@@ -83,7 +83,7 @@ pub fn process_lines(
                 }
                 let return_type = return_type.unwrap();
 
-                let return_into = name_handler.add_local_variable(None, return_type)?;
+                let return_into = name_handler.add_local_variable(None, return_type, lines)?;
                 let return_value = evaluate::evaluate(
                     &line[1..],
                     lines,
@@ -163,7 +163,7 @@ pub fn process_lines(
                         line[3].1.clone(),
                         type_name.0.clone(),
                     ))?;
-                let addr = name_handler.add_local_variable(None, (type_id, type_name.3))?;
+                let addr = name_handler.add_local_variable(None, (type_id, type_name.3), lines)?;
 
                 if line.len() < 6 {
                     return Err(ProcessorError::LetNoValue(line[3].1.clone()));

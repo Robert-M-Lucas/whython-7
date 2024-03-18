@@ -67,10 +67,10 @@ pub fn compile_user_function(function: &UserFunction) -> String {
     let mut output = Output::new_with_name(function.id, &function.name);
     output.push("push rbp");
     output.push("mov rbp, rsp");
-    output.push(&format!(
-        "sub rsp, {}",
-        (function.local_variable_count * 8) + (function.local_variable_count % 2) * 8
-    ));
+    // output.push(&format!(
+    //     "sub rsp, {}",
+    //     (function.local_variable_count * 8) + (function.local_variable_count % 2) * 8
+    // ));
 
     let mut last_return = false;
     for line in &function.lines {
@@ -118,15 +118,13 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 output.push(&format!("call {}", get_function_name(*function)));
 
                 // Move return value
-                local_copy(&mut output, *start_addr - sum as isize - 24, *return_addr, *ret_size);
+                local_copy(&mut output, *start_addr - sum as isize, *return_addr, *ret_size);
                 
                 // Release stack space used
-                if !local_args.is_empty() {
-                    output.push(&format!(
-                        "add rsp, {}",
-                        sum
-                    ));
-                }
+                output.push(&format!(
+                    "add rsp, {}",
+                    sum
+                ));
             }
             Line::NoReturnCall(function, start_addr, local_args, ret_size) => {
                 #[cfg(debug_assertions)]
@@ -169,7 +167,7 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 output.push(&format!("call {}", get_function_name(*function)));
 
                 // Release stack space used
-                if !local_args.is_empty() {
+                if sum != 0 {
                     output.push(&format!(
                         "add rsp, {}",
                         sum

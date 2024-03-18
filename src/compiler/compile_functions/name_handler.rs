@@ -57,11 +57,12 @@ impl NameHandler {
         &mut self,
         name: Option<String>,
         _type: (isize, usize),
+        lines: &mut Vec<Line>,
     ) -> Result<isize, ProcessorError> {
-        let size = self.type_table.get_type_size(_type)?;
+        let size = align(self.type_table.get_type_size(_type)?, 8);
         let addr = -(self.local_variables_size as isize) - size as isize;
         self.local_variables_size += size;
-        self.local_variables_size = align(self.local_variables_size, 8);
+        lines.push(Line::InlineAsm(vec![format!("sub rsp, {}", size)]));
         if let Some(name) = name {
             self.local_variables.push((name, addr, _type));
         }
@@ -77,7 +78,7 @@ impl NameHandler {
             }
             let t = self.type_table.get_type(type_id).unwrap();
             if let Some(destructor) = t.get_destructor() {
-                let ref_ = self.add_local_variable(None, (type_id, 1))?;
+                let ref_ = self.add_local_variable(None, (type_id, 1), lines)?;
 
                 lines.push(Line::InlineAsm(Int::instantiate_local_ref(addr, ref_)));
 
@@ -161,7 +162,7 @@ impl NameHandler {
 
                         if current_type.unwrap().1 > 0 {
                             let ref_addr = self
-                                .add_local_variable(None, (t.1 .0, current_type.unwrap().1))
+                                .add_local_variable(None, (t.1 .0, current_type.unwrap().1), lines)
                                 .unwrap();
                             lines.push(Line::InlineAsm(Int::instantiate_ref(
                                 current_variable.unwrap(),

@@ -115,7 +115,7 @@ pub fn evaluate_operation(
                     return_into
                 } else {
                     (
-                        name_handler.add_local_variable(None, (lhs.1 .0, lhs.1 .1 + 1))?,
+                        name_handler.add_local_variable(None, (lhs.1 .0, lhs.1 .1 + 1), lines)?,
                         (lhs.1 .0, lhs.1 .1 + 1),
                     )
                 };
@@ -152,7 +152,7 @@ pub fn evaluate_operation(
                     return_into
                 } else {
                     (
-                        name_handler.add_local_variable(None, (lhs.1 .0, lhs.1 .1 + 1))?,
+                        name_handler.add_local_variable(None, (lhs.1 .0, lhs.1 .1 + 1), lines)?,
                         (lhs.1 .0, lhs.1 .1 - 1),
                     )
                 };
@@ -187,7 +187,7 @@ pub fn evaluate_operation(
                     return_into
                 } else {
                     (
-                        name_handler.add_local_variable(None, (lhs.1 .0, lhs.1 .1 + 1))?,
+                        name_handler.add_local_variable(None, (lhs.1 .0, lhs.1 .1 + 1), lines)?,
                         (lhs.1 .0, lhs.1 .1 + 1),
                     )
                 };
@@ -220,7 +220,7 @@ pub fn evaluate_operation(
                     return_into
                 } else {
                     (
-                        name_handler.add_local_variable(None, (Bool::get_id(), 0))?,
+                        name_handler.add_local_variable(None, (Bool::get_id(), 0), lines)?,
                         (Bool::get_id(), 0),
                     )
                 };

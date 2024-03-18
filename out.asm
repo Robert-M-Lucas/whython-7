@@ -7,118 +7,77 @@
     extern GetProcessHeap
     section .text
 
-__4: ; printi
+main: ; main
 	push rbp
 	mov rbp, rsp
-	sub rsp, 80
+	; '    let a: A = test();'
 	; [inline asm]
-	mov rcx, rbp
-	dec rcx
-	mov rax, qword [rbp+16]
-	mov qword [rbp-24], ""
-	mov qword [rbp-16], ""
-	mov dword [rbp-8], ""
-	mov dword [rbp-4], `\0\0\0\n`
-	cmp rax, 0
-	jge ._4.positive
-	mov dword [rbp-20], "-"
-	mov r8, rax
-	mov rax, 0
-	sub rax, r8
-	._4.positive:
-	mov rbx, 10
-	._4.loop:
-	xor rdx, rdx
-	div rbx
-	dec rcx
-	add rdx, '0'
-	mov [rcx], dl
-	test rax, rax
-	jnz ._4.loop
-	mov ecx, -11
-	call GetStdHandle
-	mov rcx, rax
-	mov rdx, rbp
-	sub rdx, 24
-	mov r8, 24
-	mov qword [rbp - 40], 0
-	mov r9, rbp
-	sub r9, 24
-	mov qword [rbp - 48], 0
-	call WriteFile
-	leave
-	ret
+	sub rsp, 24
+	; [return call] 1 , [], -24
+	push 0
+	push 0
+	push 0
+	call _1
+	; [local copy] -48 , -24, 24
+	mov rax, qword [rbp-48]
+	mov qword [rbp-24], rax
+	mov rax, qword [rbp-40]
+	mov qword [rbp-16], rax
+	mov rax, qword [rbp-32]
+	mov qword [rbp-8], rax
+	add rsp, 24
+	; ''
+	; ''
+	; '    let b: A = test();'
+	; [inline asm]
+	sub rsp, 24
+	; [return call] 1 , [], -48
+	push 0
+	push 0
+	push 0
+	call _1
+	; [local copy] -72 , -48, 24
+	mov rax, qword [rbp-72]
+	mov qword [rbp-48], rax
+	mov rax, qword [rbp-64]
+	mov qword [rbp-40], rax
+	mov rax, qword [rbp-56]
+	mov qword [rbp-32], rax
+	add rsp, 24
+	; ''
+	; '    return b.c;'
+	; [inline asm]
+	sub rsp, 8
+	; [local copy] -32 , -56, 8
+	mov rax, qword [rbp-32]
+	mov qword [rbp-56], rax
+	; [return] Some((-56, 8))
+	mov rcx, [rbp-56]
+	call ExitProcess
 
 _1: ; test
 	push rbp
 	mov rbp, rsp
-	sub rsp, 0
-	; '    printi(a.a);'
-	; [no return call] -4 , [(16, 8)], 0
-	push qword 0
-	mov rax, qword [rbp+16]
-	push rax
-	call __4
-	add rsp, 16
-	; '    printi(a.b);'
-	; [no return call] -4 , [(24, 8)], 0
-	push qword 0
-	mov rax, qword [rbp+24]
-	push rax
-	call __4
-	add rsp, 16
-	; '    printi(a.c);'
-	; [no return call] -4 , [(32, 8)], 0
-	push qword 0
-	mov rax, qword [rbp+32]
-	push rax
-	call __4
-	add rsp, 16
-	leave
-	ret
-
-main: ; main
-	push rbp
-	mov rbp, rsp
-	sub rsp, 32
-	; '    let a: A = @A { 1, 2, 3 };'
+	; '    return @A {7, 8, 9};'
 	; [inline asm]
-	mov rax, qword 1
-	mov qword [rbp-24], rax
-	; [inline asm]
-	mov rax, qword 2
-	mov qword [rbp-16], rax
-	; [inline asm]
-	mov rax, qword 3
-	mov qword [rbp-8], rax
-	; [inline asm]
-	; '    test(a);'
-	; [no return call] 1 , [(-24, 24)], 0
-	push qword 0
-	mov rax, qword [rbp-8]
-	push rax
-	mov rax, qword [rbp-16]
-	push rax
-	mov rax, qword [rbp-24]
-	push rax
-	call _1
-	add rsp, 32
-	; '    test(a);'
-	; [no return call] 1 , [(-24, 24)], 0
-	push qword 0
-	mov rax, qword [rbp-8]
-	push rax
-	mov rax, qword [rbp-16]
-	push rax
-	mov rax, qword [rbp-24]
-	push rax
-	call _1
-	add rsp, 32
-	; ''
-	; '    return 7;'
+	sub rsp, 24
 	; [inline asm]
 	mov rax, qword 7
-	mov qword [rbp-32], rax
-	; [return] Some((-32, 8))
-	mov rcx, [rbp-32]
-	call ExitProcess
+	mov qword [rbp-24], rax
+	; [inline asm]
+	mov rax, qword 8
+	mov qword [rbp-16], rax
+	; [inline asm]
+	mov rax, qword 9
+	mov qword [rbp-8], rax
+	; [inline asm]
+	; [return] Some((-24, 24))
+	; [local copy] -24 , 16, 24
+	mov rax, qword [rbp-24]
+	mov qword [rbp+16], rax
+	mov rax, qword [rbp-16]
+	mov qword [rbp+24], rax
+	mov rax, qword [rbp-8]
+	mov qword [rbp+32], rax
+	leave
+	ret

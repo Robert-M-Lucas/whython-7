@@ -59,7 +59,7 @@ pub fn call_function(
     if let Some(default_arg) = default_arg {
         let default_arg = if default_arg.1 .1 == 0 && target_args[0].1 .1 == 1 {
             // TODO: Bad operator line
-            let into = name_handler.add_local_variable(None, target_args[0].1)?;
+            let into = name_handler.add_local_variable(None, target_args[0].1, lines)?;
             evaluate_operation(
                 default_arg,
                 (&Operator::And, start_line),
@@ -137,7 +137,7 @@ pub fn call_function(
             )
         } else {
             (
-                name_handler.add_local_variable(None, return_type)?,
+                name_handler.add_local_variable(None, return_type, lines)?,
                 name_handler.type_table().get_type_size(return_type)?,
             )
         };

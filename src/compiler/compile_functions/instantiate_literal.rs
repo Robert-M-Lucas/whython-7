@@ -41,7 +41,7 @@ pub fn instantiate_variable(
             Left((literal, _)) => literal.get_type_id(),
             Right(id) => *id,
         };
-        (name_handler.add_local_variable(None, id)?, id)
+        (name_handler.add_local_variable(None, id, lines)?, id)
     };
     // Indirect
     let true_id = id.0;
