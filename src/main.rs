@@ -40,7 +40,10 @@ fn main() {
     // return;
 
     let args = Args::parse();
+    main_args(args);
+}
 
+fn main_args(args: Args) {
     let mut asts = Vec::new();
     print!("Parsing...");
     time!(

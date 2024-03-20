@@ -86,7 +86,8 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                 ));
                 
                 let mut sum = local_args.iter().map(|x| align(x.1, 8)).sum::<usize>() + align(*ret_size, 8);
-                
+                let mut t = 0usize;
+
                 // Ensure 16-byte alignment
                 // #[cfg(debug_assertions)]
                 // output.push("; alignment");
@@ -102,6 +103,7 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                     local_addr += size;
                     local_addr -= 8;
                     while size > 0 {
+                        t += 8;
                         output.push("sub rsp, 8");
                         output.push(&format!(
                             "mov rax, qword [{}]",
@@ -109,7 +111,7 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                         ));
                         output.push(&format!(
                             "mov qword [{}], rax",
-                            get_local_address(-(aligned_local_size as isize) - sum as isize)
+                            get_local_address(-(aligned_local_size as isize) - t as isize)
                         ));
                         local_addr -= 8;
                         size -= 8;
@@ -119,13 +121,14 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                 // Allocate return space
                 for _ in 0..ret_size.div_ceil(8) {
                     output.push("sub rsp, 8");
+                    t += 8;
                 }
                 
                 // Call
                 output.push(&format!("call {}", get_function_name(*function)));
 
                 // Move return value
-                local_copy(&mut output, -(aligned_local_size as isize) - sum as isize, *return_addr, *ret_size);
+                local_copy(&mut output, -(aligned_local_size as isize) - t as isize, *return_addr, *ret_size);
                 
                 // Release stack space used
                 output.push(&format!(
@@ -141,6 +144,7 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                 ));
 
                 let mut sum = local_args.iter().map(|x| align(x.1, 8)).sum::<usize>() + align(*ret_size, 8);
+                let mut t = 0usize;
 
                 // Ensure 16-byte alignment
                 // #[cfg(debug_assertions)]
@@ -157,6 +161,7 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                     local_addr += size;
                     local_addr -= 8;
                     while size > 0 {
+                        t += 8;
                         output.push("sub rsp, 8");
                         output.push(&format!(
                             "mov rax, qword [{}]",
@@ -164,7 +169,7 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                         ));
                         output.push(&format!(
                             "mov qword [{}], rax",
-                            get_local_address(-(aligned_local_size as isize) - sum as isize)
+                            get_local_address(-(aligned_local_size as isize) - t as isize)
                         ));
                         local_addr -= 8;
                         size -= 8;
@@ -174,6 +179,7 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                 // Allocate return space
                 for _ in 0..ret_size.div_ceil(8) {
                     output.push("sub rsp, 8");
+                    t += 8;
                 }
 
                 // Call

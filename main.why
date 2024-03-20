@@ -56,11 +56,9 @@ impl LL {
 fn main() ~ int {
     let ll: LL = LL#new();
 
-    ll.add(22);
+    ll.add(12);
 
-    ll.add(38);
-
-    ll.add(48);
+    ll.add(18);
 
     ll.print();
 

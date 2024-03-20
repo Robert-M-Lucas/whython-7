@@ -7,14 +7,11 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Made some progress towards bug fixes after rewrite">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Hopefully nearly back to working">
       <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/out.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/out.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/out.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compile_functions/operators.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/custom_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/custom_functions.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/generate_asm.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/generate_asm.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -253,15 +250,7 @@
       <workItem from="1710961662192" duration="16000" />
       <workItem from="1710961688304" duration="2914000" />
       <workItem from="1710964709712" duration="1007000" />
-      <workItem from="1710966166751" duration="1573000" />
-    </task>
-    <task id="LOCAL-00026" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707733410417</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1707733410417</updated>
+      <workItem from="1710966166751" duration="3165000" />
     </task>
     <task id="LOCAL-00027" summary="Commit">
       <option name="closed" value="true" />
@@ -647,7 +636,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710804022395</updated>
     </task>
-    <option name="localTasksCounter" value="75" />
+    <task id="LOCAL-00075" summary="Hopefully nearly back to working">
+      <option name="closed" value="true" />
+      <created>1710968230890</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1710968230890</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -699,7 +696,8 @@
     <MESSAGE value="Other" />
     <MESSAGE value="Got return values larges than 8 bytes working" />
     <MESSAGE value="Made some progress towards bug fixes after rewrite" />
-    <option name="LAST_COMMIT_MESSAGE" value="Made some progress towards bug fixes after rewrite" />
+    <MESSAGE value="Hopefully nearly back to working" />
+    <option name="LAST_COMMIT_MESSAGE" value="Hopefully nearly back to working" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
