@@ -6,6 +6,8 @@ use whython_7::root::Args;
 
 #[test]
 fn tests() {
+    fs::create_dir_all("tests/temp").unwrap();
+    
     for path in fs::read_dir("tests/inputs").unwrap() {
         let mut out_path = PathBuf::from("tests/outputs");
         out_path.push(path.as_ref().unwrap().file_name());
