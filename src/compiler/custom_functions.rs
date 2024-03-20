@@ -80,7 +80,7 @@ impl TypedFunction for WindowsExit {
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
             format!(
-                "mov rcx, [{}]",
+                "mov rcx, qword [{}]",
                 crate::compiler::generate_asm::get_local_address(args[0])
             ),
             "call ExitProcess".to_string(),
@@ -140,6 +140,7 @@ impl Function for PrintI {
             local_variable_size: 48,
             arg_count: 1,
             lines: vec![Line::InlineAsm(vec![
+                "sub rsp, 32".to_string(),
                 "mov rcx, rbp".to_string(),
                 "dec rcx".to_string(),
                 "mov rax, qword [rbp+16]".to_string(),
@@ -237,6 +238,7 @@ impl Function for PrintB {
             local_variable_size: 32,
             arg_count: 1,
             lines: vec![Line::InlineAsm(vec![
+                "sub rsp, 32".to_string(),
                 "mov qword [rbp-16], \"true\"".to_string(),
                 "mov qword [rbp-8], `\\n\\r`".to_string(),
                 "mov rax, qword [rbp+16]".to_string(),

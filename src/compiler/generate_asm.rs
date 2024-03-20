@@ -63,17 +63,19 @@ pub fn get_local_address(addr: isize) -> String {
     format!("rbp{sign}{addr}")
 }
 
-pub fn compile_user_function(function: &UserFunction) -> String {
-    let mut output = Output::new_with_name(function.id, &function.name);
+pub fn compile_user_function(c_function: &UserFunction) -> String {
+    let mut output = Output::new_with_name(c_function.id, &c_function.name);
     output.push("push rbp");
     output.push("mov rbp, rsp");
+    let aligned_local_size = align(c_function.local_variable_size, 16);
+
     output.push(&format!(
         "sub rsp, {}",
-        align(function.local_variable_size, 16)    
+        aligned_local_size
     ));
 
     let mut last_return = false;
-    for line in &function.lines {
+    for line in &c_function.lines {
         last_return = false;
         match line {
             Line::ReturnCall(function, start_addr, local_args, ret_size, return_addr) => {
@@ -86,10 +88,11 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 let mut sum = local_args.iter().map(|x| align(x.1, 8)).sum::<usize>() + align(*ret_size, 8);
                 
                 // Ensure 16-byte alignment
+                // #[cfg(debug_assertions)]
+                // output.push("; alignment");
                 // if (sum / 8) % 2 != 0 {
                 //     sum += 8;
-                //     t += 8;
-                //     output.push("push qword 0");
+                //     output.push("sub rsp, 8");
                 // }
                 
                 // Push args to stack
@@ -99,26 +102,30 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                     local_addr += size;
                     local_addr -= 8;
                     while size > 0 {
+                        output.push("sub rsp, 8");
                         output.push(&format!(
                             "mov rax, qword [{}]",
                             get_local_address(local_addr)
                         ));
-                        output.push("push rax");
+                        output.push(&format!(
+                            "mov qword [{}], rax",
+                            get_local_address(-(aligned_local_size as isize) - sum as isize)
+                        ));
                         local_addr -= 8;
                         size -= 8;
                     }
                 }
 
                 // Allocate return space
-                for _ in 0..(ret_size.div_ceil(8)) {
-                    output.push("push 0");
+                for _ in 0..ret_size.div_ceil(8) {
+                    output.push("sub rsp, 8");
                 }
                 
                 // Call
                 output.push(&format!("call {}", get_function_name(*function)));
 
                 // Move return value
-                local_copy(&mut output, *start_addr - sum as isize, *return_addr, *ret_size);
+                local_copy(&mut output, -(aligned_local_size as isize) - sum as isize, *return_addr, *ret_size);
                 
                 // Release stack space used
                 output.push(&format!(
@@ -129,18 +136,20 @@ pub fn compile_user_function(function: &UserFunction) -> String {
             Line::NoReturnCall(function, start_addr, local_args, ret_size) => {
                 #[cfg(debug_assertions)]
                 output.push(&format!(
-                    "; [no return call] {} , {:?}, {}",
-                    *function, local_args, *ret_size
+                    "; [no return call] {} , {:?}",
+                    *function, local_args
                 ));
 
                 let mut sum = local_args.iter().map(|x| align(x.1, 8)).sum::<usize>() + align(*ret_size, 8);
 
                 // Ensure 16-byte alignment
+                // #[cfg(debug_assertions)]
+                // output.push("; alignment");
                 // if (sum / 8) % 2 != 0 {
-                //     output.push("push qword 0");
                 //     sum += 8;
+                //     output.push("sub rsp, 8");
                 // }
-
+                
                 // Push args to stack
                 for (local_addr, size) in local_args.iter().rev() {
                     let mut local_addr = *local_addr;
@@ -148,31 +157,36 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                     local_addr += size;
                     local_addr -= 8;
                     while size > 0 {
+                        output.push("sub rsp, 8");
                         output.push(&format!(
                             "mov rax, qword [{}]",
                             get_local_address(local_addr)
                         ));
-                        output.push("push rax");
+                        output.push(&format!(
+                            "mov qword [{}], rax",
+                            get_local_address(-(aligned_local_size as isize) - sum as isize)
+                        ));
                         local_addr -= 8;
                         size -= 8;
                     }
                 }
 
                 // Allocate return space
-                for _ in 0..(ret_size.div_ceil(8)) {
-                    output.push("push 0");
+                for _ in 0..ret_size.div_ceil(8) {
+                    output.push("sub rsp, 8");
                 }
 
                 // Call
                 output.push(&format!("call {}", get_function_name(*function)));
 
+                // Move return value
+                // local_copy(&mut output, -(c_function.local_variable_size as isize) - sum as isize, *return_addr, *ret_size);
+
                 // Release stack space used
-                if sum != 0 {
-                    output.push(&format!(
-                        "add rsp, {}",
-                        sum
-                    ));
-                }
+                output.push(&format!(
+                    "add rsp, {}",
+                    sum
+                ));
             }
             Line::Copy(local_from, local_to, amount) => {
                 local_copy(&mut output, *local_from, *local_to, *amount);
@@ -221,9 +235,9 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                 #[cfg(debug_assertions)]
                 output.push(&format!("; [return] {:?}", *local_return_val));
                 last_return = true;
-                if function.id == 0 {
+                if c_function.id == 0 {
                     output.push(&format!(
-                        "mov rcx, [{}]",
+                        "mov rcx, qword [{}]",
                         get_local_address(local_return_val.unwrap().0)
                     ));
                     output.push("call ExitProcess");
@@ -238,6 +252,7 @@ pub fn compile_user_function(function: &UserFunction) -> String {
             Line::HeapAlloc(amount, local_ref_addr) => {
                 #[cfg(debug_assertions)]
                 output.push(&format!("; [heap alloc] {} , {}", *amount, *local_ref_addr));
+                output.push("sub rsp, 32");
                 output.push("call GetProcessHeap"); // Get process heap
                 output.push("mov rcx, rax"); // Heap handle
                 output.push("mov rdx, 0"); // Flags
@@ -247,6 +262,7 @@ pub fn compile_user_function(function: &UserFunction) -> String {
                     "mov qword [{}], rax",
                     get_local_address(*local_ref_addr)
                 ));
+                output.push("add rsp, 32");
             }
             Line::HeapDealloc(local_ref_addr, local_success_bool) => {
                 #[cfg(debug_assertions)]
@@ -287,7 +303,7 @@ pub fn compile_user_function(function: &UserFunction) -> String {
         return output.into();
     }
 
-    if function.id == 0 {
+    if c_function.id == 0 {
         output.push("mov rcx, 0");
         output.push("call ExitProcess");
         output.into()

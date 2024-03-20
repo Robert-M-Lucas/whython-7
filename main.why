@@ -39,32 +39,30 @@ impl LL {
         *curr.next = ^new_node;
     }
 
-    fn destroy(self) {
+    fn print(self) {
         if (!(*self.has_first)) {
             return;
         };
 
         let curr: $Node = *self.base;
-
+        printi(*curr.cur);
         while (!(*curr.last)) {
-            let prev: $Node = curr;
             curr = *curr.next;
-            ¬prev;
+            printi(*curr.cur);
         };
-
-        ¬curr;
-
-        *self.has_first = false;
-        *self.base = 0;
     }
 }
 
-fn test() {
-    let ll: LL = LL#new();
-}
-
 fn main() ~ int {
-    test();
+    let ll: LL = LL#new();
+
+    ll.add(22);
+
+    ll.add(38);
+
+    ll.add(48);
+
+    ll.print();
 
     return 7;
 }
