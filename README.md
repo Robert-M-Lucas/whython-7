@@ -7,3 +7,7 @@ When on Linux, `gcc` will be used for linking and `wine` for execution (both of 
 `nasm.exe` is still required.
 
 Designed to work on Windows linking with `kernel32.lib` for system calls.
+
+The `master` branch should now contain a semi-stable version whereas
+the latest version can be found on `dev`. I also use `dev` to sync
+my work so expect constant breaking changes on that branch.
