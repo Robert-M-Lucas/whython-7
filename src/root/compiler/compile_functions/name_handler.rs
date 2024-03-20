@@ -57,7 +57,7 @@ impl NameHandler {
         &mut self,
         name: Option<String>,
         _type: (isize, usize),
-        lines: &mut Vec<Line>,
+        _lines: &mut Vec<Line>,
     ) -> Result<isize, ProcessorError> {
         let size = align(self.type_table.get_type_size(_type)?, 8);
         let addr = -(self.local_variables_size as isize) - size as isize;
@@ -72,7 +72,7 @@ impl NameHandler {
     pub fn destroy_local_variables(&mut self, lines: &mut Vec<Line>) -> Result<(), ProcessorError> {
         // return Ok(())
 
-        for (name, addr, (type_id, indirection)) in self.local_variables.clone() {
+        for (_name, addr, (type_id, indirection)) in self.local_variables.clone() {
             if indirection != 0 {
                 continue;
             }

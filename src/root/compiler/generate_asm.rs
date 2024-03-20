@@ -78,14 +78,14 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
     for line in &c_function.lines {
         last_return = false;
         match line {
-            Line::ReturnCall(function, start_addr, local_args, ret_size, return_addr) => {
+            Line::ReturnCall(function, _start_addr, local_args, ret_size, return_addr) => {
                 #[cfg(debug_assertions)]
                 output.push(&format!(
                     "; [return call] {} , {:?}, {}",
                     *function, local_args, *return_addr
                 ));
                 
-                let mut sum = local_args.iter().map(|x| align(x.1, 8)).sum::<usize>() + align(*ret_size, 8);
+                let sum = local_args.iter().map(|x| align(x.1, 8)).sum::<usize>() + align(*ret_size, 8);
                 let mut t = 0usize;
 
                 // Ensure 16-byte alignment
@@ -136,14 +136,14 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                     sum
                 ));
             }
-            Line::NoReturnCall(function, start_addr, local_args, ret_size) => {
+            Line::NoReturnCall(function, _start_addr, local_args, ret_size) => {
                 #[cfg(debug_assertions)]
                 output.push(&format!(
                     "; [no return call] {} , {:?}",
                     *function, local_args
                 ));
 
-                let mut sum = local_args.iter().map(|x| align(x.1, 8)).sum::<usize>() + align(*ret_size, 8);
+                let sum = local_args.iter().map(|x| align(x.1, 8)).sum::<usize>() + align(*ret_size, 8);
                 let mut t = 0usize;
 
                 // Ensure 16-byte alignment

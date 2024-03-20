@@ -83,7 +83,7 @@ pub trait Type {
     fn try_set_destructor(
         &mut self,
         line_info: &LineInfo,
-        func: isize,
+        _func: isize,
     ) -> Result<(), ProcessorError> {
         Err(ProcessorError::CantSetBuiltinDestructor(line_info.clone()))
     }
