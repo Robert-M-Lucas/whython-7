@@ -7,12 +7,59 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Hopefully nearly back to working">
-      <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Back to working (or at least so it seems for now). Deallocation not tested.">
+      <change afterPath="$PROJECT_DIR$/src/lib.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/root.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/inputs/asd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/tests.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/whython-7.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/whython-7.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/out.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/out.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/out.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/generate_asm.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/generate_asm.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assembler/assemble.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/assembler/assemble.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assembler/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/assembler/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/builtin.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/ast/builtin.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/keywords.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/ast/keywords.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/literals.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/ast/literals.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/ast/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/ast/operators.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/symbol.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/ast/symbol.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/basic_ast/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/basic_ast/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/basic_ast/punctuation.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/basic_ast/punctuation.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/basic_ast/symbol.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/basic_ast/symbol.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/assignment.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/assignment.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/call_function.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/call_function.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/evaluate.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/evaluate.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/evaluate_symbol.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/evaluate_symbol.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/instantiate_literal.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/instantiate_literal.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/name_handler.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/name_handler.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/operators.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/process_lines.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/process_lines.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/reference.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/reference.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/custom_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/custom_functions.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/generate_asm.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/generate_asm.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/custom/bool.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/bool.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/custom/int.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/int.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/custom/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/escape_codes.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/escape_codes.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/file_reader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/file_reader.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/initialiser_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/initialiser_parser.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/line_info.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/line_info.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/normal_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/normal_parser.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/parse.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/parse.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/string_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/string_parser.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/processor/custom_types.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/custom_types.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/processor/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/processor/preprocess.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/preprocess.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/processor/processor.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/processor.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/processor/type_builder.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/type_builder.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/processor/user_type.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/user_type.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/utils.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,6 +188,7 @@
       <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7\src\root" />
       <recent name="$PROJECT_DIR$/reference" />
     </key>
   </component>
@@ -250,15 +298,7 @@
       <workItem from="1710961662192" duration="16000" />
       <workItem from="1710961688304" duration="2914000" />
       <workItem from="1710964709712" duration="1007000" />
-      <workItem from="1710966166751" duration="3165000" />
-    </task>
-    <task id="LOCAL-00027" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707733460809</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1707733460809</updated>
+      <workItem from="1710966166751" duration="5532000" />
     </task>
     <task id="LOCAL-00028" summary="Commit">
       <option name="closed" value="true" />
@@ -644,7 +684,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710968230890</updated>
     </task>
-    <option name="localTasksCounter" value="76" />
+    <task id="LOCAL-00076" summary="Back to working (or at least so it seems for now). Deallocation not tested.">
+      <option name="closed" value="true" />
+      <created>1710969762145</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1710969762145</updated>
+    </task>
+    <option name="localTasksCounter" value="77" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -697,7 +745,8 @@
     <MESSAGE value="Got return values larges than 8 bytes working" />
     <MESSAGE value="Made some progress towards bug fixes after rewrite" />
     <MESSAGE value="Hopefully nearly back to working" />
-    <option name="LAST_COMMIT_MESSAGE" value="Hopefully nearly back to working" />
+    <MESSAGE value="Back to working (or at least so it seems for now). Deallocation not tested." />
+    <option name="LAST_COMMIT_MESSAGE" value="Back to working (or at least so it seems for now). Deallocation not tested." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
