@@ -175,7 +175,12 @@ pub fn call_function(
             let inline_args: Vec<_> = call_args.into_iter().map(|x| x.0).collect();
             lines.push(Line::InlineAsm(function.get_inline(inline_args)));
         } else {
-            lines.push(Line::NoReturnCall(function.get_id(), -(name_handler.local_variable_space() as isize), call_args, 0))
+            lines.push(Line::NoReturnCall(
+                function.get_id(),
+                -(name_handler.local_variable_space() as isize),
+                call_args,
+                0,
+            ))
         }
 
         None

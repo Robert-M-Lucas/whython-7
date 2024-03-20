@@ -9,6 +9,9 @@ macro_rules! time {
     };
 }
 
-pub fn align<T: Copy + Sub<Output=T> + Rem<Output=T> + Add<Output=T>>(num: T, alignment: T) -> T {
+pub fn align<T: Copy + Sub<Output = T> + Rem<Output = T> + Add<Output = T>>(
+    num: T,
+    alignment: T,
+) -> T {
     num + (alignment - (num % alignment)) % alignment
 }

@@ -1,6 +1,8 @@
 use crate::root::basic_ast::symbol::BasicSymbol;
 use crate::root::compiler::compile_functions::{Function, Line, UserFunction};
-use crate::root::compiler::generate_asm::{compile_user_function, get_function_sublabel, get_local_address};
+use crate::root::compiler::generate_asm::{
+    compile_user_function, get_function_sublabel, get_local_address,
+};
 use crate::root::custom::bool::{BoolEQ, BoolNE, BoolNot};
 use crate::root::custom::int::{
     IntAdd, IntDiv, IntEQ, IntGE, IntGT, IntLE, IntLT, IntMod, IntMul, IntNE, IntSub,
@@ -79,10 +81,7 @@ impl TypedFunction for WindowsExit {
 
     fn get_inline(&self, args: Vec<isize>) -> Vec<String> {
         vec![
-            format!(
-                "mov rcx, qword [{}]",
-                get_local_address(args[0])
-            ),
+            format!("mov rcx, qword [{}]", get_local_address(args[0])),
             "call ExitProcess".to_string(),
         ]
     }

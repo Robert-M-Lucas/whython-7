@@ -34,7 +34,9 @@ pub fn process_assignment(
                 }
 
                 let new_type = (variable.1 .0, variable.1 .1 - 1);
-                let non_ref = name_handler.add_local_variable(None, new_type, lines).unwrap();
+                let non_ref = name_handler
+                    .add_local_variable(None, new_type, lines)
+                    .unwrap();
                 lines.push(Line::DynFromCopy(
                     variable.0,
                     non_ref,

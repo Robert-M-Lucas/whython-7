@@ -7,11 +7,11 @@ use std::fs;
 
 use crate::root::parser::parse::parse;
 use crate::root::processor::processor::process;
+use crate::time;
 use clap::Parser;
 use std::path::PathBuf;
 use std::process::Command;
 use std::time::Instant;
-use crate::time;
 
 mod assembler;
 mod ast;
@@ -37,7 +37,7 @@ pub struct Args {
     pub output: String,
     /// Only build - don't run
     #[arg(short, long)]
-    pub build: bool
+    pub build: bool,
 }
 
 pub fn main() {
@@ -82,8 +82,7 @@ pub fn main_args(args: Args) -> bool {
         time!(link(&args.output));
         if args.build {
             println!("Skipping execution")
-        }
-        else {
+        } else {
             println!("Executing...");
             time!(run(&args.output));
         }
@@ -95,8 +94,7 @@ pub fn main_args(args: Args) -> bool {
         time!(link_gcc_experimental(&args.output));
         if args.build {
             println!("Skipping execution")
-        }
-        else {
+        } else {
             println!("Executing (wine)...");
             time!(run_wine_experimental(&args.output));
         }

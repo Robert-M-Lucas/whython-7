@@ -132,7 +132,7 @@ pub fn evaluate_operation(
                     if lhs.1 .1 == 0 {
                         return Err(ProcessorError::CantDerefNonRef(op.1.clone()));
                     }
-                    if return_into.1.0 != lhs.1 .0 || return_into.1 .1 != lhs.1.1 - 1 {
+                    if return_into.1 .0 != lhs.1 .0 || return_into.1 .1 != lhs.1 .1 - 1 {
                         return Err(ProcessorError::BadEvaluatedType(
                             op.1.clone(),
                             name_handler
@@ -152,11 +152,11 @@ pub fn evaluate_operation(
                     return_into
                 } else {
                     (
-                        name_handler.add_local_variable(None, (lhs.1.0, lhs.1.1 + 1), lines)?,
+                        name_handler.add_local_variable(None, (lhs.1 .0, lhs.1 .1 + 1), lines)?,
                         (lhs.1 .0, lhs.1 .1 - 1),
                     )
                 };
-                
+
                 lines.push(Line::DynFromCopy(
                     lhs.0,
                     return_into.0,

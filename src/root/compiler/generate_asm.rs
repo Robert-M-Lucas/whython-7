@@ -69,10 +69,7 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
     output.push("mov rbp, rsp");
     let aligned_local_size = align(c_function.local_variable_size, 16);
 
-    output.push(&format!(
-        "sub rsp, {}",
-        aligned_local_size
-    ));
+    output.push(&format!("sub rsp, {}", aligned_local_size));
 
     let mut last_return = false;
     for line in &c_function.lines {
@@ -84,8 +81,9 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                     "; [return call] {} , {:?}, {}",
                     *function, local_args, *return_addr
                 ));
-                
-                let sum = local_args.iter().map(|x| align(x.1, 8)).sum::<usize>() + align(*ret_size, 8);
+
+                let sum =
+                    local_args.iter().map(|x| align(x.1, 8)).sum::<usize>() + align(*ret_size, 8);
                 let mut t = 0usize;
 
                 // Ensure 16-byte alignment
@@ -95,7 +93,7 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                 //     sum += 8;
                 //     output.push("sub rsp, 8");
                 // }
-                
+
                 // Push args to stack
                 for (local_addr, size) in local_args.iter().rev() {
                     let mut local_addr = *local_addr;
@@ -123,18 +121,20 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                     output.push("sub rsp, 8");
                     t += 8;
                 }
-                
+
                 // Call
                 output.push(&format!("call {}", get_function_name(*function)));
 
                 // Move return value
-                local_copy(&mut output, -(aligned_local_size as isize) - t as isize, *return_addr, *ret_size);
-                
+                local_copy(
+                    &mut output,
+                    -(aligned_local_size as isize) - t as isize,
+                    *return_addr,
+                    *ret_size,
+                );
+
                 // Release stack space used
-                output.push(&format!(
-                    "add rsp, {}",
-                    sum
-                ));
+                output.push(&format!("add rsp, {}", sum));
             }
             Line::NoReturnCall(function, _start_addr, local_args, ret_size) => {
                 #[cfg(debug_assertions)]
@@ -143,7 +143,8 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                     *function, local_args
                 ));
 
-                let sum = local_args.iter().map(|x| align(x.1, 8)).sum::<usize>() + align(*ret_size, 8);
+                let sum =
+                    local_args.iter().map(|x| align(x.1, 8)).sum::<usize>() + align(*ret_size, 8);
                 let mut t = 0usize;
 
                 // Ensure 16-byte alignment
@@ -153,7 +154,7 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                 //     sum += 8;
                 //     output.push("sub rsp, 8");
                 // }
-                
+
                 // Push args to stack
                 for (local_addr, size) in local_args.iter().rev() {
                     let mut local_addr = *local_addr;
@@ -189,10 +190,7 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                 // local_copy(&mut output, -(c_function.local_variable_size as isize) - sum as isize, *return_addr, *ret_size);
 
                 // Release stack space used
-                output.push(&format!(
-                    "add rsp, {}",
-                    sum
-                ));
+                output.push(&format!("add rsp, {}", sum));
             }
             Line::Copy(local_from, local_to, amount) => {
                 local_copy(&mut output, *local_from, *local_to, *amount);

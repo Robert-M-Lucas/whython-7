@@ -4,9 +4,9 @@ use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::custom_types::Int;
 use crate::root::processor::processor::ProcessorError;
 use crate::root::processor::type_builder::{TypeTable, TypedFunction};
+use crate::root::utils::align;
 use either::{Either, Left, Right};
 use std::collections::HashSet;
-use crate::root::utils::align;
 
 pub struct NameHandler {
     type_table: TypeTable,
@@ -86,7 +86,7 @@ impl NameHandler {
                     destructor,
                     -(self.local_variable_space() as isize),
                     vec![(ref_, self.type_table.get_type_size((type_id, 1))?)],
-                    0
+                    0,
                 ));
 
                 self.use_function_id(destructor);

@@ -201,7 +201,10 @@ pub trait TypedFunction {
     fn get_name(&self) -> &str;
     fn get_args(&self) -> &[(String, (isize, usize))];
     fn get_line(&self) -> LineInfo;
-    fn get_args_positioned(&self, type_table: &TypeTable) -> Result<Vec<(String, isize, (isize, usize))>, ProcessorError> {
+    fn get_args_positioned(
+        &self,
+        type_table: &TypeTable,
+    ) -> Result<Vec<(String, isize, (isize, usize))>, ProcessorError> {
         let mut offset = 16isize;
         if let Some(return_type) = self.get_return_type() {
             offset += type_table.get_type_size(return_type)? as isize;
