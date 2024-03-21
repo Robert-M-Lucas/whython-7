@@ -29,6 +29,7 @@ pub enum Line {
     HeapAlloc(usize, isize),
     HeapDealloc(isize, isize),
     InlineAsm(Vec<String>),
+    #[cfg(debug_assertions)]
     Annotation(String),
 }
 

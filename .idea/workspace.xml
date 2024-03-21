@@ -7,34 +7,10 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Created build folder">
-      <change afterPath="$PROJECT_DIR$/src/root/runner.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/inputs/control/If.why" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/inputs/print/SimplePrint.why" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/outputs/control/If.why" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/outputs/print/SimplePrint.why" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.asm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/assembler/assemble.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/assembler/assemble.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/ast/literals.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/ast/literals.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/basic_ast/symbol.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/basic_ast/symbol.rs" afterDir="false" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Refactoring and tests">
       <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/instantiate_literal.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/instantiate_literal.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/operators.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/custom_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/custom_functions.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/parser/normal_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/normal_parser.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/parser/parse.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/parse.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/processor/processor.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/processor.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/processor/user_type.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/user_type.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/utils.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/utils.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/inputs/asd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/outputs/asd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests.rs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/process_lines.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/process_lines.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/parser/line_info.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/line_info.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -281,15 +257,7 @@
       <workItem from="1710961688304" duration="2914000" />
       <workItem from="1710964709712" duration="1007000" />
       <workItem from="1710966166751" duration="7309000" />
-      <workItem from="1710986829647" duration="2886000" />
-    </task>
-    <task id="LOCAL-00033" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707735564527</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1707735564527</updated>
+      <workItem from="1710986829647" duration="3372000" />
     </task>
     <task id="LOCAL-00034" summary="Commit">
       <option name="closed" value="true" />
@@ -675,7 +643,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710972552667</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="Refactoring and tests">
+      <option name="closed" value="true" />
+      <created>1710990149090</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1710990149091</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -704,7 +680,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added support gor parsing initialisers" />
     <MESSAGE value="Began adding support for reference types" />
     <MESSAGE value="Continued adding support for reference types" />
     <MESSAGE value="Continued work on reference system" />
@@ -729,7 +704,8 @@
     <MESSAGE value="Clippy" />
     <MESSAGE value="FMT" />
     <MESSAGE value="Created build folder" />
-    <option name="LAST_COMMIT_MESSAGE" value="Created build folder" />
+    <MESSAGE value="Refactoring and tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactoring and tests" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
