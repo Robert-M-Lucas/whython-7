@@ -7,8 +7,12 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Conditional compilation">
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Removed completed TODO">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.asm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,28 +89,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Cargo.Run whython-7.executor": "Run",
-    "Cargo.Test whython-7.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.rust.reset.selective.auto.import": "true",
-    "git-widget-placeholder": "dev",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "/home/robertlucas/RustroverProjects/whython-7",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
-    "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
-    "org.rust.first.attach.projects.stats": "true",
-    "settings.editor.selected.configurable": "language.rust.cargo.check",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Cargo.Run whython-7.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test whython-7.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/robertlucas/RustroverProjects/whython-7&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
+    &quot;org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon&quot;: &quot;&quot;,
+    &quot;org.rust.first.attach.projects.stats&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;language.rust.cargo.check&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
     <layout>
       <window_info id="Space Code Reviews" show_stripe_button="false" />
@@ -147,7 +151,7 @@
   <component name="RsExternalLinterProjectSettings">
     <option name="runOnTheFly" value="true" />
   </component>
-  <component name="RunManager" selected="Cargo.Test whython-7">
+  <component name="RunManager" selected="Cargo.Run whython-7">
     <configuration name="Run whython-7" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
       <option name="command" value="run --package whython-7 --bin whython-7 -- --output &quot;build/out&quot;" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
@@ -258,14 +262,7 @@
       <workItem from="1710986829647" duration="4199000" />
       <workItem from="1711034133964" duration="18000" />
       <workItem from="1711034160009" duration="1293000" />
-    </task>
-    <task id="LOCAL-00035" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707739699423</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1707739699423</updated>
+      <workItem from="1711046938830" duration="2452000" />
     </task>
     <task id="LOCAL-00036" summary="Commit">
       <option name="closed" value="true" />
@@ -651,7 +648,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710990292475</updated>
     </task>
-    <option name="localTasksCounter" value="84" />
+    <task id="LOCAL-00084" summary="Removed completed TODO">
+      <option name="closed" value="true" />
+      <created>1711047152689</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1711047152689</updated>
+    </task>
+    <option name="localTasksCounter" value="85" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -680,7 +685,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Continued adding support for reference types" />
     <MESSAGE value="Continued work on reference system" />
     <MESSAGE value="Untested reference types working" />
     <MESSAGE value="Began adding heap allocation" />
@@ -705,7 +709,8 @@
     <MESSAGE value="Created build folder" />
     <MESSAGE value="Refactoring and tests" />
     <MESSAGE value="Conditional compilation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Conditional compilation" />
+    <MESSAGE value="Removed completed TODO" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed completed TODO" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

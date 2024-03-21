@@ -1,11 +1,3 @@
-#[cfg(target_os = "windows")]
-use runner::link;
-#[cfg(target_os = "windows")]
-use crate::root::runner::run;
-#[cfg(target_os = "linux")]
-use runner::link_gcc_experimental;
-#[cfg(target_os = "linux")]
-use crate::root::runner::run_wine_experimental;
 use crate::root::assembler::assemble::generate_assembly;
 use crate::root::parser::parse::parse;
 use crate::root::processor::processor::process;
@@ -16,6 +8,15 @@ use std::time::Instant;
 use runner::assemble;
 use crate::root::utils::AnyError;
 
+#[cfg(target_os = "windows")]
+use runner::link;
+#[cfg(target_os = "windows")]
+use crate::root::runner::run;
+
+#[cfg(target_os = "linux")]
+use runner::link_gcc_experimental;
+#[cfg(target_os = "linux")]
+use crate::root::runner::run_wine_experimental;
 
 mod assembler;
 mod ast;
