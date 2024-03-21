@@ -27,8 +27,6 @@ mod processor;
 mod utils;
 mod runner;
 
-// TODO: Handle circular imports
-
 /// Compiler for Whython files (.why)
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -50,7 +48,7 @@ pub fn main() {
     // link("out");
     // run("out");
     // return;
-
+    
     let args = Args::parse();
     let _ = main_args(args);
 }
@@ -76,12 +74,13 @@ pub fn main_args(args: Args) -> Result<(), AnyError> {
             Ok(functions) => functions
         }
     );
-    // let functions = process(asts).unwrap();
 
     print!("Compiling...");
     time!(generate_assembly(&args.output, functions));
+    
     print!("Assembling (NASM)...");
     time!(assemble(&args.output));
+    
     #[cfg(target_os = "windows")]
     {
         println!("Linking (MSVC - link.exe)...");
@@ -105,6 +104,7 @@ pub fn main_args(args: Args) -> Result<(), AnyError> {
             time!(run_wine_experimental(&args.output));
         }
     }
+    
     println!("Done!");
     Ok(())
 }
