@@ -7,8 +7,34 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="FMT">
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Created build folder">
+      <change afterPath="$PROJECT_DIR$/src/root/runner.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/inputs/control/If.why" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/inputs/print/SimplePrint.why" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/outputs/control/If.why" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/outputs/print/SimplePrint.why" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.asm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/assembler/assemble.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/assembler/assemble.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/ast/literals.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/ast/literals.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/basic_ast/symbol.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/basic_ast/symbol.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/instantiate_literal.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/instantiate_literal.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/operators.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/custom_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/custom_functions.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/parser/normal_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/normal_parser.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/parser/parse.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/parse.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/processor/processor.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/processor.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/processor/user_type.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/user_type.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/utils.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/utils.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/inputs/asd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/outputs/asd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests.rs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,7 +129,7 @@
     "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
     "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
     "org.rust.first.attach.projects.stats": "true",
-    "settings.editor.selected.configurable": "language.rust",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -138,6 +164,8 @@
       <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7\tests\outputs\print" />
+      <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7\tests\inputs\print" />
       <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7\src\root" />
       <recent name="$PROJECT_DIR$/reference" />
     </key>
@@ -145,7 +173,7 @@
   <component name="RsExternalLinterProjectSettings">
     <option name="runOnTheFly" value="true" />
   </component>
-  <component name="RunManager" selected="Cargo.Run whython-7">
+  <component name="RunManager" selected="Cargo.Test whython-7">
     <configuration name="Run whython-7" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
       <option name="command" value="run --package whython-7 --bin whython-7 -- --output &quot;build/out&quot;" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
@@ -252,15 +280,8 @@
       <workItem from="1710961662192" duration="16000" />
       <workItem from="1710961688304" duration="2914000" />
       <workItem from="1710964709712" duration="1007000" />
-      <workItem from="1710966166751" duration="6337000" />
-    </task>
-    <task id="LOCAL-00032" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707735444855</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1707735444855</updated>
+      <workItem from="1710966166751" duration="7309000" />
+      <workItem from="1710986829647" duration="2886000" />
     </task>
     <task id="LOCAL-00033" summary="Commit">
       <option name="closed" value="true" />
@@ -646,7 +667,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710972229312</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="Created build folder">
+      <option name="closed" value="true" />
+      <created>1710972552667</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1710972552667</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -675,7 +704,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixed shadowing" />
     <MESSAGE value="Added support gor parsing initialisers" />
     <MESSAGE value="Began adding support for reference types" />
     <MESSAGE value="Continued adding support for reference types" />
@@ -700,7 +728,8 @@
     <MESSAGE value="Small changes" />
     <MESSAGE value="Clippy" />
     <MESSAGE value="FMT" />
-    <option name="LAST_COMMIT_MESSAGE" value="FMT" />
+    <MESSAGE value="Created build folder" />
+    <option name="LAST_COMMIT_MESSAGE" value="Created build folder" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

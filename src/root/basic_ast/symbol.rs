@@ -50,6 +50,7 @@ impl BasicSymbol {
 }
 
 impl BasicSymbol {
+    #[allow(dead_code)]
     pub fn instead_found(&self) -> String {
         match &self {
             BasicSymbol::AbstractSyntaxTree(_) => panic!(),

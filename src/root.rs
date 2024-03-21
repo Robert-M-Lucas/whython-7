@@ -1,17 +1,21 @@
 #[cfg(target_os = "windows")]
-use crate::root::assembler::assemble::link;
+use runner::link;
+#[cfg(target_os = "windows")]
+use crate::root::runner::run;
 #[cfg(target_os = "linux")]
-use crate::root::assembler::assemble::link_gcc_experimental;
-use crate::root::assembler::assemble::{assemble, generate_assembly};
-use std::fs;
-
+use runner::link_gcc_experimental;
+#[cfg(target_os = "linux")]
+use crate::root::runner::run_wine_experimental;
+use crate::root::assembler::assemble::generate_assembly;
 use crate::root::parser::parse::parse;
 use crate::root::processor::processor::process;
 use crate::time;
 use clap::Parser;
 use std::path::PathBuf;
-use std::process::Command;
 use std::time::Instant;
+use runner::assemble;
+use crate::root::utils::AnyError;
+
 
 mod assembler;
 mod ast;
@@ -21,6 +25,7 @@ mod custom;
 mod parser;
 mod processor;
 mod utils;
+mod runner;
 
 // TODO: Handle circular imports
 
@@ -47,16 +52,17 @@ pub fn main() {
     // return;
 
     let args = Args::parse();
-    main_args(args);
+    let _ = main_args(args);
 }
 
-pub fn main_args(args: Args) -> bool {
+pub fn main_args(args: Args) -> Result<(), AnyError> {
     let mut asts = Vec::new();
+    let mut files_followed = Vec::new();
     print!("Parsing...");
     time!(
-        if let Err(e) = parse(PathBuf::from(&args.input), &mut asts) {
+        if let Err(e) = parse(PathBuf::from(&args.input), &mut asts, &mut files_followed) {
             println!("\n{}", e);
-            return false;
+            return Err(e.into());
         }
     );
 
@@ -65,7 +71,7 @@ pub fn main_args(args: Args) -> bool {
         let functions = match process(asts) {
             Err(e) => {
                 println!("\n{}", e);
-                return false;
+                return Err(e.into());
             }
             Ok(functions) => functions
         }
@@ -100,26 +106,5 @@ pub fn main_args(args: Args) -> bool {
         }
     }
     println!("Done!");
-    true
-}
-
-#[cfg(target_os = "windows")]
-fn run(output: &str) {
-    let full = fs::canonicalize(format!("{output}.exe")).unwrap();
-    let code = Command::new(full).status().unwrap().code().unwrap();
-    println!("\nExited with return code {}", code,)
-}
-
-#[cfg(target_os = "linux")]
-fn run_wine_experimental(output: &str) {
-    let full = fs::canonicalize(format!("{output}.exe")).unwrap();
-    println!(
-        "\nExited with return code {}",
-        Command::new("wine")
-            .args([full])
-            .status()
-            .unwrap()
-            .code()
-            .unwrap()
-    )
+    Ok(())
 }

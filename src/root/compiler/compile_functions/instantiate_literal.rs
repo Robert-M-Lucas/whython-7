@@ -7,6 +7,7 @@ use crate::root::processor::custom_types::Int;
 use crate::root::processor::processor::ProcessorError;
 use either::{Either, Left, Right};
 
+#[allow(dead_code)]
 fn try_instantiate_literal(
     literal: Either<(isize, (isize, usize)), (&Literal, &LineInfo)>,
     lines: &mut Vec<Line>,

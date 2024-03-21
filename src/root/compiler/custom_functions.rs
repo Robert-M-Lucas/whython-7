@@ -239,7 +239,7 @@ impl Function for PrintB {
             lines: vec![Line::InlineAsm(vec![
                 "sub rsp, 32".to_string(),
                 "mov qword [rbp-16], \"true\"".to_string(),
-                "mov qword [rbp-8], `\\n\\r`".to_string(),
+                "mov qword [rbp-8], `\\r\\n`".to_string(),
                 "mov rax, qword [rbp+16]".to_string(),
                 "cmp rax, 0".to_string(),
                 format!(
@@ -247,7 +247,7 @@ impl Function for PrintB {
                     get_function_sublabel(TypedFunction::get_id(self), "true")
                 ),
                 "mov qword [rbp-16], \"fals\"".to_string(),
-                "mov qword [rbp-8], `e\\n\\r`".to_string(),
+                "mov qword [rbp-8], `e\\r\\n`".to_string(),
                 format!(
                     "{}:",
                     get_function_sublabel(TypedFunction::get_id(self), "true")

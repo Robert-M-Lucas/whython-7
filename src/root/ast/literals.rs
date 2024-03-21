@@ -2,6 +2,7 @@ use crate::root::basic_ast::symbol::BasicSymbol;
 use crate::root::parser::line_info::LineInfo;
 
 #[derive(Clone, strum_macros::Display, Debug)]
+#[allow(dead_code)]
 pub enum Literal {
     String(String),
     Char(char),
