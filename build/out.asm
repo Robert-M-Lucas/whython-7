@@ -50,10 +50,27 @@ __4: ; printi
 	leave
 	ret
 
+main: ; main
+	push rbp
+	mov rbp, rsp
+	sub rsp, 16
+	; '    test();'
+	; [no return call] 4 , []
+	call _4
+	add rsp, 0
+	; ''
+	; '    return 7;'
+	; [inline asm]
+	mov rax, qword 7
+	mov qword [rbp-8], rax
+	; [return] Some((-8, 8))
+	mov rcx, qword [rbp-8]
+	call ExitProcess
+
 _3: ; print
 	push rbp
 	mov rbp, rsp
-	sub rsp, 112
+	sub rsp, 144
 	; '        if (!(*self.has_first)) {'
 	; [inline asm]
 	mov rax, qword [rbp+16]
@@ -104,7 +121,22 @@ _3: ; print
 	; [no return call] -4 , [(-56, 8)]
 	sub rsp, 8
 	mov rax, qword [rbp-56]
-	mov qword [rbp-120], rax
+	mov qword [rbp-152], rax
+	call __4
+	add rsp, 8
+	; '        printi(*curr.cur);'
+	; [inline asm]
+	mov rax, qword [rbp-32]
+	add rax, 0
+	mov qword [rbp-64], rax
+	; [dyn from copy] -64 , -72, 8
+	mov r9, qword [rbp-64]
+	mov rax, qword [r9+0]
+	mov qword [rbp-72], rax
+	; [no return call] -4 , [(-72, 8)]
+	sub rsp, 8
+	mov rax, qword [rbp-72]
+	mov qword [rbp-152], rax
 	call __4
 	add rsp, 8
 	; '        while (!(*curr.last)) {'
@@ -113,48 +145,149 @@ _3: ; print
 	; [inline asm]
 	mov rax, qword [rbp-32]
 	add rax, 8
-	mov qword [rbp-64], rax
-	; [dyn from copy] -64 , -72, 8
-	mov r9, qword [rbp-64]
+	mov qword [rbp-80], rax
+	; [dyn from copy] -80 , -88, 8
+	mov r9, qword [rbp-80]
 	mov rax, qword [r9+0]
-	mov qword [rbp-72], rax
+	mov qword [rbp-88], rax
 	; [inline asm]
 	; [inline asm]
-	mov rax, qword [rbp-72]
+	mov rax, qword [rbp-88]
 	cmp rax, 0
 	setz al
-	mov qword [rbp-80], rax
+	mov qword [rbp-96], rax
 	; [inline asm]
-	mov rax, qword [rbp-80]
+	mov rax, qword [rbp-96]
 	cmp rax, 0
 	jnz .3.3
 	; '            curr = *curr.next;'
 	; [inline asm]
 	mov rax, qword [rbp-32]
 	add rax, 16
-	mov qword [rbp-88], rax
-	; [dyn from copy] -88 , -32, 8
-	mov r9, qword [rbp-88]
+	mov qword [rbp-104], rax
+	; [dyn from copy] -104 , -32, 8
+	mov r9, qword [rbp-104]
 	mov rax, qword [r9+0]
 	mov qword [rbp-32], rax
 	; '            printi(*curr.cur);'
 	; [inline asm]
 	mov rax, qword [rbp-32]
 	add rax, 0
-	mov qword [rbp-96], rax
-	; [dyn from copy] -96 , -104, 8
-	mov r9, qword [rbp-96]
+	mov qword [rbp-112], rax
+	; [dyn from copy] -112 , -120, 8
+	mov r9, qword [rbp-112]
 	mov rax, qword [r9+0]
-	mov qword [rbp-104], rax
-	; [no return call] -4 , [(-104, 8)]
-	sub rsp, 8
-	mov rax, qword [rbp-104]
 	mov qword [rbp-120], rax
+	; [no return call] -4 , [(-120, 8)]
+	sub rsp, 8
+	mov rax, qword [rbp-120]
+	mov qword [rbp-152], rax
+	call __4
+	add rsp, 8
+	; '            printi(*curr.cur);'
+	; [inline asm]
+	mov rax, qword [rbp-32]
+	add rax, 0
+	mov qword [rbp-128], rax
+	; [dyn from copy] -128 , -136, 8
+	mov r9, qword [rbp-128]
+	mov rax, qword [r9+0]
+	mov qword [rbp-136], rax
+	; [no return call] -4 , [(-136, 8)]
+	sub rsp, 8
+	mov rax, qword [rbp-136]
+	mov qword [rbp-152], rax
 	call __4
 	add rsp, 8
 	; [inline asm]
 	jmp .3.2
 	.3.3:
+	leave
+	ret
+
+_4: ; test
+	push rbp
+	mov rbp, rsp
+	sub rsp, 64
+	; '    let ll: LL = LL#new();'
+	; [return call] 1 , [], -16
+	sub rsp, 8
+	sub rsp, 8
+	call _1
+	; [local copy] -80 , -16, 16
+	mov rax, qword [rbp-80]
+	mov qword [rbp-16], rax
+	mov rax, qword [rbp-72]
+	mov qword [rbp-8], rax
+	add rsp, 16
+	; ''
+	; '    ll.add(12);'
+	; [inline asm]
+	mov rax, rbp
+	add rax, -16
+	mov qword [rbp-24], rax
+	; [inline asm]
+	mov rax, qword 12
+	mov qword [rbp-32], rax
+	; [no return call] 2 , [(-24, 8), (-32, 8)]
+	sub rsp, 8
+	mov rax, qword [rbp-32]
+	mov qword [rbp-72], rax
+	sub rsp, 8
+	mov rax, qword [rbp-24]
+	mov qword [rbp-80], rax
+	call _2
+	add rsp, 16
+	; ''
+	; '    ll.add(18);'
+	; [inline asm]
+	mov rax, rbp
+	add rax, -16
+	mov qword [rbp-40], rax
+	; [inline asm]
+	mov rax, qword 18
+	mov qword [rbp-48], rax
+	; [no return call] 2 , [(-40, 8), (-48, 8)]
+	sub rsp, 8
+	mov rax, qword [rbp-48]
+	mov qword [rbp-72], rax
+	sub rsp, 8
+	mov rax, qword [rbp-40]
+	mov qword [rbp-80], rax
+	call _2
+	add rsp, 16
+	; ''
+	; '    ll.print();'
+	; [inline asm]
+	mov rax, rbp
+	add rax, -16
+	mov qword [rbp-56], rax
+	; [no return call] 3 , [(-56, 8)]
+	sub rsp, 8
+	mov rax, qword [rbp-56]
+	mov qword [rbp-72], rax
+	call _3
+	add rsp, 8
+	leave
+	ret
+
+_1: ; new
+	push rbp
+	mov rbp, rsp
+	sub rsp, 16
+	; '        return @LL {'
+	; [inline asm]
+	mov rax, qword 0
+	mov qword [rbp-16], rax
+	; [inline asm]
+	mov qword [rbp-8], 1
+	; [inline asm]
+	; [return] Some((-16, 16))
+	; [local copy] -16 , 16, 16
+	mov rax, qword [rbp-16]
+	mov qword [rbp+16], rax
+	mov rax, qword [rbp-8]
+	mov qword [rbp+24], rax
 	leave
 	ret
 
@@ -343,108 +476,5 @@ _2: ; add
 	mov r9, qword [rbp-152]
 	mov rax, qword [rbp-160]
 	mov qword [r9+0], rax
-	leave
-	ret
-
-main: ; main
-	push rbp
-	mov rbp, rsp
-	sub rsp, 16
-	; '    test();'
-	; [no return call] 4 , []
-	call _4
-	add rsp, 0
-	; ''
-	; '    return 7;'
-	; [inline asm]
-	mov rax, qword 7
-	mov qword [rbp-8], rax
-	; [return] Some((-8, 8))
-	mov rcx, qword [rbp-8]
-	call ExitProcess
-
-_4: ; test
-	push rbp
-	mov rbp, rsp
-	sub rsp, 64
-	; '    let ll: LL = LL#new();'
-	; [return call] 1 , [], -16
-	sub rsp, 8
-	sub rsp, 8
-	call _1
-	; [local copy] -80 , -16, 16
-	mov rax, qword [rbp-80]
-	mov qword [rbp-16], rax
-	mov rax, qword [rbp-72]
-	mov qword [rbp-8], rax
-	add rsp, 16
-	; ''
-	; '    ll.add(12);'
-	; [inline asm]
-	mov rax, rbp
-	add rax, -16
-	mov qword [rbp-24], rax
-	; [inline asm]
-	mov rax, qword 12
-	mov qword [rbp-32], rax
-	; [no return call] 2 , [(-24, 8), (-32, 8)]
-	sub rsp, 8
-	mov rax, qword [rbp-32]
-	mov qword [rbp-72], rax
-	sub rsp, 8
-	mov rax, qword [rbp-24]
-	mov qword [rbp-80], rax
-	call _2
-	add rsp, 16
-	; ''
-	; '    ll.add(18);'
-	; [inline asm]
-	mov rax, rbp
-	add rax, -16
-	mov qword [rbp-40], rax
-	; [inline asm]
-	mov rax, qword 18
-	mov qword [rbp-48], rax
-	; [no return call] 2 , [(-40, 8), (-48, 8)]
-	sub rsp, 8
-	mov rax, qword [rbp-48]
-	mov qword [rbp-72], rax
-	sub rsp, 8
-	mov rax, qword [rbp-40]
-	mov qword [rbp-80], rax
-	call _2
-	add rsp, 16
-	; ''
-	; '    ll.print();'
-	; [inline asm]
-	mov rax, rbp
-	add rax, -16
-	mov qword [rbp-56], rax
-	; [no return call] 3 , [(-56, 8)]
-	sub rsp, 8
-	mov rax, qword [rbp-56]
-	mov qword [rbp-72], rax
-	call _3
-	add rsp, 8
-	leave
-	ret
-
-_1: ; new
-	push rbp
-	mov rbp, rsp
-	sub rsp, 16
-	; '        return @LL {'
-	; [inline asm]
-	mov rax, qword 0
-	mov qword [rbp-16], rax
-	; [inline asm]
-	mov qword [rbp-8], 1
-	; [inline asm]
-	; [return] Some((-16, 16))
-	; [local copy] -16 , 16, 16
-	mov rax, qword [rbp-16]
-	mov qword [rbp+16], rax
-	mov rax, qword [rbp-8]
-	mov qword [rbp+24], rax
 	leave
 	ret
