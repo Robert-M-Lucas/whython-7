@@ -11,7 +11,9 @@ use crate::root::processor::custom_types::Bool;
 use crate::root::processor::processor::ProcessorError;
 use crate::root::processor::type_builder::Type;
 
+#[cfg(debug_assertions)]
 use itertools::Itertools;
+#[cfg(debug_assertions)]
 use std::fs;
 
 pub fn process_lines(

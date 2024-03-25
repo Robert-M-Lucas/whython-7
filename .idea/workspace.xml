@@ -7,59 +7,11 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Back to working (or at least so it seems for now). Deallocation not tested.">
-      <change afterPath="$PROJECT_DIR$/src/lib.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/root.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/inputs/asd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/tests.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/whython-7.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/whython-7.iml" afterDir="false" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Found a bug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/out.asm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/out.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/out.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assembler/assemble.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/assembler/assemble.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assembler/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/assembler/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/builtin.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/ast/builtin.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/keywords.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/ast/keywords.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/literals.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/ast/literals.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/ast/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/ast/operators.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/symbol.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/ast/symbol.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/basic_ast/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/basic_ast/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/basic_ast/punctuation.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/basic_ast/punctuation.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/basic_ast/symbol.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/basic_ast/symbol.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/assignment.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/assignment.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/call_function.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/call_function.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/evaluate.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/evaluate.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/evaluate_symbol.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/evaluate_symbol.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/instantiate_literal.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/instantiate_literal.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/name_handler.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/name_handler.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/operators.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/process_lines.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/process_lines.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/compile_functions/reference.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/reference.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/custom_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/custom_functions.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/generate_asm.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/generate_asm.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/custom/bool.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/bool.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/custom/int.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/int.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/custom/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/escape_codes.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/escape_codes.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/file_reader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/file_reader.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/initialiser_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/initialiser_parser.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/line_info.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/line_info.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/normal_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/normal_parser.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/parse.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/parse.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/string_parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/parser/string_parser.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/custom_types.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/custom_types.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/preprocess.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/preprocess.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/processor.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/processor.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/type_builder.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/type_builder.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processor/user_type.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/user_type.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/utils.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.asm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.obj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,6 +91,7 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Cargo.Run whython-7.executor&quot;: &quot;Run&quot;,
+    &quot;Cargo.Test whython-7.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
@@ -153,7 +106,7 @@
     &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
     &quot;org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon&quot;: &quot;&quot;,
     &quot;org.rust.first.attach.projects.stats&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;language.rust&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;language.rust.cargo.check&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -188,6 +141,8 @@
       <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7\tests\outputs\print" />
+      <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7\tests\inputs\print" />
       <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7\src\root" />
       <recent name="$PROJECT_DIR$/reference" />
     </key>
@@ -197,7 +152,7 @@
   </component>
   <component name="RunManager" selected="Cargo.Run whython-7">
     <configuration name="Run whython-7" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
-      <option name="command" value="run --package whython-7 --bin whython-7" />
+      <option name="command" value="run --package whython-7 --bin whython-7 -- --output &quot;build/out&quot;" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
       <envs />
       <option name="emulateTerminal" value="true" />
@@ -230,6 +185,10 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Cargo.Run whython-7" />
+      <item itemvalue="Cargo.Test whython-7" />
+    </list>
   </component>
   <component name="RustProjectSettings">
     <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
@@ -298,79 +257,15 @@
       <workItem from="1710961662192" duration="16000" />
       <workItem from="1710961688304" duration="2914000" />
       <workItem from="1710964709712" duration="1007000" />
-      <workItem from="1710966166751" duration="5532000" />
-    </task>
-    <task id="LOCAL-00028" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707734602129</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1707734602129</updated>
-    </task>
-    <task id="LOCAL-00029" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707734613623</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1707734613623</updated>
-    </task>
-    <task id="LOCAL-00030" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707734714171</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1707734714171</updated>
-    </task>
-    <task id="LOCAL-00031" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707734949158</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1707734949159</updated>
-    </task>
-    <task id="LOCAL-00032" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707735444855</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1707735444855</updated>
-    </task>
-    <task id="LOCAL-00033" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707735564527</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1707735564527</updated>
-    </task>
-    <task id="LOCAL-00034" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707735990614</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1707735990614</updated>
-    </task>
-    <task id="LOCAL-00035" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707739699423</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1707739699423</updated>
-    </task>
-    <task id="LOCAL-00036" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707753679476</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1707753679476</updated>
+      <workItem from="1710966166751" duration="7309000" />
+      <workItem from="1710986829647" duration="4199000" />
+      <workItem from="1711034133964" duration="18000" />
+      <workItem from="1711034160009" duration="1293000" />
+      <workItem from="1711046938830" duration="2452000" />
+      <workItem from="1711063182268" duration="1994000" />
+      <workItem from="1711236246653" duration="633000" />
+      <workItem from="1711251195765" duration="366000" />
+      <workItem from="1711270064174" duration="264000" />
     </task>
     <task id="LOCAL-00037" summary="Commit">
       <option name="closed" value="true" />
@@ -692,7 +587,79 @@
       <option name="project" value="LOCAL" />
       <updated>1710969762145</updated>
     </task>
-    <option name="localTasksCounter" value="77" />
+    <task id="LOCAL-00077" summary="Added testing framework">
+      <option name="closed" value="true" />
+      <created>1710972067543</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1710972067543</updated>
+    </task>
+    <task id="LOCAL-00078" summary="Small changes">
+      <option name="closed" value="true" />
+      <created>1710972149745</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1710972149745</updated>
+    </task>
+    <task id="LOCAL-00079" summary="Clippy">
+      <option name="closed" value="true" />
+      <created>1710972205613</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1710972205613</updated>
+    </task>
+    <task id="LOCAL-00080" summary="FMT">
+      <option name="closed" value="true" />
+      <created>1710972229311</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1710972229312</updated>
+    </task>
+    <task id="LOCAL-00081" summary="Created build folder">
+      <option name="closed" value="true" />
+      <created>1710972552667</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1710972552667</updated>
+    </task>
+    <task id="LOCAL-00082" summary="Refactoring and tests">
+      <option name="closed" value="true" />
+      <created>1710990149090</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1710990149091</updated>
+    </task>
+    <task id="LOCAL-00083" summary="Conditional compilation">
+      <option name="closed" value="true" />
+      <created>1710990292475</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1710990292475</updated>
+    </task>
+    <task id="LOCAL-00084" summary="Removed completed TODO">
+      <option name="closed" value="true" />
+      <created>1711047152689</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1711047152689</updated>
+    </task>
+    <task id="LOCAL-00085" summary="Found a bug">
+      <option name="closed" value="true" />
+      <created>1711251554912</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1711251554912</updated>
+    </task>
+    <option name="localTasksCounter" value="86" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -721,16 +688,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Cargo fmt" />
-    <MESSAGE value="Cargo Clippy" />
-    <MESSAGE value="Fixed the most annoying bug I've ever had the displeasure of trying to find" />
-    <MESSAGE value="Fixed 0 showing up as -0 from printi" />
-    <MESSAGE value="Added support for negative integers without needing to utilise 0-(int)" />
-    <MESSAGE value="Fixed shadowing" />
-    <MESSAGE value="Added support gor parsing initialisers" />
-    <MESSAGE value="Began adding support for reference types" />
-    <MESSAGE value="Continued adding support for reference types" />
-    <MESSAGE value="Continued work on reference system" />
     <MESSAGE value="Untested reference types working" />
     <MESSAGE value="Began adding heap allocation" />
     <MESSAGE value="Rust fmt" />
@@ -746,7 +703,17 @@
     <MESSAGE value="Made some progress towards bug fixes after rewrite" />
     <MESSAGE value="Hopefully nearly back to working" />
     <MESSAGE value="Back to working (or at least so it seems for now). Deallocation not tested." />
-    <option name="LAST_COMMIT_MESSAGE" value="Back to working (or at least so it seems for now). Deallocation not tested." />
+    <MESSAGE value="Added testing framework" />
+    <MESSAGE value="Small change" />
+    <MESSAGE value="Small changes" />
+    <MESSAGE value="Clippy" />
+    <MESSAGE value="FMT" />
+    <MESSAGE value="Created build folder" />
+    <MESSAGE value="Refactoring and tests" />
+    <MESSAGE value="Conditional compilation" />
+    <MESSAGE value="Removed completed TODO" />
+    <MESSAGE value="Found a bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="Found a bug" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -188,6 +188,57 @@ _1: ; new
 	leave
 	ret
 
+main: ; main
+	push rbp
+	mov rbp, rsp
+	sub rsp, 64
+	sub rsp, 8
+	sub rsp, 8
+	call _1
+	mov rax, qword [rbp-80]
+	mov qword [rbp-16], rax
+	mov rax, qword [rbp-72]
+	mov qword [rbp-8], rax
+	add rsp, 16
+	mov rax, rbp
+	add rax, -16
+	mov qword [rbp-24], rax
+	mov rax, qword 12
+	mov qword [rbp-32], rax
+	sub rsp, 8
+	mov rax, qword [rbp-32]
+	mov qword [rbp-72], rax
+	sub rsp, 8
+	mov rax, qword [rbp-24]
+	mov qword [rbp-80], rax
+	call _2
+	add rsp, 16
+	mov rax, rbp
+	add rax, -16
+	mov qword [rbp-40], rax
+	mov rax, qword 18
+	mov qword [rbp-48], rax
+	sub rsp, 8
+	mov rax, qword [rbp-48]
+	mov qword [rbp-72], rax
+	sub rsp, 8
+	mov rax, qword [rbp-40]
+	mov qword [rbp-80], rax
+	call _2
+	add rsp, 16
+	mov rax, rbp
+	add rax, -16
+	mov qword [rbp-56], rax
+	sub rsp, 8
+	mov rax, qword [rbp-56]
+	mov qword [rbp-72], rax
+	call _3
+	add rsp, 8
+	mov rax, qword 7
+	mov qword [rbp-64], rax
+	mov rcx, qword [rbp-64]
+	call ExitProcess
+
 _3: ; print
 	push rbp
 	mov rbp, rsp
@@ -261,54 +312,3 @@ _3: ; print
 	.3.3:
 	leave
 	ret
-
-main: ; main
-	push rbp
-	mov rbp, rsp
-	sub rsp, 64
-	sub rsp, 8
-	sub rsp, 8
-	call _1
-	mov rax, qword [rbp-80]
-	mov qword [rbp-16], rax
-	mov rax, qword [rbp-72]
-	mov qword [rbp-8], rax
-	add rsp, 16
-	mov rax, rbp
-	add rax, -16
-	mov qword [rbp-24], rax
-	mov rax, qword 12
-	mov qword [rbp-32], rax
-	sub rsp, 8
-	mov rax, qword [rbp-32]
-	mov qword [rbp-72], rax
-	sub rsp, 8
-	mov rax, qword [rbp-24]
-	mov qword [rbp-80], rax
-	call _2
-	add rsp, 16
-	mov rax, rbp
-	add rax, -16
-	mov qword [rbp-40], rax
-	mov rax, qword 18
-	mov qword [rbp-48], rax
-	sub rsp, 8
-	mov rax, qword [rbp-48]
-	mov qword [rbp-72], rax
-	sub rsp, 8
-	mov rax, qword [rbp-40]
-	mov qword [rbp-80], rax
-	call _2
-	add rsp, 16
-	mov rax, rbp
-	add rax, -16
-	mov qword [rbp-56], rax
-	sub rsp, 8
-	mov rax, qword [rbp-56]
-	mov qword [rbp-72], rax
-	call _3
-	add rsp, 8
-	mov rax, qword 7
-	mov qword [rbp-64], rax
-	mov rcx, qword [rbp-64]
-	call ExitProcess

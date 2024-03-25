@@ -297,6 +297,7 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                     output.push(line);
                 }
             }
+            #[cfg(debug_assertions)]
             Line::Annotation(annotation) => {
                 output.push(&format!("; '{}'", annotation));
             }

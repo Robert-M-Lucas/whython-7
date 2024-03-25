@@ -97,7 +97,6 @@ pub fn parse_normal(
                     let parsed_pos = reader.get_line_info();
                     let parsed = parse_normal(reader, new_block)?;
 
-                    let mut intercepted = false;
                     if !symbols.is_empty()
                         && matches!(symbols.last().unwrap().0, BasicSymbol::Name(_))
                         && matches!(&parsed, BasicSymbol::BracketedSection(_))
@@ -116,7 +115,6 @@ pub fn parse_normal(
                         let (s, _l) = &mut symbols.last_mut().unwrap();
                         let BasicSymbol::Name(v) = s else { panic!() };
 
-                        intercepted = true;
                         let mut arguments = vec![Vec::new()];
 
                         let BasicSymbol::BracketedSection(symbols) = parsed else {

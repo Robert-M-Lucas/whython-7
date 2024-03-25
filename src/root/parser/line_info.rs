@@ -10,6 +10,7 @@ pub struct LineInfo {
     char_start: usize,
 }
 
+#[allow(dead_code)]
 impl LineInfo {
     pub fn new(file: Rc<PathBuf>, line: usize, char_start: usize) -> LineInfo {
         LineInfo {

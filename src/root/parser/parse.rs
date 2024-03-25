@@ -1,15 +1,17 @@
+use std::{fs, io};
+use std::path::PathBuf;
+
+use same_file::is_same_file;
+use thiserror::Error;
+
+use ParseError::Nested;
+
 use crate::root::ast::keywords::MOD_KEYWORD;
 use crate::root::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol};
-
 use crate::root::parser::file_reader::FileReader;
-use crate::root::parser::normal_parser::parse_normal;
-
 use crate::root::parser::line_info::LineInfo;
+use crate::root::parser::normal_parser::parse_normal;
 use crate::root::parser::parse::ParseError::ModNotFollowedByPath;
-use std::path::PathBuf;
-use std::{fs, io};
-use thiserror::Error;
-use ParseError::Nested;
 
 #[derive(Error, Debug)]
 pub enum ParseError {
@@ -38,16 +40,24 @@ pub enum ParseError {
     #[error("Error: Initialiser type must be followed by braces containing attribute values\n{0}")]
     NoInitialiserContents(LineInfo),
     #[error("Error: Attribute cannot be empty (must be a value between commas)\n{0}")]
-    NoInitialiserAttribute(LineInfo),
+    NoInitialiserAttribute(LineInfo)
 }
 
-pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(), ParseError> {
+pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>, files_followed: &mut Vec<PathBuf>) -> Result<(), ParseError> {
+    for other_path in & *files_followed {
+        if is_same_file(&path, other_path).map_err(|x| ParseError::FileRead(path.clone(), x))? {
+            return Ok(())
+        }
+    }
+    
     let data = fs::read_to_string(&path);
 
     if let Err(e) = data {
         return Err(ParseError::FileRead(path, e));
     }
-    let mut reader = FileReader::new(path, data.unwrap());
+    let mut reader = FileReader::new(path.clone(), data.unwrap());
+    
+    files_followed.push(path);
 
     // * IMPORT PHASE
     {
@@ -61,7 +71,7 @@ pub fn parse(path: PathBuf, asts: &mut Vec<BasicAbstractSyntaxTree>) -> Result<(
                 return Err(ModNotFollowedByPath(reader.get_line_info()));
             }
 
-            if let Err(e) = parse(PathBuf::from(file), asts) {
+            if let Err(e) = parse(PathBuf::from(file), asts, files_followed) {
                 return Err(Nested(reader.get_line_info(), Box::new(e)));
             }
         }

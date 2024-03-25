@@ -7,7 +7,6 @@ use crate::root::compiler::compile_functions::{FunctionHolder, Line};
 use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::custom_types::{Bool, Int};
 use crate::root::processor::processor::ProcessorError;
-use crate::root::processor::type_builder::{Type, TypedFunction};
 use either::{Left, Right};
 
 pub fn evaluate_operator(symbol: &(BasicSymbol, LineInfo)) -> Result<&Operator, ProcessorError> {

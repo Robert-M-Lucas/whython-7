@@ -8,6 +8,7 @@ use crate::root::processor::type_builder::build_types;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
+#[allow(dead_code)]
 pub enum ProcessorError {
     #[error("Error: Expected name after 'struct'\n{0}")]
     StructNoName(LineInfo),

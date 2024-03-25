@@ -67,7 +67,8 @@ impl Type for UserType {
         mut path: Option<Vec<isize>>,
     ) -> Result<usize, ProcessorError> {
         if path.is_none() {
-            path = Some(vec![self.get_id()])
+            // path = Some(vec![self.get_id()])
+            // ? 
         } else {
             let mut failed_check = false;
             for id in &**path.as_ref().unwrap() {

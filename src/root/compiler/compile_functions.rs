@@ -15,7 +15,7 @@ use crate::root::compiler::custom_functions::{
 use crate::root::compiler::generate_asm::compile_user_function;
 use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::processor::ProcessorError;
-use crate::root::processor::type_builder::{Type, TypeTable, TypedFunction};
+use crate::root::processor::type_builder::{TypeTable, TypedFunction};
 use name_handler::NameHandler;
 use std::collections::HashMap;
 
@@ -29,6 +29,7 @@ pub enum Line {
     HeapAlloc(usize, isize),
     HeapDealloc(isize, isize),
     InlineAsm(Vec<String>),
+    #[cfg(debug_assertions)]
     Annotation(String),
 }
 
