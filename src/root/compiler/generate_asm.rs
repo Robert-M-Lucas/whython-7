@@ -81,7 +81,7 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                     "; [return call] {} , {:?}, {}",
                     *function, local_args, *return_addr
                 ));
-
+                
                 let sum =
                     local_args.iter().map(|x| align(x.1, 8)).sum::<usize>() + align(*ret_size, 8);
                 let mut t = 0usize;
@@ -89,9 +89,10 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                 // Ensure 16-byte alignment
                 // #[cfg(debug_assertions)]
                 // output.push("; alignment");
-                // if (sum / 8) % 2 != 0 {
-                //     sum += 8;
-                //     output.push("sub rsp, 8");
+                // if sum % 16 != 0 {
+                //     let adjustment = 16 - (sum % 16);
+                //     output.push(&format!("sub rsp, {adjustment}"));
+                //     sum += adjustment;
                 // }
 
                 // Push args to stack
@@ -150,9 +151,10 @@ pub fn compile_user_function(c_function: &UserFunction) -> String {
                 // Ensure 16-byte alignment
                 // #[cfg(debug_assertions)]
                 // output.push("; alignment");
-                // if (sum / 8) % 2 != 0 {
-                //     sum += 8;
-                //     output.push("sub rsp, 8");
+                // if sum % 16 != 0 {
+                //     let adjustment = 16 - (sum % 16);
+                //     output.push(&format!("sub rsp, {adjustment}"));
+                //     sum += adjustment;
                 // }
 
                 // Push args to stack
