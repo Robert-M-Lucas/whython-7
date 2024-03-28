@@ -7,11 +7,12 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Found a bug">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Added better error messages if a required program is not in the system path">
+      <change afterPath="$PROJECT_DIR$/reference/linked_list_example.why" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,6 +74,11 @@
       </UrlAndAccount>
     </option>
   </component>
+  <component name="JsbtTreeLayoutManager">
+    <layout place="tools.popupGrunt">
+      <scroll-view-position x="0" y="0" />
+    </layout>
+  </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="px6oipxj" />
   </component>
@@ -106,7 +112,7 @@
     &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
     &quot;org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon&quot;: &quot;&quot;,
     &quot;org.rust.first.attach.projects.stats&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;language.rust.cargo.check&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -266,38 +272,15 @@
       <workItem from="1711236246653" duration="633000" />
       <workItem from="1711251195765" duration="366000" />
       <workItem from="1711270064174" duration="264000" />
-    </task>
-    <task id="LOCAL-00037" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707755442409</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1707755442409</updated>
-    </task>
-    <task id="LOCAL-00038" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707935065745</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1707935065745</updated>
-    </task>
-    <task id="LOCAL-00039" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707958152611</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1707958152611</updated>
-    </task>
-    <task id="LOCAL-00040" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707958162776</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1707958162776</updated>
+      <workItem from="1711396667740" duration="665000" />
+      <workItem from="1711417244223" duration="785000" />
+      <workItem from="1711473017839" duration="155000" />
+      <workItem from="1711505794825" duration="213000" />
+      <workItem from="1711564897618" duration="68000" />
+      <workItem from="1711567431941" duration="34000" />
+      <workItem from="1711635981746" duration="11000" />
+      <workItem from="1711636002595" duration="497000" />
+      <workItem from="1711636595406" duration="2486000" />
     </task>
     <task id="LOCAL-00041" summary="Commit">
       <option name="closed" value="true" />
@@ -659,7 +642,39 @@
       <option name="project" value="LOCAL" />
       <updated>1711251554912</updated>
     </task>
-    <option name="localTasksCounter" value="86" />
+    <task id="LOCAL-00086" summary="Metadata">
+      <option name="closed" value="true" />
+      <created>1711396818451</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1711396818451</updated>
+    </task>
+    <task id="LOCAL-00087" summary="Testing">
+      <option name="closed" value="true" />
+      <created>1711473166077</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1711473166078</updated>
+    </task>
+    <task id="LOCAL-00088" summary="Removed Fleet files">
+      <option name="closed" value="true" />
+      <created>1711636693525</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1711636693526</updated>
+    </task>
+    <task id="LOCAL-00089" summary="Added better error messages if a required program is not in the system path">
+      <option name="closed" value="true" />
+      <created>1711638859529</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1711638859529</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -688,10 +703,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Untested reference types working" />
-    <MESSAGE value="Began adding heap allocation" />
-    <MESSAGE value="Rust fmt" />
-    <MESSAGE value="Cargo clippy" />
     <MESSAGE value="Build config" />
     <MESSAGE value="README update" />
     <MESSAGE value="Bug found :) (Not fixed)" />
@@ -713,7 +724,11 @@
     <MESSAGE value="Conditional compilation" />
     <MESSAGE value="Removed completed TODO" />
     <MESSAGE value="Found a bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="Found a bug" />
+    <MESSAGE value="Metadata" />
+    <MESSAGE value="Testing" />
+    <MESSAGE value="Removed Fleet files" />
+    <MESSAGE value="Added better error messages if a required program is not in the system path" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added better error messages if a required program is not in the system path" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
