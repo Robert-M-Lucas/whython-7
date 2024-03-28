@@ -50,20 +50,6 @@ __4: ; printi
 	leave
 	ret
 
-_1: ; test
-	push rbp
-	mov rbp, rsp
-	sub rsp, 0
-	; '    printi(a.b);'
-	; [no return call] -4 , [(16, 8)]
-	sub rsp, 8
-	mov rax, qword [rbp+16]
-	mov qword [rbp-8], rax
-	call __4
-	add rsp, 8
-	leave
-	ret
-
 main: ; main
 	push rbp
 	mov rbp, rsp
@@ -86,3 +72,17 @@ main: ; main
 	; [return] Some((-16, 8))
 	mov rcx, qword [rbp-16]
 	call ExitProcess
+
+_1: ; test
+	push rbp
+	mov rbp, rsp
+	sub rsp, 0
+	; '    printi(a.b);'
+	; [no return call] -4 , [(16, 8)]
+	sub rsp, 8
+	mov rax, qword [rbp+16]
+	mov qword [rbp-8], rax
+	call __4
+	add rsp, 8
+	leave
+	ret

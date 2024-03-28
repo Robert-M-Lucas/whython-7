@@ -1,3 +1,5 @@
+use std::fs;
+use std::io::ErrorKind;
 use crate::root::assembler::assemble::generate_assembly;
 use crate::root::parser::parse::parse;
 use crate::root::processor::processor::process;
@@ -36,7 +38,7 @@ pub struct Args {
     pub input: String,
     /// Output files name without extension
     /// Main input file
-    #[arg(short, long, default_value = "out")]
+    #[arg(short, long, default_value = "build/out")]
     pub output: String,
     /// Only build - don't run
     #[arg(short, long)]
@@ -54,6 +56,15 @@ pub fn main() {
 }
 
 pub fn main_args(args: Args) -> Result<(), AnyError> {
+    if let Some(path) = PathBuf::from(&args.output).parent() {
+        if let Err(e) = fs::create_dir_all(path) {
+            if !matches!(e.kind(), ErrorKind::AlreadyExists) {
+                println!("Failed to create directories for output files");
+                return Err(AnyError::Other);
+            }
+        }
+    }
+    
     let mut asts = Vec::new();
     let mut files_followed = Vec::new();
     print!("Parsing...");

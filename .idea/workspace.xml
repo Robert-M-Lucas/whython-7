@@ -7,12 +7,16 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Added better error messages if a required program is not in the system path">
-      <change afterPath="$PROJECT_DIR$/reference/linked_list_example.why" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.asm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Added support for initialiser type inference i.e. allowing initialisers to be passed as arguments without having to be assigned to a variable">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/a.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/out.asm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/out.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/out.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out.asm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -280,15 +284,7 @@
       <workItem from="1711567431941" duration="34000" />
       <workItem from="1711635981746" duration="11000" />
       <workItem from="1711636002595" duration="497000" />
-      <workItem from="1711636595406" duration="2486000" />
-    </task>
-    <task id="LOCAL-00041" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707958253947</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1707958253947</updated>
+      <workItem from="1711636595406" duration="3387000" />
     </task>
     <task id="LOCAL-00042" summary="Commit">
       <option name="closed" value="true" />
@@ -674,7 +670,15 @@
       <option name="project" value="LOCAL" />
       <updated>1711638859529</updated>
     </task>
-    <option name="localTasksCounter" value="90" />
+    <task id="LOCAL-00090" summary="Added support for initialiser type inference i.e. allowing initialisers to be passed as arguments without having to be assigned to a variable">
+      <option name="closed" value="true" />
+      <created>1711639660890</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1711639660890</updated>
+    </task>
+    <option name="localTasksCounter" value="91" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -703,7 +707,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Build config" />
     <MESSAGE value="README update" />
     <MESSAGE value="Bug found :) (Not fixed)" />
     <MESSAGE value="Commit" />
@@ -728,7 +731,8 @@
     <MESSAGE value="Testing" />
     <MESSAGE value="Removed Fleet files" />
     <MESSAGE value="Added better error messages if a required program is not in the system path" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added better error messages if a required program is not in the system path" />
+    <MESSAGE value="Added support for initialiser type inference i.e. allowing initialisers to be passed as arguments without having to be assigned to a variable" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added support for initialiser type inference i.e. allowing initialisers to be passed as arguments without having to be assigned to a variable" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
