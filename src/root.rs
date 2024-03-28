@@ -4,7 +4,6 @@ use crate::root::processor::processor::process;
 use crate::time;
 use clap::Parser;
 use std::path::PathBuf;
-use std::time::Instant;
 use runner::assemble;
 use crate::root::utils::AnyError;
 

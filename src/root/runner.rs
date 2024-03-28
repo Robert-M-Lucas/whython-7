@@ -1,8 +1,7 @@
-use std::{fs, thread};
-use std::io::ErrorKind;
+use std::fs;
 use std::process::Command;
-use std::time::Duration;
-use crate::{ret_time, time};
+
+use crate::ret_time;
 use crate::root::utils::try_run_program;
 
 #[cfg(target_os = "windows")]
