@@ -5,8 +5,10 @@ use std::collections::HashMap;
 
 use crate::root::ast::literals::Literal;
 use crate::root::basic_ast::symbol::BasicSymbol;
+use crate::root::custom::bool::Bool;
+use crate::root::custom::float::Float;
+use crate::root::custom::int::Int;
 use crate::root::parser::line_info::LineInfo;
-use crate::root::processor::custom_types::{Bool, Int};
 
 use crate::root::processor::user_type::UserType;
 use crate::root::utils::align;
@@ -110,8 +112,9 @@ impl TypeTable {
     }
 
     pub fn add_builtin(mut self) -> TypeTable {
-        self.add_type(Int::new().get_id(), Box::new(Int::new()));
-        self.add_type(Bool::new().get_id(), Box::new(Bool::new()));
+        self.add_type(Int::get_id(), Box::new(Int::new()));
+        self.add_type(Bool::get_id(), Box::new(Bool::new()));
+        self.add_type(Float::get_id(), Box::new(Float::new()));
         self
     }
 
@@ -402,7 +405,7 @@ pub fn build_types(
         if !main.get_args().is_empty() {
             return Err(ProcessorError::MainFunctionParams);
         }
-        if main.get_return_type() != Some((-1, 0)) {
+        if main.get_return_type() != Some((Int::get_id(), 0)) {
             return Err(ProcessorError::MainFunctionBadReturn);
         }
     } else {

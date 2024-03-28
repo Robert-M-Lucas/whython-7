@@ -273,6 +273,15 @@ fn process_buffer(
         return Ok(());
     }
 
+    if let Ok(val) = buffer.parse::<f64>() {
+        symbols.push((
+            BasicSymbol::Literal(Literal::Float(val)),
+            reader.get_line_info(),
+        ));
+        buffer.clear();
+        return Ok(());
+    }
+
     let mut sections = Vec::new();
     let mut section_buffer = String::new();
     let mut section_type = NameType::Normal;

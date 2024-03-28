@@ -3,15 +3,13 @@ use crate::root::compiler::compile_functions::{Function, Line, UserFunction};
 use crate::root::compiler::generate_asm::{
     compile_user_function, get_function_sublabel, get_local_address,
 };
-use crate::root::custom::bool::{BoolEQ, BoolNE, BoolNot};
-use crate::root::custom::int::{
-    IntAdd, IntDiv, IntEQ, IntGE, IntGT, IntLE, IntLT, IntMod, IntMul, IntNE, IntSub,
-};
+use crate::root::custom::bool::{Bool, BoolEQ, BoolNE, BoolNot};
+use crate::root::custom::int::{Int, IntAdd, IntDiv, IntEQ, IntGE, IntGT, IntLE, IntLT, IntMod, IntMul, IntNE, IntSub};
 use crate::root::parser::line_info::LineInfo;
-use crate::root::processor::custom_types::{Bool, Int};
 use crate::root::processor::type_builder::{Type, TypedFunction};
 use lazy_static::lazy_static;
 use unique_type_id::UniqueTypeId;
+use crate::root::custom::float::{Float, FloatAdd, FloatDiv, FloatEQ, FloatGE, FloatGT, FloatLE, FloatLT, FloatMul, FloatNE, FloatSub};
 
 pub fn get_custom_function_signatures() -> Vec<(Option<isize>, Box<dyn TypedFunction>)> {
     vec![
@@ -32,6 +30,16 @@ pub fn get_custom_function_signatures() -> Vec<(Option<isize>, Box<dyn TypedFunc
         (Some(Bool::get_id()), Box::new(BoolNot {})),
         (Some(Bool::get_id()), Box::new(BoolEQ {})),
         (Some(Bool::get_id()), Box::new(BoolNE {})),
+        (Some(Float::get_id()), Box::new(FloatAdd {})),
+        (Some(Float::get_id()), Box::new(FloatSub {})),
+        (Some(Float::get_id()), Box::new(FloatMul {})),
+        (Some(Float::get_id()), Box::new(FloatDiv {})),
+        (Some(Float::get_id()), Box::new(FloatLT {})),
+        (Some(Float::get_id()), Box::new(FloatGT {})),
+        (Some(Float::get_id()), Box::new(FloatLE {})),
+        (Some(Float::get_id()), Box::new(FloatGE {})),
+        (Some(Float::get_id()), Box::new(FloatEQ {})),
+        (Some(Float::get_id()), Box::new(FloatNE {})),
     ]
 }
 
@@ -48,7 +56,7 @@ lazy_static! {
 }
 impl TypedFunction for WindowsExit {
     fn get_id(&self) -> isize {
-        -(Self::id().0 as isize)
+        -(Self::id().0 as isize) - 1
     }
 
     fn get_name(&self) -> &str {
@@ -96,7 +104,7 @@ lazy_static! {
 }
 impl TypedFunction for PrintI {
     fn get_id(&self) -> isize {
-        -(Self::id().0 as isize)
+        -(Self::id().0 as isize) - 1
     }
 
     fn get_name(&self) -> &str {
@@ -170,7 +178,7 @@ impl Function for PrintI {
                 "dec rcx".to_string(),
                 "add rdx, '0'".to_string(),
                 "mov [rcx], dl".to_string(),
-                "test rax, rax".to_string(),
+                "test.txt rax, rax".to_string(),
                 format!(
                     "jnz {}",
                     get_function_sublabel(TypedFunction::get_id(self), "loop")
@@ -206,7 +214,7 @@ lazy_static! {
 }
 impl TypedFunction for PrintB {
     fn get_id(&self) -> isize {
-        -(Self::id().0 as isize)
+        -(Self::id().0 as isize) - 1
     }
 
     fn get_name(&self) -> &str {

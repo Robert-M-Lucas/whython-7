@@ -3,9 +3,9 @@ use crate::root::compiler::compile_functions::evaluate::evaluate;
 use crate::root::compiler::compile_functions::name_handler::NameHandler;
 use crate::root::compiler::compile_functions::{FunctionHolder, Line};
 use crate::root::parser::line_info::LineInfo;
-use crate::root::processor::custom_types::Int;
 use crate::root::processor::processor::ProcessorError;
 use either::{Either, Left, Right};
+use crate::root::custom::int::Int;
 
 #[allow(dead_code)]
 fn try_instantiate_literal(

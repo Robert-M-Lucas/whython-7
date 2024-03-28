@@ -1,12 +1,11 @@
-struct A {
-    b: int
-}
-
-fn test(a: A) {
-    printi(a.b);
-}
-
 fn main() ~ int {
-    test(@A { 12 });
-    return 13;
+    let a: float = 2.43;
+    let b: float = 3.21;
+
+    let c: float = a * b;
+    let d: float = (b * a) + 0.001;
+
+    printb(c == d);
+
+    return 7;
 }

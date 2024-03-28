@@ -1,9 +1,85 @@
 use crate::root::compiler::generate_asm::get_local_address;
 use crate::root::parser::line_info::LineInfo;
-use crate::root::processor::custom_types::{Bool, Int};
-use crate::root::processor::type_builder::TypedFunction;
+use crate::root::processor::type_builder::{Type, TypedFunction, TypeTable};
 use lazy_static::lazy_static;
 use unique_type_id::UniqueTypeId;
+use crate::root::ast::literals::Literal;
+use crate::root::custom::bool::Bool;
+use crate::root::processor::processor::ProcessorError;
+
+#[derive(UniqueTypeId)]
+#[UniqueTypeIdType = "u16"]
+pub struct Int {}
+
+impl Int {
+    pub fn new() -> Int {
+        Int {}
+    }
+
+    pub fn get_id() -> isize {
+        -(Self::id().0 as isize) - 1
+    }
+}
+
+impl Int {
+    pub fn instantiate_local_ref(offset: isize, local_address: isize) -> Vec<String> {
+        vec![
+            "mov rax, rbp".to_string(),
+            format!("add rax, {offset}"),
+            format!("mov qword [{}], rax", get_local_address(local_address),),
+        ]
+    }
+
+    pub fn instantiate_ref(base_variable: isize, offset: isize, ref_address: isize) -> Vec<String> {
+        vec![
+            format!("mov rax, qword [{}]", get_local_address(base_variable)),
+            format!("add rax, {offset}"),
+            format!("mov qword [{}], rax", get_local_address(ref_address),),
+        ]
+    }
+}
+
+impl Type for Int {
+    fn get_id(&self) -> isize {
+        Self::get_id()
+    }
+
+    fn get_name(&self) -> &str {
+        "int"
+    }
+
+    fn get_size(
+        &self,
+        _type_table: &TypeTable,
+        _path: Option<Vec<isize>>,
+    ) -> Result<usize, ProcessorError> {
+        Ok(8)
+    }
+
+    fn instantiate(
+        &self,
+        literal: Option<&Literal>,
+        local_address: isize,
+    ) -> Result<Vec<String>, ProcessorError> {
+        if literal.is_none() {
+            return Ok(vec![]);
+        }
+        let Literal::Int(val) = literal.unwrap() else {
+            panic!()
+        };
+
+        // ? Hacky workaround as NASM doesn't appear to support 64-bit literals
+        let hex_str = format!("{:016x}", *val as i64);
+        let upper = &hex_str[..8];
+        let lower = &hex_str[8..];
+        
+        Ok(vec![
+            format!("mov dword [{}], 0x{}", get_local_address(local_address), lower),
+            format!("mov dword [{}], 0x{}", get_local_address(local_address + 4), upper),
+        ])
+    }
+}
+
 
 #[derive(UniqueTypeId)]
 #[UniqueTypeIdType = "u16"]
@@ -16,7 +92,7 @@ lazy_static! {
 }
 impl TypedFunction for IntAdd {
     fn get_id(&self) -> isize {
-        -(Self::id().0 as isize)
+        -(Self::id().0 as isize) - 1
     }
 
     fn get_name(&self) -> &str {
@@ -43,7 +119,7 @@ impl TypedFunction for IntAdd {
         vec![
             format!("mov rax, qword [{}]", get_local_address(args[0])),
             format!("add rax, [{}]", get_local_address(args[1])),
-            format!("mov [{}], rax", get_local_address(args[2])),
+            format!("mov qword [{}], rax", get_local_address(args[2])),
         ]
     }
 }
@@ -59,7 +135,7 @@ lazy_static! {
 }
 impl TypedFunction for IntSub {
     fn get_id(&self) -> isize {
-        -(Self::id().0 as isize)
+        -(Self::id().0 as isize) - 1
     }
 
     fn get_name(&self) -> &str {
@@ -102,7 +178,7 @@ lazy_static! {
 }
 impl TypedFunction for IntMul {
     fn get_id(&self) -> isize {
-        -(Self::id().0 as isize)
+        -(Self::id().0 as isize) - 1
     }
 
     fn get_name(&self) -> &str {
@@ -146,7 +222,7 @@ lazy_static! {
 }
 impl TypedFunction for IntDiv {
     fn get_id(&self) -> isize {
-        -(Self::id().0 as isize)
+        -(Self::id().0 as isize) - 1
     }
 
     fn get_name(&self) -> &str {
@@ -191,7 +267,7 @@ lazy_static! {
 }
 impl TypedFunction for IntMod {
     fn get_id(&self) -> isize {
-        -(Self::id().0 as isize)
+        -(Self::id().0 as isize) - 1
     }
 
     fn get_name(&self) -> &str {
@@ -236,7 +312,7 @@ lazy_static! {
 }
 impl TypedFunction for IntLT {
     fn get_id(&self) -> isize {
-        -(Self::id().0 as isize)
+        -(Self::id().0 as isize) - 1
     }
 
     fn get_name(&self) -> &str {
@@ -281,7 +357,7 @@ lazy_static! {
 }
 impl TypedFunction for IntGT {
     fn get_id(&self) -> isize {
-        -(Self::id().0 as isize)
+        -(Self::id().0 as isize) - 1
     }
 
     fn get_name(&self) -> &str {
@@ -326,7 +402,7 @@ lazy_static! {
 }
 impl TypedFunction for IntLE {
     fn get_id(&self) -> isize {
-        -(Self::id().0 as isize)
+        -(Self::id().0 as isize) - 1
     }
 
     fn get_name(&self) -> &str {
@@ -371,7 +447,7 @@ lazy_static! {
 }
 impl TypedFunction for IntGE {
     fn get_id(&self) -> isize {
-        -(Self::id().0 as isize)
+        -(Self::id().0 as isize) - 1
     }
 
     fn get_name(&self) -> &str {
@@ -416,7 +492,7 @@ lazy_static! {
 }
 impl TypedFunction for IntEQ {
     fn get_id(&self) -> isize {
-        -(Self::id().0 as isize)
+        -(Self::id().0 as isize) - 1
     }
 
     fn get_name(&self) -> &str {
@@ -461,7 +537,7 @@ lazy_static! {
 }
 impl TypedFunction for IntNE {
     fn get_id(&self) -> isize {
-        -(Self::id().0 as isize)
+        -(Self::id().0 as isize) - 1
     }
 
     fn get_name(&self) -> &str {

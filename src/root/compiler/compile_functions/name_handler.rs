@@ -1,12 +1,12 @@
 use crate::root::basic_ast::symbol::{BasicSymbol, NameAccessType, NameType};
 use crate::root::compiler::compile_functions::{FunctionHolder, Line};
 use crate::root::parser::line_info::LineInfo;
-use crate::root::processor::custom_types::Int;
 use crate::root::processor::processor::ProcessorError;
 use crate::root::processor::type_builder::{TypeTable, TypedFunction};
 use crate::root::utils::align;
 use either::{Either, Left, Right};
 use std::collections::HashSet;
+use crate::root::custom::int::Int;
 
 pub struct NameHandler {
     type_table: TypeTable,

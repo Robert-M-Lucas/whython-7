@@ -7,7 +7,6 @@ use crate::root::compiler::compile_functions::name_handler::NameHandler;
 use crate::root::compiler::compile_functions::{evaluate, FunctionHolder, Line};
 use crate::root::compiler::generate_asm::{get_function_sublabel, get_local_address};
 use crate::root::parser::line_info::LineInfo;
-use crate::root::processor::custom_types::Bool;
 use crate::root::processor::processor::ProcessorError;
 use crate::root::processor::type_builder::Type;
 
@@ -15,6 +14,7 @@ use crate::root::processor::type_builder::Type;
 use itertools::Itertools;
 #[cfg(debug_assertions)]
 use std::fs;
+use crate::root::custom::bool::Bool;
 
 pub fn process_lines(
     section: &[(BasicSymbol, LineInfo)],
