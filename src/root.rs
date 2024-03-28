@@ -73,36 +73,52 @@ pub fn main_args(args: Args) -> Result<(), AnyError> {
                 return Err(e.into());
             }
             Ok(functions) => functions
-        }
+        };
     );
 
     print!("Compiling...");
-    time!(generate_assembly(&args.output, functions));
+    time!(generate_assembly(&args.output, functions););
     
     print!("Assembling (NASM)...");
-    time!(assemble(&args.output));
+    time!(
+        if assemble(&args.output).is_err() {
+            return Err(AnyError::Other);
+        }
+    );
     
     #[cfg(target_os = "windows")]
     {
         println!("Linking (MSVC - link.exe)...");
-        time!(link(&args.output));
+        time!(
+            if link(&args.output).is_err() {
+                return Err(AnyError::Other);
+            }
+        );
         if args.build {
             println!("Skipping execution")
         } else {
             println!("Executing...");
-            time!(run(&args.output));
+            run(&args.output);
         }
     }
     #[cfg(target_os = "linux")]
     {
         println!("Compilation and execution on Linux may be buggy!");
         println!("Linking (gcc)...");
-        time!(link_gcc_experimental(&args.output));
+        time!(
+            let res = link_gcc_experimental(&args.output);
+            if res.is_err() {
+                return Err(AnyError::Other);
+            }
+        );
+        
         if args.build {
             println!("Skipping execution")
         } else {
             println!("Executing (wine)...");
-            time!(run_wine_experimental(&args.output));
+            if run_wine_experimental(&args.output).is_err() {
+                return Err(AnyError::Other);
+            }
         }
     }
     

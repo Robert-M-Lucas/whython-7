@@ -7,15 +7,14 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Metadata">
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Removed Fleet files">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/out.asm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/out.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/out.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/generate_asm.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/generate_asm.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/runner.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/runner.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/utils.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/utils.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +114,7 @@
     &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
     &quot;org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon&quot;: &quot;&quot;,
     &quot;org.rust.first.attach.projects.stats&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;language.rust.cargo.check&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -277,22 +276,13 @@
       <workItem from="1711270064174" duration="264000" />
       <workItem from="1711396667740" duration="665000" />
       <workItem from="1711417244223" duration="785000" />
-    </task>
-    <task id="LOCAL-00038" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707935065745</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1707935065745</updated>
-    </task>
-    <task id="LOCAL-00039" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707958152611</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1707958152611</updated>
+      <workItem from="1711473017839" duration="155000" />
+      <workItem from="1711505794825" duration="213000" />
+      <workItem from="1711564897618" duration="68000" />
+      <workItem from="1711567431941" duration="34000" />
+      <workItem from="1711635981746" duration="11000" />
+      <workItem from="1711636002595" duration="497000" />
+      <workItem from="1711636595406" duration="1187000" />
     </task>
     <task id="LOCAL-00040" summary="Commit">
       <option name="closed" value="true" />
@@ -670,7 +660,23 @@
       <option name="project" value="LOCAL" />
       <updated>1711396818451</updated>
     </task>
-    <option name="localTasksCounter" value="87" />
+    <task id="LOCAL-00087" summary="Testing">
+      <option name="closed" value="true" />
+      <created>1711473166077</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1711473166078</updated>
+    </task>
+    <task id="LOCAL-00088" summary="Removed Fleet files">
+      <option name="closed" value="true" />
+      <created>1711636693525</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1711636693526</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -699,8 +705,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Began adding heap allocation" />
-    <MESSAGE value="Rust fmt" />
     <MESSAGE value="Cargo clippy" />
     <MESSAGE value="Build config" />
     <MESSAGE value="README update" />
@@ -724,7 +728,9 @@
     <MESSAGE value="Removed completed TODO" />
     <MESSAGE value="Found a bug" />
     <MESSAGE value="Metadata" />
-    <option name="LAST_COMMIT_MESSAGE" value="Metadata" />
+    <MESSAGE value="Testing" />
+    <MESSAGE value="Removed Fleet files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed Fleet files" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
