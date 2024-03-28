@@ -5,33 +5,18 @@
     extern HeapAlloc
     extern HeapFree
     extern GetProcessHeap
+    extern printf
     section .text
 
-__3: ; printb
+__37: ; printf
 	push rbp
 	mov rbp, rsp
 	sub rsp, 32
 	; [inline asm]
-	sub rsp, 32
-	mov qword [rbp-16], "true"
-	mov qword [rbp-8], `\r\n`
-	mov rax, qword [rbp+16]
-	cmp rax, 0
-	jz ._3.true
-	mov qword [rbp-16], "fals"
-	mov qword [rbp-8], `e\r\n`
-	._3.true:
-	mov ecx, -11
-	call GetStdHandle
-	mov rcx, rax
-	mov rdx, rbp
-	sub rdx, 16
-	mov r8, 16
-	mov qword [rbp - 24], 0
-	mov r9, rbp
-	sub r9, 24
-	mov qword [rbp - 32], 0
-	call WriteFile
+	mov rdi,formatStr ; first argument: format string
+	mov rsi,5 ; second argument (for format string below): integer to print
+	mov al,0 ; magic for varargs (0==no magic, to prevent a crash!)
+	call printf
 	leave
 	ret
 
@@ -67,24 +52,21 @@ main: ; main
 	addsd xmm0, qword [rbp-48]
 	movsd qword [rbp-32], xmm0
 	; ''
-	; '    printb(c == d);'
-	; [inline asm]
-	; [inline asm]
-	movsd xmm0, qword [rbp-24]
-	ucomisd xmm0, qword [rbp-32]
-	mov qword [rbp-56], 0
-	setne [rbp-56]
-	; [no return call] -3 , [(-56, 8)]
+	; '    printf(c);'
+	; [no return call] -37 , [(-24, 8)]
 	sub rsp, 8
-	mov rax, qword [rbp-56]
+	mov rax, qword [rbp-24]
 	mov qword [rbp-72], rax
-	call __3
+	call __37
 	add rsp, 8
 	; ''
 	; '    return 7;'
 	; [inline asm]
-	mov dword [rbp-64], 0x00000007
-	mov dword [rbp-60], 0x00000000
-	; [return] Some((-64, 8))
-	mov rcx, qword [rbp-64]
+	mov dword [rbp-56], 0x00000007
+	mov dword [rbp-52], 0x00000000
+	; [return] Some((-56, 8))
+	mov rcx, qword [rbp-56]
 	call ExitProcess
+
+formatStr:
+	db `The int is %d\n`,0

@@ -16,6 +16,7 @@ pub fn get_custom_function_signatures() -> Vec<(Option<isize>, Box<dyn TypedFunc
         (None, Box::new(WindowsExit {})),
         (None, Box::new(PrintI {})),
         (None, Box::new(PrintB {})),
+        (None, Box::new(PrintF {})),
         (Some(Int::get_id()), Box::new(IntAdd {})),
         (Some(Int::get_id()), Box::new(IntSub {})),
         (Some(Int::get_id()), Box::new(IntMul {})),
@@ -44,7 +45,7 @@ pub fn get_custom_function_signatures() -> Vec<(Option<isize>, Box<dyn TypedFunc
 }
 
 pub fn get_custom_function_implementations() -> Vec<Box<dyn Function>> {
-    vec![Box::new(PrintI {}), Box::new(PrintB {})]
+    vec![Box::new(PrintI {}), Box::new(PrintB {}), Box::new(PrintF{})]
 }
 
 #[derive(UniqueTypeId)]
@@ -210,7 +211,7 @@ impl Function for PrintI {
 pub struct PrintB {}
 lazy_static! {
     static ref PRINT_B_ARGS: [(String, (isize, usize)); 1] =
-        [(String::from("bool"), (Bool {}.get_id(), 0))];
+        [(String::from("bool"), (Bool::get_id(), 0))];
 }
 impl TypedFunction for PrintB {
     fn get_id(&self) -> isize {
@@ -274,6 +275,60 @@ impl Function for PrintB {
                 "call WriteFile".to_string(),
             ])],
             name: "printb".to_string(),
+        })
+    }
+
+    fn get_id(&self) -> isize {
+        TypedFunction::get_id(self)
+    }
+}
+
+#[derive(UniqueTypeId)]
+#[UniqueTypeIdType = "u16"]
+pub struct PrintF {}
+lazy_static! {
+    static ref PRINT_F_ARGS: [(String, (isize, usize)); 1] =
+        [(String::from("float"), (Float::get_id(), 0))];
+}
+impl TypedFunction for PrintF {
+    fn get_id(&self) -> isize {
+        -(Self::id().0 as isize) - 1
+    }
+
+    fn get_name(&self) -> &str {
+        "printf"
+    }
+
+    fn get_args(&self) -> &[(String, (isize, usize))] {
+        PRINT_F_ARGS.as_ref()
+    }
+
+    fn get_line(&self) -> LineInfo {
+        LineInfo::builtin()
+    }
+
+    fn get_return_type(&self) -> Option<(isize, usize)> {
+        None
+    }
+
+    fn is_inline(&self) -> bool {
+        false
+    }
+}
+
+impl Function for PrintF {
+    fn get_asm(&self) -> String {
+        compile_user_function(&UserFunction {
+            id: TypedFunction::get_id(self),
+            local_variable_size: 32,
+            arg_count: 1,
+            lines: vec![Line::InlineAsm(vec![
+                "mov rdi,formatStr ; first argument: format string".to_string(),
+                "mov rsi,5 ; second argument (for format string below): integer to print".to_string(),
+                "mov al,0 ; magic for varargs (0==no magic, to prevent a crash!)".to_string(),
+                "call printf".to_string(),
+            ])],
+            name: "printf".to_string(),
         })
     }
 

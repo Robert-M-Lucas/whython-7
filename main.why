@@ -5,7 +5,7 @@ fn main() ~ int {
     let c: float = a * b;
     let d: float = (b * a) + 0.001;
 
-    printb(c == d);
+    printf(c);
 
     return 7;
 }

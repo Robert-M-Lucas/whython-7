@@ -1,5 +1,6 @@
-use std::fs;
+use std::{fs, thread};
 use std::process::Command;
+use std::time::Duration;
 
 use crate::ret_time;
 use crate::root::utils::try_run_program;
@@ -27,7 +28,8 @@ pub fn run(output: &str) {
         };
     );
     
-    // thread::sleep(Duration::from_millis(100));
+    // ? Here to circumvent some timing issues
+    thread::sleep(Duration::from_millis(100));
     println!("\nExited with return code {}", code);
     println!("Completed [{:?}]", time);
 }
@@ -66,12 +68,17 @@ pub fn assemble(output: &str) -> Result<(), ()> {
 pub fn link(output: &str) -> Result<(), ()> {
     if !try_run_program("link", Command::new("link")
         .args([
-            "/entry:main",
+            // "/entry:main",
             format!("/out:{output}.exe").as_str(),
             "/SUBSYSTEM:CONSOLE",
             // "/LARGEADDRESSAWARE:NO",
             format!("{output}.obj").as_str(),
             ".\\libs\\kernel32.lib",
+            ".\\libs\\msvcrt.lib",
+            ".\\libs\\legacy_stdio_definitions.lib",
+            ".\\libs\\legacy_stdio_wide_specifiers.lib",
+            ".\\libs\\vcruntime.lib",
+            ".\\libs\\ucrt.lib",
         ])
         .status())?
         .success()
