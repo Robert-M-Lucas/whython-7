@@ -3,7 +3,6 @@ use unique_type_id::UniqueTypeId;
 
 use crate::root::ast::literals::Literal;
 use crate::root::compiler::generate_asm::get_local_address;
-use crate::root::custom::types::float::{Float, FloatAdd, FloatDiv, FloatEQ, FloatGE, FloatGT, FloatLE, FloatLT, FloatMul, FloatNE, FloatSub};
 use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::processor::ProcessorError;
 use crate::root::processor::type_builder::{Type, TypedFunction, TypeTable};

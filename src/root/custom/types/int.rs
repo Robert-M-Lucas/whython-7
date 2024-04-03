@@ -1,11 +1,12 @@
-use crate::root::compiler::generate_asm::get_local_address;
-use crate::root::parser::line_info::LineInfo;
-use crate::root::processor::type_builder::{Type, TypedFunction, TypeTable};
 use lazy_static::lazy_static;
 use unique_type_id::UniqueTypeId;
+
 use crate::root::ast::literals::Literal;
-use crate::root::custom::types::bool::{Bool, BoolEQ, BoolNE, BoolNot};
+use crate::root::compiler::generate_asm::get_local_address;
+use crate::root::custom::types::bool::Bool;
+use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::processor::ProcessorError;
+use crate::root::processor::type_builder::{Type, TypedFunction, TypeTable};
 
 pub fn add_function_signatures(existing: &mut Vec<(Option<isize>, Box<dyn TypedFunction>)>) {
     let signatures: [(Option<isize>, Box<dyn TypedFunction>); 11] = [

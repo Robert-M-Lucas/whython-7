@@ -1,11 +1,12 @@
 use lazy_static::lazy_static;
 use unique_type_id::UniqueTypeId;
+
 use crate::root::basic_ast::symbol::BasicSymbol;
 use crate::root::compiler::compile_functions::{Function, Line, UserFunction};
 use crate::root::compiler::generate_asm::{compile_user_function, get_function_sublabel};
 use crate::root::custom::types::bool::Bool;
 use crate::root::custom::types::float::Float;
-use crate::root::custom::types::int::{Int, IntAdd, IntDiv, IntEQ, IntGE, IntGT, IntLE, IntLT, IntMod, IntMul, IntNE, IntSub};
+use crate::root::custom::types::int::Int;
 use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::type_builder::TypedFunction;
 

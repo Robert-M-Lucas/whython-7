@@ -4,7 +4,7 @@ use crate::root::custom::types::float::Float;
 use crate::root::custom::types::int::Int;
 use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::processor::ProcessorError;
-use crate::root::processor::type_builder::{Type, TypeTable};
+use crate::root::processor::type_builder::TypeTable;
 
 #[derive(Clone, strum_macros::Display, Debug)]
 #[allow(dead_code)]
