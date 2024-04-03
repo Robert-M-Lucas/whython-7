@@ -1,0 +1,1015 @@
+Index: main.why
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>struct Node {\n    cur: int,\n    last: bool,\n    next: $Node\n}\n\nstruct LL {\n    base: $Node,\n    has_first: bool\n}\n\nimpl LL {\n    fn new() ~ LL {\n        return @LL {\n            0,\n            false\n        };\n    }\n\n    fn add(self, next: int) {\n        let new_node: Node = @Node {\n            next,\n            true,\n            0\n        };\n\n        if (!(*self.has_first)) {\n            *self.base = ^new_node;\n            *self.has_first = true;\n            return;\n        };\n\n        let curr: $Node = *self.base;\n        while (!(*curr.last)) {\n            curr = *curr.next;\n        };\n\n        *curr.last = false;\n        *curr.next = ^new_node;\n    }\n\n    fn print(self) {\n        if (!(*self.has_first)) {\n            return;\n        };\n\n        let curr: $Node = *self.base;\n        printi(*curr.cur);\n\n        while (!(*curr.last)) {\n            curr = *curr.next;\n            printi(*curr.cur);\n        };\n    }\n\n    fn destroy(self) {\n        if (!(*self.has_first)) {\n            return;\n        };\n\n        let curr: $Node = *self.base;\n\n        while (!(*curr.last)) {\n            let prev: $Node = curr;\n            curr = *curr.next;\n            ¬prev;\n        };\n\n        ¬curr;\n\n        *self.has_first = false;\n        *self.base = 0;\n    }\n}\n\nfn test() {\n    let ll: LL = LL#new();\n\n    let a = ll.\n}\n\nfn main() ~ int {\n    test();\n\n    return 7;\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.why b/main.why
+--- a/main.why	
++++ b/main.why	
+@@ -75,8 +75,6 @@
+ 
+ fn test() {
+     let ll: LL = LL#new();
+-
+-    let a = ll.
+ }
+ 
+ fn main() ~ int {
+Index: .idea/dictionaries/rober.xml
+===================================================================
+diff --git a/.idea/dictionaries/rober.xml b/.idea/dictionaries/rober.xml
+deleted file mode 100644
+--- a/.idea/dictionaries/rober.xml	
++++ /dev/null	
+@@ -1,3 +0,0 @@
+-<component name="ProjectDictionaryState">
+-  <dictionary name="rober" />
+-</component>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_13_02_2024,_00_33_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_13_02_2024,_00_33_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Update_at_13_02_2024,_00_33_[Changes]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_13_02_2024,_00_33_[Changes]/shelved.patch	
++++ /dev/null	
+@@ -1,49 +0,0 @@
+-Index: .idea/workspace.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"ALL\" />\n  </component>\n  <component name=\"CargoProjects\">\n    <cargoProject FILE=\"$PROJECT_DIR$/Cargo.toml\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"4a32adca-6e3f-423b-8eaf-1f905a752400\" name=\"Changes\" comment=\"Commit\">\n      <change beforePath=\"$PROJECT_DIR$/src/compiler/custom_functions.rs\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/compiler/custom_functions.rs\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/custom/bool.rs\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/custom/bool.rs\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/types.toml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/types.toml\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"Rust File\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"MacroExpansionManager\">\n    <option name=\"directoryName\" value=\"px6oipxj\" />\n  </component>\n  <component name=\"ProjectColorInfo\">{\n  &quot;customColor&quot;: &quot;&quot;,\n  &quot;associatedIndex&quot;: 7\n}</component>\n  <component name=\"ProjectId\" id=\"2c3JJhiilBjbhR3vdcAEf6hNkrT\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;Cargo.Run whython-7.executor&quot;: &quot;Run&quot;,\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,\n    &quot;git-widget-placeholder&quot;: &quot;master&quot;,\n    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\n    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,\n    &quot;settings.editor.selected.configurable&quot;: &quot;language.rust.cargo.check&quot;,\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\n  }\n}</component>\n  <component name=\"RunManager\" selected=\"Cargo.Run whython-7\">\n    <configuration name=\"Run whython-7\" type=\"CargoCommandRunConfiguration\" factoryName=\"Cargo Command\">\n      <option name=\"command\" value=\"run --package whython-7 --bin whython-7\" />\n      <option name=\"workingDirectory\" value=\"file://$PROJECT_DIR$\" />\n      <envs />\n      <option name=\"emulateTerminal\" value=\"true\" />\n      <option name=\"channel\" value=\"DEFAULT\" />\n      <option name=\"requiredFeatures\" value=\"true\" />\n      <option name=\"allFeatures\" value=\"false\" />\n      <option name=\"withSudo\" value=\"false\" />\n      <option name=\"buildTarget\" value=\"REMOTE\" />\n      <option name=\"backtrace\" value=\"SHORT\" />\n      <option name=\"isRedirectInput\" value=\"false\" />\n      <option name=\"redirectInputPath\" value=\"\" />\n      <method v=\"2\">\n        <option name=\"CARGO.BUILD_TASK_PROVIDER\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"Test whython-7\" type=\"CargoCommandRunConfiguration\" factoryName=\"Cargo Command\">\n      <option name=\"command\" value=\"test --workspace\" />\n      <option name=\"workingDirectory\" value=\"file://$PROJECT_DIR$\" />\n      <envs />\n      <option name=\"emulateTerminal\" value=\"true\" />\n      <option name=\"channel\" value=\"DEFAULT\" />\n      <option name=\"requiredFeatures\" value=\"true\" />\n      <option name=\"allFeatures\" value=\"false\" />\n      <option name=\"withSudo\" value=\"false\" />\n      <option name=\"buildTarget\" value=\"REMOTE\" />\n      <option name=\"backtrace\" value=\"SHORT\" />\n      <option name=\"isRedirectInput\" value=\"false\" />\n      <option name=\"redirectInputPath\" value=\"\" />\n      <method v=\"2\">\n        <option name=\"CARGO.BUILD_TASK_PROVIDER\" enabled=\"true\" />\n      </method>\n    </configuration>\n  </component>\n  <component name=\"RustProjectSettings\">\n    <option name=\"toolchainHomeDirectory\" value=\"$USER_HOME$/.cargo/bin\" />\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"4a32adca-6e3f-423b-8eaf-1f905a752400\" name=\"Changes\" comment=\"\" />\n      <created>1707334258896</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1707334258896</updated>\n      <workItem from=\"1707334260163\" duration=\"5963000\" />\n      <workItem from=\"1707408474407\" duration=\"49000\" />\n      <workItem from=\"1707411486477\" duration=\"36000\" />\n      <workItem from=\"1707411529254\" duration=\"600000\" />\n      <workItem from=\"1707419983027\" duration=\"5121000\" />\n      <workItem from=\"1707485254035\" duration=\"2324000\" />\n      <workItem from=\"1707491585220\" duration=\"1783000\" />\n      <workItem from=\"1707537208478\" duration=\"663000\" />\n      <workItem from=\"1707562919368\" duration=\"9418000\" />\n      <workItem from=\"1707600514642\" duration=\"3237000\" />\n      <workItem from=\"1707731425758\" duration=\"4565000\" />\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707342528079</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707342528079</updated>\n    </task>\n    <task id=\"LOCAL-00002\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707437121335</created>\n      <option name=\"number\" value=\"00002\" />\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707437121336</updated>\n    </task>\n    <task id=\"LOCAL-00003\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707487577616</created>\n      <option name=\"number\" value=\"00003\" />\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707487577617</updated>\n    </task>\n    <task id=\"LOCAL-00004\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707496952985</created>\n      <option name=\"number\" value=\"00004\" />\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707496952985</updated>\n    </task>\n    <task id=\"LOCAL-00005\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707577741928</created>\n      <option name=\"number\" value=\"00005\" />\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707577741928</updated>\n    </task>\n    <task id=\"LOCAL-00006\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707577819456</created>\n      <option name=\"number\" value=\"00006\" />\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707577819456</updated>\n    </task>\n    <task id=\"LOCAL-00007\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707670816437</created>\n      <option name=\"number\" value=\"00007\" />\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707670816437</updated>\n    </task>\n    <task id=\"LOCAL-00008\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707679264000</created>\n      <option name=\"number\" value=\"00008\" />\n      <option name=\"presentableId\" value=\"LOCAL-00008\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707679264000</updated>\n    </task>\n    <task id=\"LOCAL-00009\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707679319201</created>\n      <option name=\"number\" value=\"00009\" />\n      <option name=\"presentableId\" value=\"LOCAL-00009\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707679319201</updated>\n    </task>\n    <task id=\"LOCAL-00010\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707679657629</created>\n      <option name=\"number\" value=\"00010\" />\n      <option name=\"presentableId\" value=\"LOCAL-00010\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707679657629</updated>\n    </task>\n    <task id=\"LOCAL-00011\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707683459104</created>\n      <option name=\"number\" value=\"00011\" />\n      <option name=\"presentableId\" value=\"LOCAL-00011\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707683459104</updated>\n    </task>\n    <task id=\"LOCAL-00012\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707684009416</created>\n      <option name=\"number\" value=\"00012\" />\n      <option name=\"presentableId\" value=\"LOCAL-00012\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707684009416</updated>\n    </task>\n    <task id=\"LOCAL-00013\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707687691247</created>\n      <option name=\"number\" value=\"00013\" />\n      <option name=\"presentableId\" value=\"LOCAL-00013\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707687691247</updated>\n    </task>\n    <task id=\"LOCAL-00014\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707688757644</created>\n      <option name=\"number\" value=\"00014\" />\n      <option name=\"presentableId\" value=\"LOCAL-00014\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707688757644</updated>\n    </task>\n    <task id=\"LOCAL-00015\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707722524228</created>\n      <option name=\"number\" value=\"00015\" />\n      <option name=\"presentableId\" value=\"LOCAL-00015\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707722524228</updated>\n    </task>\n    <task id=\"LOCAL-00016\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707725704345</created>\n      <option name=\"number\" value=\"00016\" />\n      <option name=\"presentableId\" value=\"LOCAL-00016\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707725704345</updated>\n    </task>\n    <task id=\"LOCAL-00017\" summary=\"Cargo fmt\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707725783401</created>\n      <option name=\"number\" value=\"00017\" />\n      <option name=\"presentableId\" value=\"LOCAL-00017\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707725783401</updated>\n    </task>\n    <task id=\"LOCAL-00018\" summary=\"Cargo Clippy\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707725833933</created>\n      <option name=\"number\" value=\"00018\" />\n      <option name=\"presentableId\" value=\"LOCAL-00018\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707725833933</updated>\n    </task>\n    <task id=\"LOCAL-00019\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707726596106</created>\n      <option name=\"number\" value=\"00019\" />\n      <option name=\"presentableId\" value=\"LOCAL-00019\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707726596106</updated>\n    </task>\n    <task id=\"LOCAL-00020\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707730642317</created>\n      <option name=\"number\" value=\"00020\" />\n      <option name=\"presentableId\" value=\"LOCAL-00020\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707730642317</updated>\n    </task>\n    <task id=\"LOCAL-00021\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707730703129</created>\n      <option name=\"number\" value=\"00021\" />\n      <option name=\"presentableId\" value=\"LOCAL-00021\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707730703129</updated>\n    </task>\n    <task id=\"LOCAL-00022\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707731790344</created>\n      <option name=\"number\" value=\"00022\" />\n      <option name=\"presentableId\" value=\"LOCAL-00022\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707731790344</updated>\n    </task>\n    <task id=\"LOCAL-00023\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707732889774</created>\n      <option name=\"number\" value=\"00023\" />\n      <option name=\"presentableId\" value=\"LOCAL-00023\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707732889775</updated>\n    </task>\n    <task id=\"LOCAL-00024\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707733064232</created>\n      <option name=\"number\" value=\"00024\" />\n      <option name=\"presentableId\" value=\"LOCAL-00024\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707733064232</updated>\n    </task>\n    <task id=\"LOCAL-00025\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707733131237</created>\n      <option name=\"number\" value=\"00025\" />\n      <option name=\"presentableId\" value=\"LOCAL-00025\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707733131237</updated>\n    </task>\n    <task id=\"LOCAL-00026\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707733410417</created>\n      <option name=\"number\" value=\"00026\" />\n      <option name=\"presentableId\" value=\"LOCAL-00026\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707733410417</updated>\n    </task>\n    <task id=\"LOCAL-00027\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707733460809</created>\n      <option name=\"number\" value=\"00027\" />\n      <option name=\"presentableId\" value=\"LOCAL-00027\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707733460809</updated>\n    </task>\n    <task id=\"LOCAL-00028\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707734602129</created>\n      <option name=\"number\" value=\"00028\" />\n      <option name=\"presentableId\" value=\"LOCAL-00028\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707734602129</updated>\n    </task>\n    <task id=\"LOCAL-00029\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707734613623</created>\n      <option name=\"number\" value=\"00029\" />\n      <option name=\"presentableId\" value=\"LOCAL-00029\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707734613623</updated>\n    </task>\n    <task id=\"LOCAL-00030\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707734714171</created>\n      <option name=\"number\" value=\"00030\" />\n      <option name=\"presentableId\" value=\"LOCAL-00030\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707734714171</updated>\n    </task>\n    <task id=\"LOCAL-00031\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707734949158</created>\n      <option name=\"number\" value=\"00031\" />\n      <option name=\"presentableId\" value=\"LOCAL-00031\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707734949159</updated>\n    </task>\n    <task id=\"LOCAL-00032\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707735444855</created>\n      <option name=\"number\" value=\"00032\" />\n      <option name=\"presentableId\" value=\"LOCAL-00032\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707735444855</updated>\n    </task>\n    <task id=\"LOCAL-00033\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707735564527</created>\n      <option name=\"number\" value=\"00033\" />\n      <option name=\"presentableId\" value=\"LOCAL-00033\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707735564527</updated>\n    </task>\n    <task id=\"LOCAL-00034\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707735990614</created>\n      <option name=\"number\" value=\"00034\" />\n      <option name=\"presentableId\" value=\"LOCAL-00034\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707735990614</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"35\" />\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"3\" />\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"Cargo fmt\" />\n    <MESSAGE value=\"Cargo Clippy\" />\n    <MESSAGE value=\"Commit\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Commit\" />\n  </component>\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+---- a/.idea/workspace.xml	(revision ff17fa362ca138b915d0e05f74679deb3f720a29)
+-+++ b/.idea/workspace.xml	(date 1707784417561)
+-@@ -7,11 +7,7 @@
+-     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
+-   </component>
+-   <component name="ChangeListManager">
+--    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Commit">
+--      <change beforePath="$PROJECT_DIR$/src/compiler/custom_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/custom_functions.rs" afterDir="false" />
+--      <change beforePath="$PROJECT_DIR$/src/custom/bool.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/custom/bool.rs" afterDir="false" />
+--      <change beforePath="$PROJECT_DIR$/types.toml" beforeDir="false" afterPath="$PROJECT_DIR$/types.toml" afterDir="false" />
+--    </list>
+-+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Commit" />
+-     <option name="SHOW_DIALOG" value="false" />
+-     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+-     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+-@@ -114,7 +110,7 @@
+-       <workItem from="1707537208478" duration="663000" />
+-       <workItem from="1707562919368" duration="9418000" />
+-       <workItem from="1707600514642" duration="3237000" />
+--      <workItem from="1707731425758" duration="4565000" />
+-+      <workItem from="1707731425758" duration="4589000" />
+-     </task>
+-     <task id="LOCAL-00001" summary="Commit">
+-       <option name="closed" value="true" />
+-@@ -388,7 +384,15 @@
+-       <option name="project" value="LOCAL" />
+-       <updated>1707735990614</updated>
+-     </task>
+--    <option name="localTasksCounter" value="35" />
+-+    <task id="LOCAL-00035" summary="Commit">
+-+      <option name="closed" value="true" />
+-+      <created>1707736003426</created>
+-+      <option name="number" value="00035" />
+-+      <option name="presentableId" value="LOCAL-00035" />
+-+      <option name="project" value="LOCAL" />
+-+      <updated>1707736003426</updated>
+-+    </task>
+-+    <option name="localTasksCounter" value="36" />
+-     <servers />
+-   </component>
+-   <component name="TypeScriptGeneratedFilesManager">
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"ALL\" />\n  </component>\n  <component name=\"CargoProjects\">\n    <cargoProject FILE=\"$PROJECT_DIR$/Cargo.toml\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"4a32adca-6e3f-423b-8eaf-1f905a752400\" name=\"Changes\" comment=\"Figured out why the bug exists, cba to fix atm :)\">\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/main.why\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/main.why\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"Rust File\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"GitHubPullRequestSearchHistory\">{\n  &quot;lastFilter&quot;: {\n    &quot;state&quot;: &quot;OPEN&quot;,\n    &quot;assignee&quot;: &quot;Robert-M-Lucas&quot;\n  }\n}</component>\n  <component name=\"GithubPullRequestsUISettings\">\n    <option name=\"selectedUrlAndAccountId\">\n      <UrlAndAccount>\n        <option name=\"accountId\" value=\"dcb8df19-0b39-47e1-9073-4a54f7034be8\" />\n        <option name=\"url\" value=\"https://github.com/Robert-M-Lucas/whython-7\" />\n      </UrlAndAccount>\n    </option>\n  </component>\n  <component name=\"MacroExpansionManager\">\n    <option name=\"directoryName\" value=\"px6oipxj\" />\n  </component>\n  <component name=\"MarkdownSettingsMigration\">\n    <option name=\"stateVersion\" value=\"1\" />\n  </component>\n  <component name=\"ProjectColorInfo\">{\n  &quot;customColor&quot;: &quot;&quot;,\n  &quot;associatedIndex&quot;: 7\n}</component>\n  <component name=\"ProjectId\" id=\"2c3JJhiilBjbhR3vdcAEf6hNkrT\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;Cargo.Run whython-7.executor&quot;: &quot;Run&quot;,\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,\n    &quot;git-widget-placeholder&quot;: &quot;master&quot;,\n    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,\n    &quot;last_opened_file_path&quot;: &quot;/home/robertlucas/RustroverProjects/whython-7&quot;,\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\n    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,\n    &quot;org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon&quot;: &quot;&quot;,\n    &quot;settings.editor.selected.configurable&quot;: &quot;language.rust.cargo.check&quot;,\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\n  }\n}</component>\n  <component name=\"RecentsManager\">\n    <key name=\"CopyFile.RECENT_KEYS\">\n      <recent name=\"$PROJECT_DIR$\" />\n      <recent name=\"C:\\Users\\rober\\Documents\\Coding\\RustProjects\\whython-7\" />\n    </key>\n    <key name=\"MoveFile.RECENT_KEYS\">\n      <recent name=\"$PROJECT_DIR$/reference\" />\n    </key>\n  </component>\n  <component name=\"RunManager\" selected=\"Cargo.Run whython-7\">\n    <configuration name=\"Run whython-7\" type=\"CargoCommandRunConfiguration\" factoryName=\"Cargo Command\">\n      <option name=\"command\" value=\"run --package whython-7 --bin whython-7\" />\n      <option name=\"workingDirectory\" value=\"file://$PROJECT_DIR$\" />\n      <envs />\n      <option name=\"emulateTerminal\" value=\"true\" />\n      <option name=\"channel\" value=\"DEFAULT\" />\n      <option name=\"requiredFeatures\" value=\"true\" />\n      <option name=\"allFeatures\" value=\"false\" />\n      <option name=\"withSudo\" value=\"false\" />\n      <option name=\"buildTarget\" value=\"REMOTE\" />\n      <option name=\"backtrace\" value=\"SHORT\" />\n      <option name=\"isRedirectInput\" value=\"false\" />\n      <option name=\"redirectInputPath\" value=\"\" />\n      <method v=\"2\">\n        <option name=\"CARGO.BUILD_TASK_PROVIDER\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"Test whython-7\" type=\"CargoCommandRunConfiguration\" factoryName=\"Cargo Command\">\n      <option name=\"command\" value=\"test --workspace\" />\n      <option name=\"workingDirectory\" value=\"file://$PROJECT_DIR$\" />\n      <envs />\n      <option name=\"emulateTerminal\" value=\"true\" />\n      <option name=\"channel\" value=\"DEFAULT\" />\n      <option name=\"requiredFeatures\" value=\"true\" />\n      <option name=\"allFeatures\" value=\"false\" />\n      <option name=\"withSudo\" value=\"false\" />\n      <option name=\"buildTarget\" value=\"REMOTE\" />\n      <option name=\"backtrace\" value=\"SHORT\" />\n      <option name=\"isRedirectInput\" value=\"false\" />\n      <option name=\"redirectInputPath\" value=\"\" />\n      <method v=\"2\">\n        <option name=\"CARGO.BUILD_TASK_PROVIDER\" enabled=\"true\" />\n      </method>\n    </configuration>\n  </component>\n  <component name=\"RustProjectSettings\">\n    <option name=\"toolchainHomeDirectory\" value=\"$USER_HOME$/.cargo/bin\" />\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"4a32adca-6e3f-423b-8eaf-1f905a752400\" name=\"Changes\" comment=\"\" />\n      <created>1707334258896</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1707334258896</updated>\n      <workItem from=\"1707334260163\" duration=\"5963000\" />\n      <workItem from=\"1707408474407\" duration=\"49000\" />\n      <workItem from=\"1707411486477\" duration=\"36000\" />\n      <workItem from=\"1707411529254\" duration=\"600000\" />\n      <workItem from=\"1707419983027\" duration=\"5121000\" />\n      <workItem from=\"1707485254035\" duration=\"2324000\" />\n      <workItem from=\"1707491585220\" duration=\"1783000\" />\n      <workItem from=\"1707537208478\" duration=\"663000\" />\n      <workItem from=\"1707562919368\" duration=\"9418000\" />\n      <workItem from=\"1707600514642\" duration=\"3237000\" />\n      <workItem from=\"1707731425758\" duration=\"4565000\" />\n      <workItem from=\"1707737109884\" duration=\"8162000\" />\n      <workItem from=\"1707933031624\" duration=\"1396000\" />\n      <workItem from=\"1707957454164\" duration=\"15000\" />\n      <workItem from=\"1707957688736\" duration=\"1808000\" />\n      <workItem from=\"1708003618582\" duration=\"44000\" />\n      <workItem from=\"1708097902131\" duration=\"380000\" />\n      <workItem from=\"1708127278301\" duration=\"600000\" />\n      <workItem from=\"1708249633031\" duration=\"17626000\" />\n      <workItem from=\"1708267670728\" duration=\"2368000\" />\n      <workItem from=\"1708360345763\" duration=\"19000\" />\n      <workItem from=\"1708360501883\" duration=\"8165000\" />\n      <workItem from=\"1708389551937\" duration=\"8190000\" />\n      <workItem from=\"1708443054042\" duration=\"78000\" />\n      <workItem from=\"1708444249472\" duration=\"435000\" />\n      <workItem from=\"1708446636633\" duration=\"1360000\" />\n      <workItem from=\"1708530621877\" duration=\"3489000\" />\n      <workItem from=\"1708629674803\" duration=\"690000\" />\n      <workItem from=\"1708687088255\" duration=\"177000\" />\n      <workItem from=\"1708882042489\" duration=\"7450000\" />\n      <workItem from=\"1709038220033\" duration=\"774000\" />\n      <workItem from=\"1709176246128\" duration=\"14000\" />\n      <workItem from=\"1709383015105\" duration=\"86000\" />\n      <workItem from=\"1709383107736\" duration=\"392000\" />\n      <workItem from=\"1710243512001\" duration=\"12282000\" />\n      <workItem from=\"1710266632374\" duration=\"1766000\" />\n      <workItem from=\"1710288507896\" duration=\"1503000\" />\n      <workItem from=\"1710325675974\" duration=\"885000\" />\n      <workItem from=\"1710326655683\" duration=\"779000\" />\n      <workItem from=\"1710418785654\" duration=\"5405000\" />\n      <workItem from=\"1710440643344\" duration=\"4821000\" />\n      <workItem from=\"1710456449212\" duration=\"3203000\" />\n      <workItem from=\"1710489150326\" duration=\"24000\" />\n      <workItem from=\"1710501995761\" duration=\"599000\" />\n    </task>\n    <task id=\"LOCAL-00022\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707731790344</created>\n      <option name=\"number\" value=\"00022\" />\n      <option name=\"presentableId\" value=\"LOCAL-00022\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707731790344</updated>\n    </task>\n    <task id=\"LOCAL-00023\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707732889774</created>\n      <option name=\"number\" value=\"00023\" />\n      <option name=\"presentableId\" value=\"LOCAL-00023\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707732889775</updated>\n    </task>\n    <task id=\"LOCAL-00024\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707733064232</created>\n      <option name=\"number\" value=\"00024\" />\n      <option name=\"presentableId\" value=\"LOCAL-00024\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707733064232</updated>\n    </task>\n    <task id=\"LOCAL-00025\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707733131237</created>\n      <option name=\"number\" value=\"00025\" />\n      <option name=\"presentableId\" value=\"LOCAL-00025\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707733131237</updated>\n    </task>\n    <task id=\"LOCAL-00026\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707733410417</created>\n      <option name=\"number\" value=\"00026\" />\n      <option name=\"presentableId\" value=\"LOCAL-00026\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707733410417</updated>\n    </task>\n    <task id=\"LOCAL-00027\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707733460809</created>\n      <option name=\"number\" value=\"00027\" />\n      <option name=\"presentableId\" value=\"LOCAL-00027\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707733460809</updated>\n    </task>\n    <task id=\"LOCAL-00028\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707734602129</created>\n      <option name=\"number\" value=\"00028\" />\n      <option name=\"presentableId\" value=\"LOCAL-00028\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707734602129</updated>\n    </task>\n    <task id=\"LOCAL-00029\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707734613623</created>\n      <option name=\"number\" value=\"00029\" />\n      <option name=\"presentableId\" value=\"LOCAL-00029\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707734613623</updated>\n    </task>\n    <task id=\"LOCAL-00030\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707734714171</created>\n      <option name=\"number\" value=\"00030\" />\n      <option name=\"presentableId\" value=\"LOCAL-00030\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707734714171</updated>\n    </task>\n    <task id=\"LOCAL-00031\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707734949158</created>\n      <option name=\"number\" value=\"00031\" />\n      <option name=\"presentableId\" value=\"LOCAL-00031\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707734949159</updated>\n    </task>\n    <task id=\"LOCAL-00032\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707735444855</created>\n      <option name=\"number\" value=\"00032\" />\n      <option name=\"presentableId\" value=\"LOCAL-00032\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707735444855</updated>\n    </task>\n    <task id=\"LOCAL-00033\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707735564527</created>\n      <option name=\"number\" value=\"00033\" />\n      <option name=\"presentableId\" value=\"LOCAL-00033\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707735564527</updated>\n    </task>\n    <task id=\"LOCAL-00034\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707735990614</created>\n      <option name=\"number\" value=\"00034\" />\n      <option name=\"presentableId\" value=\"LOCAL-00034\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707735990614</updated>\n    </task>\n    <task id=\"LOCAL-00035\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707739699423</created>\n      <option name=\"number\" value=\"00035\" />\n      <option name=\"presentableId\" value=\"LOCAL-00035\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707739699423</updated>\n    </task>\n    <task id=\"LOCAL-00036\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707753679476</created>\n      <option name=\"number\" value=\"00036\" />\n      <option name=\"presentableId\" value=\"LOCAL-00036\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707753679476</updated>\n    </task>\n    <task id=\"LOCAL-00037\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707755442409</created>\n      <option name=\"number\" value=\"00037\" />\n      <option name=\"presentableId\" value=\"LOCAL-00037\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707755442409</updated>\n    </task>\n    <task id=\"LOCAL-00038\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707935065745</created>\n      <option name=\"number\" value=\"00038\" />\n      <option name=\"presentableId\" value=\"LOCAL-00038\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707935065745</updated>\n    </task>\n    <task id=\"LOCAL-00039\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707958152611</created>\n      <option name=\"number\" value=\"00039\" />\n      <option name=\"presentableId\" value=\"LOCAL-00039\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707958152611</updated>\n    </task>\n    <task id=\"LOCAL-00040\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707958162776</created>\n      <option name=\"number\" value=\"00040\" />\n      <option name=\"presentableId\" value=\"LOCAL-00040\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707958162776</updated>\n    </task>\n    <task id=\"LOCAL-00041\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707958253947</created>\n      <option name=\"number\" value=\"00041\" />\n      <option name=\"presentableId\" value=\"LOCAL-00041\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707958253947</updated>\n    </task>\n    <task id=\"LOCAL-00042\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707958289111</created>\n      <option name=\"number\" value=\"00042\" />\n      <option name=\"presentableId\" value=\"LOCAL-00042\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707958289111</updated>\n    </task>\n    <task id=\"LOCAL-00043\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707958341975</created>\n      <option name=\"number\" value=\"00043\" />\n      <option name=\"presentableId\" value=\"LOCAL-00043\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707958341975</updated>\n    </task>\n    <task id=\"LOCAL-00044\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707958438460</created>\n      <option name=\"number\" value=\"00044\" />\n      <option name=\"presentableId\" value=\"LOCAL-00044\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707958438460</updated>\n    </task>\n    <task id=\"LOCAL-00045\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1707958490702</created>\n      <option name=\"number\" value=\"00045\" />\n      <option name=\"presentableId\" value=\"LOCAL-00045\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1707958490702</updated>\n    </task>\n    <task id=\"LOCAL-00046\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1708098187187</created>\n      <option name=\"number\" value=\"00046\" />\n      <option name=\"presentableId\" value=\"LOCAL-00046\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1708098187187</updated>\n    </task>\n    <task id=\"LOCAL-00047\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1708264365450</created>\n      <option name=\"number\" value=\"00047\" />\n      <option name=\"presentableId\" value=\"LOCAL-00047\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1708264365450</updated>\n    </task>\n    <task id=\"LOCAL-00048\" summary=\"Fixed the most annoying bug I've ever had the displeasure of trying to find\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1708269097569</created>\n      <option name=\"number\" value=\"00048\" />\n      <option name=\"presentableId\" value=\"LOCAL-00048\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1708269097569</updated>\n    </task>\n    <task id=\"LOCAL-00049\" summary=\"Fixed 0 showing up as -0 from printi\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1708269205195</created>\n      <option name=\"number\" value=\"00049\" />\n      <option name=\"presentableId\" value=\"LOCAL-00049\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1708269205195</updated>\n    </task>\n    <task id=\"LOCAL-00050\" summary=\"Fixed 0 showing up as -0 from printi\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1708269822989</created>\n      <option name=\"number\" value=\"00050\" />\n      <option name=\"presentableId\" value=\"LOCAL-00050\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1708269822989</updated>\n    </task>\n    <task id=\"LOCAL-00051\" summary=\"Added support for negative integers without needing to utilise 0-(int)\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1708270037585</created>\n      <option name=\"number\" value=\"00051\" />\n      <option name=\"presentableId\" value=\"LOCAL-00051\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1708270037585</updated>\n    </task>\n    <task id=\"LOCAL-00052\" summary=\"Fixed shadowing\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1708368084288</created>\n      <option name=\"number\" value=\"00052\" />\n      <option name=\"presentableId\" value=\"LOCAL-00052\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1708368084289</updated>\n    </task>\n    <task id=\"LOCAL-00053\" summary=\"Added support gor parsing initialisers\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1708374408506</created>\n      <option name=\"number\" value=\"00053\" />\n      <option name=\"presentableId\" value=\"LOCAL-00053\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1708374408506</updated>\n    </task>\n    <task id=\"LOCAL-00054\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1708446689753</created>\n      <option name=\"number\" value=\"00054\" />\n      <option name=\"presentableId\" value=\"LOCAL-00054\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1708446689753</updated>\n    </task>\n    <task id=\"LOCAL-00055\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1708530697176</created>\n      <option name=\"number\" value=\"00055\" />\n      <option name=\"presentableId\" value=\"LOCAL-00055\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1708530697177</updated>\n    </task>\n    <task id=\"LOCAL-00056\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1708882059655</created>\n      <option name=\"number\" value=\"00056\" />\n      <option name=\"presentableId\" value=\"LOCAL-00056\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1708882059656</updated>\n    </task>\n    <task id=\"LOCAL-00057\" summary=\"Began adding support for reference types\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1708888153620</created>\n      <option name=\"number\" value=\"00057\" />\n      <option name=\"presentableId\" value=\"LOCAL-00057\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1708888153620</updated>\n    </task>\n    <task id=\"LOCAL-00058\" summary=\"Continued adding support for reference types\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1708889183047</created>\n      <option name=\"number\" value=\"00058\" />\n      <option name=\"presentableId\" value=\"LOCAL-00058\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1708889183047</updated>\n    </task>\n    <task id=\"LOCAL-00059\" summary=\"Continued work on reference system\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1710247471819</created>\n      <option name=\"number\" value=\"00059\" />\n      <option name=\"presentableId\" value=\"LOCAL-00059\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1710247471819</updated>\n    </task>\n    <task id=\"LOCAL-00060\" summary=\"Continued work on reference system\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1710250720696</created>\n      <option name=\"number\" value=\"00060\" />\n      <option name=\"presentableId\" value=\"LOCAL-00060\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1710250720696</updated>\n    </task>\n    <task id=\"LOCAL-00061\" summary=\"Untested reference types working\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1710252458295</created>\n      <option name=\"number\" value=\"00061\" />\n      <option name=\"presentableId\" value=\"LOCAL-00061\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1710252458295</updated>\n    </task>\n    <task id=\"LOCAL-00062\" summary=\"Began adding heap allocation\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1710255701419</created>\n      <option name=\"number\" value=\"00062\" />\n      <option name=\"presentableId\" value=\"LOCAL-00062\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1710255701419</updated>\n    </task>\n    <task id=\"LOCAL-00063\" summary=\"Rust fmt\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1710325793601</created>\n      <option name=\"number\" value=\"00063\" />\n      <option name=\"presentableId\" value=\"LOCAL-00063\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1710325793602</updated>\n    </task>\n    <task id=\"LOCAL-00064\" summary=\"Cargo clippy\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1710325846217</created>\n      <option name=\"number\" value=\"00064\" />\n      <option name=\"presentableId\" value=\"LOCAL-00064\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1710325846217</updated>\n    </task>\n    <task id=\"LOCAL-00065\" summary=\"Cargo clippy\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1710326234517</created>\n      <option name=\"number\" value=\"00065\" />\n      <option name=\"presentableId\" value=\"LOCAL-00065\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1710326234517</updated>\n    </task>\n    <task id=\"LOCAL-00066\" summary=\"Build config\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1710326552208</created>\n      <option name=\"number\" value=\"00066\" />\n      <option name=\"presentableId\" value=\"LOCAL-00066\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1710326552208</updated>\n    </task>\n    <task id=\"LOCAL-00067\" summary=\"README update\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1710326834533</created>\n      <option name=\"number\" value=\"00067\" />\n      <option name=\"presentableId\" value=\"LOCAL-00067\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1710326834534</updated>\n    </task>\n    <task id=\"LOCAL-00068\" summary=\"Bug found :) (Not fixed)\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1710453720522</created>\n      <option name=\"number\" value=\"00068\" />\n      <option name=\"presentableId\" value=\"LOCAL-00068\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1710453720522</updated>\n    </task>\n    <task id=\"LOCAL-00069\" summary=\"Commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1710458575472</created>\n      <option name=\"number\" value=\"00069\" />\n      <option name=\"presentableId\" value=\"LOCAL-00069\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1710458575474</updated>\n    </task>\n    <task id=\"LOCAL-00070\" summary=\"Figured out why the bug exists, cba to fix atm :)\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1710459651943</created>\n      <option name=\"number\" value=\"00070\" />\n      <option name=\"presentableId\" value=\"LOCAL-00070\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1710459651943</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"71\" />\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"3\" />\n  </component>\n  <component name=\"Vcs.Log.History.Properties\">\n    <option name=\"COLUMN_ID_ORDER\">\n      <list>\n        <option value=\"Default.Root\" />\n        <option value=\"Default.Author\" />\n        <option value=\"Default.Date\" />\n        <option value=\"Default.Subject\" />\n        <option value=\"Space.CommitStatus\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State />\n          </value>\n        </entry>\n      </map>\n    </option>\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"Cargo fmt\" />\n    <MESSAGE value=\"Cargo Clippy\" />\n    <MESSAGE value=\"Fixed the most annoying bug I've ever had the displeasure of trying to find\" />\n    <MESSAGE value=\"Fixed 0 showing up as -0 from printi\" />\n    <MESSAGE value=\"Added support for negative integers without needing to utilise 0-(int)\" />\n    <MESSAGE value=\"Fixed shadowing\" />\n    <MESSAGE value=\"Added support gor parsing initialisers\" />\n    <MESSAGE value=\"Began adding support for reference types\" />\n    <MESSAGE value=\"Continued adding support for reference types\" />\n    <MESSAGE value=\"Continued work on reference system\" />\n    <MESSAGE value=\"Untested reference types working\" />\n    <MESSAGE value=\"Began adding heap allocation\" />\n    <MESSAGE value=\"Rust fmt\" />\n    <MESSAGE value=\"Cargo clippy\" />\n    <MESSAGE value=\"Build config\" />\n    <MESSAGE value=\"README update\" />\n    <MESSAGE value=\"Bug found :) (Not fixed)\" />\n    <MESSAGE value=\"Commit\" />\n    <MESSAGE value=\"Figured out why the bug exists, cba to fix atm :)\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Figured out why the bug exists, cba to fix atm :)\" />\n  </component>\n  <component name=\"XSLT-Support.FileAssociations.UIState\">\n    <expand />\n    <select />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	
++++ b/.idea/workspace.xml	
+@@ -7,41 +7,29 @@
+     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Figured out why the bug exists, cba to fix atm :)">
++    <list default="true" id="03b4383f-f12e-4615-a554-2311980bf784" name="Changes" comment="">
++      <change beforePath="$PROJECT_DIR$/.cargo/config.toml" beforeDir="false" afterPath="$PROJECT_DIR$/.cargo/config.toml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.fleet/run.json" beforeDir="false" afterPath="$PROJECT_DIR$/.fleet/run.json" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/rober.xml" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_11_03_2024,_00_46_[Changes]/shelved.patch" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_11_03_2024__00_46__Changes_.xml" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_13_02_2024,_00_33_[Changes]/shelved.patch" beforeDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/out.asm" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/out.exe" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/out.obj" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+     <option name="LAST_RESOLUTION" value="IGNORE" />
+-  </component>
+-  <component name="FileTemplateManagerImpl">
+-    <option name="RECENT_TEMPLATES">
+-      <list>
+-        <option value="Rust File" />
+-      </list>
+-    </option>
+   </component>
+   <component name="Git.Settings">
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+-  </component>
+-  <component name="GitHubPullRequestSearchHistory">{
+-  &quot;lastFilter&quot;: {
+-    &quot;state&quot;: &quot;OPEN&quot;,
+-    &quot;assignee&quot;: &quot;Robert-M-Lucas&quot;
+-  }
+-}</component>
+-  <component name="GithubPullRequestsUISettings">
+-    <option name="selectedUrlAndAccountId">
+-      <UrlAndAccount>
+-        <option name="accountId" value="dcb8df19-0b39-47e1-9073-4a54f7034be8" />
+-        <option name="url" value="https://github.com/Robert-M-Lucas/whython-7" />
+-      </UrlAndAccount>
+-    </option>
+   </component>
+   <component name="MacroExpansionManager">
+-    <option name="directoryName" value="px6oipxj" />
++    <option name="directoryName" value="iy2w3xug" />
+   </component>
+   <component name="MarkdownSettingsMigration">
+     <option name="stateVersion" value="1" />
+@@ -50,19 +38,17 @@
+   &quot;customColor&quot;: &quot;&quot;,
+   &quot;associatedIndex&quot;: 7
+ }</component>
+-  <component name="ProjectId" id="2c3JJhiilBjbhR3vdcAEf6hNkrT" />
++  <component name="ProjectId" id="2dpV8EVMSeoWlQ83IeMDJeje7kg" />
+   <component name="ProjectViewState">
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+   <component name="PropertiesComponent">{
+   &quot;keyToString&quot;: {
+-    &quot;Cargo.Run whython-7.executor&quot;: &quot;Run&quot;,
+     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+     &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
+     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+     &quot;last_opened_file_path&quot;: &quot;/home/robertlucas/RustroverProjects/whython-7&quot;,
+     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+@@ -70,20 +56,10 @@
+     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+     &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
+-    &quot;org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon&quot;: &quot;&quot;,
+-    &quot;settings.editor.selected.configurable&quot;: &quot;language.rust.cargo.check&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;language.rust&quot;,
+     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   }
+ }</component>
+-  <component name="RecentsManager">
+-    <key name="CopyFile.RECENT_KEYS">
+-      <recent name="$PROJECT_DIR$" />
+-      <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7" />
+-    </key>
+-    <key name="MoveFile.RECENT_KEYS">
+-      <recent name="$PROJECT_DIR$/reference" />
+-    </key>
+-  </component>
+   <component name="RunManager" selected="Cargo.Run whython-7">
+     <configuration name="Run whython-7" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+       <option name="command" value="run --package whython-7 --bin whython-7" />
+@@ -126,500 +102,20 @@
+   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+   <component name="TaskManager">
+     <task active="true" id="Default" summary="Default task">
+-      <changelist id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="" />
+-      <created>1707334258896</created>
++      <changelist id="03b4383f-f12e-4615-a554-2311980bf784" name="Changes" comment="" />
++      <created>1710704845805</created>
+       <option name="number" value="Default" />
+       <option name="presentableId" value="Default" />
+-      <updated>1707334258896</updated>
+-      <workItem from="1707334260163" duration="5963000" />
+-      <workItem from="1707408474407" duration="49000" />
+-      <workItem from="1707411486477" duration="36000" />
+-      <workItem from="1707411529254" duration="600000" />
+-      <workItem from="1707419983027" duration="5121000" />
+-      <workItem from="1707485254035" duration="2324000" />
+-      <workItem from="1707491585220" duration="1783000" />
+-      <workItem from="1707537208478" duration="663000" />
+-      <workItem from="1707562919368" duration="9418000" />
+-      <workItem from="1707600514642" duration="3237000" />
+-      <workItem from="1707731425758" duration="4565000" />
+-      <workItem from="1707737109884" duration="8162000" />
+-      <workItem from="1707933031624" duration="1396000" />
+-      <workItem from="1707957454164" duration="15000" />
+-      <workItem from="1707957688736" duration="1808000" />
+-      <workItem from="1708003618582" duration="44000" />
+-      <workItem from="1708097902131" duration="380000" />
+-      <workItem from="1708127278301" duration="600000" />
+-      <workItem from="1708249633031" duration="17626000" />
+-      <workItem from="1708267670728" duration="2368000" />
+-      <workItem from="1708360345763" duration="19000" />
+-      <workItem from="1708360501883" duration="8165000" />
+-      <workItem from="1708389551937" duration="8190000" />
+-      <workItem from="1708443054042" duration="78000" />
+-      <workItem from="1708444249472" duration="435000" />
+-      <workItem from="1708446636633" duration="1360000" />
+-      <workItem from="1708530621877" duration="3489000" />
+-      <workItem from="1708629674803" duration="690000" />
+-      <workItem from="1708687088255" duration="177000" />
+-      <workItem from="1708882042489" duration="7450000" />
+-      <workItem from="1709038220033" duration="774000" />
+-      <workItem from="1709176246128" duration="14000" />
+-      <workItem from="1709383015105" duration="86000" />
+-      <workItem from="1709383107736" duration="392000" />
+-      <workItem from="1710243512001" duration="12282000" />
+-      <workItem from="1710266632374" duration="1766000" />
+-      <workItem from="1710288507896" duration="1503000" />
+-      <workItem from="1710325675974" duration="885000" />
+-      <workItem from="1710326655683" duration="779000" />
+-      <workItem from="1710418785654" duration="5405000" />
+-      <workItem from="1710440643344" duration="4821000" />
+-      <workItem from="1710456449212" duration="3203000" />
+-      <workItem from="1710489150326" duration="24000" />
+-      <workItem from="1710501995761" duration="599000" />
+-    </task>
+-    <task id="LOCAL-00022" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707731790344</created>
+-      <option name="number" value="00022" />
+-      <option name="presentableId" value="LOCAL-00022" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707731790344</updated>
+-    </task>
+-    <task id="LOCAL-00023" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707732889774</created>
+-      <option name="number" value="00023" />
+-      <option name="presentableId" value="LOCAL-00023" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707732889775</updated>
+-    </task>
+-    <task id="LOCAL-00024" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707733064232</created>
+-      <option name="number" value="00024" />
+-      <option name="presentableId" value="LOCAL-00024" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707733064232</updated>
+-    </task>
+-    <task id="LOCAL-00025" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707733131237</created>
+-      <option name="number" value="00025" />
+-      <option name="presentableId" value="LOCAL-00025" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707733131237</updated>
+-    </task>
+-    <task id="LOCAL-00026" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707733410417</created>
+-      <option name="number" value="00026" />
+-      <option name="presentableId" value="LOCAL-00026" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707733410417</updated>
+-    </task>
+-    <task id="LOCAL-00027" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707733460809</created>
+-      <option name="number" value="00027" />
+-      <option name="presentableId" value="LOCAL-00027" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707733460809</updated>
+-    </task>
+-    <task id="LOCAL-00028" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707734602129</created>
+-      <option name="number" value="00028" />
+-      <option name="presentableId" value="LOCAL-00028" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707734602129</updated>
+-    </task>
+-    <task id="LOCAL-00029" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707734613623</created>
+-      <option name="number" value="00029" />
+-      <option name="presentableId" value="LOCAL-00029" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707734613623</updated>
+-    </task>
+-    <task id="LOCAL-00030" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707734714171</created>
+-      <option name="number" value="00030" />
+-      <option name="presentableId" value="LOCAL-00030" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707734714171</updated>
+-    </task>
+-    <task id="LOCAL-00031" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707734949158</created>
+-      <option name="number" value="00031" />
+-      <option name="presentableId" value="LOCAL-00031" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707734949159</updated>
+-    </task>
+-    <task id="LOCAL-00032" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707735444855</created>
+-      <option name="number" value="00032" />
+-      <option name="presentableId" value="LOCAL-00032" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707735444855</updated>
+-    </task>
+-    <task id="LOCAL-00033" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707735564527</created>
+-      <option name="number" value="00033" />
+-      <option name="presentableId" value="LOCAL-00033" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707735564527</updated>
+-    </task>
+-    <task id="LOCAL-00034" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707735990614</created>
+-      <option name="number" value="00034" />
+-      <option name="presentableId" value="LOCAL-00034" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707735990614</updated>
+-    </task>
+-    <task id="LOCAL-00035" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707739699423</created>
+-      <option name="number" value="00035" />
+-      <option name="presentableId" value="LOCAL-00035" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707739699423</updated>
+-    </task>
+-    <task id="LOCAL-00036" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707753679476</created>
+-      <option name="number" value="00036" />
+-      <option name="presentableId" value="LOCAL-00036" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707753679476</updated>
+-    </task>
+-    <task id="LOCAL-00037" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707755442409</created>
+-      <option name="number" value="00037" />
+-      <option name="presentableId" value="LOCAL-00037" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707755442409</updated>
+-    </task>
+-    <task id="LOCAL-00038" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707935065745</created>
+-      <option name="number" value="00038" />
+-      <option name="presentableId" value="LOCAL-00038" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707935065745</updated>
++      <updated>1710704845805</updated>
++      <workItem from="1710704847219" duration="134000" />
++      <workItem from="1710705546157" duration="204000" />
++      <workItem from="1710705786634" duration="25000" />
++      <workItem from="1710705851178" duration="447000" />
++      <workItem from="1710706528945" duration="622000" />
+     </task>
+-    <task id="LOCAL-00039" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707958152611</created>
+-      <option name="number" value="00039" />
+-      <option name="presentableId" value="LOCAL-00039" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707958152611</updated>
+-    </task>
+-    <task id="LOCAL-00040" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707958162776</created>
+-      <option name="number" value="00040" />
+-      <option name="presentableId" value="LOCAL-00040" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707958162776</updated>
+-    </task>
+-    <task id="LOCAL-00041" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707958253947</created>
+-      <option name="number" value="00041" />
+-      <option name="presentableId" value="LOCAL-00041" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707958253947</updated>
+-    </task>
+-    <task id="LOCAL-00042" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707958289111</created>
+-      <option name="number" value="00042" />
+-      <option name="presentableId" value="LOCAL-00042" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707958289111</updated>
+-    </task>
+-    <task id="LOCAL-00043" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707958341975</created>
+-      <option name="number" value="00043" />
+-      <option name="presentableId" value="LOCAL-00043" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707958341975</updated>
+-    </task>
+-    <task id="LOCAL-00044" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707958438460</created>
+-      <option name="number" value="00044" />
+-      <option name="presentableId" value="LOCAL-00044" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707958438460</updated>
+-    </task>
+-    <task id="LOCAL-00045" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1707958490702</created>
+-      <option name="number" value="00045" />
+-      <option name="presentableId" value="LOCAL-00045" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1707958490702</updated>
+-    </task>
+-    <task id="LOCAL-00046" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1708098187187</created>
+-      <option name="number" value="00046" />
+-      <option name="presentableId" value="LOCAL-00046" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1708098187187</updated>
+-    </task>
+-    <task id="LOCAL-00047" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1708264365450</created>
+-      <option name="number" value="00047" />
+-      <option name="presentableId" value="LOCAL-00047" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1708264365450</updated>
+-    </task>
+-    <task id="LOCAL-00048" summary="Fixed the most annoying bug I've ever had the displeasure of trying to find">
+-      <option name="closed" value="true" />
+-      <created>1708269097569</created>
+-      <option name="number" value="00048" />
+-      <option name="presentableId" value="LOCAL-00048" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1708269097569</updated>
+-    </task>
+-    <task id="LOCAL-00049" summary="Fixed 0 showing up as -0 from printi">
+-      <option name="closed" value="true" />
+-      <created>1708269205195</created>
+-      <option name="number" value="00049" />
+-      <option name="presentableId" value="LOCAL-00049" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1708269205195</updated>
+-    </task>
+-    <task id="LOCAL-00050" summary="Fixed 0 showing up as -0 from printi">
+-      <option name="closed" value="true" />
+-      <created>1708269822989</created>
+-      <option name="number" value="00050" />
+-      <option name="presentableId" value="LOCAL-00050" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1708269822989</updated>
+-    </task>
+-    <task id="LOCAL-00051" summary="Added support for negative integers without needing to utilise 0-(int)">
+-      <option name="closed" value="true" />
+-      <created>1708270037585</created>
+-      <option name="number" value="00051" />
+-      <option name="presentableId" value="LOCAL-00051" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1708270037585</updated>
+-    </task>
+-    <task id="LOCAL-00052" summary="Fixed shadowing">
+-      <option name="closed" value="true" />
+-      <created>1708368084288</created>
+-      <option name="number" value="00052" />
+-      <option name="presentableId" value="LOCAL-00052" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1708368084289</updated>
+-    </task>
+-    <task id="LOCAL-00053" summary="Added support gor parsing initialisers">
+-      <option name="closed" value="true" />
+-      <created>1708374408506</created>
+-      <option name="number" value="00053" />
+-      <option name="presentableId" value="LOCAL-00053" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1708374408506</updated>
+-    </task>
+-    <task id="LOCAL-00054" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1708446689753</created>
+-      <option name="number" value="00054" />
+-      <option name="presentableId" value="LOCAL-00054" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1708446689753</updated>
+-    </task>
+-    <task id="LOCAL-00055" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1708530697176</created>
+-      <option name="number" value="00055" />
+-      <option name="presentableId" value="LOCAL-00055" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1708530697177</updated>
+-    </task>
+-    <task id="LOCAL-00056" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1708882059655</created>
+-      <option name="number" value="00056" />
+-      <option name="presentableId" value="LOCAL-00056" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1708882059656</updated>
+-    </task>
+-    <task id="LOCAL-00057" summary="Began adding support for reference types">
+-      <option name="closed" value="true" />
+-      <created>1708888153620</created>
+-      <option name="number" value="00057" />
+-      <option name="presentableId" value="LOCAL-00057" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1708888153620</updated>
+-    </task>
+-    <task id="LOCAL-00058" summary="Continued adding support for reference types">
+-      <option name="closed" value="true" />
+-      <created>1708889183047</created>
+-      <option name="number" value="00058" />
+-      <option name="presentableId" value="LOCAL-00058" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1708889183047</updated>
+-    </task>
+-    <task id="LOCAL-00059" summary="Continued work on reference system">
+-      <option name="closed" value="true" />
+-      <created>1710247471819</created>
+-      <option name="number" value="00059" />
+-      <option name="presentableId" value="LOCAL-00059" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1710247471819</updated>
+-    </task>
+-    <task id="LOCAL-00060" summary="Continued work on reference system">
+-      <option name="closed" value="true" />
+-      <created>1710250720696</created>
+-      <option name="number" value="00060" />
+-      <option name="presentableId" value="LOCAL-00060" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1710250720696</updated>
+-    </task>
+-    <task id="LOCAL-00061" summary="Untested reference types working">
+-      <option name="closed" value="true" />
+-      <created>1710252458295</created>
+-      <option name="number" value="00061" />
+-      <option name="presentableId" value="LOCAL-00061" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1710252458295</updated>
+-    </task>
+-    <task id="LOCAL-00062" summary="Began adding heap allocation">
+-      <option name="closed" value="true" />
+-      <created>1710255701419</created>
+-      <option name="number" value="00062" />
+-      <option name="presentableId" value="LOCAL-00062" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1710255701419</updated>
+-    </task>
+-    <task id="LOCAL-00063" summary="Rust fmt">
+-      <option name="closed" value="true" />
+-      <created>1710325793601</created>
+-      <option name="number" value="00063" />
+-      <option name="presentableId" value="LOCAL-00063" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1710325793602</updated>
+-    </task>
+-    <task id="LOCAL-00064" summary="Cargo clippy">
+-      <option name="closed" value="true" />
+-      <created>1710325846217</created>
+-      <option name="number" value="00064" />
+-      <option name="presentableId" value="LOCAL-00064" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1710325846217</updated>
+-    </task>
+-    <task id="LOCAL-00065" summary="Cargo clippy">
+-      <option name="closed" value="true" />
+-      <created>1710326234517</created>
+-      <option name="number" value="00065" />
+-      <option name="presentableId" value="LOCAL-00065" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1710326234517</updated>
+-    </task>
+-    <task id="LOCAL-00066" summary="Build config">
+-      <option name="closed" value="true" />
+-      <created>1710326552208</created>
+-      <option name="number" value="00066" />
+-      <option name="presentableId" value="LOCAL-00066" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1710326552208</updated>
+-    </task>
+-    <task id="LOCAL-00067" summary="README update">
+-      <option name="closed" value="true" />
+-      <created>1710326834533</created>
+-      <option name="number" value="00067" />
+-      <option name="presentableId" value="LOCAL-00067" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1710326834534</updated>
+-    </task>
+-    <task id="LOCAL-00068" summary="Bug found :) (Not fixed)">
+-      <option name="closed" value="true" />
+-      <created>1710453720522</created>
+-      <option name="number" value="00068" />
+-      <option name="presentableId" value="LOCAL-00068" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1710453720522</updated>
+-    </task>
+-    <task id="LOCAL-00069" summary="Commit">
+-      <option name="closed" value="true" />
+-      <created>1710458575472</created>
+-      <option name="number" value="00069" />
+-      <option name="presentableId" value="LOCAL-00069" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1710458575474</updated>
+-    </task>
+-    <task id="LOCAL-00070" summary="Figured out why the bug exists, cba to fix atm :)">
+-      <option name="closed" value="true" />
+-      <created>1710459651943</created>
+-      <option name="number" value="00070" />
+-      <option name="presentableId" value="LOCAL-00070" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1710459651943</updated>
+-    </task>
+-    <option name="localTasksCounter" value="71" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+     <option name="version" value="3" />
+   </component>
+-  <component name="Vcs.Log.History.Properties">
+-    <option name="COLUMN_ID_ORDER">
+-      <list>
+-        <option value="Default.Root" />
+-        <option value="Default.Author" />
+-        <option value="Default.Date" />
+-        <option value="Default.Subject" />
+-        <option value="Space.CommitStatus" />
+-      </list>
+-    </option>
+-  </component>
+-  <component name="Vcs.Log.Tabs.Properties">
+-    <option name="TAB_STATES">
+-      <map>
+-        <entry key="MAIN">
+-          <value>
+-            <State />
+-          </value>
+-        </entry>
+-      </map>
+-    </option>
+-  </component>
+-  <component name="VcsManagerConfiguration">
+-    <MESSAGE value="Cargo fmt" />
+-    <MESSAGE value="Cargo Clippy" />
+-    <MESSAGE value="Fixed the most annoying bug I've ever had the displeasure of trying to find" />
+-    <MESSAGE value="Fixed 0 showing up as -0 from printi" />
+-    <MESSAGE value="Added support for negative integers without needing to utilise 0-(int)" />
+-    <MESSAGE value="Fixed shadowing" />
+-    <MESSAGE value="Added support gor parsing initialisers" />
+-    <MESSAGE value="Began adding support for reference types" />
+-    <MESSAGE value="Continued adding support for reference types" />
+-    <MESSAGE value="Continued work on reference system" />
+-    <MESSAGE value="Untested reference types working" />
+-    <MESSAGE value="Began adding heap allocation" />
+-    <MESSAGE value="Rust fmt" />
+-    <MESSAGE value="Cargo clippy" />
+-    <MESSAGE value="Build config" />
+-    <MESSAGE value="README update" />
+-    <MESSAGE value="Bug found :) (Not fixed)" />
+-    <MESSAGE value="Commit" />
+-    <MESSAGE value="Figured out why the bug exists, cba to fix atm :)" />
+-    <option name="LAST_COMMIT_MESSAGE" value="Figured out why the bug exists, cba to fix atm :)" />
+-  </component>
+-  <component name="XSLT-Support.FileAssociations.UIState">
+-    <expand />
+-    <select />
+-  </component>
+ </project>
+\ No newline at end of file
+Index: .fleet/run.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\n    \"configurations\": [\n        {\n            \"type\": \"cargo\",\n            \"name\": \"Cargo configuration\",\n            \"cargoArgs\": [\"run\"],\n        },\n    ]\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.fleet/run.json b/.fleet/run.json
+--- a/.fleet/run.json	
++++ b/.fleet/run.json	
+@@ -2,8 +2,11 @@
+     "configurations": [
+         {
+             "type": "cargo",
+-            "name": "Cargo configuration",
+-            "cargoArgs": ["run"],
++            "name": "Run",
++            "cargoArgs": ["run", "--release"],
++            "environment": {
++                "RUSTFLAGS": "-C target-cpu=native"
++            },
+         },
+     ]
+ }
+\ No newline at end of file
+Index: .cargo/config.toml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>[build]\nrustflags = [\"-C\", \"target-cpu=native\"]
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.cargo/config.toml b/.cargo/config.toml
+--- a/.cargo/config.toml	
++++ b/.cargo/config.toml	
+@@ -1,2 +1,6 @@
+ [build]
+-rustflags = ["-C", "target-cpu=native"]
+\ No newline at end of file
++rustflags = ["-C", "target-cpu=native"]
++
++[target.x86_64-unknown-linux-gnu]
++linker = "/usr/bin/clang"
++rustflags = ["-C", "link-arg=--ld-path=/usr/bin/mold"]
+\ No newline at end of file
+Index: out.asm
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>    global main\n    extern ExitProcess\n    extern GetStdHandle\n    extern WriteFile\n    extern HeapAlloc\n    extern HeapFree\n    extern GetProcessHeap\n    section .text\n\n__4: ; printi\n\tpush rbp\n\tmov rbp, rsp\n\tsub rsp, 80\n\t; [inline asm]\n\tmov rcx, rbp\n\tdec rcx\n\tmov rax, qword [rbp+16]\n\tmov qword [rbp-24], \"\"\n\tmov qword [rbp-16], \"\"\n\tmov dword [rbp-8], \"\"\n\tmov dword [rbp-4], `\\0\\0\\0\\n`\n\tcmp rax, 0\n\tjge ._4.positive\n\tmov dword [rbp-20], \"-\"\n\tmov r8, rax\n\tmov rax, 0\n\tsub rax, r8\n\t._4.positive:\n\tmov rbx, 10\n\t._4.loop:\n\txor rdx, rdx\n\tdiv rbx\n\tdec rcx\n\tadd rdx, '0'\n\tmov [rcx], dl\n\ttest rax, rax\n\tjnz ._4.loop\n\tmov ecx, -11\n\tcall GetStdHandle\n\tmov rcx, rax\n\tmov rdx, rbp\n\tsub rdx, 24\n\tmov r8, 24\n\tmov qword [rbp - 40], 0\n\tmov r9, rbp\n\tsub r9, 24\n\tmov qword [rbp - 48], 0\n\tcall WriteFile\n\tleave\n\tret\n\n__14: ; printb\n\tpush rbp\n\tmov rbp, rsp\n\tsub rsp, 64\n\t; [inline asm]\n\tmov qword [rbp-16], \"true\"\n\tmov qword [rbp-8], `\\n\\r`\n\tmov rax, qword [rbp+16]\n\tcmp rax, 0\n\tjz ._14.true\n\tmov qword [rbp-16], \"fals\"\n\tmov qword [rbp-8], `e\\n\\r`\n\t._14.true:\n\tmov ecx, -11\n\tcall GetStdHandle\n\tmov rcx, rax\n\tmov rdx, rbp\n\tsub rdx, 16\n\tmov r8, 16\n\tmov qword [rbp - 24], 0\n\tmov r9, rbp\n\tsub r9, 24\n\tmov qword [rbp - 32], 0\n\tcall WriteFile\n\tleave\n\tret\n\n_1: ; new\n\tpush rbp\n\tmov rbp, rsp\n\tsub rsp, 16\n\t; '        return @LL {'\n\t; [inline asm]\n\tmov rax, qword 0\n\tmov qword [rbp-16], rax\n\t; [inline asm]\n\tmov qword [rbp-8], 1\n\t; [inline asm]\n\t; [return] Some(-16)\n\tmov rax, qword [rbp-16]\n\tmov r14, qword [rbp-8]\n\tleave\n\tret\n\n_3: ; test\n\tpush rbp\n\tmov rbp, rsp\n\tsub rsp, 48\n\t; '    let ll: LL = LL#new();'\n\t; [no return call] 1 , [], -16\n\tcall _1\n\tmov qword [rbp-16], rax\n\tmov qword [rbp-8], r14\n\t; '    let b: bool = ll.has_first;'\n\t; [dyn to copy] -8 , -24, 8\n\tmov rax, qword [rbp-8]\n\tmov qword [rbp-24], rax\n\tmov r15, qword [rbp-24]\n\t; '    printb(b);'\n\t; [no return call] -14 , [(-24, 8)]\n\tpush qword 0\n\tmov rax, qword [rbp-24]\n\tpush rax\n\tcall __14\n\tadd rsp, 16\n\t; ''\n\t; '    let a: $int = 0;'\n\t; [inline asm]\n\tmov rax, qword 0\n\tmov qword [rbp-32], rax\n\t; '    *a = 1;'\n\t; [dyn from copy] -32 , -40, 8\n\tmov r9, qword [rbp-32]\n\tmov rax, qword [r9+0]\n\tmov qword [rbp-40], rax\n\t; [inline asm]\n\tmov rax, qword 1\n\tmov qword [rbp-40], rax\n\t; [dyn to copy] -40 , -32, 8\n\tmov r9, qword [rbp-32]\n\tmov rax, qword [rbp-40]\n\tmov qword [r9+0], rax\n\t; [inline asm]\n\tmov rax, rbp\n\tadd rax, -16\n\tmov qword [rbp-48], rax\n\t; [no return call] 2 , [(-48, 8)]\n\tpush qword 0\n\tmov rax, qword [rbp-48]\n\tpush rax\n\tcall _2\n\tadd rsp, 16\n\tleave\n\tret\n\n_2: ; destroy\n\tpush rbp\n\tmov rbp, rsp\n\tsub rsp, 48\n\t; '        if (!(*self.has_first)) {'\n\t; [inline asm]\n\tmov rax, qword [rbp+16]\n\tadd rax, 8\n\tmov qword [rbp-8], rax\n\t; [dyn from copy] -8 , -16, 8\n\tmov r9, qword [rbp-8]\n\tmov rax, qword [r9+0]\n\tmov qword [rbp-16], rax\n\t; [inline asm]\n\t; [inline asm]\n\tmov rax, qword [rbp-16]\n\tcmp rax, 0\n\tsetz al\n\tmov qword [rbp-24], rax\n\t; [inline asm]\n\tmov rax, qword [rbp-24]\n\tcmp rax, 0\n\tjnz .2.0\n\t; '            printi(119);'\n\t; [inline asm]\n\tmov rax, qword 119\n\tmov qword [rbp-32], rax\n\t; [no return call] -4 , [(-32, 8)]\n\tpush qword 0\n\tmov rax, qword [rbp-32]\n\tpush rax\n\tcall __4\n\tadd rsp, 16\n\t; '            return;'\n\t; [return] None\n\tleave\n\tret\n\t; [inline asm]\n\t.2.0:\n\t.2.1:\n\t; '            printi(119);'\n\t; '            return;'\n\t; '        };'\n\t; ''\n\t; '        printi(120);'\n\t; [inline asm]\n\tmov rax, qword 120\n\tmov qword [rbp-40], rax\n\t; [no return call] -4 , [(-40, 8)]\n\tpush qword 0\n\tmov rax, qword [rbp-40]\n\tpush rax\n\tcall __4\n\tadd rsp, 16\n\tleave\n\tret\n\nmain: ; main\n\tpush rbp\n\tmov rbp, rsp\n\tsub rsp, 16\n\t; '    test();'\n\t; [no return call] 3 , []\n\tcall _3\n\t; ''\n\t; '    return 7;'\n\t; [inline asm]\n\tmov rax, qword 7\n\tmov qword [rbp-8], rax\n\t; [return] Some(-8)\n\tmov rcx, [rbp-8]\n\tcall ExitProcess\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/out.asm b/out.asm
+--- a/out.asm	
++++ b/out.asm	
+@@ -11,7 +11,6 @@
+ 	push rbp
+ 	mov rbp, rsp
+ 	sub rsp, 80
+-	; [inline asm]
+ 	mov rcx, rbp
+ 	dec rcx
+ 	mov rax, qword [rbp+16]
+@@ -49,155 +48,124 @@
+ 	leave
+ 	ret
+ 
+-__14: ; printb
+-	push rbp
+-	mov rbp, rsp
+-	sub rsp, 64
+-	; [inline asm]
+-	mov qword [rbp-16], "true"
+-	mov qword [rbp-8], `\n\r`
+-	mov rax, qword [rbp+16]
+-	cmp rax, 0
+-	jz ._14.true
+-	mov qword [rbp-16], "fals"
+-	mov qword [rbp-8], `e\n\r`
+-	._14.true:
+-	mov ecx, -11
+-	call GetStdHandle
+-	mov rcx, rax
+-	mov rdx, rbp
+-	sub rdx, 16
+-	mov r8, 16
+-	mov qword [rbp - 24], 0
+-	mov r9, rbp
+-	sub r9, 24
+-	mov qword [rbp - 32], 0
+-	call WriteFile
+-	leave
+-	ret
+-
+ _1: ; new
+ 	push rbp
+ 	mov rbp, rsp
+ 	sub rsp, 16
+-	; '        return @LL {'
+-	; [inline asm]
+ 	mov rax, qword 0
+ 	mov qword [rbp-16], rax
+-	; [inline asm]
+ 	mov qword [rbp-8], 1
+-	; [inline asm]
+-	; [return] Some(-16)
+ 	mov rax, qword [rbp-16]
+-	mov r14, qword [rbp-8]
+ 	leave
+ 	ret
+ 
+-_3: ; test
++_5: ; test
+ 	push rbp
+ 	mov rbp, rsp
+-	sub rsp, 48
+-	; '    let ll: LL = LL#new();'
+-	; [no return call] 1 , [], -16
++	sub rsp, 32
+ 	call _1
+ 	mov qword [rbp-16], rax
+-	mov qword [rbp-8], r14
+-	; '    let b: bool = ll.has_first;'
+-	; [dyn to copy] -8 , -24, 8
+-	mov rax, qword [rbp-8]
+-	mov qword [rbp-24], rax
+-	mov r15, qword [rbp-24]
+-	; '    printb(b);'
+-	; [no return call] -14 , [(-24, 8)]
+-	push qword 0
+-	mov rax, qword [rbp-24]
+-	push rax
+-	call __14
+-	add rsp, 16
+-	; ''
+-	; '    let a: $int = 0;'
+-	; [inline asm]
+-	mov rax, qword 0
+-	mov qword [rbp-32], rax
+-	; '    *a = 1;'
+-	; [dyn from copy] -32 , -40, 8
+-	mov r9, qword [rbp-32]
+-	mov rax, qword [r9+0]
+-	mov qword [rbp-40], rax
+-	; [inline asm]
+-	mov rax, qword 1
+-	mov qword [rbp-40], rax
+-	; [dyn to copy] -40 , -32, 8
+-	mov r9, qword [rbp-32]
+-	mov rax, qword [rbp-40]
+-	mov qword [r9+0], rax
+-	; [inline asm]
+ 	mov rax, rbp
+ 	add rax, -16
+-	mov qword [rbp-48], rax
+-	; [no return call] 2 , [(-48, 8)]
++	mov qword [rbp-24], rax
+ 	push qword 0
+-	mov rax, qword [rbp-48]
++	mov rax, qword [rbp-24]
+ 	push rax
+-	call _2
++	call _4
+ 	add rsp, 16
+ 	leave
+ 	ret
+ 
+-_2: ; destroy
++_4: ; destroy
+ 	push rbp
+ 	mov rbp, rsp
+-	sub rsp, 48
+-	; '        if (!(*self.has_first)) {'
+-	; [inline asm]
++	sub rsp, 128
+ 	mov rax, qword [rbp+16]
+ 	add rax, 8
+ 	mov qword [rbp-8], rax
+-	; [dyn from copy] -8 , -16, 8
+ 	mov r9, qword [rbp-8]
+ 	mov rax, qword [r9+0]
+ 	mov qword [rbp-16], rax
+-	; [inline asm]
+-	; [inline asm]
+ 	mov rax, qword [rbp-16]
+ 	cmp rax, 0
+ 	setz al
+ 	mov qword [rbp-24], rax
+-	; [inline asm]
+ 	mov rax, qword [rbp-24]
+ 	cmp rax, 0
+-	jnz .2.0
+-	; '            printi(119);'
+-	; [inline asm]
+-	mov rax, qword 119
+-	mov qword [rbp-32], rax
+-	; [no return call] -4 , [(-32, 8)]
+-	push qword 0
+-	mov rax, qword [rbp-32]
+-	push rax
+-	call __4
+-	add rsp, 16
+-	; '            return;'
+-	; [return] None
++	jnz .4.0
+ 	leave
+ 	ret
+-	; [inline asm]
+-	.2.0:
+-	.2.1:
+-	; '            printi(119);'
+-	; '            return;'
+-	; '        };'
+-	; ''
+-	; '        printi(120);'
+-	; [inline asm]
+-	mov rax, qword 120
++	.4.0:
++	.4.1:
++	mov rax, qword [rbp+16]
++	add rax, 0
+ 	mov qword [rbp-40], rax
+-	; [no return call] -4 , [(-40, 8)]
+-	push qword 0
+-	mov rax, qword [rbp-40]
+-	push rax
+-	call __4
+-	add rsp, 16
++	mov r9, qword [rbp-40]
++	mov rax, qword [r9+0]
++	mov qword [rbp-32], rax
++	.4.2:
++	mov rax, qword [rbp-32]
++	add rax, 8
++	mov qword [rbp-48], rax
++	mov r9, qword [rbp-48]
++	mov rax, qword [r9+0]
++	mov qword [rbp-56], rax
++	mov rax, qword [rbp-56]
++	cmp rax, 0
++	setz al
++	mov qword [rbp-64], rax
++	mov rax, qword [rbp-64]
++	cmp rax, 0
++	jnz .4.3
++	mov rax, qword [rbp-32]
++	mov qword [rbp-72], rax
++	mov rax, qword [rbp-32]
++	add rax, 16
++	mov qword [rbp-80], rax
++	mov r9, qword [rbp-80]
++	mov rax, qword [r9+0]
++	mov qword [rbp-32], rax
++	call GetProcessHeap
++	mov rcx, rax
++	mov rdx, 0
++	mov r8, qword [rbp-72]
++	call HeapFree
++	cmp rax, 0
++	mov rcx, 0
++	setz cl
++	mov qword [rbp-88], rcx
++	jmp .4.2
++	.4.3:
++	call GetProcessHeap
++	mov rcx, rax
++	mov rdx, 0
++	mov r8, qword [rbp-32]
++	call HeapFree
++	cmp rax, 0
++	mov rcx, 0
++	setz cl
++	mov qword [rbp-96], rcx
++	mov rax, qword [rbp+16]
++	add rax, 8
++	mov qword [rbp-104], rax
++	mov r9, qword [rbp-104]
++	mov rax, qword [r9+0]
++	mov qword [rbp-112], rax
++	mov qword [rbp-112], 1
++	mov r9, qword [rbp-104]
++	mov rax, qword [rbp-112]
++	mov qword [r9+0], rax
++	mov rax, qword [rbp+16]
++	add rax, 0
++	mov qword [rbp-120], rax
++	mov r9, qword [rbp-120]
++	mov rax, qword [r9+0]
++	mov qword [rbp-128], rax
++	mov rax, qword 0
++	mov qword [rbp-128], rax
++	mov r9, qword [rbp-120]
++	mov rax, qword [rbp-128]
++	mov qword [r9+0], rax
+ 	leave
+ 	ret
+ 
+@@ -205,14 +173,8 @@
+ 	push rbp
+ 	mov rbp, rsp
+ 	sub rsp, 16
+-	; '    test();'
+-	; [no return call] 3 , []
+-	call _3
+-	; ''
+-	; '    return 7;'
+-	; [inline asm]
++	call _5
+ 	mov rax, qword 7
+ 	mov qword [rbp-8], rax
+-	; [return] Some(-8)
+ 	mov rcx, [rbp-8]
+ 	call ExitProcess
