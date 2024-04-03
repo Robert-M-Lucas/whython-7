@@ -60,7 +60,7 @@ pub fn main_args(args: Args) -> Result<(), AnyError> {
     if let Some(path) = PathBuf::from(&args.output).parent() {
         if let Err(e) = fs::create_dir_all(path) {
             if !matches!(e.kind(), ErrorKind::AlreadyExists) {
-                cprintln!("<red,bold>Failed to create directories for output files</>");
+                cprintln!("<r,bold>Failed to create directories for output files</>");
                 return Err(AnyError::Other);
             }
         }
@@ -71,7 +71,7 @@ pub fn main_args(args: Args) -> Result<(), AnyError> {
     print!("Parsing... ");
     time!(
         if let Err(e) = parse(PathBuf::from(&args.input), &mut asts, &mut files_followed) {
-            cprintln!("\n<red,bold>{}</>", e);
+            cprintln!("\n<r,bold>{}</>", e);
             return Err(e.into());
         }
     );
@@ -80,7 +80,7 @@ pub fn main_args(args: Args) -> Result<(), AnyError> {
     time!(
         let functions = match process(asts) {
             Err(e) => {
-                cprintln!("\n<red,bold>{}</>", e);
+                cprintln!("\n<r,bold>{}</>", e);
                 return Err(e.into());
             }
             Ok(functions) => functions
@@ -133,6 +133,6 @@ pub fn main_args(args: Args) -> Result<(), AnyError> {
         }
     }
     
-    cprintln!("<green,bold>Done!</>");
+    cprintln!("<g,bold>Done!</>");
     Ok(())
 }

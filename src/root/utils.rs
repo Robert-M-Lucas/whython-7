@@ -26,7 +26,7 @@ macro_rules! time {
         let t = std::time::Instant::now();
         $($tts)*
         let end = t.elapsed();
-        color_print::cprintln!("<green,bold>Completed [{:?}]</>", end);
+        color_print::cprintln!("<g,bold>Completed [{:?}]</>", end);
     };
 }
 

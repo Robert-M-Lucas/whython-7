@@ -16,14 +16,14 @@ pub fn run(output: &str) {
                 match r.code() {
                     Some(c) => c,
                     None => {
-                        cprintln!("<red,bold>\nProcess did not return an exit code. \
+                        cprintln!("<r,bold>\nProcess did not return an exit code. \
                         This could be due to a forceful termination</>");
                         return;
                     }
                 } 
             }
             Err(e) => {
-                cprintln!("<red,bold>Starting process failed with error:\n{}</>", e);
+                cprintln!("<r,bold>Starting process failed with error:\n{}</>", e);
                 return;
             } 
         };
@@ -32,7 +32,7 @@ pub fn run(output: &str) {
     // ? Here to circumvent some timing issues
     thread::sleep(Duration::from_millis(100));
     println!("\nExited with return code {}", code);
-    cprintln!("<green,bold>Completed [{:?}]</>", time);
+    cprintln!("<g,bold>Completed [{:?}]</>", time);
 }
 
 #[cfg(target_os = "linux")]
@@ -49,7 +49,7 @@ pub fn run_wine_experimental(output: &str) -> Result<(), ()> {
         "\nExited with return code {}",
         code
     );
-    cprintln!("<green,bold>Completed [{:?}]</>", time);
+    cprintln!("<g,bold>Completed [{:?}]</>", time);
     Ok(())
 }
 
@@ -59,7 +59,7 @@ pub fn assemble(output: &str) -> Result<(), ()> {
         .status())?
         .success()
     {
-        cprintln!("<red,bold>NASM assembler step failed</>");
+        cprintln!("<r,bold>NASM assembler step failed</>");
         return Err(())
     }
     Ok(())
@@ -84,7 +84,7 @@ pub fn link(output: &str) -> Result<(), ()> {
         .status())?
         .success()
     {
-        cprintln!("<red,bold>MSVC linking step failed</>");
+        cprintln!("<r,bold>MSVC linking step failed</>");
         return Err(())
     }
 
@@ -103,7 +103,7 @@ pub fn link_gcc_experimental(output: &str) -> Result<(), ()> {
         .status())?
         .success()
     {
-        cprintln!("<red,bold>gcc linking step failed</>");
+        cprintln!("<r,bold>gcc linking step failed</>");
         return Err(());
     }
     
