@@ -5,9 +5,9 @@ use std::collections::HashMap;
 
 use crate::root::ast::literals::Literal;
 use crate::root::basic_ast::symbol::BasicSymbol;
-use crate::root::custom::bool::Bool;
-use crate::root::custom::float::Float;
-use crate::root::custom::int::Int;
+use crate::root::custom::types::bool::Bool;
+use crate::root::custom::types::float::Float;
+use crate::root::custom::types::int::Int;
 use crate::root::parser::line_info::LineInfo;
 
 use crate::root::processor::user_type::UserType;

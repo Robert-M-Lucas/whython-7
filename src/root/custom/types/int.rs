@@ -4,8 +4,28 @@ use crate::root::processor::type_builder::{Type, TypedFunction, TypeTable};
 use lazy_static::lazy_static;
 use unique_type_id::UniqueTypeId;
 use crate::root::ast::literals::Literal;
-use crate::root::custom::bool::Bool;
+use crate::root::custom::types::bool::{Bool, BoolEQ, BoolNE, BoolNot};
 use crate::root::processor::processor::ProcessorError;
+
+pub fn add_function_signatures(existing: &mut Vec<(Option<isize>, Box<dyn TypedFunction>)>) {
+    let signatures: [(Option<isize>, Box<dyn TypedFunction>); 11] = [
+        (Some(Int::get_id()), Box::new(IntAdd {})),
+        (Some(Int::get_id()), Box::new(IntSub {})),
+        (Some(Int::get_id()), Box::new(IntMul {})),
+        (Some(Int::get_id()), Box::new(IntDiv {})),
+        (Some(Int::get_id()), Box::new(IntMod {})),
+        (Some(Int::get_id()), Box::new(IntLT {})),
+        (Some(Int::get_id()), Box::new(IntGT {})),
+        (Some(Int::get_id()), Box::new(IntLE {})),
+        (Some(Int::get_id()), Box::new(IntGE {})),
+        (Some(Int::get_id()), Box::new(IntEQ {})),
+        (Some(Int::get_id()), Box::new(IntNE {}))
+    ];
+
+    for s in signatures {
+        existing.push(s);
+    }
+}
 
 #[derive(UniqueTypeId)]
 #[UniqueTypeIdType = "u16"]

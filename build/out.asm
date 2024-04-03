@@ -67,6 +67,3 @@ main: ; main
 	; [return] Some((-56, 8))
 	mov rcx, qword [rbp-56]
 	call ExitProcess
-
-formatStr:
-	db `The int is %d\n`,0

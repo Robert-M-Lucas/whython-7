@@ -9,7 +9,7 @@ mod process_lines;
 mod reference;
 
 use crate::root::basic_ast::symbol::BasicSymbol;
-use crate::root::compiler::custom_functions::{
+use crate::root::custom::get::{
     get_custom_function_implementations, get_custom_function_signatures,
 };
 use crate::root::compiler::generate_asm::compile_user_function;

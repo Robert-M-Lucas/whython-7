@@ -14,7 +14,7 @@ use crate::root::processor::type_builder::Type;
 use itertools::Itertools;
 #[cfg(debug_assertions)]
 use std::fs;
-use crate::root::custom::bool::Bool;
+use crate::root::custom::types::bool::Bool;
 
 pub fn process_lines(
     section: &[(BasicSymbol, LineInfo)],

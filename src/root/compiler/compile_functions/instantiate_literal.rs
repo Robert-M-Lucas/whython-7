@@ -5,7 +5,7 @@ use crate::root::compiler::compile_functions::{FunctionHolder, Line};
 use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::processor::ProcessorError;
 use either::{Either, Left, Right};
-use crate::root::custom::int::Int;
+use crate::root::custom::types::int::Int;
 
 #[allow(dead_code)]
 fn try_instantiate_literal(

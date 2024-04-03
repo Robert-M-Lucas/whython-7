@@ -1,3 +1,3 @@
-pub mod bool;
-pub mod int;
-pub mod float;
+pub mod types;
+mod functions;
+pub mod get;

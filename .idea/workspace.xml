@@ -8,15 +8,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Added floats and their associated operations">
+      <change afterPath="$PROJECT_DIR$/src/root/custom/functions/mod.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/root/custom/functions/print.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/root/custom/functions/windows.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/root/custom/get.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/root/custom/types/mod.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.asm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/assembler/assemble.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/assembler/assemble.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/custom_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/custom_functions.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/runner.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/runner.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/types.toml" beforeDir="false" afterPath="$PROJECT_DIR$/types.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/out.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/ast/literals.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/ast/literals.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/instantiate_literal.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/instantiate_literal.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/name_handler.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/name_handler.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/operators.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/process_lines.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/process_lines.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/custom_functions.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/custom/bool.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/types/bool.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/custom/float.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/types/float.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/custom/int.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/types/int.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/custom/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/processor/type_builder.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/type_builder.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,6 +127,7 @@
     "nodejs_package_manager_path": "npm",
     "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
     "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
+    "org.rust.first.attach.projects": "true",
     "org.rust.first.attach.projects.stats": "true",
     "settings.editor.selected.configurable": "language.rust.cargo.check",
     "vue.rearranger.settings.migration": "true"
@@ -151,14 +164,12 @@
       <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/root/custom/types" />
       <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7\tests\outputs\print" />
       <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7\tests\inputs\print" />
       <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7\src\root" />
       <recent name="$PROJECT_DIR$/reference" />
     </key>
-  </component>
-  <component name="RsExternalLinterProjectSettings">
-    <option name="runOnTheFly" value="true" />
   </component>
   <component name="RunManager" selected="Cargo.Run whython-7">
     <configuration name="Run whython-7" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
@@ -286,6 +297,10 @@
       <workItem from="1711636002595" duration="497000" />
       <workItem from="1711636595406" duration="3621000" />
       <workItem from="1711650461232" duration="10337000" />
+      <workItem from="1711921533130" duration="80000" />
+      <workItem from="1712079579923" duration="4000" />
+      <workItem from="1712180291542" duration="332000" />
+      <workItem from="1712180649769" duration="1464000" />
     </task>
     <task id="LOCAL-00044" summary="Commit">
       <option name="closed" value="true" />

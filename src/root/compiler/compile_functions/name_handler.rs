@@ -6,7 +6,7 @@ use crate::root::processor::type_builder::{TypeTable, TypedFunction};
 use crate::root::utils::align;
 use either::{Either, Left, Right};
 use std::collections::HashSet;
-use crate::root::custom::int::Int;
+use crate::root::custom::types::int::Int;
 
 pub struct NameHandler {
     type_table: TypeTable,

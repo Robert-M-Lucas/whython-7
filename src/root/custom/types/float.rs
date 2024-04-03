@@ -3,10 +3,28 @@ use unique_type_id::UniqueTypeId;
 
 use crate::root::ast::literals::Literal;
 use crate::root::compiler::generate_asm::get_local_address;
-use crate::root::custom::bool::Bool;
+use crate::root::custom::types::bool::Bool;
 use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::processor::ProcessorError;
 use crate::root::processor::type_builder::{Type, TypedFunction, TypeTable};
+
+pub fn add_function_signatures(existing: &mut Vec<(Option<isize>, Box<dyn TypedFunction>)>) {
+    let signatures: [(Option<isize>, Box<dyn TypedFunction>); 10] = [
+        (Some(Float::get_id()), Box::new(FloatAdd {})),
+        (Some(Float::get_id()), Box::new(FloatSub {})),
+        (Some(Float::get_id()), Box::new(FloatMul {})),
+        (Some(Float::get_id()), Box::new(FloatDiv {})),
+        (Some(Float::get_id()), Box::new(FloatLT {})),
+        (Some(Float::get_id()), Box::new(FloatGT {})),
+        (Some(Float::get_id()), Box::new(FloatLE {})),
+        (Some(Float::get_id()), Box::new(FloatGE {})),
+        (Some(Float::get_id()), Box::new(FloatEQ {})),
+        (Some(Float::get_id()), Box::new(FloatNE {}))
+    ];
+    for s in signatures {
+        existing.push(s);
+    }
+}
 
 #[derive(UniqueTypeId)]
 #[UniqueTypeIdType = "u16"]
