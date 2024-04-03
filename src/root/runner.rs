@@ -1,6 +1,7 @@
 use std::{fs, thread};
 use std::process::Command;
 use std::time::Duration;
+use color_print::cprintln;
 
 use crate::ret_time;
 use crate::root::utils::try_run_program;
@@ -15,14 +16,14 @@ pub fn run(output: &str) {
                 match r.code() {
                     Some(c) => c,
                     None => {
-                        println!("\nProcess did not return an exit code. \
-                        This could be due to a forceful termination");
+                        cprintln!("<red,bold>\nProcess did not return an exit code. \
+                        This could be due to a forceful termination</>");
                         return;
                     }
                 } 
             }
             Err(e) => {
-                println!("Starting process failed with error:\n{}", e);
+                cprintln!("<red,bold>Starting process failed with error:\n{}</>", e);
                 return;
             } 
         };
@@ -31,7 +32,7 @@ pub fn run(output: &str) {
     // ? Here to circumvent some timing issues
     thread::sleep(Duration::from_millis(100));
     println!("\nExited with return code {}", code);
-    println!("Completed [{:?}]", time);
+    cprintln!("<green,bold>Completed [{:?}]</>", time);
 }
 
 #[cfg(target_os = "linux")]
@@ -48,7 +49,7 @@ pub fn run_wine_experimental(output: &str) -> Result<(), ()> {
         "\nExited with return code {}",
         code
     );
-    println!("Completed [{:?}]", time);
+    cprintln!("<green,bold>Completed [{:?}]</>", time);
     Ok(())
 }
 
@@ -58,7 +59,7 @@ pub fn assemble(output: &str) -> Result<(), ()> {
         .status())?
         .success()
     {
-        println!("NASM assembler step failed");
+        cprintln!("<red,bold>NASM assembler step failed</>");
         return Err(())
     }
     Ok(())
@@ -83,7 +84,7 @@ pub fn link(output: &str) -> Result<(), ()> {
         .status())?
         .success()
     {
-        println!("MSVC linking step failed");
+        cprintln!("<red,bold>MSVC linking step failed</>");
         return Err(())
     }
 
@@ -102,7 +103,7 @@ pub fn link_gcc_experimental(output: &str) -> Result<(), ()> {
         .status())?
         .success()
     {
-        println!("gcc linking step failed");
+        cprintln!("<red,bold>gcc linking step failed</>");
         return Err(());
     }
     

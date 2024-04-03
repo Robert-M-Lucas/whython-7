@@ -7,28 +7,16 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Added floats and their associated operations">
-      <change afterPath="$PROJECT_DIR$/src/root/custom/functions/mod.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/root/custom/functions/print.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/root/custom/functions/windows.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/root/custom/get.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/root/custom/types/mod.rs" afterDir="false" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Meta">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.asm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/out.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/ast/literals.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/ast/literals.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/instantiate_literal.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/instantiate_literal.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/name_handler.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/name_handler.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/operators.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/process_lines.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/process_lines.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/custom_functions.rs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/custom/bool.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/types/bool.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/custom/float.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/types/float.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/custom/int.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/types/int.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/custom/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/processor/type_builder.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/type_builder.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/runner.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/runner.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/utils.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/utils.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -300,23 +288,7 @@
       <workItem from="1711921533130" duration="80000" />
       <workItem from="1712079579923" duration="4000" />
       <workItem from="1712180291542" duration="332000" />
-      <workItem from="1712180649769" duration="1464000" />
-    </task>
-    <task id="LOCAL-00044" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707958438460</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1707958438460</updated>
-    </task>
-    <task id="LOCAL-00045" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1707958490702</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1707958490702</updated>
+      <workItem from="1712180649769" duration="2418000" />
     </task>
     <task id="LOCAL-00046" summary="Commit">
       <option name="closed" value="true" />
@@ -694,7 +666,23 @@
       <option name="project" value="LOCAL" />
       <updated>1711658751990</updated>
     </task>
-    <option name="localTasksCounter" value="93" />
+    <task id="LOCAL-00093" summary="Moved builtin types and functions around">
+      <option name="closed" value="true" />
+      <created>1712182153260</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1712182153261</updated>
+    </task>
+    <task id="LOCAL-00094" summary="Meta">
+      <option name="closed" value="true" />
+      <created>1712182217705</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1712182217706</updated>
+    </task>
+    <option name="localTasksCounter" value="95" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -723,8 +711,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Commit" />
-    <MESSAGE value="Figured out why the bug exists, cba to fix atm :)" />
     <MESSAGE value="Began implementing support for return types larger than 8 bytes" />
     <MESSAGE value="Other" />
     <MESSAGE value="Got return values larges than 8 bytes working" />
@@ -748,7 +734,9 @@
     <MESSAGE value="Added support for initialiser type inference i.e. allowing initialisers to be passed as arguments without having to be assigned to a variable" />
     <MESSAGE value="Changed default output directory. All necessary directories will also be automatically created." />
     <MESSAGE value="Added floats and their associated operations" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added floats and their associated operations" />
+    <MESSAGE value="Moved builtin types and functions around" />
+    <MESSAGE value="Meta" />
+    <option name="LAST_COMMIT_MESSAGE" value="Meta" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

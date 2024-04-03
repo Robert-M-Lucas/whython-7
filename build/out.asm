@@ -8,18 +8,6 @@
     extern printf
     section .text
 
-__37: ; printf
-	push rbp
-	mov rbp, rsp
-	sub rsp, 32
-	; [inline asm]
-	mov rdi,formatStr ; first argument: format string
-	mov rsi,5 ; second argument (for format string below): integer to print
-	mov al,0 ; magic for varargs (0==no magic, to prevent a crash!)
-	call printf
-	leave
-	ret
-
 main: ; main
 	push rbp
 	mov rbp, rsp
@@ -52,15 +40,8 @@ main: ; main
 	addsd xmm0, qword [rbp-48]
 	movsd qword [rbp-32], xmm0
 	; ''
-	; '    printf(c);'
-	; [no return call] -37 , [(-24, 8)]
-	sub rsp, 8
-	mov rax, qword [rbp-24]
-	mov qword [rbp-72], rax
-	call __37
-	add rsp, 8
+	; '    \ printf(c);'
 	; ''
-	; '    return 7;'
 	; [inline asm]
 	mov dword [rbp-56], 0x00000007
 	mov dword [rbp-52], 0x00000000

@@ -16,6 +16,7 @@ lazy_static = "1.4.0"
 b-box = "0.1.0"
 same-file = "1.0.6"
 walkdir = "2.5.0"
+color-print = "0.3.5"
 
 [profile.release]
 opt-level = 3

@@ -6,6 +6,7 @@ use crate::root::processor::processor::process;
 use crate::time;
 use clap::Parser;
 use std::path::PathBuf;
+use color_print::cprintln;
 use runner::assemble;
 use crate::root::utils::AnyError;
 
@@ -59,7 +60,7 @@ pub fn main_args(args: Args) -> Result<(), AnyError> {
     if let Some(path) = PathBuf::from(&args.output).parent() {
         if let Err(e) = fs::create_dir_all(path) {
             if !matches!(e.kind(), ErrorKind::AlreadyExists) {
-                println!("Failed to create directories for output files");
+                cprintln!("<red,bold>Failed to create directories for output files</>");
                 return Err(AnyError::Other);
             }
         }
@@ -67,29 +68,29 @@ pub fn main_args(args: Args) -> Result<(), AnyError> {
     
     let mut asts = Vec::new();
     let mut files_followed = Vec::new();
-    print!("Parsing...");
+    print!("Parsing... ");
     time!(
         if let Err(e) = parse(PathBuf::from(&args.input), &mut asts, &mut files_followed) {
-            println!("\n{}", e);
+            cprintln!("\n<red,bold>{}</>", e);
             return Err(e.into());
         }
     );
 
-    print!("Processing...");
+    print!("Processing... ");
     time!(
         let functions = match process(asts) {
             Err(e) => {
-                println!("\n{}", e);
+                cprintln!("\n<red,bold>{}</>", e);
                 return Err(e.into());
             }
             Ok(functions) => functions
         };
     );
 
-    print!("Compiling...");
+    print!("Compiling... ");
     time!(generate_assembly(&args.output, functions););
     
-    print!("Assembling (NASM)...");
+    print!("Assembling (NASM)... ");
     time!(
         if assemble(&args.output).is_err() {
             return Err(AnyError::Other);
@@ -98,7 +99,7 @@ pub fn main_args(args: Args) -> Result<(), AnyError> {
     
     #[cfg(target_os = "windows")]
     {
-        println!("Linking (MSVC - link.exe)...");
+        println!("Linking (MSVC - link.exe)... ");
         time!(
             if link(&args.output).is_err() {
                 return Err(AnyError::Other);
@@ -107,14 +108,14 @@ pub fn main_args(args: Args) -> Result<(), AnyError> {
         if args.build {
             println!("Skipping execution")
         } else {
-            println!("Executing...");
+            println!("Executing... ");
             run(&args.output);
         }
     }
     #[cfg(target_os = "linux")]
     {
-        println!("Compilation and execution on Linux may be buggy!");
-        println!("Linking (gcc)...");
+        cprintln!("<yellow,bold>Compilation and execution on Linux may be buggy!</>");
+        println!("Linking (gcc)... ");
         time!(
             let res = link_gcc_experimental(&args.output);
             if res.is_err() {
@@ -125,13 +126,13 @@ pub fn main_args(args: Args) -> Result<(), AnyError> {
         if args.build {
             println!("Skipping execution")
         } else {
-            println!("Executing (wine)...");
+            println!("Executing (wine)... ");
             if run_wine_experimental(&args.output).is_err() {
                 return Err(AnyError::Other);
             }
         }
     }
     
-    println!("Done!");
+    cprintln!("<green,bold>Done!</>");
     Ok(())
 }
