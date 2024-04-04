@@ -9,6 +9,7 @@ use crate::root::processor::processor::ProcessorError;
 use either::{Left, Right};
 use crate::root::compiler::local_variable::{LocalVariable, TypeInfo};
 use crate::root::custom::types::bool::Bool;
+use crate::root::custom::types::float::Float;
 use crate::root::custom::types::int::Int;
 
 pub fn evaluate_operator(symbol: &(BasicSymbol, LineInfo)) -> Result<&Operator, ProcessorError> {
@@ -235,13 +236,13 @@ pub fn evaluate_operation(
                 return Ok(Some(return_into));
             }
 
+            // Negate int
             let (lhs, rhs) = if matches!(op_, Operator::Subtract)
-                && rhs.is_none()
-                && lhs.type_info == TypeInfo::new(Int::get_id(), 0)
+                && rhs.is_none() && (lhs.type_info == TypeInfo::new(Int::get_id(), 0) || lhs.type_info == TypeInfo::new(Float::get_id(), 0))
             {
                 (
                     instantiate_variable(
-                        Left((&Literal::Int(0), &op.1)),
+                        if lhs.type_info.type_id == Int::get_id() { Left((&Literal::Int(0), &op.1)) } else { Left((&Literal::Float(0.0), &op.1)) },
                         lines,
                         name_handler,
                         function_holder,

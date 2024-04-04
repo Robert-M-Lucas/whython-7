@@ -217,11 +217,11 @@ impl Function for PrintF {
             arg_count: 1,
             lines: vec![Line::InlineAsm(vec![
                 "mov dword [rbp-4], 0x00".to_string(),
-                "mov dword [rbp-8], 0x0a666C25".to_string(),
+                "mov dword [rbp-8], 0x0a664C25".to_string(),
                 "mov rcx, rbp".to_string(),
                 "sub rcx, 8".to_string(),
-                "movq xmm1, qword [rbp+16]".to_string(),
-                "movq rdx, xmm1".to_string(),
+                "movsd xmm1, qword [rbp+16]".to_string(),
+                "mov rdx, qword [rbp+16]".to_string(),
                 "sub rsp, 40".to_string(),
                 "call printf".to_string(),
                 "add rsp, 40".to_string()

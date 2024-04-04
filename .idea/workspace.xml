@@ -7,16 +7,15 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Replaced unnamed tuple types with structs found in local_variable.rs">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_28_03_2024,_15_17_[Changes]/out.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_28_03_2024,_15_17_[Changes]/out.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_28_03_2024,_15_17_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_28_03_2024__15_17__Changes_.xml" beforeDir="false" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Transitioned WriteFile calls to printf from the C std library">
+      <change afterPath="$PROJECT_DIR$/hex_formatter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/whython-7.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/whython-7.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.obj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/operators.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/root/custom/functions/print.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/functions/print.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -118,7 +117,7 @@
     "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
     "org.rust.first.attach.projects": "true",
     "org.rust.first.attach.projects.stats": "true",
-    "settings.editor.selected.configurable": "language.rust.cargo.check",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -294,15 +293,8 @@
       <workItem from="1712187323656" duration="3000" />
       <workItem from="1712225094287" duration="7201000" />
       <workItem from="1712233798916" duration="3787000" />
-      <workItem from="1712258968080" duration="1839000" />
-    </task>
-    <task id="LOCAL-00055" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1708530697176</created>
-      <option name="number" value="00055" />
-      <option name="presentableId" value="LOCAL-00055" />
-      <option name="project" value="LOCAL" />
-      <updated>1708530697177</updated>
+      <workItem from="1712258968080" duration="3012000" />
+      <workItem from="1712262002041" duration="397000" />
     </task>
     <task id="LOCAL-00056" summary="Commit">
       <option name="closed" value="true" />
@@ -688,7 +680,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712237478871</updated>
     </task>
-    <option name="localTasksCounter" value="104" />
+    <task id="LOCAL-00104" summary="Transitioned WriteFile calls to printf from the C std library">
+      <option name="closed" value="true" />
+      <created>1712261022510</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1712261022512</updated>
+    </task>
+    <option name="localTasksCounter" value="105" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -717,7 +717,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Small changes" />
     <MESSAGE value="Clippy" />
     <MESSAGE value="FMT" />
     <MESSAGE value="Created build folder" />
@@ -742,7 +741,8 @@
     <MESSAGE value="Metadata" />
     <MESSAGE value="Moved reference files" />
     <MESSAGE value="Replaced unnamed tuple types with structs found in local_variable.rs" />
-    <option name="LAST_COMMIT_MESSAGE" value="Replaced unnamed tuple types with structs found in local_variable.rs" />
+    <MESSAGE value="Transitioned WriteFile calls to printf from the C std library" />
+    <option name="LAST_COMMIT_MESSAGE" value="Transitioned WriteFile calls to printf from the C std library" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
