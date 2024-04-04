@@ -279,7 +279,7 @@ pub fn evaluate_operation(
                 Operator::Not => panic!(),
             };
 
-            println!("{}vs{} {} {}vs{}", lhs.1.0, Float::get_id(), func_name, rhs.1.1, Float::get_id());
+            // println!("{}vs{} {} {}vs{}", lhs.1.0, Float::get_id(), func_name, rhs.1.1, Float::get_id());
 
             let func = function_holder.get_function(Some(lhs.1), func_name).ok_or(
                 ProcessorError::OpFunctionNotFound(
