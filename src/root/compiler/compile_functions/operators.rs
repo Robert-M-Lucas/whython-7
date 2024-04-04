@@ -8,6 +8,7 @@ use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::processor::ProcessorError;
 use either::{Left, Right};
 use crate::root::custom::types::bool::Bool;
+use crate::root::custom::types::float::Float;
 use crate::root::custom::types::int::Int;
 
 pub fn evaluate_operator(symbol: &(BasicSymbol, LineInfo)) -> Result<&Operator, ProcessorError> {
@@ -278,6 +279,8 @@ pub fn evaluate_operation(
                 Operator::Not => panic!(),
             };
 
+            println!("{}vs{} {} {}vs{}", lhs.1.0, Float::get_id(), func_name, rhs.1.1, Float::get_id());
+
             let func = function_holder.get_function(Some(lhs.1), func_name).ok_or(
                 ProcessorError::OpFunctionNotFound(
                     op.1.clone(),
@@ -300,7 +303,7 @@ pub fn evaluate_operation(
             let func_args = func.get_args();
             let func_id = func.get_id();
 
-            if func_args.len() != 2 {
+            if func_args.len() != 2 || func_args[1].1 != rhs.1 {
                 return Err(ProcessorError::OpFunctionNotFound(
                     op.1.clone(),
                     func_name.to_string(),
