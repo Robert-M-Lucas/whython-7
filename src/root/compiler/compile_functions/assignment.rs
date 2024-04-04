@@ -4,6 +4,7 @@ use crate::root::compiler::compile_functions::{evaluate, operators, FunctionHold
 use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::processor::ProcessorError;
 use either::Left;
+use crate::root::compiler::local_variable::{LocalVariable, TypeInfo};
 
 pub fn process_assignment(
     lines: &mut Vec<Line>,
@@ -29,20 +30,20 @@ pub fn process_assignment(
             };
 
             let (original_variable, variable) = if is_ref {
-                if variable.1 .1 == 0 {
+                if variable.type_info.reference_depth == 0 {
                     return Err(ProcessorError::CantDerefNonRef(line[0].1.clone()));
                 }
 
-                let new_type = (variable.1 .0, variable.1 .1 - 1);
+                let new_type = TypeInfo::new(variable.type_info.type_id, variable.type_info.reference_depth - 1);
                 let non_ref = name_handler
                     .add_local_variable(None, new_type, lines)
                     .unwrap();
                 lines.push(Line::DynFromCopy(
-                    variable.0,
+                    variable.offset,
                     non_ref,
                     name_handler.type_table().get_type_size(new_type)?,
                 ));
-                (Some(variable), (non_ref, new_type))
+                (Some(variable), LocalVariable::from_type_info(non_ref, new_type))
             } else {
                 (None, variable)
             };
@@ -75,9 +76,9 @@ pub fn process_assignment(
 
             if is_ref {
                 lines.push(Line::DynToCopy(
-                    variable.0,
-                    original_variable.unwrap().0,
-                    name_handler.type_table().get_type_size(variable.1)?,
+                    variable.offset,
+                    original_variable.unwrap().offset,
+                    name_handler.type_table().get_type_size(variable.type_info)?,
                 ));
             }
 

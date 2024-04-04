@@ -5,16 +5,17 @@ use crate::root::compiler::compile_functions::{FunctionHolder, Line};
 use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::processor::ProcessorError;
 use either::{Either, Left, Right};
+use crate::root::compiler::local_variable::{LocalVariable, TypeInfo};
 use crate::root::custom::types::int::Int;
 
 #[allow(dead_code)]
 fn try_instantiate_literal(
-    literal: Either<(isize, (isize, usize)), (&Literal, &LineInfo)>,
+    literal: Either<LocalVariable, (&Literal, &LineInfo)>,
     lines: &mut Vec<Line>,
     name_handler: &mut NameHandler,
     function_holder: &FunctionHolder,
-    return_into: Option<(isize, (isize, usize))>,
-) -> Result<(isize, (isize, usize)), ProcessorError> {
+    return_into: Option<LocalVariable>,
+) -> Result<LocalVariable, ProcessorError> {
     match literal {
         Left(r) => Ok(r),
         Right(literal) => instantiate_variable(
@@ -28,28 +29,29 @@ fn try_instantiate_literal(
 }
 
 pub fn instantiate_variable(
-    literal: Either<(&Literal, &LineInfo), (isize, usize)>,
+    literal: Either<(&Literal, &LineInfo), TypeInfo>,
     lines: &mut Vec<Line>,
     name_handler: &mut NameHandler,
     function_holder: &FunctionHolder,
-    return_into: Option<(isize, (isize, usize))>,
-) -> Result<(isize, (isize, usize)), ProcessorError> {
-    let (addr, id) = if let Some((addr, id)) = return_into {
-        (addr, id)
+    return_into: Option<LocalVariable>,
+) -> Result<LocalVariable, ProcessorError> {
+    let variable = if let Some(variable) = return_into {
+        variable
     } else {
         let id = match &literal {
             Left((literal, info)) => literal.get_type_id(name_handler.type_table(), info)?,
             Right(id) => *id,
         };
-        (name_handler.add_local_variable(None, id, lines)?, id)
+        LocalVariable::from_type_info(name_handler.add_local_variable(None, id, lines)?, id)
     };
+
     // Indirect
-    let true_id = id.0;
-    let indirection = id.1;
+    let true_id = variable.type_info.type_id;
+    let indirection = variable.type_info.reference_depth;
     let id = if indirection != 0 {
         Int::get_id()
     } else {
-        id.0
+        variable.type_info.type_id
     };
     let _type = name_handler.type_table().get_type(id).unwrap();
     let asm = match &literal {
@@ -83,14 +85,14 @@ pub fn instantiate_variable(
                 ));
             }
 
-            let mut addr_counter = addr;
+            let mut addr_counter = variable.offset;
             for (attribute, attribute_type) in attributes.iter().zip(attribute_types) {
                 evaluate(
                     attribute,
                     lines,
                     name_handler,
                     function_holder,
-                    Some((addr_counter, attribute_type)),
+                    Some(LocalVariable::from_type_info(addr_counter, attribute_type)),
                 )?;
 
                 addr_counter += name_handler.type_table().get_type_size(attribute_type)? as isize;
@@ -99,13 +101,13 @@ pub fn instantiate_variable(
             Vec::new()
         }
         Left((literal, line_info)) => {
-            if literal.get_type_id(name_handler.type_table(), line_info)? != (id, 0) {
+            if literal.get_type_id(name_handler.type_table(), line_info)? != TypeInfo::new(id, 0) {
                 return Err(ProcessorError::BadLiteralType());
             }
-            _type.instantiate(Some(literal), addr)?
+            _type.instantiate(Some(literal), variable.offset)?
         }
-        Right(_id) => _type.instantiate(None, addr)?,
+        Right(_id) => _type.instantiate(None, variable.offset)?,
     };
     lines.push(Line::InlineAsm(asm));
-    Ok((addr, (true_id, indirection)))
+    Ok(LocalVariable::new(variable.offset, true_id, indirection))
 }

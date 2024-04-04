@@ -6,14 +6,15 @@ use crate::root::compiler::compile_functions::{
 use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::processor::ProcessorError;
 use either::{Left, Right};
+use crate::root::compiler::local_variable::LocalVariable;
 
 pub fn evaluate_symbol(
     symbol: &(BasicSymbol, LineInfo),
     lines: &mut Vec<Line>,
     name_handler: &mut NameHandler,
     function_holder: &FunctionHolder,
-    return_into: Option<(isize, (isize, usize))>,
-) -> Result<Option<(isize, (isize, usize))>, ProcessorError> {
+    return_into: Option<LocalVariable>,
+) -> Result<Option<LocalVariable>, ProcessorError> {
     // println!("{:?}", symbol);
     Ok(match &symbol.0 {
         BasicSymbol::AbstractSyntaxTree(_) => panic!(),
@@ -35,28 +36,28 @@ pub fn evaluate_symbol(
             match name_handler.resolve_name(function_holder, name, &symbol.1, lines)? {
                 Left(new_variable) => {
                     if let Some(return_into) = return_into {
-                        if return_into.1 != new_variable.1 {
+                        if return_into.type_info != new_variable.type_info {
                             return Err(ProcessorError::BadEvaluatedType(
                                 symbol.1.clone(),
                                 name_handler
                                     .type_table()
-                                    .get_type(return_into.1 .0)
+                                    .get_type(return_into.type_info.type_id)
                                     .unwrap()
-                                    .get_indirect_name(return_into.1 .1)
+                                    .get_indirect_name(return_into.type_info.reference_depth)
                                     .to_string(),
                                 name_handler
                                     .type_table()
-                                    .get_type(new_variable.1 .0)
+                                    .get_type(new_variable.type_info.type_id)
                                     .unwrap()
-                                    .get_indirect_name(new_variable.1 .1)
+                                    .get_indirect_name(new_variable.type_info.reference_depth)
                                     .to_string(),
                             ));
                         }
 
                         lines.push(Line::Copy(
-                            new_variable.0,
-                            return_into.0,
-                            name_handler.type_table().get_type_size(return_into.1)?,
+                            new_variable.offset,
+                            return_into.offset,
+                            name_handler.type_table().get_type_size(return_into.type_info)?,
                         ));
 
                         Some(return_into)

@@ -3,6 +3,7 @@ use unique_type_id::UniqueTypeId;
 
 use crate::root::ast::literals::Literal;
 use crate::root::compiler::generate_asm::get_local_address;
+use crate::root::compiler::local_variable::TypeInfo;
 use crate::root::custom::types::bool::Bool;
 use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::processor::ProcessorError;
@@ -80,9 +81,9 @@ impl Type for Float {
 #[UniqueTypeIdType = "u16"]
 pub struct FloatAdd {}
 lazy_static! {
-    static ref FLOAT_ADD_ARGS: [(String, (isize, usize)); 2] = [
-        (String::from("lhs"), (Float::get_id(), 0)),
-        (String::from("rhs"), (Float::get_id(), 0))
+    static ref FLOAT_ADD_ARGS: [(String, TypeInfo); 2] = [
+        (String::from("lhs"), TypeInfo::new(Float::get_id(), 0)),
+        (String::from("rhs"), TypeInfo::new(Float::get_id(), 0))
     ];
 }
 impl TypedFunction for FloatAdd {
@@ -94,7 +95,7 @@ impl TypedFunction for FloatAdd {
         "add"
     }
 
-    fn get_args(&self) -> &[(String, (isize, usize))] {
+    fn get_args(&self) -> &[(String, TypeInfo)] {
         FLOAT_ADD_ARGS.as_ref()
     }
 
@@ -102,8 +103,8 @@ impl TypedFunction for FloatAdd {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<(isize, usize)> {
-        Some((Float::get_id(), 0))
+    fn get_return_type(&self) -> Option<TypeInfo> {
+        Some(TypeInfo::new(Float::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -123,9 +124,9 @@ impl TypedFunction for FloatAdd {
 #[UniqueTypeIdType = "u16"]
 pub struct FloatSub {}
 lazy_static! {
-    static ref FLOAT_SUB_ARGS: [(String, (isize, usize)); 2] = [
-        (String::from("lhs"), (Float::get_id(), 0)),
-        (String::from("rhs"), (Float::get_id(), 0))
+    static ref FLOAT_SUB_ARGS: [(String, TypeInfo); 2] = [
+        (String::from("lhs"), TypeInfo::new(Float::get_id(), 0)),
+        (String::from("rhs"), TypeInfo::new(Float::get_id(), 0))
     ];
 }
 impl TypedFunction for FloatSub {
@@ -137,7 +138,7 @@ impl TypedFunction for FloatSub {
         "sub"
     }
 
-    fn get_args(&self) -> &[(String, (isize, usize))] {
+    fn get_args(&self) -> &[(String, TypeInfo)] {
         FLOAT_SUB_ARGS.as_ref()
     }
 
@@ -145,8 +146,8 @@ impl TypedFunction for FloatSub {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<(isize, usize)> {
-        Some((Float::get_id(), 0))
+    fn get_return_type(&self) -> Option<TypeInfo> {
+        Some(TypeInfo::new(Float::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -166,9 +167,9 @@ impl TypedFunction for FloatSub {
 #[UniqueTypeIdType = "u16"]
 pub struct FloatMul {}
 lazy_static! {
-    static ref FLOAT_MUL_ARGS: [(String, (isize, usize)); 2] = [
-        (String::from("lhs"), (Float::get_id(), 0)),
-        (String::from("rhs"), (Float::get_id(), 0))
+    static ref FLOAT_MUL_ARGS: [(String, TypeInfo); 2] = [
+        (String::from("lhs"), TypeInfo::new(Float::get_id(), 0)),
+        (String::from("rhs"), TypeInfo::new(Float::get_id(), 0))
     ];
 }
 impl TypedFunction for FloatMul {
@@ -180,7 +181,7 @@ impl TypedFunction for FloatMul {
         "mul"
     }
 
-    fn get_args(&self) -> &[(String, (isize, usize))] {
+    fn get_args(&self) -> &[(String, TypeInfo)] {
         FLOAT_SUB_ARGS.as_ref()
     }
 
@@ -188,8 +189,8 @@ impl TypedFunction for FloatMul {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<(isize, usize)> {
-        Some((Float::get_id(), 0))
+    fn get_return_type(&self) -> Option<TypeInfo> {
+        Some(TypeInfo::new(Float::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -209,9 +210,9 @@ impl TypedFunction for FloatMul {
 #[UniqueTypeIdType = "u16"]
 pub struct FloatDiv {}
 lazy_static! {
-    static ref FLOAT_DIV_ARGS: [(String, (isize, usize)); 2] = [
-        (String::from("lhs"), (Float::get_id(), 0)),
-        (String::from("rhs"), (Float::get_id(), 0))
+    static ref FLOAT_DIV_ARGS: [(String, TypeInfo); 2] = [
+        (String::from("lhs"), TypeInfo::new(Float::get_id(), 0)),
+        (String::from("rhs"), TypeInfo::new(Float::get_id(), 0))
     ];
 }
 impl TypedFunction for FloatDiv {
@@ -223,7 +224,7 @@ impl TypedFunction for FloatDiv {
         "div"
     }
 
-    fn get_args(&self) -> &[(String, (isize, usize))] {
+    fn get_args(&self) -> &[(String, TypeInfo)] {
         FLOAT_SUB_ARGS.as_ref()
     }
 
@@ -231,8 +232,8 @@ impl TypedFunction for FloatDiv {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<(isize, usize)> {
-        Some((Float::get_id(), 0))
+    fn get_return_type(&self) -> Option<TypeInfo> {
+        Some(TypeInfo::new(Float::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -252,9 +253,9 @@ impl TypedFunction for FloatDiv {
 #[UniqueTypeIdType = "u16"]
 pub struct FloatLT {}
 lazy_static! {
-    static ref FLOAT_LT_ARGS: [(String, (isize, usize)); 2] = [
-        (String::from("lhs"), (Float::get_id(), 0)),
-        (String::from("rhs"), (Float::get_id(), 0))
+    static ref FLOAT_LT_ARGS: [(String, TypeInfo); 2] = [
+        (String::from("lhs"), TypeInfo::new(Float::get_id(), 0)),
+        (String::from("rhs"), TypeInfo::new(Float::get_id(), 0))
     ];
 }
 impl TypedFunction for FloatLT {
@@ -266,7 +267,7 @@ impl TypedFunction for FloatLT {
         "lt"
     }
 
-    fn get_args(&self) -> &[(String, (isize, usize))] {
+    fn get_args(&self) -> &[(String, TypeInfo)] {
         FLOAT_LT_ARGS.as_ref()
     }
 
@@ -274,8 +275,8 @@ impl TypedFunction for FloatLT {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<(isize, usize)> {
-        Some((Bool::get_id(), 0))
+    fn get_return_type(&self) -> Option<TypeInfo> {
+        Some(TypeInfo::new(Bool::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -296,9 +297,9 @@ impl TypedFunction for FloatLT {
 #[UniqueTypeIdType = "u16"]
 pub struct FloatGT {}
 lazy_static! {
-    static ref FLOAT_GT_ARGS: [(String, (isize, usize)); 2] = [
-        (String::from("lhs"), (Float::get_id(), 0)),
-        (String::from("rhs"), (Float::get_id(), 0))
+    static ref FLOAT_GT_ARGS: [(String, TypeInfo); 2] = [
+        (String::from("lhs"), TypeInfo::new(Float::get_id(), 0)),
+        (String::from("rhs"), TypeInfo::new(Float::get_id(), 0))
     ];
 }
 impl TypedFunction for FloatGT {
@@ -310,7 +311,7 @@ impl TypedFunction for FloatGT {
         "gt"
     }
 
-    fn get_args(&self) -> &[(String, (isize, usize))] {
+    fn get_args(&self) -> &[(String, TypeInfo)] {
         FLOAT_GT_ARGS.as_ref()
     }
 
@@ -318,8 +319,8 @@ impl TypedFunction for FloatGT {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<(isize, usize)> {
-        Some((Bool::get_id(), 0))
+    fn get_return_type(&self) -> Option<TypeInfo> {
+        Some(TypeInfo::new(Bool::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -340,9 +341,9 @@ impl TypedFunction for FloatGT {
 #[UniqueTypeIdType = "u16"]
 pub struct FloatLE {}
 lazy_static! {
-    static ref FLOAT_LE_ARGS: [(String, (isize, usize)); 2] = [
-        (String::from("lhs"), (Float::get_id(), 0)),
-        (String::from("rhs"), (Float::get_id(), 0))
+    static ref FLOAT_LE_ARGS: [(String, TypeInfo); 2] = [
+        (String::from("lhs"), TypeInfo::new(Float::get_id(), 0)),
+        (String::from("rhs"), TypeInfo::new(Float::get_id(), 0))
     ];
 }
 impl TypedFunction for FloatLE {
@@ -354,7 +355,7 @@ impl TypedFunction for FloatLE {
         "le"
     }
 
-    fn get_args(&self) -> &[(String, (isize, usize))] {
+    fn get_args(&self) -> &[(String, TypeInfo)] {
         FLOAT_LE_ARGS.as_ref()
     }
 
@@ -362,8 +363,8 @@ impl TypedFunction for FloatLE {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<(isize, usize)> {
-        Some((Bool::get_id(), 0))
+    fn get_return_type(&self) -> Option<TypeInfo> {
+        Some(TypeInfo::new(Bool::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -384,9 +385,9 @@ impl TypedFunction for FloatLE {
 #[UniqueTypeIdType = "u16"]
 pub struct FloatGE {}
 lazy_static! {
-    static ref FLOAT_GE_ARGS: [(String, (isize, usize)); 2] = [
-        (String::from("lhs"), (Float::get_id(), 0)),
-        (String::from("rhs"), (Float::get_id(), 0))
+    static ref FLOAT_GE_ARGS: [(String, TypeInfo); 2] = [
+        (String::from("lhs"), TypeInfo::new(Float::get_id(), 0)),
+        (String::from("rhs"), TypeInfo::new(Float::get_id(), 0))
     ];
 }
 impl TypedFunction for FloatGE {
@@ -398,7 +399,7 @@ impl TypedFunction for FloatGE {
         "ge"
     }
 
-    fn get_args(&self) -> &[(String, (isize, usize))] {
+    fn get_args(&self) -> &[(String, TypeInfo)] {
         FLOAT_GE_ARGS.as_ref()
     }
 
@@ -406,8 +407,8 @@ impl TypedFunction for FloatGE {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<(isize, usize)> {
-        Some((Bool::get_id(), 0))
+    fn get_return_type(&self) -> Option<TypeInfo> {
+        Some(TypeInfo::new(Bool::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -428,9 +429,9 @@ impl TypedFunction for FloatGE {
 #[UniqueTypeIdType = "u16"]
 pub struct FloatEQ {}
 lazy_static! {
-    static ref FLOAT_EQ_ARGS: [(String, (isize, usize)); 2] = [
-        (String::from("lhs"), (Float::get_id(), 0)),
-        (String::from("rhs"), (Float::get_id(), 0))
+    static ref FLOAT_EQ_ARGS: [(String, TypeInfo); 2] = [
+        (String::from("lhs"), TypeInfo::new(Float::get_id(), 0)),
+        (String::from("rhs"), TypeInfo::new(Float::get_id(), 0))
     ];
 }
 impl TypedFunction for FloatEQ {
@@ -442,7 +443,7 @@ impl TypedFunction for FloatEQ {
         "eq"
     }
 
-    fn get_args(&self) -> &[(String, (isize, usize))] {
+    fn get_args(&self) -> &[(String, TypeInfo)] {
         FLOAT_EQ_ARGS.as_ref()
     }
 
@@ -450,8 +451,8 @@ impl TypedFunction for FloatEQ {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<(isize, usize)> {
-        Some((Bool::get_id(), 0))
+    fn get_return_type(&self) -> Option<TypeInfo> {
+        Some(TypeInfo::new(Bool::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -472,9 +473,9 @@ impl TypedFunction for FloatEQ {
 #[UniqueTypeIdType = "u16"]
 pub struct FloatNE {}
 lazy_static! {
-    static ref FLOAT_NE_ARGS: [(String, (isize, usize)); 2] = [
-        (String::from("lhs"), (Float::get_id(), 0)),
-        (String::from("rhs"), (Float::get_id(), 0))
+    static ref FLOAT_NE_ARGS: [(String, TypeInfo); 2] = [
+        (String::from("lhs"), TypeInfo::new(Float::get_id(), 0)),
+        (String::from("rhs"), TypeInfo::new(Float::get_id(), 0))
     ];
 }
 impl TypedFunction for FloatNE {
@@ -486,7 +487,7 @@ impl TypedFunction for FloatNE {
         "ne"
     }
 
-    fn get_args(&self) -> &[(String, (isize, usize))] {
+    fn get_args(&self) -> &[(String, TypeInfo)] {
         FLOAT_NE_ARGS.as_ref()
     }
 
@@ -494,8 +495,8 @@ impl TypedFunction for FloatNE {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<(isize, usize)> {
-        Some((Bool::get_id(), 0))
+    fn get_return_type(&self) -> Option<TypeInfo> {
+        Some(TypeInfo::new(Bool::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {

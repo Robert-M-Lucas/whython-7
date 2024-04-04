@@ -18,6 +18,7 @@ use crate::root::processor::processor::ProcessorError;
 use crate::root::processor::type_builder::{TypeTable, TypedFunction};
 use name_handler::NameHandler;
 use std::collections::HashMap;
+use crate::root::compiler::local_variable::TypeInfo;
 
 pub enum Line {
     ReturnCall(isize, isize, Vec<(isize, usize)>, usize, isize),
@@ -74,11 +75,11 @@ impl FunctionHolder {
 
     pub fn get_function(
         &self,
-        _type: Option<(isize, usize)>,
+        _type: Option<TypeInfo>,
         name: &str,
     ) -> Option<&Box<dyn TypedFunction>> {
         self.functions_table
-            .get(&_type.map(|x| x.0))
+            .get(&_type.map(|x| x.type_id))
             .and_then(|x| x.get(name).map(|x| self.functions.get(x).unwrap()))
     }
 

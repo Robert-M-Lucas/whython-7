@@ -7,12 +7,30 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Removed debug statement">
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Moved reference files">
+      <change afterPath="$PROJECT_DIR$/src/root/compiler/local_variable.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/ast/literals.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/ast/literals.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/assignment.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/assignment.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/call_function.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/call_function.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/evaluate.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/evaluate.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/evaluate_symbol.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/evaluate_symbol.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/instantiate_literal.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/instantiate_literal.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/name_handler.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/name_handler.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/operators.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/process_lines.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/process_lines.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/compiler/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/custom/functions/print.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/functions/print.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/custom/functions/windows.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/functions/windows.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/custom/types/bool.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/types/bool.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/custom/types/float.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/types/float.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/custom/types/int.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/types/int.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/processor/type_builder.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/type_builder.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/processor/user_type.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/user_type.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,11 +166,11 @@
       <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/reference" />
       <recent name="$PROJECT_DIR$/src/root/custom/types" />
       <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7\tests\outputs\print" />
       <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7\tests\inputs\print" />
       <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7\src\root" />
-      <recent name="$PROJECT_DIR$/reference" />
     </key>
   </component>
   <component name="RunManager" selected="Cargo.Run whython-7">
@@ -286,23 +304,8 @@
       <workItem from="1712180291542" duration="332000" />
       <workItem from="1712180649769" duration="3245000" />
       <workItem from="1712187323656" duration="3000" />
-      <workItem from="1712225094287" duration="5285000" />
-    </task>
-    <task id="LOCAL-00052" summary="Fixed shadowing">
-      <option name="closed" value="true" />
-      <created>1708368084288</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1708368084289</updated>
-    </task>
-    <task id="LOCAL-00053" summary="Added support gor parsing initialisers">
-      <option name="closed" value="true" />
-      <created>1708374408506</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1708374408506</updated>
+      <workItem from="1712225094287" duration="7201000" />
+      <workItem from="1712233798916" duration="3510000" />
     </task>
     <task id="LOCAL-00054" summary="Commit">
       <option name="closed" value="true" />
@@ -680,7 +683,23 @@
       <option name="project" value="LOCAL" />
       <updated>1712229677789</updated>
     </task>
-    <option name="localTasksCounter" value="101" />
+    <task id="LOCAL-00101" summary="Metadata">
+      <option name="closed" value="true" />
+      <created>1712230643047</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1712230643047</updated>
+    </task>
+    <task id="LOCAL-00102" summary="Moved reference files">
+      <option name="closed" value="true" />
+      <created>1712231007743</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1712231007743</updated>
+    </task>
+    <option name="localTasksCounter" value="103" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -709,7 +728,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added testing framework" />
     <MESSAGE value="Small change" />
     <MESSAGE value="Small changes" />
     <MESSAGE value="Clippy" />
@@ -719,7 +737,6 @@
     <MESSAGE value="Conditional compilation" />
     <MESSAGE value="Removed completed TODO" />
     <MESSAGE value="Found a bug" />
-    <MESSAGE value="Metadata" />
     <MESSAGE value="Testing" />
     <MESSAGE value="Removed Fleet files" />
     <MESSAGE value="Added better error messages if a required program is not in the system path" />
@@ -734,7 +751,9 @@
     <MESSAGE value="Implemented PrintF (printf) for printing floats" />
     <MESSAGE value="Fixed rhs of operator functions not being type checked i.e. 3 &lt; false being permitted" />
     <MESSAGE value="Removed debug statement" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed debug statement" />
+    <MESSAGE value="Metadata" />
+    <MESSAGE value="Moved reference files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Moved reference files" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

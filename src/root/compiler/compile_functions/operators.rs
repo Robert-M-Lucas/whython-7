@@ -7,8 +7,8 @@ use crate::root::compiler::compile_functions::{FunctionHolder, Line};
 use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::processor::ProcessorError;
 use either::{Left, Right};
+use crate::root::compiler::local_variable::{LocalVariable, TypeInfo};
 use crate::root::custom::types::bool::Bool;
-use crate::root::custom::types::float::Float;
 use crate::root::custom::types::int::Int;
 
 pub fn evaluate_operator(symbol: &(BasicSymbol, LineInfo)) -> Result<&Operator, ProcessorError> {
@@ -19,25 +19,25 @@ pub fn evaluate_operator(symbol: &(BasicSymbol, LineInfo)) -> Result<&Operator, 
 }
 
 pub fn evaluate_operation(
-    lhs: (isize, (isize, usize)),
+    lhs: LocalVariable,
     op: (&Operator, &LineInfo),
-    rhs: Option<(isize, (isize, usize))>,
+    rhs: Option<LocalVariable>,
     lines: &mut Vec<Line>,
     name_handler: &mut NameHandler,
     function_holder: &FunctionHolder,
-    return_into: Option<(isize, (isize, usize))>,
-) -> Result<Option<(isize, (isize, usize))>, ProcessorError> {
+    return_into: Option<LocalVariable>,
+) -> Result<Option<LocalVariable>, ProcessorError> {
     Ok(Some(match &op.0 {
         Operator::Not => {
-            let func = function_holder.get_function(Some(lhs.1), "not").ok_or(
+            let func = function_holder.get_function(Some(lhs.type_info), "not").ok_or(
                 ProcessorError::SingleOpFunctionNotFound(
                     op.1.clone(),
                     "not".to_string(),
                     name_handler
                         .type_table()
-                        .get_type(lhs.1 .0)
+                        .get_type(lhs.type_info.type_id)
                         .unwrap()
-                        .get_indirect_name(lhs.1 .1)
+                        .get_indirect_name(lhs.type_info.reference_depth)
                         .to_string(),
                 ),
             )?;
@@ -50,9 +50,9 @@ pub fn evaluate_operation(
                     "not".to_string(),
                     name_handler
                         .type_table()
-                        .get_type(lhs.1 .0)
+                        .get_type(lhs.type_info.type_id)
                         .unwrap()
-                        .get_indirect_name(lhs.1 .1)
+                        .get_indirect_name(lhs.type_info.reference_depth)
                         .to_string(),
                 ));
             }
@@ -67,9 +67,9 @@ pub fn evaluate_operation(
                                 "not".to_string(),
                                 name_handler
                                     .type_table()
-                                    .get_type(lhs.1 .0)
+                                    .get_type(lhs.type_info.type_id)
                                     .unwrap()
-                                    .get_indirect_name(lhs.1 .1)
+                                    .get_indirect_name(lhs.type_info.reference_depth)
                                     .to_string(),
                             ))?,
                     ),
@@ -81,14 +81,14 @@ pub fn evaluate_operation(
             };
             let func = function_holder.functions().get(&func_id).unwrap();
             if func.is_inline() {
-                lines.push(Line::InlineAsm(func.get_inline(vec![lhs.0, output.0])));
+                lines.push(Line::InlineAsm(func.get_inline(vec![lhs.offset, output.offset])));
             } else {
                 lines.push(Line::ReturnCall(
                     func.get_id(),
                     -(name_handler.local_variable_space() as isize),
-                    vec![(lhs.0, name_handler.type_table().get_type_size(lhs.1)?)],
-                    name_handler.type_table().get_type_size(output.1)?,
-                    output.0,
+                    vec![(lhs.offset, name_handler.type_table().get_type_size(lhs.type_info)?)],
+                    name_handler.type_table().get_type_size(output.type_info)?,
+                    output.offset,
                 ));
             }
             output
@@ -96,33 +96,33 @@ pub fn evaluate_operation(
         op_ => {
             if matches!(op_, Operator::And) && rhs.is_none() {
                 let return_into = if let Some(return_into) = return_into {
-                    if return_into.1 .0 != lhs.1 .0 || return_into.1 .1 != lhs.1 .1 + 1 {
+                    if return_into.type_info.type_id != lhs.type_info.type_id || return_into.type_info.reference_depth != lhs.type_info.reference_depth + 1 {
                         return Err(ProcessorError::BadEvaluatedType(
                             op.1.clone(),
                             name_handler
                                 .type_table()
-                                .get_type(return_into.1 .0)
+                                .get_type(return_into.type_info.type_id)
                                 .unwrap()
-                                .get_indirect_name(return_into.1 .1)
+                                .get_indirect_name(return_into.type_info.reference_depth)
                                 .to_string(),
                             name_handler
                                 .type_table()
-                                .get_type(lhs.1 .0)
+                                .get_type(lhs.type_info.type_id)
                                 .unwrap()
-                                .get_indirect_name(lhs.1 .1 + 1)
+                                .get_indirect_name(lhs.type_info.reference_depth + 1)
                                 .to_string(),
                         ));
                     }
                     return_into
                 } else {
-                    (
-                        name_handler.add_local_variable(None, (lhs.1 .0, lhs.1 .1 + 1), lines)?,
-                        (lhs.1 .0, lhs.1 .1 + 1),
+                    LocalVariable::new(
+                        name_handler.add_local_variable(None, TypeInfo::new(lhs.type_info.type_id, lhs.type_info.reference_depth + 1), lines)?,
+                        lhs.type_info.type_id, lhs.type_info.reference_depth + 1
                     )
                 };
                 lines.push(Line::InlineAsm(Int::instantiate_local_ref(
-                    lhs.0,
-                    return_into.0,
+                    lhs.offset,
+                    return_into.offset,
                 )));
                 return Ok(Some(return_into));
             }
@@ -130,38 +130,38 @@ pub fn evaluate_operation(
             // Get ref
             if matches!(op_, Operator::Product) && rhs.is_none() {
                 let return_into = if let Some(return_into) = return_into {
-                    if lhs.1 .1 == 0 {
+                    if lhs.type_info.reference_depth == 0 {
                         return Err(ProcessorError::CantDerefNonRef(op.1.clone()));
                     }
-                    if return_into.1 .0 != lhs.1 .0 || return_into.1 .1 != lhs.1 .1 - 1 {
+                    if return_into.type_info.type_id != lhs.type_info.type_id || return_into.type_info.reference_depth != lhs.type_info.reference_depth - 1 {
                         return Err(ProcessorError::BadEvaluatedType(
                             op.1.clone(),
                             name_handler
                                 .type_table()
-                                .get_type(return_into.1 .0)
+                                .get_type(return_into.type_info.type_id)
                                 .unwrap()
-                                .get_indirect_name(return_into.1 .1)
+                                .get_indirect_name(return_into.type_info.reference_depth)
                                 .to_string(),
                             name_handler
                                 .type_table()
-                                .get_type(lhs.1 .0)
+                                .get_type(lhs.type_info.type_id)
                                 .unwrap()
-                                .get_indirect_name(lhs.1 .1 - 1)
+                                .get_indirect_name(lhs.type_info.reference_depth - 1)
                                 .to_string(),
                         ));
                     }
                     return_into
                 } else {
-                    (
-                        name_handler.add_local_variable(None, (lhs.1 .0, lhs.1 .1 + 1), lines)?,
-                        (lhs.1 .0, lhs.1 .1 - 1),
+                    LocalVariable::new(
+                        name_handler.add_local_variable(None, TypeInfo::new(lhs.type_info.type_id, lhs.type_info.reference_depth + 1), lines)?,
+                        lhs.type_info.type_id, lhs.type_info.reference_depth - 1,
                     )
                 };
 
                 lines.push(Line::DynFromCopy(
-                    lhs.0,
-                    return_into.0,
-                    name_handler.type_table().get_type_size(return_into.1)?,
+                    lhs.offset,
+                    return_into.offset,
+                    name_handler.type_table().get_type_size(return_into.type_info)?,
                 ));
                 return Ok(Some(return_into));
             }
@@ -169,47 +169,47 @@ pub fn evaluate_operation(
             // Heap alloc
             if matches!(op_, Operator::HeapAlloc) && rhs.is_none() {
                 let return_into = if let Some(return_into) = return_into {
-                    if return_into.1 .0 != lhs.1 .0 || return_into.1 .1 != lhs.1 .1 + 1 {
+                    if return_into.type_info.type_id != lhs.type_info.type_id || return_into.type_info.reference_depth != lhs.type_info.reference_depth + 1 {
                         return Err(ProcessorError::BadEvaluatedType(
                             op.1.clone(),
                             name_handler
                                 .type_table()
-                                .get_type(return_into.1 .0)
+                                .get_type(return_into.type_info.type_id)
                                 .unwrap()
-                                .get_indirect_name(return_into.1 .1)
+                                .get_indirect_name(return_into.type_info.reference_depth)
                                 .to_string(),
                             name_handler
                                 .type_table()
-                                .get_type(lhs.1 .0)
+                                .get_type(lhs.type_info.type_id)
                                 .unwrap()
-                                .get_indirect_name(lhs.1 .1 + 1)
+                                .get_indirect_name(lhs.type_info.reference_depth + 1)
                                 .to_string(),
                         ));
                     }
                     return_into
                 } else {
-                    (
-                        name_handler.add_local_variable(None, (lhs.1 .0, lhs.1 .1 + 1), lines)?,
-                        (lhs.1 .0, lhs.1 .1 + 1),
+                    LocalVariable::new(
+                        name_handler.add_local_variable(None, TypeInfo::new(lhs.type_info.type_id, lhs.type_info.reference_depth + 1), lines)?,
+                        lhs.type_info.type_id, lhs.type_info.reference_depth + 1,
                     )
                 };
-                let size = name_handler.type_table().get_type_size(lhs.1)?;
-                lines.push(Line::HeapAlloc(size, return_into.0));
-                lines.push(Line::DynToCopy(lhs.0, return_into.0, size));
+                let size = name_handler.type_table().get_type_size(lhs.type_info)?;
+                lines.push(Line::HeapAlloc(size, return_into.offset));
+                lines.push(Line::DynToCopy(lhs.offset, return_into.offset, size));
                 return Ok(Some(return_into));
             }
 
             // Heap dealloc
             if matches!(op_, Operator::HeapDealloc) && rhs.is_none() {
                 let return_into = if let Some(return_into) = return_into {
-                    if return_into.1 != (Bool::get_id(), 0) {
+                    if return_into.type_info != TypeInfo::new(Bool::get_id(), 0) {
                         return Err(ProcessorError::BadEvaluatedType(
                             op.1.clone(),
                             name_handler
                                 .type_table()
-                                .get_type(return_into.1 .0)
+                                .get_type(return_into.type_info.type_id)
                                 .unwrap()
-                                .get_indirect_name(return_into.1 .1)
+                                .get_indirect_name(return_into.type_info.reference_depth)
                                 .to_string(),
                             name_handler
                                 .type_table()
@@ -221,23 +221,23 @@ pub fn evaluate_operation(
                     }
                     return_into
                 } else {
-                    (
-                        name_handler.add_local_variable(None, (Bool::get_id(), 0), lines)?,
-                        (Bool::get_id(), 0),
+                    LocalVariable::new(
+                        name_handler.add_local_variable(None, TypeInfo::new(Bool::get_id(), 0), lines)?,
+                        Bool::get_id(), 0,
                     )
                 };
 
-                if lhs.1 .1 == 0 {
+                if lhs.type_info.reference_depth == 0 {
                     return Err(ProcessorError::CantDeallocateNonRef(op.1.clone()));
                 }
 
-                lines.push(Line::HeapDealloc(lhs.0, return_into.0));
+                lines.push(Line::HeapDealloc(lhs.offset, return_into.offset));
                 return Ok(Some(return_into));
             }
 
             let (lhs, rhs) = if matches!(op_, Operator::Subtract)
                 && rhs.is_none()
-                && lhs.1 == (Int::get_id(), 0)
+                && lhs.type_info == TypeInfo::new(Int::get_id(), 0)
             {
                 (
                     instantiate_variable(
@@ -281,21 +281,21 @@ pub fn evaluate_operation(
 
             // println!("{}vs{} {} {}vs{}", lhs.1.0, Float::get_id(), func_name, rhs.1.1, Float::get_id());
 
-            let func = function_holder.get_function(Some(lhs.1), func_name).ok_or(
+            let func = function_holder.get_function(Some(lhs.type_info), func_name).ok_or(
                 ProcessorError::OpFunctionNotFound(
                     op.1.clone(),
                     func_name.to_string(),
                     name_handler
                         .type_table()
-                        .get_type(lhs.1 .0)
+                        .get_type(lhs.type_info.type_id)
                         .unwrap()
-                        .get_indirect_name(lhs.1 .1)
+                        .get_indirect_name(lhs.type_info.reference_depth)
                         .to_string(),
                     name_handler
                         .type_table()
-                        .get_type(rhs.1 .0)
+                        .get_type(rhs.type_info.type_id)
                         .unwrap()
-                        .get_indirect_name(rhs.1 .1)
+                        .get_indirect_name(rhs.type_info.reference_depth)
                         .to_string(),
                 ),
             )?;
@@ -303,21 +303,21 @@ pub fn evaluate_operation(
             let func_args = func.get_args();
             let func_id = func.get_id();
 
-            if func_args.len() != 2 || func_args[1].1 != rhs.1 {
+            if func_args.len() != 2 || func_args[1].1 != rhs.type_info {
                 return Err(ProcessorError::OpFunctionNotFound(
                     op.1.clone(),
                     func_name.to_string(),
                     name_handler
                         .type_table()
-                        .get_type(lhs.1 .0)
+                        .get_type(lhs.type_info.type_id)
                         .unwrap()
-                        .get_indirect_name(lhs.1 .1)
+                        .get_indirect_name(lhs.type_info.reference_depth)
                         .to_string(),
                     name_handler
                         .type_table()
-                        .get_type(rhs.1 .0)
+                        .get_type(rhs.type_info.type_id)
                         .unwrap()
-                        .get_indirect_name(rhs.1 .1)
+                        .get_indirect_name(rhs.type_info.reference_depth)
                         .to_string(),
                 ));
             }
@@ -329,33 +329,33 @@ pub fn evaluate_operation(
                     func_name.to_string(),
                     name_handler
                         .type_table()
-                        .get_type(lhs.1 .0)
+                        .get_type(lhs.type_info.type_id)
                         .unwrap()
-                        .get_indirect_name(lhs.1 .1)
+                        .get_indirect_name(lhs.type_info.reference_depth)
                         .to_string(),
                     name_handler
                         .type_table()
-                        .get_type(rhs.1 .0)
+                        .get_type(rhs.type_info.type_id)
                         .unwrap()
-                        .get_indirect_name(rhs.1 .1)
+                        .get_indirect_name(rhs.type_info.reference_depth)
                         .to_string(),
                 ))?;
 
             let output = if let Some(return_into) = return_into {
-                if return_into.1 != ret_type {
+                if return_into.type_info != ret_type {
                     return Err(ProcessorError::BadEvaluatedType(
                         op.1.clone(),
                         name_handler
                             .type_table()
-                            .get_type(return_into.1 .0)
+                            .get_type(return_into.type_info.type_id)
                             .unwrap()
-                            .get_indirect_name(return_into.1 .1)
+                            .get_indirect_name(return_into.type_info.reference_depth)
                             .to_string(),
                         name_handler
                             .type_table()
-                            .get_type(ret_type.0)
+                            .get_type(ret_type.type_id)
                             .unwrap()
-                            .get_indirect_name(ret_type.1)
+                            .get_indirect_name(ret_type.reference_depth)
                             .to_string(),
                     ));
                 }
@@ -367,18 +367,18 @@ pub fn evaluate_operation(
             let func = function_holder.functions().get(&func_id).unwrap();
             if func.is_inline() {
                 lines.push(Line::InlineAsm(
-                    func.get_inline(vec![lhs.0, rhs.0, output.0]),
+                    func.get_inline(vec![lhs.offset, rhs.offset, output.offset]),
                 ));
             } else {
                 lines.push(Line::ReturnCall(
                     func.get_id(),
                     -(name_handler.local_variable_space() as isize),
                     vec![
-                        (lhs.0, name_handler.type_table().get_type_size(lhs.1)?),
-                        (rhs.0, name_handler.type_table().get_type_size(rhs.1)?),
+                        (lhs.offset, name_handler.type_table().get_type_size(lhs.type_info)?),
+                        (rhs.offset, name_handler.type_table().get_type_size(rhs.type_info)?),
                     ],
-                    name_handler.type_table().get_type_size(output.1)?,
-                    output.0,
+                    name_handler.type_table().get_type_size(output.type_info)?,
+                    output.offset,
                 ));
             }
             output

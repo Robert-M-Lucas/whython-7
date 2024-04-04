@@ -3,6 +3,7 @@ use crate::root::basic_ast::symbol::BasicSymbol;
 use crate::root::compiler::compile_functions::name_handler::NameHandler;
 use crate::root::compiler::compile_functions::operators::evaluate_operation;
 use crate::root::compiler::compile_functions::{evaluate, FunctionHolder, Line};
+use crate::root::compiler::local_variable::LocalVariable;
 use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::processor::ProcessorError;
 use crate::root::processor::type_builder::TypedFunction;
@@ -10,13 +11,13 @@ use crate::root::processor::type_builder::TypedFunction;
 pub fn call_function(
     function: &Box<dyn TypedFunction>,
     start_line: &LineInfo,
-    default_arg: Option<(isize, (isize, usize))>,
+    default_arg: Option<LocalVariable>,
     args: &Vec<Vec<(BasicSymbol, LineInfo)>>,
     lines: &mut Vec<Line>,
     name_handler: &mut NameHandler,
     function_holder: &FunctionHolder,
-    return_into: Option<(isize, (isize, usize))>,
-) -> Result<Option<(isize, (isize, usize))>, ProcessorError> {
+    return_into: Option<LocalVariable>,
+) -> Result<Option<LocalVariable>, ProcessorError> {
     name_handler.use_function(function);
     let target_args = function.get_args();
     let mut args_len = args.len();
@@ -57,7 +58,7 @@ pub fn call_function(
 
     let mut call_args = Vec::new();
     if let Some(default_arg) = default_arg {
-        let default_arg = if default_arg.1 .1 == 0 && target_args[0].1 .1 == 1 {
+        let default_arg = if default_arg.type_info.reference_depth == 0 && target_args[0].1.reference_depth == 1 {
             // TODO: Bad operator line
             let into = name_handler.add_local_variable(None, target_args[0].1, lines)?;
             evaluate_operation(
@@ -67,18 +68,18 @@ pub fn call_function(
                 lines,
                 name_handler,
                 function_holder,
-                Some((into, target_args[0].1)),
+                Some(LocalVariable::from_type_info(into, target_args[0].1)),
             )?
             .unwrap()
         } else {
             default_arg
         };
-        if default_arg.1 != target_args[0].1 {
+        if default_arg.type_info != target_args[0].1 {
             panic!("Default arg doesn't match first target arg")
         }
         call_args.push((
-            default_arg.0,
-            name_handler.type_table().get_type_size(default_arg.1)?,
+            default_arg.offset,
+            name_handler.type_table().get_type_size(default_arg.type_info)?,
         ));
     }
     for arg in args {
@@ -88,51 +89,51 @@ pub fn call_function(
             return Err(ProcessorError::DoesntEvaluate(arg[0].1.clone()));
         }
         let evaluated = evaluated.unwrap();
-        if evaluated.1 != target_args[call_args.len()].1 {
+        if evaluated.type_info != target_args[call_args.len()].1 {
             return Err(ProcessorError::BadArgType(
                 arg[0].1.clone(),
                 name_handler
                     .type_table()
-                    .get_type(target_args[call_args.len()].1 .0)
+                    .get_type(target_args[call_args.len()].1.type_id)
                     .unwrap()
-                    .get_indirect_name(target_args[call_args.len()].1 .1)
+                    .get_indirect_name(target_args[call_args.len()].1.reference_depth)
                     .to_string(),
                 name_handler
                     .type_table()
-                    .get_type(evaluated.1 .0)
+                    .get_type(evaluated.type_info.type_id)
                     .unwrap()
-                    .get_indirect_name(evaluated.1 .1)
+                    .get_indirect_name(evaluated.type_info.reference_depth)
                     .to_string(),
                 function.get_line(),
             ));
         }
         call_args.push((
-            evaluated.0,
-            name_handler.type_table().get_type_size(evaluated.1)?,
+            evaluated.offset,
+            name_handler.type_table().get_type_size(evaluated.type_info)?,
         ));
     }
 
     Ok(if let Some(return_type) = function.get_return_type() {
-        if return_into.is_some() && return_into.unwrap().1 != return_type {
+        if return_into.is_some() && return_into.unwrap().type_info != return_type {
             return Err(ProcessorError::BadEvaluatedType(
                 start_line.clone(),
                 name_handler
                     .type_table()
-                    .get_type(return_into.unwrap().1 .0)
+                    .get_type(return_into.unwrap().type_info.type_id)
                     .unwrap()
-                    .get_indirect_name(return_into.unwrap().1 .1)
+                    .get_indirect_name(return_into.unwrap().type_info.reference_depth)
                     .to_string(),
                 name_handler
                     .type_table()
-                    .get_type(return_type.0)
+                    .get_type(return_type.type_id)
                     .unwrap()
-                    .get_indirect_name(return_type.1)
+                    .get_indirect_name(return_type.reference_depth)
                     .to_string(),
             ));
         }
         let return_into = if let Some(return_into) = return_into {
             (
-                return_into.0,
+                return_into.offset,
                 name_handler.type_table().get_type_size(return_type)?,
             )
         } else {
@@ -156,16 +157,16 @@ pub fn call_function(
             ))
         }
 
-        Some((return_into.0, return_type))
+        Some(LocalVariable::from_type_info(return_into.0, return_type))
     } else {
         if let Some(return_into) = return_into {
             return Err(ProcessorError::BadEvaluatedType(
                 start_line.clone(),
                 name_handler
                     .type_table()
-                    .get_type(return_into.1 .0)
+                    .get_type(return_into.type_info.type_id)
                     .unwrap()
-                    .get_indirect_name(return_into.1 .1)
+                    .get_indirect_name(return_into.type_info.reference_depth)
                     .to_string(),
                 "None".to_string(),
             ));

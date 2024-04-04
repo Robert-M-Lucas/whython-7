@@ -5,6 +5,7 @@ use std::collections::HashMap;
 
 use crate::root::ast::literals::Literal;
 use crate::root::basic_ast::symbol::BasicSymbol;
+use crate::root::compiler::local_variable::{LocalVariable, TypeInfo};
 use crate::root::custom::types::bool::Bool;
 use crate::root::custom::types::float::Float;
 use crate::root::custom::types::int::Int;
@@ -16,7 +17,7 @@ use crate::root::utils::align;
 struct UninitialisedType {
     pub path: LineInfo,
     pub id: isize,
-    pub attributes: Vec<(String, Result<(isize, usize), ((String, usize), LineInfo)>)>,
+    pub attributes: Vec<(String, Result<TypeInfo, ((String, usize), LineInfo)>)>,
 }
 
 impl UninitialisedType {
@@ -141,11 +142,11 @@ impl TypeTable {
         self.types.get_mut(&id)
     }
 
-    pub fn get_type_size(&self, id: (isize, usize)) -> Result<usize, ProcessorError> {
-        if id.1 != 0 {
-            return Ok(8);
+    pub fn get_type_size(&self, id: TypeInfo) -> Result<usize, ProcessorError> {
+        if id.reference_depth != 0 {
+            return Ok(Int::get_size(&Int::new(), self, None)?);
         }
-        self.types.get(&id.0).unwrap().get_size(self, None)
+        self.types.get(&id.type_id).unwrap().get_size(self, None)
     }
 }
 
@@ -154,8 +155,8 @@ pub struct UserTypedFunction {
     pub id: isize,
     pub name: String,
     pub line: LineInfo,
-    pub args: Vec<(String, (isize, usize))>,
-    pub return_type: Option<(isize, usize)>,
+    pub args: Vec<(String, TypeInfo)>,
+    pub return_type: Option<TypeInfo>,
     pub contents: Option<Vec<(BasicSymbol, LineInfo)>>,
 }
 
@@ -168,7 +169,7 @@ impl TypedFunction for UserTypedFunction {
         &self.name
     }
 
-    fn get_args(&self) -> &[(String, (isize, usize))] {
+    fn get_args(&self) -> &[(String, TypeInfo)] {
         &self.args
     }
 
@@ -176,7 +177,7 @@ impl TypedFunction for UserTypedFunction {
         self.line.clone()
     }
 
-    fn get_return_type(&self) -> Option<(isize, usize)> {
+    fn get_return_type(&self) -> Option<TypeInfo> {
         self.return_type
     }
 
@@ -202,12 +203,12 @@ pub trait TypedFunction {
         panic!();
     }
     fn get_name(&self) -> &str;
-    fn get_args(&self) -> &[(String, (isize, usize))];
+    fn get_args(&self) -> &[(String, TypeInfo)];
     fn get_line(&self) -> LineInfo;
     fn get_args_positioned(
         &self,
         type_table: &TypeTable,
-    ) -> Result<Vec<(String, isize, (isize, usize))>, ProcessorError> {
+    ) -> Result<Vec<(String, LocalVariable)>, ProcessorError> {
         let mut offset = 16isize;
         if let Some(return_type) = self.get_return_type() {
             offset += type_table.get_type_size(return_type)? as isize;
@@ -216,14 +217,14 @@ pub trait TypedFunction {
         let mut output = Vec::new();
 
         for (name, _type) in self.get_args() {
-            output.push((name.clone(), offset, *_type));
+            output.push((name.clone(), LocalVariable::from_type_info(offset, *_type)));
             offset += type_table.get_type_size(*_type).unwrap() as isize;
             offset = align(offset, 8);
         }
 
         Ok(output)
     }
-    fn get_return_type(&self) -> Option<(isize, usize)>;
+    fn get_return_type(&self) -> Option<TypeInfo>;
     fn is_inline(&self) -> bool;
     fn contents(&self) -> &Vec<(BasicSymbol, LineInfo)> {
         panic!()
@@ -285,7 +286,7 @@ pub fn build_types(
                      .0
                     == uninitialised_types[j].0
                 {
-                    uninitialised_types[i].1.attributes[a].1 = Ok((
+                    uninitialised_types[i].1.attributes[a].1 = Ok(TypeInfo::new(
                         uninitialised_types[j].1.id,
                         uninitialised_types[i].1.attributes[a]
                             .1
@@ -306,7 +307,7 @@ pub fn build_types(
                     .0
                      .0,
             ) {
-                uninitialised_types[i].1.attributes[a].1 = Ok((
+                uninitialised_types[i].1.attributes[a].1 = Ok(TypeInfo::new(
                     id,
                     uninitialised_types[i].1.attributes[a]
                         .1
@@ -405,7 +406,7 @@ pub fn build_types(
         if !main.get_args().is_empty() {
             return Err(ProcessorError::MainFunctionParams);
         }
-        if main.get_return_type() != Some((Int::get_id(), 0)) {
+        if main.get_return_type() != Some(TypeInfo::new(Int::get_id(), 0)) {
             return Err(ProcessorError::MainFunctionBadReturn);
         }
     } else {
@@ -424,7 +425,7 @@ fn process_function(
 ) -> Result<Box<dyn TypedFunction>, ProcessorError> {
     let (name, args, return_type, contents) = function;
 
-    let mut args_processed: Vec<(String, (isize, usize))> = Vec::new();
+    let mut args_processed: Vec<(String, TypeInfo)> = Vec::new();
 
     for (param_name, param_line, type_name, indirection, type_line) in args {
         for (existing_arg, _) in &args_processed {
@@ -434,7 +435,7 @@ fn process_function(
         }
         args_processed.push((
             param_name,
-            (
+            TypeInfo::new(
                 type_table
                     .get_id_by_name(&type_name)
                     .ok_or(ProcessorError::TypeNotFound(type_line, type_name))?,
@@ -444,7 +445,7 @@ fn process_function(
     }
 
     let return_type = if let Some((type_name, type_line)) = return_type {
-        Some((
+        Some(TypeInfo::new(
             type_table
                 .get_id_by_name(&type_name.0)
                 .ok_or(ProcessorError::TypeNotFound(type_line, type_name.0))?,

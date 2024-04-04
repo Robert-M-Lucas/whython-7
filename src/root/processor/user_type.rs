@@ -1,4 +1,5 @@
 use crate::root::ast::literals::Literal;
+use crate::root::compiler::local_variable::{LocalVariable, TypeInfo};
 use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::processor::ProcessorError;
 use crate::root::processor::type_builder::{Type, TypeTable};
@@ -7,7 +8,7 @@ pub struct UserType {
     name: String,
     id: isize,
     path: LineInfo,
-    attributes: Vec<(String, (isize, usize))>,
+    attributes: Vec<(String, TypeInfo)>,
     destructor: Option<isize>,
 }
 
@@ -16,7 +17,7 @@ impl UserType {
         name: String,
         id: isize,
         path: LineInfo,
-        attributes: Vec<(String, (isize, usize))>,
+        attributes: Vec<(String, TypeInfo)>,
         destructor: Option<isize>,
     ) -> UserType {
         UserType {
@@ -32,18 +33,18 @@ impl UserType {
         &self,
         name: &str,
         type_table: &TypeTable,
-    ) -> Result<Option<(usize, (isize, usize))>, ProcessorError> {
+    ) -> Result<Option<LocalVariable>, ProcessorError> {
         let mut offset = 0;
         for (attrib_name, attrib_type) in &self.attributes {
             if name == attrib_name {
-                return Ok(Some((offset, *attrib_type)));
+                return Ok(Some(LocalVariable::from_type_info(offset, *attrib_type)));
             }
-            offset += type_table.get_type_size(*attrib_type)?;
+            offset += type_table.get_type_size(*attrib_type)? as isize;
         }
         Ok(None)
     }
 
-    pub fn get_attribute_types(&self) -> Vec<(isize, usize)> {
+    pub fn get_attribute_types(&self) -> Vec<TypeInfo> {
         let mut out = Vec::new();
         for (_, i) in &self.attributes {
             out.push(*i);

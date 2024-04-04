@@ -6,12 +6,13 @@ use crate::root::processor::type_builder::{TypeTable, TypedFunction};
 use crate::root::utils::align;
 use either::{Either, Left, Right};
 use std::collections::HashSet;
+use crate::root::compiler::local_variable::{LocalVariable, TypeInfo};
 use crate::root::custom::types::int::Int;
 
 pub struct NameHandler {
     type_table: TypeTable,
-    args: Vec<(String, isize, (isize, usize))>,
-    local_variables: Vec<(String, isize, (isize, usize))>,
+    args: Vec<(String, LocalVariable)>,
+    local_variables: Vec<(String, LocalVariable)>,
     local_variables_size: usize,
     used_functions: HashSet<isize>,
     uid: usize,
@@ -29,7 +30,7 @@ impl NameHandler {
         }
     }
 
-    pub fn set_args(&mut self, args: Vec<(String, isize, (isize, usize))>) {
+    pub fn set_args(&mut self, args: Vec<(String, LocalVariable)>) {
         self.args = args;
     }
 
@@ -56,7 +57,7 @@ impl NameHandler {
     pub fn add_local_variable(
         &mut self,
         name: Option<String>,
-        _type: (isize, usize),
+        _type: TypeInfo,
         _lines: &mut Vec<Line>,
     ) -> Result<isize, ProcessorError> {
         let size = align(self.type_table.get_type_size(_type)?, 8);
@@ -64,7 +65,7 @@ impl NameHandler {
         self.local_variables_size += size;
         // lines.push(Line::InlineAsm(vec![format!("sub rsp, {}", size)]));
         if let Some(name) = name {
-            self.local_variables.push((name, addr, _type));
+            self.local_variables.push((name, LocalVariable::from_type_info(addr, _type)));
         }
         Ok(addr)
     }
@@ -72,20 +73,20 @@ impl NameHandler {
     pub fn destroy_local_variables(&mut self, lines: &mut Vec<Line>) -> Result<(), ProcessorError> {
         // return Ok(())
 
-        for (_name, addr, (type_id, indirection)) in self.local_variables.clone() {
-            if indirection != 0 {
+        for (_name, variable) in self.local_variables.clone() {
+            if variable.type_info.reference_depth != 0 {
                 continue;
             }
-            let t = self.type_table.get_type(type_id).unwrap();
+            let t = self.type_table.get_type(variable.type_info.type_id).unwrap();
             if let Some(destructor) = t.get_destructor() {
-                let ref_ = self.add_local_variable(None, (type_id, 1), lines)?;
+                let ref_ = self.add_local_variable(None, TypeInfo::new(variable.type_info.type_id, 1), lines)?;
 
-                lines.push(Line::InlineAsm(Int::instantiate_local_ref(addr, ref_)));
+                lines.push(Line::InlineAsm(Int::instantiate_local_ref(variable.offset, ref_)));
 
                 lines.push(Line::NoReturnCall(
                     destructor,
                     -(self.local_variable_space() as isize),
-                    vec![(ref_, self.type_table.get_type_size((type_id, 1))?)],
+                    vec![(ref_, self.type_table.get_type_size(TypeInfo::new(variable.type_info.type_id, 1))?)],
                     0,
                 ));
 
@@ -96,8 +97,8 @@ impl NameHandler {
         Ok(())
     }
 
-    pub fn name_variable(&mut self, name: String, addr: isize, _type: (isize, usize)) {
-        self.local_variables.push((name, addr, _type));
+    pub fn name_variable(&mut self, name: String, addr: isize, _type: TypeInfo) {
+        self.local_variables.push((name, LocalVariable::from_type_info(addr, _type)));
     }
 
     pub fn resolve_name<'b>(
@@ -108,18 +109,18 @@ impl NameHandler {
         lines: &mut Vec<Line>,
     ) -> Result<
         Either<
-            (isize, (isize, usize)),
+            LocalVariable,
             (
                 &'b Box<dyn TypedFunction>,
-                Option<(isize, (isize, usize))>,
+                Option<LocalVariable>,
                 &'b Vec<Vec<(BasicSymbol, LineInfo)>>,
             ),
         >,
         ProcessorError,
     > {
-        let mut current_type: Option<(isize, usize)> = None;
+        let mut current_type: Option<TypeInfo> = None;
         let mut current_variable = None;
-        let mut return_func = None;
+        let mut return_func: Option<(&Box<dyn TypedFunction>, Option<LocalVariable>, &Vec<Vec<(BasicSymbol, LineInfo)>>)> = None;
 
         for (name, access_type, name_type, indirection) in name {
             if return_func.is_some() {
@@ -135,13 +136,13 @@ impl NameHandler {
                     if current_type.is_some() && current_variable.is_some() {
                         let user_type = self
                             .type_table
-                            .get_type(current_type.unwrap().0)
+                            .get_type(current_type.unwrap().type_id)
                             .unwrap()
                             .get_user_type()
                             .ok_or(ProcessorError::AttributeDoesntExist(
                                 line.clone(),
                                 self.type_table
-                                    .get_type(current_type.unwrap().0)
+                                    .get_type(current_type.unwrap().type_id)
                                     .unwrap()
                                     .get_name()
                                     .to_string(),
@@ -153,43 +154,43 @@ impl NameHandler {
                             .ok_or(ProcessorError::AttributeDoesntExist(
                                 line.clone(),
                                 self.type_table
-                                    .get_type(current_type.unwrap().0)
+                                    .get_type(current_type.unwrap().type_id)
                                     .unwrap()
                                     .get_name()
                                     .to_string(),
                                 name.clone(),
                             ))?;
 
-                        if current_type.unwrap().1 > 0 {
+                        if current_type.unwrap().reference_depth > 0 {
                             let ref_addr = self
-                                .add_local_variable(None, (t.1 .0, current_type.unwrap().1), lines)
+                                .add_local_variable(None, TypeInfo::new(t.type_info.type_id, current_type.unwrap().reference_depth), lines)
                                 .unwrap();
                             lines.push(Line::InlineAsm(Int::instantiate_ref(
                                 current_variable.unwrap(),
-                                t.0 as isize,
+                                t.offset,
                                 ref_addr,
                             )));
                             current_variable = Some(ref_addr);
-                            current_type = Some((t.1 .0, current_type.unwrap().1 + t.1 .1));
+                            current_type = Some(TypeInfo::new(t.type_info.type_id, current_type.unwrap().reference_depth + t.type_info.reference_depth));
                         } else {
-                            current_variable = Some(current_variable.unwrap() + (t.0 as isize));
-                            current_type = Some(t.1);
+                            current_variable = Some(current_variable.unwrap() + t.offset);
+                            current_type = Some(t.type_info);
                         }
                     } else if current_type.is_some() {
                         return Err(ProcessorError::AttemptedTypeAttribAccess(line.clone()));
-                    } else if let Some((_, addr, _type)) = self
+                    } else if let Some((_, variable)) = self
                         .local_variables
                         .iter()
                         .rev()
                         .chain(self.args.iter())
-                        .find(|(n, _, _)| n == name)
+                        .find(|(n, _)| n == name)
                     {
                         // println!("{}, {}", addr, _type);
-                        current_variable = Some(*addr);
-                        current_type = Some(*_type);
+                        current_variable = Some(variable.offset);
+                        current_type = Some(variable.type_info);
                     } else if let Some(_type) = self.type_table.get_id_by_name(name) {
                         current_variable = None;
-                        current_type = Some((_type, *indirection));
+                        current_type = Some(TypeInfo::new(_type, *indirection));
                     } else {
                         return Err(ProcessorError::NameNotFound(line.clone(), name.clone()));
                     }
@@ -197,7 +198,7 @@ impl NameHandler {
                 NameType::Function(contents) => {
                     if let Some(func) = function_holder
                         .functions_table()
-                        .get(&current_type.map(|x| x.0))
+                        .get(&current_type.map(|x| x.type_id))
                         .unwrap()
                         .get(name)
                     {
@@ -207,7 +208,7 @@ impl NameHandler {
                                     line.clone(),
                                 ));
                             }
-                            Some((current_variable.unwrap(), current_type.unwrap()))
+                            Some(LocalVariable::from_type_info(current_variable.unwrap(), current_type.unwrap()))
                         } else {
                             None
                         };
@@ -225,7 +226,7 @@ impl NameHandler {
             return Ok(Right(return_func));
         }
 
-        Ok(Left((
+        Ok(Left(LocalVariable::from_type_info(
             current_variable.ok_or(ProcessorError::StandaloneType(line.clone()))?,
             current_type.unwrap(),
         )))

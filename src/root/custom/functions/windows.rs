@@ -2,6 +2,7 @@ use lazy_static::lazy_static;
 use unique_type_id::UniqueTypeId;
 use crate::root::basic_ast::symbol::BasicSymbol;
 use crate::root::compiler::generate_asm::get_local_address;
+use crate::root::compiler::local_variable::TypeInfo;
 use crate::root::custom::types::int::Int;
 use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::type_builder::TypedFunction;
@@ -21,8 +22,8 @@ pub fn add_function_signatures(existing: &mut Vec<(Option<isize>, Box<dyn TypedF
 #[UniqueTypeIdType = "u16"]
 pub struct WindowsExit {}
 lazy_static! {
-    static ref WINDOWS_EXIT_ARGS: [(String, (isize, usize)); 1] =
-        [(String::from("exit_code"), (Int::get_id(), 0))];
+    static ref WINDOWS_EXIT_ARGS: [(String, TypeInfo); 1] =
+        [(String::from("exit_code"), TypeInfo::new(Int::get_id(), 0))];
 }
 impl TypedFunction for WindowsExit {
     fn get_id(&self) -> isize {
@@ -33,7 +34,7 @@ impl TypedFunction for WindowsExit {
         "exit"
     }
 
-    fn get_args(&self) -> &[(String, (isize, usize))] {
+    fn get_args(&self) -> &[(String, TypeInfo)] {
         WINDOWS_EXIT_ARGS.as_ref()
     }
 
@@ -41,7 +42,7 @@ impl TypedFunction for WindowsExit {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<(isize, usize)> {
+    fn get_return_type(&self) -> Option<TypeInfo> {
         None
     }
 

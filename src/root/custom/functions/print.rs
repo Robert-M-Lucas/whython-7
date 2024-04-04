@@ -4,6 +4,7 @@ use unique_type_id::UniqueTypeId;
 use crate::root::basic_ast::symbol::BasicSymbol;
 use crate::root::compiler::compile_functions::{Function, Line, UserFunction};
 use crate::root::compiler::generate_asm::{compile_user_function, get_function_sublabel};
+use crate::root::compiler::local_variable::TypeInfo;
 use crate::root::custom::types::bool::Bool;
 use crate::root::custom::types::float::Float;
 use crate::root::custom::types::int::Int;
@@ -39,8 +40,8 @@ pub fn add_function_implementations(existing: &mut Vec<Box<dyn Function>>) {
 #[UniqueTypeIdType = "u16"]
 pub struct PrintI {}
 lazy_static! {
-    static ref PRINT_I_ARGS: [(String, (isize, usize)); 1] =
-        [(String::from("integer"), (Int::get_id(), 0))];
+    static ref PRINT_I_ARGS: [(String, TypeInfo); 1] =
+        [(String::from("integer"), TypeInfo::new(Int::get_id(), 0))];
 }
 impl TypedFunction for PrintI {
     fn get_id(&self) -> isize {
@@ -51,7 +52,7 @@ impl TypedFunction for PrintI {
         "printi"
     }
 
-    fn get_args(&self) -> &[(String, (isize, usize))] {
+    fn get_args(&self) -> &[(String, TypeInfo)] {
         PRINT_I_ARGS.as_ref()
     }
 
@@ -59,7 +60,7 @@ impl TypedFunction for PrintI {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<(isize, usize)> {
+    fn get_return_type(&self) -> Option<TypeInfo> {
         None
     }
 
@@ -149,8 +150,8 @@ impl Function for PrintI {
 #[UniqueTypeIdType = "u16"]
 pub struct PrintB {}
 lazy_static! {
-    static ref PRINT_B_ARGS: [(String, (isize, usize)); 1] =
-        [(String::from("bool"), (Bool::get_id(), 0))];
+    static ref PRINT_B_ARGS: [(String, TypeInfo); 1] =
+        [(String::from("bool"), TypeInfo::new(Bool::get_id(), 0))];
 }
 impl TypedFunction for PrintB {
     fn get_id(&self) -> isize {
@@ -161,7 +162,7 @@ impl TypedFunction for PrintB {
         "printb"
     }
 
-    fn get_args(&self) -> &[(String, (isize, usize))] {
+    fn get_args(&self) -> &[(String, TypeInfo)] {
         PRINT_B_ARGS.as_ref()
     }
 
@@ -169,7 +170,7 @@ impl TypedFunction for PrintB {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<(isize, usize)> {
+    fn get_return_type(&self) -> Option<TypeInfo> {
         None
     }
 
@@ -226,8 +227,8 @@ impl Function for PrintB {
 #[UniqueTypeIdType = "u16"]
 pub struct PrintF {}
 lazy_static! {
-    static ref PRINT_F_ARGS: [(String, (isize, usize)); 1] =
-        [(String::from("float"), (Float::get_id(), 0))];
+    static ref PRINT_F_ARGS: [(String, TypeInfo); 1] =
+        [(String::from("float"), TypeInfo::new(Float::get_id(), 0))];
 }
 impl TypedFunction for PrintF {
     fn get_id(&self) -> isize {
@@ -238,7 +239,7 @@ impl TypedFunction for PrintF {
         "printf"
     }
 
-    fn get_args(&self) -> &[(String, (isize, usize))] {
+    fn get_args(&self) -> &[(String, TypeInfo)] {
         PRINT_F_ARGS.as_ref()
     }
 
@@ -246,7 +247,7 @@ impl TypedFunction for PrintF {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<(isize, usize)> {
+    fn get_return_type(&self) -> Option<TypeInfo> {
         None
     }
 

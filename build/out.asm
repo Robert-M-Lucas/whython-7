@@ -25,97 +25,6 @@ __37: ; printf
 	leave
 	ret
 
-main: ; main
-	push rbp
-	mov rbp, rsp
-	sub rsp, 80
-	; '    let e: float = 0.0;'
-	; [inline asm]
-	mov rax, __float64__(0.0)
-	mov qword [rbp-8], rax
-	; ''
-	; '    let i: float = 0.0;'
-	; [inline asm]
-	mov rax, __float64__(0.0)
-	mov qword [rbp-16], rax
-	; '    while (i < 10.0) {'
-	; [inline asm]
-	main.0:
-	; [inline asm]
-	mov rax, __float64__(10.0)
-	mov qword [rbp-24], rax
-	; [inline asm]
-	; [inline asm]
-	movsd xmm0, qword [rbp-16]
-	ucomisd xmm0, qword [rbp-24]
-	mov qword [rbp-32], 0
-	seta [rbp-32]
-	; [inline asm]
-	mov rax, qword [rbp-32]
-	cmp rax, 0
-	jnz main.1
-	; '        e += 1.0 / fact(i);'
-	; [inline asm]
-	mov rax, __float64__(1.0)
-	mov qword [rbp-40], rax
-	; [return call] 1 , [(-16, 8)], -48
-	sub rsp, 8
-	mov rax, qword [rbp-16]
-	mov qword [rbp-88], rax
-	sub rsp, 8
-	call _1
-	; [local copy] -96 , -48, 8
-	mov rax, qword [rbp-96]
-	mov qword [rbp-48], rax
-	add rsp, 16
-	; [inline asm]
-	; [inline asm]
-	movsd xmm0, qword [rbp-40]
-	divsd xmm0, qword [rbp-48]
-	movsd qword [rbp-56], xmm0
-	; [inline asm]
-	movsd xmm0, qword [rbp-8]
-	addsd xmm0, qword [rbp-56]
-	movsd qword [rbp-8], xmm0
-	; '        printf(e);'
-	; [no return call] -37 , [(-8, 8)]
-	sub rsp, 8
-	mov rax, qword [rbp-8]
-	mov qword [rbp-88], rax
-	call __37
-	add rsp, 8
-	; '        i += 1.0;'
-	; [inline asm]
-	mov rax, __float64__(1.0)
-	mov qword [rbp-64], rax
-	; [inline asm]
-	movsd xmm0, qword [rbp-16]
-	addsd xmm0, qword [rbp-64]
-	movsd qword [rbp-16], xmm0
-	; [inline asm]
-	jmp main.0
-	main.1:
-	; '        e += 1.0 / fact(i);'
-	; '        printf(e);'
-	; '        i += 1.0;'
-	; '    };'
-	; ''
-	; '    printf(e);'
-	; [no return call] -37 , [(-8, 8)]
-	sub rsp, 8
-	mov rax, qword [rbp-8]
-	mov qword [rbp-88], rax
-	call __37
-	add rsp, 8
-	; ''
-	; '    return 7;'
-	; [inline asm]
-	mov dword [rbp-72], 0x00000007
-	mov dword [rbp-68], 0x00000000
-	; [return] Some((-72, 8))
-	mov rcx, qword [rbp-72]
-	call ExitProcess
-
 _1: ; fact
 	push rbp
 	mov rbp, rsp
@@ -210,6 +119,97 @@ _1: ; fact
 	mov qword [rbp+16], rax
 	leave
 	ret
+
+main: ; main
+	push rbp
+	mov rbp, rsp
+	sub rsp, 80
+	; '    let e: float = 0.0;'
+	; [inline asm]
+	mov rax, __float64__(0.0)
+	mov qword [rbp-8], rax
+	; ''
+	; '    let i: float = 0.0;'
+	; [inline asm]
+	mov rax, __float64__(0.0)
+	mov qword [rbp-16], rax
+	; '    while (i < 10.0) {'
+	; [inline asm]
+	main.0:
+	; [inline asm]
+	mov rax, __float64__(10.0)
+	mov qword [rbp-24], rax
+	; [inline asm]
+	; [inline asm]
+	movsd xmm0, qword [rbp-16]
+	ucomisd xmm0, qword [rbp-24]
+	mov qword [rbp-32], 0
+	seta [rbp-32]
+	; [inline asm]
+	mov rax, qword [rbp-32]
+	cmp rax, 0
+	jnz main.1
+	; '        e += 1.0 / fact(i);'
+	; [inline asm]
+	mov rax, __float64__(1.0)
+	mov qword [rbp-40], rax
+	; [return call] 1 , [(-16, 8)], -48
+	sub rsp, 8
+	mov rax, qword [rbp-16]
+	mov qword [rbp-88], rax
+	sub rsp, 8
+	call _1
+	; [local copy] -96 , -48, 8
+	mov rax, qword [rbp-96]
+	mov qword [rbp-48], rax
+	add rsp, 16
+	; [inline asm]
+	; [inline asm]
+	movsd xmm0, qword [rbp-40]
+	divsd xmm0, qword [rbp-48]
+	movsd qword [rbp-56], xmm0
+	; [inline asm]
+	movsd xmm0, qword [rbp-8]
+	addsd xmm0, qword [rbp-56]
+	movsd qword [rbp-8], xmm0
+	; '        printf(e);'
+	; [no return call] -37 , [(-8, 8)]
+	sub rsp, 8
+	mov rax, qword [rbp-8]
+	mov qword [rbp-88], rax
+	call __37
+	add rsp, 8
+	; '        i += 1.0;'
+	; [inline asm]
+	mov rax, __float64__(1.0)
+	mov qword [rbp-64], rax
+	; [inline asm]
+	movsd xmm0, qword [rbp-16]
+	addsd xmm0, qword [rbp-64]
+	movsd qword [rbp-16], xmm0
+	; [inline asm]
+	jmp main.0
+	main.1:
+	; '        e += 1.0 / fact(i);'
+	; '        printf(e);'
+	; '        i += 1.0;'
+	; '    };'
+	; ''
+	; '    printf(e);'
+	; [no return call] -37 , [(-8, 8)]
+	sub rsp, 8
+	mov rax, qword [rbp-8]
+	mov qword [rbp-88], rax
+	call __37
+	add rsp, 8
+	; ''
+	; '    return 7;'
+	; [inline asm]
+	mov dword [rbp-72], 0x00000007
+	mov dword [rbp-68], 0x00000000
+	; [return] Some((-72, 8))
+	mov rcx, qword [rbp-72]
+	call ExitProcess
 
 formatStr:
 	db `The int is %d\n`,0

@@ -3,6 +3,7 @@ use unique_type_id::UniqueTypeId;
 
 use crate::root::ast::literals::Literal;
 use crate::root::compiler::generate_asm::get_local_address;
+use crate::root::compiler::local_variable::TypeInfo;
 use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::processor::ProcessorError;
 use crate::root::processor::type_builder::{Type, TypedFunction, TypeTable};
@@ -78,8 +79,8 @@ impl Type for Bool {
 #[UniqueTypeIdType = "u16"]
 pub struct BoolNot {}
 lazy_static! {
-    static ref BOOL_NOT_ARGS: [(String, (isize, usize)); 1] =
-        [(String::from("lhs"), (Bool::get_id(), 0))];
+    static ref BOOL_NOT_ARGS: [(String, TypeInfo); 1] =
+        [(String::from("lhs"), TypeInfo::new(Bool::get_id(), 0))];
 }
 impl TypedFunction for BoolNot {
     fn get_id(&self) -> isize {
@@ -90,7 +91,7 @@ impl TypedFunction for BoolNot {
         "not"
     }
 
-    fn get_args(&self) -> &[(String, (isize, usize))] {
+    fn get_args(&self) -> &[(String, TypeInfo)] {
         BOOL_NOT_ARGS.as_ref()
     }
 
@@ -98,8 +99,8 @@ impl TypedFunction for BoolNot {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<(isize, usize)> {
-        Some((Bool::get_id(), 0))
+    fn get_return_type(&self) -> Option<TypeInfo> {
+        Some(TypeInfo::new(Bool::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -120,9 +121,9 @@ impl TypedFunction for BoolNot {
 #[UniqueTypeIdType = "u16"]
 pub struct BoolEQ {}
 lazy_static! {
-    static ref BOOL_EQ_ARGS: [(String, (isize, usize)); 2] = [
-        (String::from("lhs"), (Bool::get_id(), 0)),
-        (String::from("rhs"), (Bool::get_id(), 0))
+    static ref BOOL_EQ_ARGS: [(String, TypeInfo); 2] = [
+        (String::from("lhs"), TypeInfo::new(Bool::get_id(), 0)),
+        (String::from("rhs"), TypeInfo::new(Bool::get_id(), 0))
     ];
 }
 impl TypedFunction for BoolEQ {
@@ -134,7 +135,7 @@ impl TypedFunction for BoolEQ {
         "eq"
     }
 
-    fn get_args(&self) -> &[(String, (isize, usize))] {
+    fn get_args(&self) -> &[(String, TypeInfo)] {
         BOOL_EQ_ARGS.as_ref()
     }
 
@@ -142,8 +143,8 @@ impl TypedFunction for BoolEQ {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<(isize, usize)> {
-        Some((Bool::get_id(), 0))
+    fn get_return_type(&self) -> Option<TypeInfo> {
+        Some(TypeInfo::new(Bool::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {
@@ -165,9 +166,9 @@ impl TypedFunction for BoolEQ {
 #[UniqueTypeIdType = "u16"]
 pub struct BoolNE {}
 lazy_static! {
-    static ref BOOL_NE_ARGS: [(String, (isize, usize)); 2] = [
-        (String::from("lhs"), (Bool::get_id(), 0)),
-        (String::from("rhs"), (Bool::get_id(), 0))
+    static ref BOOL_NE_ARGS: [(String, TypeInfo); 2] = [
+        (String::from("lhs"), TypeInfo::new(Bool::get_id(), 0)),
+        (String::from("rhs"), TypeInfo::new(Bool::get_id(), 0))
     ];
 }
 impl TypedFunction for BoolNE {
@@ -179,7 +180,7 @@ impl TypedFunction for BoolNE {
         "ne"
     }
 
-    fn get_args(&self) -> &[(String, (isize, usize))] {
+    fn get_args(&self) -> &[(String, TypeInfo)] {
         BOOL_NE_ARGS.as_ref()
     }
 
@@ -187,8 +188,8 @@ impl TypedFunction for BoolNE {
         LineInfo::builtin()
     }
 
-    fn get_return_type(&self) -> Option<(isize, usize)> {
-        Some((Bool::get_id(), 0))
+    fn get_return_type(&self) -> Option<TypeInfo> {
+        Some(TypeInfo::new(Bool::get_id(), 0))
     }
 
     fn is_inline(&self) -> bool {

@@ -1,4 +1,5 @@
 use crate::root::basic_ast::symbol::BasicSymbol;
+use crate::root::compiler::local_variable::TypeInfo;
 use crate::root::custom::types::bool::Bool;
 use crate::root::custom::types::float::Float;
 use crate::root::custom::types::int::Int;
@@ -20,13 +21,13 @@ pub enum Literal {
 }
 
 impl Literal {
-    pub fn get_type_id(&self, type_table: &TypeTable, line_info: &LineInfo) -> Result<(isize, usize), ProcessorError> {
+    pub fn get_type_id(&self, type_table: &TypeTable, line_info: &LineInfo) -> Result<TypeInfo, ProcessorError> {
         Ok(match &self {
-            Literal::Int(_) => (Int::get_id(), 0),
-            Literal::Bool(_) => (Bool::get_id(), 0),
-            Literal::Float(_) => (Float::get_id(), 0),
-            Literal::Null => (-1, 1),
-            Literal::Initialiser(name, _) => (
+            Literal::Int(_) => TypeInfo::new(Int::get_id(), 0),
+            Literal::Bool(_) => TypeInfo::new(Bool::get_id(), 0),
+            Literal::Float(_) => TypeInfo::new(Float::get_id(), 0),
+            Literal::Null => TypeInfo::new(-1, 1),
+            Literal::Initialiser(name, _) => TypeInfo::new(
                 type_table.get_id_by_name(name).ok_or_else(||
                     ProcessorError::TypeNotFound(line_info.clone(), name.clone())
                 )?, 

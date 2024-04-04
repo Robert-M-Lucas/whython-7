@@ -1,6 +1,7 @@
 use crate::root::basic_ast::symbol::BasicSymbol;
 use crate::root::compiler::compile_functions::name_handler::NameHandler;
 use crate::root::compiler::compile_functions::{evaluate_symbol, operators, FunctionHolder, Line};
+use crate::root::compiler::local_variable::LocalVariable;
 use crate::root::parser::line_info::LineInfo;
 use crate::root::processor::processor::ProcessorError;
 
@@ -9,8 +10,8 @@ pub fn evaluate(
     lines: &mut Vec<Line>,
     name_handler: &mut NameHandler,
     function_holder: &FunctionHolder,
-    return_into: Option<(isize, (isize, usize))>,
-) -> Result<Option<(isize, (isize, usize))>, ProcessorError> {
+    return_into: Option<LocalVariable>,
+) -> Result<Option<LocalVariable>, ProcessorError> {
     // addr, type
     Ok(if section.len() == 1 {
         evaluate_symbol::evaluate_symbol(

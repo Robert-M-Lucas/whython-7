@@ -14,12 +14,13 @@ use crate::root::processor::type_builder::Type;
 use itertools::Itertools;
 #[cfg(debug_assertions)]
 use std::fs;
+use crate::root::compiler::local_variable::{LocalVariable, TypeInfo};
 use crate::root::custom::types::bool::Bool;
 
 pub fn process_lines(
     section: &[(BasicSymbol, LineInfo)],
     current_id: isize,
-    return_type: Option<(isize, usize)>,
+    return_type: Option<TypeInfo>,
     lines: &mut Vec<Line>,
     name_handler: &mut NameHandler,
     function_holder: &FunctionHolder,
@@ -91,33 +92,33 @@ pub fn process_lines(
                     lines,
                     name_handler,
                     function_holder,
-                    Some((return_into, return_type)),
+                    Some(LocalVariable::from_type_info(return_into, return_type)),
                 )?;
                 if return_value.is_none() {
                     return Err(ProcessorError::DoesntEvaluate(line[1].1.clone()));
                 }
                 let return_value = return_value.unwrap();
-                if return_type != return_value.1 {
+                if return_type != return_value.type_info {
                     return Err(ProcessorError::BadReturnType(
                         line[1].1.clone(),
                         name_handler
                             .type_table()
-                            .get_type(return_type.0)
+                            .get_type(return_type.type_id)
                             .unwrap()
-                            .get_indirect_name(return_type.1)
+                            .get_indirect_name(return_type.reference_depth)
                             .to_string(),
                         name_handler
                             .type_table()
-                            .get_type(return_value.1 .0)
+                            .get_type(return_value.type_info.type_id)
                             .unwrap()
-                            .get_indirect_name(return_value.1 .1)
+                            .get_indirect_name(return_value.type_info.reference_depth)
                             .to_string(),
                     ));
                 }
                 name_handler.destroy_local_variables(lines)?;
                 lines.push(Line::Return(Some((
-                    return_value.0,
-                    name_handler.type_table().get_type_size(return_value.1)?,
+                    return_value.offset,
+                    name_handler.type_table().get_type_size(return_value.type_info)?,
                 ))));
             }
             BasicSymbol::Keyword(Keyword::Let) => {
@@ -168,7 +169,7 @@ pub fn process_lines(
                         line[3].1.clone(),
                         type_name.0.clone(),
                     ))?;
-                let addr = name_handler.add_local_variable(None, (type_id, type_name.3), lines)?;
+                let addr = name_handler.add_local_variable(None, TypeInfo::new(type_id, type_name.3), lines)?;
 
                 if line.len() < 6 {
                     return Err(ProcessorError::LetNoValue(line[3].1.clone()));
@@ -182,10 +183,10 @@ pub fn process_lines(
                     lines,
                     name_handler,
                     function_holder,
-                    Some((addr, (type_id, type_name.3))),
+                    Some(LocalVariable::new(addr, type_id, type_name.3)),
                 )?;
 
-                name_handler.name_variable(name.clone(), addr, (type_id, type_name.3));
+                name_handler.name_variable(name.clone(), addr, TypeInfo::new(type_id, type_name.3));
             }
             BasicSymbol::Keyword(Keyword::While) => {
                 if line.len() < 2 {
@@ -206,19 +207,19 @@ pub fn process_lines(
                     evaluate::evaluate(expr, lines, name_handler, function_holder, None)?
                         .ok_or(ProcessorError::DoesntEvaluate(line[1].1.clone()))?;
                 lines.push(Line::InlineAsm(vec![
-                    format!("mov rax, qword [{}]", get_local_address(evaluated.0)),
+                    format!("mov rax, qword [{}]", get_local_address(evaluated.offset)),
                     "cmp rax, 0".to_string(),
                     format!("jnz {}", end_label),
                 ]));
 
-                if evaluated.1 != (Bool::new().get_id(), 0) {
+                if evaluated.type_info != TypeInfo::new(Bool::new().get_id(), 0) {
                     return Err(ProcessorError::BadConditionType(
                         line[1].1.clone(),
                         name_handler
                             .type_table()
-                            .get_type(evaluated.1 .0)
+                            .get_type(evaluated.type_info.type_id)
                             .unwrap()
-                            .get_indirect_name(evaluated.1 .1)
+                            .get_indirect_name(evaluated.type_info.reference_depth)
                             .to_string(),
                     ));
                 }
@@ -262,19 +263,19 @@ pub fn process_lines(
                 let evaluated =
                     evaluate::evaluate(expr, lines, name_handler, function_holder, None)?
                         .ok_or(ProcessorError::DoesntEvaluate(line[1].1.clone()))?;
-                if evaluated.1 != (Bool::new().get_id(), 0) {
+                if evaluated.type_info != TypeInfo::new(Bool::new().get_id(), 0) {
                     return Err(ProcessorError::BadConditionType(
                         line[1].1.clone(),
                         name_handler
                             .type_table()
-                            .get_type(evaluated.1 .0)
+                            .get_type(evaluated.type_info.type_id)
                             .unwrap()
-                            .get_indirect_name(evaluated.1 .1)
+                            .get_indirect_name(evaluated.type_info.reference_depth)
                             .to_string(),
                     ));
                 }
                 lines.push(Line::InlineAsm(vec![
-                    format!("mov rax, qword [{}]", get_local_address(evaluated.0)),
+                    format!("mov rax, qword [{}]", get_local_address(evaluated.offset)),
                     "cmp rax, 0".to_string(),
                     format!("jnz {}", next_label),
                 ]));
@@ -329,19 +330,19 @@ pub fn process_lines(
                                 None,
                             )?
                             .ok_or(ProcessorError::DoesntEvaluate(line[i].1.clone()))?;
-                            if evaluated.1 != (Bool::new().get_id(), 0) {
+                            if evaluated.type_info != TypeInfo::new(Bool::new().get_id(), 0) {
                                 return Err(ProcessorError::BadConditionType(
                                     line[i].1.clone(),
                                     name_handler
                                         .type_table()
-                                        .get_type(evaluated.1 .0)
+                                        .get_type(evaluated.type_info.type_id)
                                         .unwrap()
-                                        .get_indirect_name(evaluated.1 .1)
+                                        .get_indirect_name(evaluated.type_info.reference_depth)
                                         .to_string(),
                                 ));
                             }
                             lines.push(Line::InlineAsm(vec![
-                                format!("mov rax, qword [{}]", get_local_address(evaluated.0)),
+                                format!("mov rax, qword [{}]", get_local_address(evaluated.offset)),
                                 "cmp rax, 0".to_string(),
                                 format!("jnz {}", next_label),
                             ]));
