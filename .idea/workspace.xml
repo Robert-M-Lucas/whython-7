@@ -7,18 +7,12 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Swapped colour tags for shorter aliases">
-      <change afterPath="$PROJECT_DIR$/print.asm" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/print2.asm" afterDir="false" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Removed debug statement">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.obj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/assembler/assemble.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/assembler/assemble.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/operators.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/custom/functions/print.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/functions/print.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -292,31 +286,7 @@
       <workItem from="1712180291542" duration="332000" />
       <workItem from="1712180649769" duration="3245000" />
       <workItem from="1712187323656" duration="3000" />
-      <workItem from="1712225094287" duration="3877000" />
-    </task>
-    <task id="LOCAL-00049" summary="Fixed 0 showing up as -0 from printi">
-      <option name="closed" value="true" />
-      <created>1708269205195</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1708269205195</updated>
-    </task>
-    <task id="LOCAL-00050" summary="Fixed 0 showing up as -0 from printi">
-      <option name="closed" value="true" />
-      <created>1708269822989</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1708269822989</updated>
-    </task>
-    <task id="LOCAL-00051" summary="Added support for negative integers without needing to utilise 0-(int)">
-      <option name="closed" value="true" />
-      <created>1708270037585</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1708270037585</updated>
+      <workItem from="1712225094287" duration="5285000" />
     </task>
     <task id="LOCAL-00052" summary="Fixed shadowing">
       <option name="closed" value="true" />
@@ -686,7 +656,31 @@
       <option name="project" value="LOCAL" />
       <updated>1712183895394</updated>
     </task>
-    <option name="localTasksCounter" value="98" />
+    <task id="LOCAL-00098" summary="Implemented PrintF (printf) for printing floats">
+      <option name="closed" value="true" />
+      <created>1712229066755</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1712229066756</updated>
+    </task>
+    <task id="LOCAL-00099" summary="Fixed rhs of operator functions not being type checked i.e. 3 &lt; false being permitted">
+      <option name="closed" value="true" />
+      <created>1712229122500</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1712229122500</updated>
+    </task>
+    <task id="LOCAL-00100" summary="Removed debug statement">
+      <option name="closed" value="true" />
+      <created>1712229677789</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1712229677789</updated>
+    </task>
+    <option name="localTasksCounter" value="101" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -715,9 +709,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Made some progress towards bug fixes after rewrite" />
-    <MESSAGE value="Hopefully nearly back to working" />
-    <MESSAGE value="Back to working (or at least so it seems for now). Deallocation not tested." />
     <MESSAGE value="Added testing framework" />
     <MESSAGE value="Small change" />
     <MESSAGE value="Small changes" />
@@ -740,7 +731,10 @@
     <MESSAGE value="Added coloured text" />
     <MESSAGE value="Optimised imports" />
     <MESSAGE value="Swapped colour tags for shorter aliases" />
-    <option name="LAST_COMMIT_MESSAGE" value="Swapped colour tags for shorter aliases" />
+    <MESSAGE value="Implemented PrintF (printf) for printing floats" />
+    <MESSAGE value="Fixed rhs of operator functions not being type checked i.e. 3 &lt; false being permitted" />
+    <MESSAGE value="Removed debug statement" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed debug statement" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
