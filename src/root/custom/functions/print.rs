@@ -85,57 +85,17 @@ impl Function for PrintI {
     fn get_asm(&self) -> String {
         compile_user_function(&UserFunction {
             id: TypedFunction::get_id(self),
-            local_variable_size: 48,
+            local_variable_size: 8,
             arg_count: 1,
             lines: vec![Line::InlineAsm(vec![
-                "sub rsp, 32".to_string(),
+                "mov dword [rbp-4], 0x000a".to_string(),
+                "mov dword [rbp-8], 0x646C6C25".to_string(),
                 "mov rcx, rbp".to_string(),
-                "dec rcx".to_string(),
-                "mov rax, qword [rbp+16]".to_string(),
-                "mov qword [rbp-24], \"\"".to_string(),
-                "mov qword [rbp-16], \"\"".to_string(),
-                "mov dword [rbp-8], \"\"".to_string(),
-                "mov dword [rbp-4], `\\0\\0\\0\\n`".to_string(),
-                "cmp rax, 0".to_string(),
-                format!(
-                    "jge {}",
-                    get_function_sublabel(TypedFunction::get_id(self), "positive")
-                ),
-                "mov dword [rbp-20], \"-\"".to_string(),
-                "mov r8, rax".to_string(),
-                "mov rax, 0".to_string(),
-                "sub rax, r8".to_string(),
-                format!(
-                    "{}:",
-                    get_function_sublabel(TypedFunction::get_id(self), "positive")
-                ),
-                "mov rbx, 10".to_string(),
-                format!(
-                    "{}:",
-                    get_function_sublabel(TypedFunction::get_id(self), "loop")
-                ),
-                "xor rdx, rdx".to_string(),
-                "div rbx".to_string(),
-                "dec rcx".to_string(),
-                "add rdx, '0'".to_string(),
-                "mov [rcx], dl".to_string(),
-                "test.txt rax, rax".to_string(),
-                format!(
-                    "jnz {}",
-                    get_function_sublabel(TypedFunction::get_id(self), "loop")
-                ),
-                "mov ecx, -11".to_string(), // Get std handle (32 bit arg)
-                "call GetStdHandle".to_string(), // Get
-                //; You have to reserve space for these despite not being on the stack!
-                "mov rcx, rax".to_string(),            // ; STD Handle
-                "mov rdx, rbp".to_string(),            // ; Data pointer
-                "sub rdx, 24".to_string(),             // ; cont.
-                "mov r8, 24".to_string(),              // ; Bytes to write
-                "mov qword [rbp - 40], 0".to_string(), // ; optional out bytes written
-                "mov r9, rbp".to_string(),             //
-                "sub r9, 24".to_string(),              // ; contd.
-                "mov qword [rbp - 48], 0".to_string(), // ; optional lpOverlapped
-                "call WriteFile".to_string(),
+                "sub rcx, 8".to_string(),
+                "mov rdx, qword [rbp+16]".to_string(),
+                "sub rsp, 40".to_string(),
+                "call printf".to_string(),
+                "add rsp, 40".to_string()
             ])],
             name: "printi".to_string(),
         })
@@ -186,33 +146,26 @@ impl Function for PrintB {
             local_variable_size: 32,
             arg_count: 1,
             lines: vec![Line::InlineAsm(vec![
-                "sub rsp, 32".to_string(),
-                "mov qword [rbp-16], \"true\"".to_string(),
-                "mov qword [rbp-8], `\\r\\n`".to_string(),
+                "mov dword [rbp-8], 0x65757274".to_string(),
+                "mov dword [rbp-4], 0x0D0A".to_string(),
                 "mov rax, qword [rbp+16]".to_string(),
                 "cmp rax, 0".to_string(),
                 format!(
                     "jz {}",
                     get_function_sublabel(TypedFunction::get_id(self), "true")
                 ),
-                "mov qword [rbp-16], \"fals\"".to_string(),
-                "mov qword [rbp-8], `e\\r\\n`".to_string(),
+                "mov dword [rbp-8], 0x736C6166".to_string(),
+                "mov dword [rbp-4], 0x0D0A65".to_string(),
                 format!(
                     "{}:",
                     get_function_sublabel(TypedFunction::get_id(self), "true")
                 ),
-                "mov ecx, -11".to_string(), // Get std handle (32 bit arg)
-                "call GetStdHandle".to_string(), // Get
-                //; You have to reserve space for these despite not being on the stack!
-                "mov rcx, rax".to_string(),            // ; STD Handle
-                "mov rdx, rbp".to_string(),            // ; Data pointer
-                "sub rdx, 16".to_string(),             // ; cont.
-                "mov r8, 16".to_string(),              // ; Bytes to write
-                "mov qword [rbp - 24], 0".to_string(), // ; optional out bytes written
-                "mov r9, rbp".to_string(),             //
-                "sub r9, 24".to_string(),              // ; contd.
-                "mov qword [rbp - 32], 0".to_string(), // ; optional lpOverlapped
-                "call WriteFile".to_string(),
+                "mov rcx, rbp".to_string(),
+                "sub rcx, 8".to_string(),
+                "mov rdx, qword [rbp+16]".to_string(),
+                "sub rsp, 40".to_string(),
+                "call printf".to_string(),
+                "add rsp, 40".to_string()
             ])],
             name: "printb".to_string(),
         })
@@ -260,7 +213,7 @@ impl Function for PrintF {
     fn get_asm(&self) -> String {
         compile_user_function(&UserFunction {
             id: TypedFunction::get_id(self),
-            local_variable_size: 32,
+            local_variable_size: 8,
             arg_count: 1,
             lines: vec![Line::InlineAsm(vec![
                 "mov dword [rbp-4], 0x00".to_string(),

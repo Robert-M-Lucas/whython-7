@@ -8,10 +8,48 @@
     extern printf
     section .text
 
-__37: ; printf
+__2: ; printi
+	push rbp
+	mov rbp, rsp
+	sub rsp, 16
+	; [inline asm]
+	mov dword [rbp-4], 0x000a
+	mov dword [rbp-8], 0x646C6C25
+	mov rcx, rbp
+	sub rcx, 8
+	mov rdx, qword [rbp+16]
+	sub rsp, 40
+	call printf
+	add rsp, 40
+	leave
+	ret
+
+__3: ; printb
 	push rbp
 	mov rbp, rsp
 	sub rsp, 32
+	; [inline asm]
+	mov dword [rbp-8], 0x65757274
+	mov dword [rbp-4], 0x0D0A
+	mov rax, qword [rbp+16]
+	cmp rax, 0
+	jz ._3.true
+	mov dword [rbp-8], 0x736C6166
+	mov dword [rbp-4], 0x0D0A65
+	._3.true:
+	mov rcx, rbp
+	sub rcx, 8
+	mov rdx, qword [rbp+16]
+	sub rsp, 40
+	call printf
+	add rsp, 40
+	leave
+	ret
+
+__37: ; printf
+	push rbp
+	mov rbp, rsp
+	sub rsp, 16
 	; [inline asm]
 	mov dword [rbp-4], 0x00
 	mov dword [rbp-8], 0x0a666C25
@@ -25,190 +63,110 @@ __37: ; printf
 	leave
 	ret
 
-_1: ; fact
-	push rbp
-	mov rbp, rsp
-	sub rsp, 80
-	; '	if (x == 0.0) {'
-	; [inline asm]
-	mov rax, __float64__(0.0)
-	mov qword [rbp-8], rax
-	; [inline asm]
-	; [inline asm]
-	movsd xmm0, qword [rbp+24]
-	ucomisd xmm0, qword [rbp-8]
-	mov qword [rbp-16], 0
-	setne [rbp-16]
-	; [inline asm]
-	mov rax, qword [rbp-16]
-	cmp rax, 0
-	jnz .1.0
-	; '        return 1.0;'
-	; [inline asm]
-	mov rax, __float64__(1.0)
-	mov qword [rbp-24], rax
-	; [return] Some((-24, 8))
-	; [local copy] -24 , 16, 8
-	mov rax, qword [rbp-24]
-	mov qword [rbp+16], rax
-	leave
-	ret
-	; [inline asm]
-	.1.0:
-	.1.1:
-	; '        return 1.0;'
-	; '    };'
-	; ''
-	; '    let f: float = 1.0;'
-	; [inline asm]
-	mov rax, __float64__(1.0)
-	mov qword [rbp-32], rax
-	; '    let i: float = 1.0;'
-	; [inline asm]
-	mov rax, __float64__(1.0)
-	mov qword [rbp-40], rax
-	; ''
-	; '    while (i < (x + 0.99)) {'
-	; [inline asm]
-	.1.2:
-	; [inline asm]
-	mov rax, __float64__(0.99)
-	mov qword [rbp-48], rax
-	; [inline asm]
-	; [inline asm]
-	movsd xmm0, qword [rbp+24]
-	addsd xmm0, qword [rbp-48]
-	movsd qword [rbp-56], xmm0
-	; [inline asm]
-	; [inline asm]
-	movsd xmm0, qword [rbp-40]
-	ucomisd xmm0, qword [rbp-56]
-	mov qword [rbp-64], 0
-	seta [rbp-64]
-	; [inline asm]
-	mov rax, qword [rbp-64]
-	cmp rax, 0
-	jnz .1.3
-	; '        f *= i;'
-	; [inline asm]
-	movsd xmm0, qword [rbp-32]
-	mulsd xmm0, qword [rbp-40]
-	movsd qword [rbp-32], xmm0
-	; '        i += 1.0;'
-	; [inline asm]
-	mov rax, __float64__(1.0)
-	mov qword [rbp-72], rax
-	; [inline asm]
-	movsd xmm0, qword [rbp-40]
-	addsd xmm0, qword [rbp-72]
-	movsd qword [rbp-40], xmm0
-	; [inline asm]
-	jmp .1.2
-	.1.3:
-	; '        f *= i;'
-	; '        i += 1.0;'
-	; '    };'
-	; ''
-	; '    return f;'
-	; [local copy] -32 , -80, 8
-	mov rax, qword [rbp-32]
-	mov qword [rbp-80], rax
-	; [return] Some((-80, 8))
-	; [local copy] -80 , 16, 8
-	mov rax, qword [rbp-80]
-	mov qword [rbp+16], rax
-	leave
-	ret
-
 main: ; main
 	push rbp
 	mov rbp, rsp
-	sub rsp, 80
-	; '    let e: float = 0.0;'
+	sub rsp, 112
+	; '    printb(true);'
 	; [inline asm]
-	mov rax, __float64__(0.0)
-	mov qword [rbp-8], rax
-	; ''
-	; '    let i: float = 0.0;'
+	mov qword [rbp-8], 0
+	; [no return call] -3 , [(-8, 8)]
+	sub rsp, 8
+	mov rax, qword [rbp-8]
+	mov qword [rbp-120], rax
+	call __3
+	add rsp, 8
+	; '    printb(true);'
 	; [inline asm]
-	mov rax, __float64__(0.0)
-	mov qword [rbp-16], rax
-	; '    while (i < 10.0) {'
-	; [inline asm]
-	main.0:
-	; [inline asm]
-	mov rax, __float64__(10.0)
-	mov qword [rbp-24], rax
-	; [inline asm]
-	; [inline asm]
-	movsd xmm0, qword [rbp-16]
-	ucomisd xmm0, qword [rbp-24]
-	mov qword [rbp-32], 0
-	seta [rbp-32]
-	; [inline asm]
-	mov rax, qword [rbp-32]
-	cmp rax, 0
-	jnz main.1
-	; '        e += 1.0 / fact(i);'
-	; [inline asm]
-	mov rax, __float64__(1.0)
-	mov qword [rbp-40], rax
-	; [return call] 1 , [(-16, 8)], -48
+	mov qword [rbp-16], 0
+	; [no return call] -3 , [(-16, 8)]
 	sub rsp, 8
 	mov rax, qword [rbp-16]
-	mov qword [rbp-88], rax
+	mov qword [rbp-120], rax
+	call __3
+	add rsp, 8
+	; '    printb(false);'
+	; [inline asm]
+	mov qword [rbp-24], 1
+	; [no return call] -3 , [(-24, 8)]
 	sub rsp, 8
-	call _1
-	; [local copy] -96 , -48, 8
+	mov rax, qword [rbp-24]
+	mov qword [rbp-120], rax
+	call __3
+	add rsp, 8
+	; '    printb(false);'
+	; [inline asm]
+	mov qword [rbp-32], 1
+	; [no return call] -3 , [(-32, 8)]
+	sub rsp, 8
+	mov rax, qword [rbp-32]
+	mov qword [rbp-120], rax
+	call __3
+	add rsp, 8
+	; '    printi(9223372036854775808);'
+	; [inline asm]
+	mov dword [rbp-40], 0x00000000
+	mov dword [rbp-36], 0x80000000
+	; [no return call] -2 , [(-40, 8)]
+	sub rsp, 8
+	mov rax, qword [rbp-40]
+	mov qword [rbp-120], rax
+	call __2
+	add rsp, 8
+	; '    printi(-9223372036854775807);'
+	; [inline asm]
+	mov dword [rbp-48], 0xffffffff
+	mov dword [rbp-44], 0x7fffffff
+	; [inline asm]
+	mov dword [rbp-56], 0x00000000
+	mov dword [rbp-52], 0x00000000
+	; [inline asm]
+	; [inline asm]
+	mov rax, qword [rbp-56]
+	sub rax, [rbp-48]
+	mov [rbp-64], rax
+	; [no return call] -2 , [(-64, 8)]
+	sub rsp, 8
+	mov rax, qword [rbp-64]
+	mov qword [rbp-120], rax
+	call __2
+	add rsp, 8
+	; '    printf(1.12351234123);'
+	; [inline asm]
+	mov rax, __float64__(1.12351234123)
+	mov qword [rbp-72], rax
+	; [no return call] -37 , [(-72, 8)]
+	sub rsp, 8
+	mov rax, qword [rbp-72]
+	mov qword [rbp-120], rax
+	call __37
+	add rsp, 8
+	; '    printf(1.12351234123 - 2.0);'
+	; [inline asm]
+	mov rax, __float64__(1.12351234123)
+	mov qword [rbp-80], rax
+	; [inline asm]
+	mov rax, __float64__(2.0)
+	mov qword [rbp-88], rax
+	; [inline asm]
+	; [inline asm]
+	movsd xmm0, qword [rbp-80]
+	subsd xmm0, qword [rbp-88]
+	movsd qword [rbp-96], xmm0
+	; [no return call] -37 , [(-96, 8)]
+	sub rsp, 8
 	mov rax, qword [rbp-96]
-	mov qword [rbp-48], rax
-	add rsp, 16
-	; [inline asm]
-	; [inline asm]
-	movsd xmm0, qword [rbp-40]
-	divsd xmm0, qword [rbp-48]
-	movsd qword [rbp-56], xmm0
-	; [inline asm]
-	movsd xmm0, qword [rbp-8]
-	addsd xmm0, qword [rbp-56]
-	movsd qword [rbp-8], xmm0
-	; '        printf(e);'
-	; [no return call] -37 , [(-8, 8)]
-	sub rsp, 8
-	mov rax, qword [rbp-8]
-	mov qword [rbp-88], rax
+	mov qword [rbp-120], rax
 	call __37
 	add rsp, 8
-	; '        i += 1.0;'
-	; [inline asm]
-	mov rax, __float64__(1.0)
-	mov qword [rbp-64], rax
-	; [inline asm]
-	movsd xmm0, qword [rbp-16]
-	addsd xmm0, qword [rbp-64]
-	movsd qword [rbp-16], xmm0
-	; [inline asm]
-	jmp main.0
-	main.1:
-	; '        e += 1.0 / fact(i);'
-	; '        printf(e);'
-	; '        i += 1.0;'
-	; '    };'
 	; ''
-	; '    printf(e);'
-	; [no return call] -37 , [(-8, 8)]
-	sub rsp, 8
-	mov rax, qword [rbp-8]
-	mov qword [rbp-88], rax
-	call __37
-	add rsp, 8
 	; ''
 	; '    return 7;'
 	; [inline asm]
-	mov dword [rbp-72], 0x00000007
-	mov dword [rbp-68], 0x00000000
-	; [return] Some((-72, 8))
-	mov rcx, qword [rbp-72]
+	mov dword [rbp-104], 0x00000007
+	mov dword [rbp-100], 0x00000000
+	; [return] Some((-104, 8))
+	mov rcx, qword [rbp-104]
 	call ExitProcess
 
 formatStr:

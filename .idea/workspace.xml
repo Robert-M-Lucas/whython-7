@@ -7,30 +7,17 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Moved reference files">
-      <change afterPath="$PROJECT_DIR$/src/root/compiler/local_variable.rs" afterDir="false" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Replaced unnamed tuple types with structs found in local_variable.rs">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_28_03_2024,_15_17_[Changes]/out.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_28_03_2024,_15_17_[Changes]/out.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_28_03_2024,_15_17_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_28_03_2024__15_17__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.asm" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.asm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.exe" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/out.obj" beforeDir="false" afterPath="$PROJECT_DIR$/build/out.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/ast/literals.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/ast/literals.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/assignment.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/assignment.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/call_function.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/call_function.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/evaluate.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/evaluate.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/evaluate_symbol.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/evaluate_symbol.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/instantiate_literal.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/instantiate_literal.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/name_handler.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/name_handler.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/operators.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/operators.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/process_lines.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/process_lines.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.why" beforeDir="false" afterPath="$PROJECT_DIR$/main.why" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/root/custom/functions/print.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/functions/print.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/custom/functions/windows.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/functions/windows.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/custom/types/bool.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/types/bool.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/custom/types/float.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/types/float.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/custom/types/int.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/custom/types/int.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/processor/type_builder.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/type_builder.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/processor/user_type.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/processor/user_type.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,29 +99,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Cargo.Run whython-7.executor&quot;: &quot;Run&quot;,
-    &quot;Cargo.Test whython-7.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/robertlucas/RustroverProjects/whython-7&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
-    &quot;org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon&quot;: &quot;&quot;,
-    &quot;org.rust.first.attach.projects&quot;: &quot;true&quot;,
-    &quot;org.rust.first.attach.projects.stats&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;language.rust.cargo.check&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Cargo.Run whython-7.executor": "Run",
+    "Cargo.Test whython-7.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.rust.reset.selective.auto.import": "true",
+    "git-widget-placeholder": "dev",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "/home/robertlucas/RustroverProjects/whython-7/reference",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+    "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
+    "org.rust.first.attach.projects": "true",
+    "org.rust.first.attach.projects.stats": "true",
+    "settings.editor.selected.configurable": "language.rust.cargo.check",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
     <layout>
       <window_info id="Space Code Reviews" show_stripe_button="false" />
@@ -162,6 +149,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/reference" />
       <recent name="$PROJECT_DIR$" />
       <recent name="C:\Users\rober\Documents\Coding\RustProjects\whython-7" />
     </key>
@@ -305,15 +293,8 @@
       <workItem from="1712180649769" duration="3245000" />
       <workItem from="1712187323656" duration="3000" />
       <workItem from="1712225094287" duration="7201000" />
-      <workItem from="1712233798916" duration="3510000" />
-    </task>
-    <task id="LOCAL-00054" summary="Commit">
-      <option name="closed" value="true" />
-      <created>1708446689753</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1708446689753</updated>
+      <workItem from="1712233798916" duration="3787000" />
+      <workItem from="1712258968080" duration="1839000" />
     </task>
     <task id="LOCAL-00055" summary="Commit">
       <option name="closed" value="true" />
@@ -699,7 +680,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712231007743</updated>
     </task>
-    <option name="localTasksCounter" value="103" />
+    <task id="LOCAL-00103" summary="Replaced unnamed tuple types with structs found in local_variable.rs">
+      <option name="closed" value="true" />
+      <created>1712237478870</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1712237478871</updated>
+    </task>
+    <option name="localTasksCounter" value="104" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -728,7 +717,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Small change" />
     <MESSAGE value="Small changes" />
     <MESSAGE value="Clippy" />
     <MESSAGE value="FMT" />
@@ -753,7 +741,8 @@
     <MESSAGE value="Removed debug statement" />
     <MESSAGE value="Metadata" />
     <MESSAGE value="Moved reference files" />
-    <option name="LAST_COMMIT_MESSAGE" value="Moved reference files" />
+    <MESSAGE value="Replaced unnamed tuple types with structs found in local_variable.rs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Replaced unnamed tuple types with structs found in local_variable.rs" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
