@@ -262,10 +262,15 @@ impl Function for PrintF {
             local_variable_size: 32,
             arg_count: 1,
             lines: vec![Line::InlineAsm(vec![
-                "mov rdi,formatStr ; first argument: format string".to_string(),
-                "mov rsi,5 ; second argument (for format string below): integer to print".to_string(),
-                "mov al,0 ; magic for varargs (0==no magic, to prevent a crash!)".to_string(),
+                "mov dword [rbp-4], 0x00".to_string(),
+                "mov dword [rbp-8], 0x0a666C25".to_string(),
+                "mov rcx, rbp".to_string(),
+                "sub rcx, 8".to_string(),
+                "movq xmm1, qword [rbp+16]".to_string(),
+                "movq rdx, xmm1".to_string(),
+                "sub rsp, 40".to_string(),
                 "call printf".to_string(),
+                "add rsp, 40".to_string()
             ])],
             name: "printf".to_string(),
         })

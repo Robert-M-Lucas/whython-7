@@ -47,9 +47,9 @@ pub struct Args {
 }
 
 pub fn main() {
-    // assemble("out");
-    // link("out");
-    // run("out");
+    // assemble("build/out").unwrap();
+    // link_gcc_experimental("build/out").unwrap();
+    // run_wine_experimental("build/out").unwrap();
     // return;
     
     let args = Args::parse();

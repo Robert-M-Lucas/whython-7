@@ -18,8 +18,8 @@ pub fn generate_assembly(output: &str, functions: Vec<Box<dyn Function>>) {
         out += &(f.get_asm());
     }
     
-    // out += "\nformatStr:
-	// db `The int is %d\\n`,0";
+    out += "\nformatStr:
+	db `The int is %d\\n`,0";
 
     fs::write(format!("{output}.asm"), out).expect("Failed to write assembly to file");
 }

@@ -1,11 +1,12 @@
 fn main() ~ int {
     let a: float = 2.43;
-    let b: float = 3.21;
 
-    let c: float = a * b;
-    let d: float = (b * a) + 0.001;
 
-    \ printf(c);
+    while (a < 10) {
+        a += 0.5;
+        printf(a);
+    };
+
 
     return 7;
 }
