@@ -26,6 +26,7 @@ mod basic_ast;
 mod compiler;
 mod custom;
 mod parser;
+mod nom_parser;
 mod processor;
 mod utils;
 mod runner;
@@ -47,6 +48,9 @@ pub struct Args {
 }
 
 pub fn main() {
+    nom_parser::parse::parse(PathBuf::from("")).ok();
+    return;
+
     // assemble("build/out").unwrap();
     // link_gcc_experimental("build/out").unwrap();
     // run_wine_experimental("build/out").unwrap();
