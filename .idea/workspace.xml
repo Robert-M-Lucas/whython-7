@@ -9,17 +9,6 @@
   <component name="ChangeListManager">
     <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Continued nom parser implementation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parse_test.why" beforeDir="false" afterPath="$PROJECT_DIR$/parse_test.why" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse_blocks.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_blocks.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse_fn.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_fn.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse_fn/base.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_fn/base.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse_impl.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_impl.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse_name.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_name.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse_parameters.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_parameters.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse_struct.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_struct.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse_toplevel.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_toplevel.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,29 +90,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Cargo.Run whython-7.executor&quot;: &quot;Run&quot;,
-    &quot;Cargo.Test whython-7.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/robertlucas/RustroverProjects/whython-7/reference&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
-    &quot;org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon&quot;: &quot;&quot;,
-    &quot;org.rust.first.attach.projects&quot;: &quot;true&quot;,
-    &quot;org.rust.first.attach.projects.stats&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Cargo.Run whython-7.executor": "Run",
+    "Cargo.Test whython-7.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.rust.reset.selective.auto.import": "true",
+    "git-widget-placeholder": "dev",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "/home/robertlucas/RustroverProjects/whython-8",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+    "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
+    "org.rust.first.attach.projects": "true",
+    "org.rust.first.attach.projects.stats": "true",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
     <layout>
       <window_info id="Space Code Reviews" show_stripe_button="false" />
@@ -299,15 +288,7 @@
       <workItem from="1712258968080" duration="3012000" />
       <workItem from="1712262002041" duration="877000" />
       <workItem from="1712416688323" duration="13970000" />
-      <workItem from="1712487606343" duration="8311000" />
-    </task>
-    <task id="LOCAL-00060" summary="Continued work on reference system">
-      <option name="closed" value="true" />
-      <created>1710250720696</created>
-      <option name="number" value="00060" />
-      <option name="presentableId" value="LOCAL-00060" />
-      <option name="project" value="LOCAL" />
-      <updated>1710250720696</updated>
+      <workItem from="1712487606343" duration="9270000" />
     </task>
     <task id="LOCAL-00061" summary="Untested reference types working">
       <option name="closed" value="true" />
@@ -693,7 +674,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712493112095</updated>
     </task>
-    <option name="localTasksCounter" value="109" />
+    <task id="LOCAL-00109" summary="Continued nom parser implementation">
+      <option name="closed" value="true" />
+      <created>1712496937543</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1712496937544</updated>
+    </task>
+    <option name="localTasksCounter" value="110" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
