@@ -1,4 +1,4 @@
-fn
-fn
-fn
-fn
+struct A {
+    a: A::B.C
+}
+

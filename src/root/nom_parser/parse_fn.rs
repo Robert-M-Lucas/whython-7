@@ -2,17 +2,23 @@ pub mod base;
 
 use nom_supreme::tag::complete::tag;
 use nom::Parser;
+use crate::root::nom_parser::parse::{Location, ParseResult, Span};
+use crate::root::nom_parser::parse_parameters::Parameters;
 use crate::root::nom_parser::parse_toplevel::TopLevelTokens;
 
-struct FunctionToken<'a> {
+#[derive(Debug)]
+pub struct FunctionToken {
     location: Location,
-    name: &'a str,
-    return_type: &'a str,
-    arguments: Vec<(&'a str, &'a str)>,
-    contents: Vec<LineTokens<'a>>
+    name: String,
+    return_type: String,
+    parameters: Parameters,
+    // contents: Vec<LineTokens<'a>>
 }
 
-pub fn parse_function(s: Span) -> ParseResult<Span, TopLevelTokens> {
-    println!("{:?}", s);
-    tag("fn").parse(s).map(|(s, _)| (s, TopLevelTokens::Test))
+pub fn parse_function(s: Span) -> ParseResult<Span, FunctionToken> {
+    todo!();
+
+    // println!("{:?}", s);
+    // tag("fn").parse(s).map(|(s, _)| (s, TopLevelTokens::Test))
 }
+

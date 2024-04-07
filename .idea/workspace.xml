@@ -8,21 +8,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Continued nom parser implementation">
-      <change afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_arguments.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_blocks.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_comments.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_fn.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_fn/base.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_impl.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_name.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_parameters.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_struct.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_toplevel.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_util.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/root/compiler/compile_functions/name_handler.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/compiler/compile_functions/name_handler.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parse_test.why" beforeDir="false" afterPath="$PROJECT_DIR$/parse_test.why" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/root/nom_parser/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/mod.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse_blocks.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_blocks.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse_fn.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_fn.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse_fn/base.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_fn/base.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse_impl.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_impl.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse_name.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_name.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse_parameters.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_parameters.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse_struct.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_struct.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse_toplevel.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_toplevel.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -302,15 +299,7 @@
       <workItem from="1712258968080" duration="3012000" />
       <workItem from="1712262002041" duration="877000" />
       <workItem from="1712416688323" duration="13970000" />
-      <workItem from="1712487606343" duration="3661000" />
-    </task>
-    <task id="LOCAL-00059" summary="Continued work on reference system">
-      <option name="closed" value="true" />
-      <created>1710247471819</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
-      <option name="project" value="LOCAL" />
-      <updated>1710247471819</updated>
+      <workItem from="1712487606343" duration="8311000" />
     </task>
     <task id="LOCAL-00060" summary="Continued work on reference system">
       <option name="closed" value="true" />
@@ -696,7 +685,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712488502668</updated>
     </task>
-    <option name="localTasksCounter" value="108" />
+    <task id="LOCAL-00108" summary="Continued nom parser implementation">
+      <option name="closed" value="true" />
+      <created>1712493112095</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1712493112095</updated>
+    </task>
+    <option name="localTasksCounter" value="109" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -11,6 +11,7 @@ pub type Span<'a> = LocatedSpan<&'a str, &'a Rc<PathBuf>>;
 pub type ParseResult<'a, I=Span<'a>, O=Span<'a>, E=TypeErrorTree<'a>> = IResult<I, O, E>;
 pub type TypeErrorTree<'a> = GenericErrorTree<Span<'a>, &'static str, &'static str, Box<dyn std::error::Error + Send + Sync + 'static>>;
 
+#[derive(Debug)]
 pub struct Location {
     path: Rc<PathBuf>,
     offset: usize,

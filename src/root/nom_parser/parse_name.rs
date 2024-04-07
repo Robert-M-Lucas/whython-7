@@ -5,12 +5,14 @@ use nom_supreme::error::{BaseErrorKind, Expectation};
 use crate::root::nom_parser::parse::{Location, ParseResult, Span, TypeErrorTree};
 use crate::root::nom_parser::parse_fn::base::EvaluableToken;
 
+#[derive(Debug)]
 enum NameConnectors {
     NonStatic,
     Static
 }
 
-pub struct NameToken<'a> {
+#[derive(Debug)]
+pub struct NameToken {
     location: Location,
     base: String,
     names: Vec<(NameConnectors, String)>,
@@ -29,11 +31,11 @@ pub fn parse_full_name(s: Span) -> ParseResult<Span, NameToken> {
         let ns;
         let connector = if let Some(next) = s.chars().next() {
             if next == '.' {
-                ns = s.take_split(1).1;
+                ns = s.take_split(1).0;
                 NameConnectors::NonStatic
             }
-            else if next == '#' {
-                ns = s.take_split(1).1;
+            else if next == ':' && s.chars().nth(1).is_some_and(|c| c == ':') {
+                ns = s.take_split(2).0;
                 NameConnectors::Static
             }
             else {

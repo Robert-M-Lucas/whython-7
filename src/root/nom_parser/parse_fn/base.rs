@@ -1,4 +1,5 @@
 use crate::root::nom_parser::parse::{Location, ParseResult, Span};
+use crate::root::nom_parser::parse_name::NameToken;
 
 enum LineTokens<'a> {
     Initialisation(InitialisationToken<'a>),
@@ -7,9 +8,10 @@ enum LineTokens<'a> {
     While(WhileToken<'a>),
     Return(&'a str),
     Break,
-    NoOp(EvaluableToken<'a>)
+    NoOp(EvaluableToken)
 }
 
+#[derive(Debug)]
 pub struct EvaluableToken {
     location: Location,
     tokens: Vec<EvaluableTokens>
@@ -19,7 +21,7 @@ struct InitialisationToken<'a> {
     location: Location,
     name: &'a str,
     type_name: &'a str,
-    value: EvaluableToken<'a>
+    value: EvaluableToken
 }
 
 struct AssignmentOperatorToken {
@@ -36,43 +38,47 @@ struct AssignmentToken<'a> {
     location: Location,
     name: &'a str,
     assignment_operator: AssignmentOperatorToken,
-    value: EvaluableToken<'a>
+    value: EvaluableToken
 }
 
 struct IfToken<'a> {
     location: Location,
-    if_condition: EvaluableToken<'a>,
+    if_condition: EvaluableToken,
     if_contents: Vec<LineTokens<'a>>,
-    elif_condition_contents: Vec<(EvaluableToken<'a>, Vec<LineTokens<'a>>)>,
+    elif_condition_contents: Vec<(EvaluableToken, Vec<LineTokens<'a>>)>,
     else_contents: Option<Vec<LineTokens<'a>>>
 }
 
 struct WhileToken<'a> {
     location: Location,
-    condition: EvaluableToken<'a>,
+    condition: EvaluableToken,
     contents: Vec<LineTokens<'a>>
 }
 
-enum EvaluableTokens<'a> {
-    Name(NameToken<'a>),
-    Literal(LiteralTokens<'a>),
-    InfixOperator(EvaluableToken<'a>, OperatorToken, EvaluableToken<'a>),
-    PrefixOperator(OperatorToken, EvaluableToken<'a>)
+#[derive(Debug)]
+enum EvaluableTokens {
+    Name(NameToken),
+    Literal(LiteralTokens),
+    InfixOperator(EvaluableToken, OperatorToken, EvaluableToken),
+    PrefixOperator(OperatorToken, EvaluableToken)
 }
 
+#[derive(Debug)]
 struct OperatorToken {
     location: Location,
     operator: OperatorTokens
 }
 
+#[derive(Debug)]
 enum OperatorTokens {
     Add,
     Subtract,
 }
 
-enum LiteralTokens<'a> {
+#[derive(Debug)]
+enum LiteralTokens {
     Bool(bool),
-    String(&'a str)
+    String(String)
 }
 
 pub fn evaluable(s: Span) -> ParseResult<(), EvaluableToken> {
