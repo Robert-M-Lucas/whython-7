@@ -1,41 +1,65 @@
 use std::fs;
+use std::fs::File;
 use std::mem::take;
-use std::panic::Location;
 use std::path::PathBuf;
-use nom::bytes::complete::{is_not, tag, take_until, take_while};
-use nom::{FindSubstring, InputLength, InputTake, IResult, Parser};
+use std::rc::Rc;
+use nom::bytes::complete::{is_not, take_till, take_until, take_while};
+use nom::{FindSubstring, InputLength, InputTake, InputTakeAtPosition, IResult, Offset, Parser};
+use nom::branch::alt;
 use nom::character::complete::char;
 use nom::combinator::{recognize, value};
-use nom::error::{Error, ErrorKind, ParseError};
+use nom::error::{convert_error, Error, ErrorKind, ParseError, VerboseError};
 use nom::sequence::{pair, Tuple};
 use nom_locate::LocatedSpan;
+use nom_supreme::error::{ErrorTree, GenericErrorTree};
+use nom_supreme::final_parser::final_parser;
+use nom_supreme::tag::complete::tag;
 use crate::root::compiler::compile_functions::Function;
 
-type Span<'a> = LocatedSpan<&'a str, &'a PathBuf>;
-type ParseResult<'a, O=Span<'a>, E=nom::error::Error<Span<'a>>> = IResult<Span<'a>, O, E>;
+type Span<'a> = LocatedSpan<&'a str, &'a Rc<PathBuf>>;
 
-enum TopLevelTokens<'a> {
-    Struct(StructToken<'a>),
-    Impl(ImplToken<'a>),
-    Function(FunctionToken<'a>)
+type ParseResult<'a, I=Span<'a>, O=Span<'a>, E=ErrorTree<Span<'a>>> = IResult<I, O, E>;
+
+struct Location {
+    path: Rc<PathBuf>,
+    offset: usize,
+    line: u32
+}
+
+impl Location {
+    pub fn from_span(span: Span) -> Location {
+        Location {
+            path: span.extra.clone(),
+            offset: span.location_offset(),
+            line: span.location_line()
+        }
+    }
+}
+
+#[derive(Debug)]
+enum TopLevelTokens {
+    // Struct(StructToken<'a>),
+    // Impl(ImplToken<'a>),
+    // Function(FunctionToken<'a>),
+    Test
 }
 
 struct StructToken<'a> {
-    location: Span<'a>,
+    location: Location,
     name: &'a str,
     attributes: Vec<(&'a str, &'a str)>
 }
 
 
 struct ImplToken<'a> {
-    location: Span<'a>,
+    location: Location,
     name: &'a str,
     functions: Vec<FunctionToken<'a>>
 }
 
 
 struct FunctionToken<'a> {
-    location: Span<'a>,
+    location: Location,
     name: &'a str,
     return_type: &'a str,
     arguments: Vec<(&'a str, &'a str)>,
@@ -53,19 +77,19 @@ enum LineTokens<'a> {
 }
 
 struct EvaluableToken<'a> {
-    location: Span<'a>,
+    location: Location,
     tokens: Vec<EvaluableTokens<'a>>
 }
 
 struct InitialisationToken<'a> {
-    location: Span<'a>,
+    location: Location,
     name: &'a str,
     type_name: &'a str,
     value: EvaluableToken<'a>
 }
 
 struct AssignmentOperatorToken<'a> {
-    location: Span<'a>,
+    location: Location,
     assignment_operator: AssignmentOperatorTokens
 }
 
@@ -75,14 +99,14 @@ enum AssignmentOperatorTokens {
 }
 
 struct AssignmentToken<'a> {
-    location: Span<'a>,
+    location: Location,
     name: &'a str,
     assignment_operator: AssignmentOperatorToken<'a>,
     value: EvaluableToken<'a>
 }
 
 struct IfToken<'a> {
-    location: Span<'a>,
+    location: Location,
     if_condition: EvaluableToken<'a>,
     if_contents: Vec<LineTokens<'a>>,
     elif_condition_contents: Vec<(EvaluableToken<'a>, Vec<LineTokens<'a>>)>,
@@ -90,7 +114,7 @@ struct IfToken<'a> {
 }
 
 struct WhileToken<'a> {
-    location: Span<'a>,
+    location: Location,
     condition: EvaluableToken<'a>,
     contents: Vec<LineTokens<'a>>
 }
@@ -101,7 +125,7 @@ enum NameConnectors {
 }
 
 struct NameToken<'a> {
-    location: Span<'a>,
+    location: Location,
     base: &'a str,
     names: Vec<(NameConnectors, &'a str)>,
     function_call: Option<Vec<EvaluableToken<'a>>>
@@ -115,7 +139,7 @@ enum EvaluableTokens<'a> {
 }
 
 struct OperatorToken<'a> {
-    location: Span<'a>,
+    location: Location,
     operator: OperatorTokens
 }
 
@@ -129,21 +153,14 @@ enum LiteralTokens<'a> {
     String(&'a str)
 }
 
-// fn parse_struct(s: &str) -> ParseResult {
-//
-// }
-//
-// fn parse_function(s: &str) -> ParseResult {
-//
-// }
 
 fn peol_comment(s: Span) -> ParseResult
 {
-    pair(tag::<&str, LocatedSpan<&str, &PathBuf>, nom::error::Error<Span>>("//"), is_not("\n\r")).parse(s)
+    pair(tag("//"), is_not("\n\r")).parse(s)
         .map(|(s, (_, y)): (Span, (Span, Span))| (s, y))
 }
 
-fn pinline_comment(s: Span) -> ParseResult{
+fn pinline_comment(s: Span) -> ParseResult {
     (
         tag("/*"),
         take_until("*/"),
@@ -180,19 +197,60 @@ pub fn discard_ignored(s: Span) -> Span {
     s
 }
 
+fn parse_toplevel(s: Span) -> ParseResult<Span, Vec<TopLevelTokens>> {
+    let mut s = s;
+    let mut tokens = Vec::new();
+
+    loop {
+        let ns = s;
+        let ns = discard_ignored(ns);
+
+        if ns.is_empty() {
+            return Ok((ns, tokens))
+        }
+
+        let (ns, token) = alt((
+            parse_function,
+            parse_function,
+        ))
+            .parse(ns)?;
+
+        tokens.push(token);
+
+        s = ns;
+    }
+}
+
+pub fn take_till_whitespace<F, Input, Error: ParseError<Input>>(
+    cond: F,
+) -> impl Fn(Input) -> IResult<Input, Input, Error>
+    where
+        Input: InputTakeAtPosition<Item=char>,
+        F: Fn(<Input as InputTakeAtPosition>::Item) -> bool,
+{
+    take_till(|c: char| c.is_whitespace())
+}
+
+// fn parse_struct(s: Span) -> ParseResult<Span, TopLevelTokens> {
+//     let (s, _) = tag("struct").parse(s)?;
+//     Err()
 //
-// fn parse_toplevel(s: Span) -> ParseResult<Vec<TopLevelTokens>> {
-//     loop {
-//         let (s, parsed) = take_until()
-//     }
+//     ()
 // }
 
+fn parse_function(s: Span) -> ParseResult<Span, TopLevelTokens> {
+    println!("{:?}", s);
+    tag("fn").parse(s).map(|(s, _)| (s, TopLevelTokens::Test))
+}
+
 pub fn parse(path: PathBuf) -> Result<(), ()> {
-    // let text = fs::read_to_string(&path).unwrap();
-    let text = String::from("asd // test_string");
+    let text = fs::read_to_string(&path).unwrap();
+    let path = Rc::new(path);
+    let base = Span::new_extra(&text, &path);
+
 
     println!("{:?}",
-        discard_ignored(Span::new_extra(&text, &path))
+       parse_toplevel(base)
     );
 
     // parse_toplevel(Span::new_extra(&text, &path)).unwrap();

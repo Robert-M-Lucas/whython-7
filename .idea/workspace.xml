@@ -7,14 +7,13 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Implemented negative float literals">
-      <change afterPath="$PROJECT_DIR$/src/root/nom_parser/mod.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/root/nom_parser/parse.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/root/nom_parser/parse_error.rs" afterDir="false" />
+    <list default="true" id="4a32adca-6e3f-423b-8eaf-1f905a752400" name="Changes" comment="Continued nom parser implementation">
+      <change afterPath="$PROJECT_DIR$/parse_test.why" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/root.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/root/nom_parser/parse.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/root/nom_parser/parse.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -293,15 +292,8 @@
       <workItem from="1712233798916" duration="3787000" />
       <workItem from="1712258968080" duration="3012000" />
       <workItem from="1712262002041" duration="877000" />
-      <workItem from="1712416688323" duration="8014000" />
-    </task>
-    <task id="LOCAL-00057" summary="Began adding support for reference types">
-      <option name="closed" value="true" />
-      <created>1708888153620</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
-      <option name="project" value="LOCAL" />
-      <updated>1708888153620</updated>
+      <workItem from="1712416688323" duration="13970000" />
+      <workItem from="1712487606343" duration="636000" />
     </task>
     <task id="LOCAL-00058" summary="Continued adding support for reference types">
       <option name="closed" value="true" />
@@ -687,7 +679,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712262872878</updated>
     </task>
-    <option name="localTasksCounter" value="106" />
+    <task id="LOCAL-00106" summary="Began transitioning the parser to nom">
+      <option name="closed" value="true" />
+      <created>1712434097524</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1712434097526</updated>
+    </task>
+    <option name="localTasksCounter" value="107" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -716,8 +716,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="FMT" />
-    <MESSAGE value="Created build folder" />
     <MESSAGE value="Refactoring and tests" />
     <MESSAGE value="Conditional compilation" />
     <MESSAGE value="Removed completed TODO" />
@@ -741,7 +739,9 @@
     <MESSAGE value="Replaced unnamed tuple types with structs found in local_variable.rs" />
     <MESSAGE value="Transitioned WriteFile calls to printf from the C std library" />
     <MESSAGE value="Implemented negative float literals" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented negative float literals" />
+    <MESSAGE value="Began transitioning the parser to nom" />
+    <MESSAGE value="Continued nom parser implementation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Continued nom parser implementation" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

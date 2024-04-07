@@ -48,7 +48,7 @@ pub struct Args {
 }
 
 pub fn main() {
-    nom_parser::parse::parse(PathBuf::from("")).ok();
+    nom_parser::parse::parse(PathBuf::from("parse_test.why")).ok();
     return;
 
     // assemble("build/out").unwrap();
