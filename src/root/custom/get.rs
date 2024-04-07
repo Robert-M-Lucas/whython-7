@@ -1,7 +1,7 @@
 use crate::root::compiler::compile_functions::Function;
 use crate::root::custom::functions::{print, windows};
 use crate::root::custom::types::{bool, float, int};
-use crate::root::processor::type_builder::TypedFunction;
+use crate::root::name_resolver::type_builder::TypedFunction;
 
 pub fn get_custom_function_signatures() -> Vec<(Option<isize>, Box<dyn TypedFunction>)> {
     let mut signatures = Vec::new();

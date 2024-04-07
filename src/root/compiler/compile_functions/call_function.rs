@@ -5,8 +5,8 @@ use crate::root::compiler::compile_functions::operators::evaluate_operation;
 use crate::root::compiler::compile_functions::{evaluate, FunctionHolder, Line};
 use crate::root::compiler::local_variable::LocalVariable;
 use crate::root::parser::line_info::LineInfo;
-use crate::root::processor::processor::ProcessorError;
-use crate::root::processor::type_builder::TypedFunction;
+use crate::root::name_resolver::processor::ProcessorError;
+use crate::root::name_resolver::type_builder::TypedFunction;
 
 pub fn call_function(
     function: &Box<dyn TypedFunction>,

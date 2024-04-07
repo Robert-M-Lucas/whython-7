@@ -3,7 +3,7 @@ use std::io::ErrorKind;
 use std::ops::{Add, Rem, Sub};
 use std::process::ExitStatus;
 use crate::root::parser::parse::ParseError;
-use crate::root::processor::processor::ProcessorError;
+use crate::root::name_resolver::processor::ProcessorError;
 
 pub fn try_run_program(name: &str, exit_status: io::Result<ExitStatus>) -> Result<ExitStatus, ()> {
     match exit_status {

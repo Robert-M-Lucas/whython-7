@@ -2,7 +2,7 @@ use std::fs;
 use std::io::ErrorKind;
 use crate::root::assembler::assemble::generate_assembly;
 use crate::root::parser::parse::parse;
-use crate::root::processor::processor::process;
+use crate::root::name_resolver::processor::process;
 use crate::time;
 use clap::Parser;
 use std::path::PathBuf;
@@ -27,7 +27,7 @@ mod compiler;
 mod custom;
 mod parser;
 mod nom_parser;
-mod processor;
+mod name_resolver;
 mod utils;
 mod runner;
 

@@ -7,8 +7,8 @@ use crate::root::compiler::compile_functions::name_handler::NameHandler;
 use crate::root::compiler::compile_functions::{evaluate, FunctionHolder, Line};
 use crate::root::compiler::generate_asm::{get_function_sublabel, get_local_address};
 use crate::root::parser::line_info::LineInfo;
-use crate::root::processor::processor::ProcessorError;
-use crate::root::processor::type_builder::Type;
+use crate::root::name_resolver::processor::ProcessorError;
+use crate::root::name_resolver::type_builder::Type;
 
 #[cfg(debug_assertions)]
 use itertools::Itertools;

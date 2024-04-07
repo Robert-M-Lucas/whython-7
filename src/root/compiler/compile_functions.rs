@@ -14,8 +14,8 @@ use crate::root::custom::get::{
 };
 use crate::root::compiler::generate_asm::compile_user_function;
 use crate::root::parser::line_info::LineInfo;
-use crate::root::processor::processor::ProcessorError;
-use crate::root::processor::type_builder::{TypeTable, TypedFunction};
+use crate::root::name_resolver::processor::ProcessorError;
+use crate::root::name_resolver::type_builder::{TypeTable, TypedFunction};
 use name_handler::NameHandler;
 use std::collections::HashMap;
 use crate::root::compiler::local_variable::TypeInfo;

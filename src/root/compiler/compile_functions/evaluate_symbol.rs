@@ -4,7 +4,7 @@ use crate::root::compiler::compile_functions::{
     call_function, evaluate, instantiate_literal, FunctionHolder, Line,
 };
 use crate::root::parser::line_info::LineInfo;
-use crate::root::processor::processor::ProcessorError;
+use crate::root::name_resolver::processor::ProcessorError;
 use either::{Left, Right};
 use crate::root::compiler::local_variable::LocalVariable;
 

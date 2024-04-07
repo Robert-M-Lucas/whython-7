@@ -1,8 +1,8 @@
 use crate::root::ast::literals::Literal;
 use crate::root::compiler::local_variable::{LocalVariable, TypeInfo};
 use crate::root::parser::line_info::LineInfo;
-use crate::root::processor::processor::ProcessorError;
-use crate::root::processor::type_builder::{Type, TypeTable};
+use crate::root::name_resolver::processor::ProcessorError;
+use crate::root::name_resolver::type_builder::{Type, TypeTable};
 
 pub struct UserType {
     name: String,

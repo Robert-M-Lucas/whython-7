@@ -1,8 +1,8 @@
 use crate::root::basic_ast::symbol::{BasicSymbol, NameAccessType, NameType};
 use crate::root::compiler::compile_functions::{FunctionHolder, Line};
 use crate::root::parser::line_info::LineInfo;
-use crate::root::processor::processor::ProcessorError;
-use crate::root::processor::type_builder::{TypeTable, TypedFunction};
+use crate::root::name_resolver::processor::ProcessorError;
+use crate::root::name_resolver::type_builder::{TypeTable, TypedFunction};
 use crate::root::utils::align;
 use either::{Either, Left, Right};
 use std::collections::HashSet;
@@ -63,7 +63,7 @@ impl NameHandler {
         let size = align(self.type_table.get_type_size(_type)?, 8);
         let addr = -(self.local_variables_size as isize) - size as isize;
         self.local_variables_size += size;
-        // lines.push(Line::InlineAsm(vec![format!("sub rsp, {}", size)]));
+        // parse_fn.push(Line::InlineAsm(vec![format!("sub rsp, {}", size)]));
         if let Some(name) = name {
             self.local_variables.push((name, LocalVariable::from_type_info(addr, _type)));
         }

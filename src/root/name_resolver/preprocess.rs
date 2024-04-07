@@ -3,7 +3,7 @@ use crate::root::basic_ast::punctuation::Punctuation;
 use crate::root::basic_ast::symbol::{BasicAbstractSyntaxTree, BasicSymbol, NameType};
 
 use crate::root::parser::line_info::LineInfo;
-use crate::root::processor::processor::ProcessorError;
+use crate::root::name_resolver::processor::ProcessorError;
 
 use std::vec::IntoIter;
 

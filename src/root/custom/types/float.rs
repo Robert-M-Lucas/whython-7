@@ -6,8 +6,8 @@ use crate::root::compiler::generate_asm::get_local_address;
 use crate::root::compiler::local_variable::TypeInfo;
 use crate::root::custom::types::bool::Bool;
 use crate::root::parser::line_info::LineInfo;
-use crate::root::processor::processor::ProcessorError;
-use crate::root::processor::type_builder::{Type, TypedFunction, TypeTable};
+use crate::root::name_resolver::processor::ProcessorError;
+use crate::root::name_resolver::type_builder::{Type, TypedFunction, TypeTable};
 
 pub fn add_function_signatures(existing: &mut Vec<(Option<isize>, Box<dyn TypedFunction>)>) {
     let signatures: [(Option<isize>, Box<dyn TypedFunction>); 10] = [

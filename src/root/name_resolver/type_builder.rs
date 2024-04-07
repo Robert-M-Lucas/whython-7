@@ -1,5 +1,5 @@
-use crate::root::processor::preprocess::{PreProcessFunction, PreprocessSymbol};
-use crate::root::processor::processor::ProcessorError;
+use crate::root::name_resolver::preprocess::{PreProcessFunction, PreprocessSymbol};
+use crate::root::name_resolver::processor::ProcessorError;
 
 use std::collections::HashMap;
 
@@ -11,7 +11,7 @@ use crate::root::custom::types::float::Float;
 use crate::root::custom::types::int::Int;
 use crate::root::parser::line_info::LineInfo;
 
-use crate::root::processor::user_type::UserType;
+use crate::root::name_resolver::user_type::UserType;
 use crate::root::utils::align;
 
 struct UninitialisedType {

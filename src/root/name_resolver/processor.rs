@@ -2,8 +2,8 @@ use crate::root::ast::operators::Operator;
 use crate::root::basic_ast::symbol::BasicAbstractSyntaxTree;
 use crate::root::compiler::compile_functions::{compile_functions, Function};
 use crate::root::parser::line_info::LineInfo;
-use crate::root::processor::preprocess::preprocess;
-use crate::root::processor::type_builder::build_types;
+use crate::root::name_resolver::preprocess::preprocess;
+use crate::root::name_resolver::type_builder::build_types;
 
 use thiserror::Error;
 
